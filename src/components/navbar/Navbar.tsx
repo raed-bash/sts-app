@@ -4,7 +4,7 @@ import ButtonGroup from "../buttons/ButtonGroup";
 import { ReactComponent as LogoIcon } from "src/assets/icons/logo.svg";
 import { ReactComponent as LogoutIcon } from "src/assets/icons/logout.svg";
 import sectionsInfo from "src/constants/SectionsInfo";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import useLogout from "src/hooks/useLogout";
 import useCheckPrivileges from "src/hooks/useCheckPrivileges";
 

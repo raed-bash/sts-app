@@ -1,5 +1,5 @@
 import { Toaster } from "react-hot-toast";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import useAxiosInterceptor from "src/hooks/useAxiosInterceptor";
 
 function Container() {

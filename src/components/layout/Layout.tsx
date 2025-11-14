@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router";
 import Navbar from "../navbar/Navbar";
 import LinksPagesView from "../LinksPagesView";
 import SectionsInfo from "src/constants/SectionsInfo";

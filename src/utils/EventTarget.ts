@@ -5,7 +5,7 @@ export class EventTarget<T extends any> {
     this.target = { name, value, checked };
   }
 
-  setValue(value: T) {
+  setValue?(value: T) {
     this.target.value = value;
 
     return this;

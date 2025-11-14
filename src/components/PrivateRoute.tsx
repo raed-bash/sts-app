@@ -1,6 +1,6 @@
-import { memo, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate } from "react-router";
 
 export type PrivateRouteProps = { children: ReactNode };
 
@@ -14,4 +14,4 @@ function PrivateRoute({ children }: PrivateRouteProps) {
   return <Navigate to="/login" replace />;
 }
 
-export default memo(PrivateRoute);
+export default PrivateRoute;

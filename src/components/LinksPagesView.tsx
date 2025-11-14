@@ -1,8 +1,8 @@
 import { memo } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router";
 /**
  * @typedef utils
- * @property {(import("react-router-dom").LinkProps & React.RefAttributes<HTMLAnchorElement> & {disabled:boolean, label:any})[]} links
+ * @property {(import("react-router").LinkProps & React.RefAttributes<HTMLAnchorElement> & {disabled:boolean, label:any})[]} links
  */
 
 /**
