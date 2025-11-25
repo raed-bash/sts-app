@@ -1,18 +1,16 @@
-import { memo, useMemo } from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "src/utils/cn";
 
-/**
- * @typedef utils
- * @property {string} helperText
- * @property {boolean} error
- * @property {React.HTMLAttributes<HTMLDivElement>} containerProps
- * @property {React.HTMLAttributes<HTMLParagraphElement>} helperTextProps
- */
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  error?: boolean;
 
-/**
- * @param {React.InputHTMLAttributes<HTMLInputElement> & utils} props
- */
-function Input({ className, ...props } = { className: "", helperText: "" }) {
+  helperText?: string;
+
+  helperTextProps?: React.HTMLAttributes<HTMLParagraphElement>;
+
+  containerProps?: React.HTMLAttributes<HTMLDivElement>;
+};
+
+function Input({ className, ...props }: InputProps) {
   const {
     helperTextProps = { className: "" },
     containerProps = { className: "" },
@@ -21,41 +19,29 @@ function Input({ className, ...props } = { className: "", helperText: "" }) {
     ...otherProps
   } = props;
 
-  const classNameMemo = useMemo(
-    () =>
-      twMerge(
-        ` w-full rounded-lg indent-1 border-black p-1 border-[1px] ${
-          helperText && error ? "border-danger-main" : ""
-        } 
-        ${props.disabled ? "opacity-60" : ""}
-        `,
-        className
-      ),
-    [className, helperText, props.disabled, error]
-  );
-
-  const containerClassNameMemo = useMemo(
-    () => twMerge(`w-full`, containerProps.className),
-    [containerProps.className]
-  );
-
-  const helperTextClassNameMemo = useMemo(
-    () =>
-      twMerge(
-        (error && "text-danger-main ") + " text-sm",
-        helperTextProps.className
-      ),
-    [error, helperTextProps.className]
-  );
-
   return (
-    <div {...containerProps} className={containerClassNameMemo}>
-      <input {...otherProps} className={classNameMemo} />
-      <p {...helperTextProps} className={helperTextClassNameMemo}>
+    <div {...containerProps} className={cn(`w-full`, containerProps.className)}>
+      <input
+        {...otherProps}
+        className={cn(
+          `w-full rounded-lg indent-1 border-black p-1 border`,
+          helperText && error ? "border-danger-main" : "",
+          props.disabled ? "opacity-60" : "",
+          className
+        )}
+      />
+      <p
+        {...helperTextProps}
+        className={cn(
+          error && "text-danger-main ",
+          "text-sm",
+          helperTextProps.className
+        )}
+      >
         {helperText}
       </p>
     </div>
   );
 }
 
-export default memo(Input);
+export default Input;

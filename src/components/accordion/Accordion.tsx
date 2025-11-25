@@ -1,17 +1,17 @@
-import { memo, useCallback, useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Button from "../buttons/Button";
-import { ReactComponent as InfoIcon } from "src/assets/icons/info.svg";
-import { ReactComponent as ArrowLineDownIcon } from "src/assets/icons/arrow-line-down.svg";
+import InfoIcon from "src/assets/icons/info.svg?react";
+import ArrowLineDownIcon from "src/assets/icons/arrow-line-down.svg?react";
 import { EventTarget } from "src/utils/EventTarget";
 import ExpandContainer from "./ExpandContainer";
 
 type AccordionProps = {
-  name: string;
-  onChange: (e: EventTarget<boolean>) => void;
   title: string | number;
-  defaultExpaned?: boolean;
-  expand: boolean;
   children: ReactNode;
+  name?: string;
+  onChange?: (e: EventTarget<boolean>) => void;
+  defaultExpaned?: boolean;
+  expand?: boolean;
 };
 
 function Accordion({
@@ -24,20 +24,19 @@ function Accordion({
 }: AccordionProps) {
   const [expand, setExpand] = useState<boolean>(defaultExpaned || false);
 
-  const handleToggle = useCallback(() => {
+  const handleToggle = () => {
     setExpand(!expand);
 
-    onChange(new EventTarget(name, !expand));
-  }, [expand, name, onChange]);
-
-  useEffect(() => {
-    if (typeof externalExpand === "boolean" && externalExpand !== expand) {
-      setExpand(externalExpand);
+    if (onChange) {
+      onChange(new EventTarget(name, !expand));
     }
-  }, [externalExpand, expand]);
+  };
+
+  const _expand =
+    typeof externalExpand !== "undefined" ? externalExpand : expand;
 
   return (
-    <div className={` duration-150 ${expand ? "pt-4" : ""}`}>
+    <div className={` duration-150 ${_expand ? "pt-4" : ""}`}>
       <Button
         className="flex items-center justify-between gap-3 "
         onClick={handleToggle}
@@ -46,17 +45,17 @@ function Accordion({
           <InfoIcon className="stroke-white" />
           <p className="text-lg">{title}</p>
         </div>
-        <span className="bg-white rounded-full px-[10px] py-[12px]">
+        <span className="bg-white rounded-full px-2.5 py-3">
           <ArrowLineDownIcon
             className={` stroke-primary-main  duration-150 ${
-              expand ? "rotate-0" : "rotate-90"
+              _expand ? "rotate-0" : "rotate-90"
             }`}
           />
         </span>
       </Button>
       <div>
         <ExpandContainer
-          expand={expand}
+          expand={_expand}
           expanedClassName="mt-8 pt-8 pb-4"
           className="border-t-2 border-solid border-secondary-secondary"
         >
@@ -67,4 +66,4 @@ function Accordion({
   );
 }
 
-export default memo(Accordion);
+export default Accordion;

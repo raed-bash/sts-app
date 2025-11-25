@@ -1,5 +1,5 @@
 import { useRef, useState, type ReactNode } from "react";
-import Tooltip from "../Tooltip";
+import Tooltip from "../tooltip/Tooltip";
 import MoreIcon from "src/assets/icons/more.svg?react";
 import useFocusout from "src/hooks/useFocusout";
 import IconButton from "../buttons/IconButton";

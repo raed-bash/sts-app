@@ -8,7 +8,7 @@ import useRawSelectUtils, {
   type UseRawSelectUtilsOptions,
 } from "./hooks/useRawSelectUtils";
 import { cn } from "src/utils/cn";
-import Tooltip, { type TooltipProps } from "src/components/Tooltip";
+import Tooltip, { type TooltipProps } from "src/components/tooltip/Tooltip";
 import useFocusout from "src/hooks/useFocusout";
 
 export type RawAutocomplete<TOption extends OptionType> = Omit<

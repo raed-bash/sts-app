@@ -1,32 +1,44 @@
-import { memo, useMemo } from "react";
+import { useId, type ReactNode } from "react";
 import Input from "./Input";
-import { buttonTheme } from "../buttons/Button";
-import { twMerge } from "tailwind-merge";
+import { cn } from "src/utils/cn";
+import {
+  ButtonTheme,
+  type ButtonColor,
+  type ButtonVariant,
+} from "../buttons/ButtonTheme";
 
-/**
- * @typedef buttonProps
- * @type {import("../buttons/Button").buttonProps}
- */
+export type CheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  label: ReactNode;
 
-/**
- * @typedef utils
- * @property {string} label
- * @property {buttonProps['variant']} mainVariant
- * @property {buttonProps['color']} mainColor
- * @property {buttonProps['variant']} secondaryVariant
- * @property {buttonProps['color']} secondaryColor
- * @property {string} checkedClassName
- * @property {string} notCheckedClassName
- */
+  /**
+   * @default contained
+   */
+  mainVariant?: ButtonVariant;
 
-/**
- * @typedef checkboxProps
- * @type {React.InputHTMLAttributes<HTMLInputElement> & import("./Input").utils & utils}
- */
+  /**
+   * @default primary
+   */
+  mainColor?: ButtonColor;
 
-/**
- * @param {checkboxProps} props
- */
+  /**
+   * @default outlined
+   */
+  secondaryVariant?: ButtonVariant;
+
+  /**
+   * @default secondary
+   */
+  secondaryColor?: ButtonColor;
+
+  disabled?: boolean;
+
+  className?: string;
+
+  checkedClassName?: string;
+
+  notCheckedClassName?: string;
+};
+
 function Checkbox({
   label,
   mainVariant = "contained",
@@ -38,42 +50,29 @@ function Checkbox({
   checkedClassName,
   notCheckedClassName,
   ...props
-}) {
-  const id = useMemo(
-    () => props.id || props.name || Math.random().toString(16).slice(2),
-    [props.name, props.id]
-  );
+}: CheckboxProps) {
+  const hId = useId();
+
+  const id = props.id || props.name || hId;
 
   const checked = props.checked;
 
-  const classNameMemo = useMemo(
-    () =>
-      twMerge(
-        ` ${
-          buttonTheme[checked ? mainVariant : secondaryVariant][
-            disabled ? "disabled" : checked ? mainColor : secondaryColor
-          ]
-        }  rounded-[35px] transition-all duration-150 ease-in-out text-[16px] py-2 px-10 w-full cursor-pointer aria-disabled:pointer-events-none border text-center flex items-center justify-center ${
-          checked ? checkedClassName : notCheckedClassName
-        }`,
-        className
-      ),
-    [
-      className,
-      mainColor,
-      mainVariant,
-      disabled,
-      secondaryVariant,
-      secondaryColor,
-      checked,
-      checkedClassName,
-      notCheckedClassName,
-    ]
-  );
-
   return (
     <div className="flex">
-      <label htmlFor={id} className={classNameMemo} aria-disabled={disabled}>
+      <label
+        htmlFor={id}
+        className={cn(
+          ButtonTheme[checked ? mainVariant : secondaryVariant][
+            disabled ? "disabled" : checked ? mainColor : secondaryColor
+          ],
+          `rounded-[35px] transition-all duration-150 ease-in-out text-[16px]
+           py-2 px-10 w-full cursor-pointer aria-disabled:pointer-events-none
+           border text-center flex items-center justify-center`,
+          checked ? checkedClassName : notCheckedClassName,
+          className
+        )}
+        aria-disabled={disabled}
+      >
         {label}
       </label>
       <Input type="checkbox" id={id} hidden {...props} />
@@ -81,4 +80,4 @@ function Checkbox({
   );
 }
 
-export default memo(Checkbox);
+export default Checkbox;

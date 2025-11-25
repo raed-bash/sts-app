@@ -1,6 +1,6 @@
 import ArrowDown from "../../../assets/icons/arrow-down.svg?react";
 import Option, { type OptionProps } from "./Option";
-import Tooltip, { type TooltipProps } from "src/components/Tooltip";
+import Tooltip, { type TooltipProps } from "src/components/tooltip/Tooltip";
 import { cn } from "src/utils/cn";
 import useRawSelectUtils, {
   type OptionType,

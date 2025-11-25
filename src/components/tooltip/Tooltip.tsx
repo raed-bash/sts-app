@@ -1,14 +1,9 @@
-import React, { useState, type ReactNode, type Ref } from "react";
+import React, { useState, type ReactNode } from "react";
 import { cn } from "src/utils/cn";
-
-export const TooltipPlacementStyle = {
-  bottom: "top-[115%] left-1/2 -translate-x-1/2",
-  top: "bottom-[115%] left-1/2 -translate-x-1/2",
-  left: "right-[115%] top-1/2 -translate-y-1/2",
-  right: "left-[115%] top-1/2 -translate-y-1/2",
-};
-
-export type TooltipPlacement = keyof typeof TooltipPlacementStyle;
+import {
+  TooltipPlacementStyle,
+  type TooltipPlacement,
+} from "./TooltipPlacementStyle";
 
 export type TooltipProps = Omit<
   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
