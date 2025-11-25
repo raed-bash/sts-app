@@ -1,26 +1,27 @@
 import { useState } from "react";
 import "./App.css";
-import RawSelect from "./components/inputs/select/RawSelect";
-import type { UniqueValue } from "./components/inputs/select/hooks/useRawSelectUtils";
-import Table, { type TableColumn } from "./components/table/Table";
-const columns: TableColumn[] = [
-  {
-    headerName: "raed",
-    name: "rad",
-    getCell: (_, { name }) => {
-      return "";
-    },
-    type: "actions",
-  },
-];
+import RawAutocomplete from "./components/inputs/select/RawAutocomplete";
+import { type UniqueValue } from "./components/inputs/select/hooks/useRawSelectUtils";
 
 function App() {
   const [value, setValue] =
     useState<Map<UniqueValue, (typeof options)[number]>>();
-
+  console.log(value);
   return (
     <div>
-      <Table columns={columns} rows={[{ id: 1, name: "raed" }]} />
+      <RawAutocomplete
+        value={value}
+        options={options}
+        multiple={true}
+        getUniqueValue={(opt) => opt.id}
+        getOptionLabel={(opt) => opt.name}
+        getInputLabel={(opts) =>
+          [...opts.values()].map((opt) => opt.name).toString()
+        }
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
+      />
     </div>
   );
 }

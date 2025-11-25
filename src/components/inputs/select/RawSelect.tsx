@@ -1,16 +1,17 @@
-import { type ReactNode } from "react";
 import ArrowDown from "../../../assets/icons/arrow-down.svg?react";
 import Option, { type OptionProps } from "./Option";
 import Tooltip, { type TooltipProps } from "src/components/Tooltip";
 import { cn } from "src/utils/cn";
 import useRawSelectUtils, {
+  type OptionType,
   type RawSelectMap,
   type UseRawSelectUtilsOptions,
 } from "./hooks/useRawSelectUtils";
 
-export type RawSelectProps<
-  TOption extends string | number | Record<string | number, any>
-> = Omit<TooltipProps, "title" | "onChange" | "onClick"> &
+export type RawSelectProps<TOption extends OptionType> = Omit<
+  TooltipProps,
+  "title" | "onChange" | "onClick"
+> &
   Partial<Pick<TooltipProps, "title">> &
   UseRawSelectUtilsOptions<TOption> & {
     options: TOption[];
@@ -23,14 +24,12 @@ export type RawSelectProps<
 
     enableTooltip?: boolean;
 
-    getOptionLabel?: (option: TOption) => ReactNode;
+    getOptionLabel?: (option: TOption) => string;
 
     getOptionProps?: (option: TOption, i: number) => Partial<OptionProps>;
   };
 
-function RawSelect<
-  TOption extends string | number | Record<string | number, any>
->({
+function RawSelect<TOption extends OptionType>({
   className,
   onClick = () => {},
   onChange,
@@ -40,12 +39,11 @@ function RawSelect<
   disabled,
   inputProps = {},
   arrowDownProps = {},
-  multiple = false,
+  multiple,
   value: externalValue,
   enableTooltip = true,
   getUniqueValue = () => "",
   getInputLabel = () => "",
-  getInputLabels = () => "",
   getOptionLabel = () => "",
   getOptionProps = () => ({}),
   ...props
@@ -58,13 +56,12 @@ function RawSelect<
     tooltipRef,
     handleClick,
     openDrop,
-  } = useRawSelectUtils<TOption>({
+  } = useRawSelectUtils({
     name,
     disabled,
     getUniqueValue,
     onClick,
     getInputLabel,
-    getInputLabels,
     onChange,
     value: externalValue,
     multiple,

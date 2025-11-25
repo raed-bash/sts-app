@@ -1,28 +1,34 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useRef, useState } from "react";
 import useFocusout from "src/hooks/useFocusout";
 import { EventTarget } from "src/utils/EventTarget";
 import type { OptionProps } from "../Option";
 
 const OpenSelectStatus = ["enter", "space", "arrowdown", "arrowup"];
 
+export type OptionType = string | number | Record<string | number, any>;
+
 export type UniqueValue = string | number;
 
 export type RawSelectMap<TOption> = Map<UniqueValue, TOption>;
 
 export type MultiSelectProps<TOption> = {
-  multiple?: true;
+  multiple: true;
 
-  onChange?: (e: EventTarget<RawSelectMap<TOption>>) => void;
+  onChange: (e: EventTarget<RawSelectMap<TOption>>) => void;
 
   value?: RawSelectMap<TOption>;
+
+  getInputLabel: (option: Map<UniqueValue, TOption>) => string | number;
 };
 
 export type SignleSelectProps<TOption> = {
-  multiple?: false;
+  multiple: false;
 
-  onChange?: (e: EventTarget<TOption>) => void;
+  onChange: (e: EventTarget<TOption>) => void;
 
   value?: TOption;
+
+  getInputLabel: (option: TOption) => string | number;
 };
 
 export type UseRawSelectUtilsOptions<TOption> = (
@@ -36,23 +42,11 @@ export type UseRawSelectUtilsOptions<TOption> = (
   getUniqueValue?: (option: TOption) => UniqueValue;
 
   onClick?: (e?: React.MouseEvent<HTMLDivElement>) => void;
-
-  /**
-   * for multiple
-   */
-  getInputLabels?: (option: Map<UniqueValue, TOption>) => string | number;
-  /**
-   * for single select
-   */
-  getInputLabel?: (option: TOption) => string | number;
 };
 
-export default function useRawSelectUtils<
-  TOption extends string | number | Record<string | number, any>
->({
-  onChange = () => {},
-  getInputLabel = () => "",
-  getInputLabels = () => "",
+export default function useRawSelectUtils<TOption extends OptionType>({
+  onChange,
+  getInputLabel,
   getUniqueValue = () => "",
   onClick = () => {},
   value: externalValue,
@@ -60,10 +54,14 @@ export default function useRawSelectUtils<
   name,
   disabled,
 }: UseRawSelectUtilsOptions<TOption>) {
-  const inputLabel: ReactNode = externalValue
-    ? multiple
-      ? getInputLabels(externalValue as Map<UniqueValue, TOption>)
-      : getInputLabel(externalValue as TOption)
+  const inputLabel: string | number = externalValue
+    ? (() => {
+        if (multiple) {
+          return getInputLabel(externalValue);
+        } else {
+          return getInputLabel(externalValue);
+        }
+      })()
     : "";
 
   const [openDrop, setOpenDrop] = useState<boolean>(false);
@@ -104,9 +102,9 @@ export default function useRawSelectUtils<
         externalValueMap.set(uniqueValue, value);
       }
 
-      onChange(new EventTarget(name, multiple ? externalValueMap : value));
+      onChange(new EventTarget(name, externalValueMap));
     } else {
-      onChange(new EventTarget(name, value));
+      onChange(new EventTarget(name, value as TOption));
 
       handleCloseDrop();
 
@@ -122,7 +120,9 @@ export default function useRawSelectUtils<
     if (OpenSelectStatus.includes(code)) {
       e.preventDefault();
       handleClick();
+      return true;
     }
+    return false;
   };
 
   const handleOptionsKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -132,7 +132,7 @@ export default function useRawSelectUtils<
       "[data-index]"
     ) as HTMLElement | null;
 
-    if (!option) return;
+    if (!option) return false;
 
     const index = Number(option.dataset.index);
 
@@ -162,6 +162,7 @@ export default function useRawSelectUtils<
         break;
 
       default:
+        return false;
     }
   };
 
@@ -175,5 +176,6 @@ export default function useRawSelectUtils<
     inputLabel,
     tooltipRef,
     openDrop,
+    handleOpenDrop,
   };
 }

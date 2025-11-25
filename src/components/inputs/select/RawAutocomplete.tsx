@@ -1,314 +1,168 @@
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { twMerge } from "tailwind-merge";
-import { ReactComponent as ArrowDown } from "../../assets/icons/arrow-down.svg";
-import { EventTarget } from "../../utils/EventTarget";
-import ParentOption from "./select/Option";
+import { useRef, useState, type ReactNode } from "react";
+import ArrowDown from "../../../assets/icons/arrow-down.svg?react";
+import { EventTarget } from "../../../utils/EventTarget";
+import Option, { type OptionProps } from "./Option";
+import useRawSelectUtils, {
+  type OptionType,
+  type RawSelectMap,
+  type UseRawSelectUtilsOptions,
+} from "./hooks/useRawSelectUtils";
+import { cn } from "src/utils/cn";
+import Tooltip, { type TooltipProps } from "src/components/Tooltip";
+import useFocusout from "src/hooks/useFocusout";
 
-const openSelectStatus = ["enter", "space", "arrowdown", "arrowup"];
+export type RawAutocomplete<TOption extends OptionType> = Omit<
+  TooltipProps,
+  "title" | "onChange" | "onClick"
+> &
+  Partial<Pick<TooltipProps, "title">> &
+  UseRawSelectUtilsOptions<TOption> & {
+    options: (TOption & { helperElement?: true; content?: () => ReactNode })[];
 
-/**
- * @typedef utils
- * @property {object} value
- * @property {React.HTMLAttributes<HTMLDivElement>} optionsContainer
- */
+    optionsContainer?: React.HTMLAttributes<HTMLDivElement>;
 
-/**
- * @typedef rawSelectProps
- * @type {React.SelectHTMLAttributes<HTMLSelectElement> & utils}
- */
+    arrowDownProps?: React.SVGProps<SVGSVGElement>;
 
-/**
- * @param {rawSelectProps} props
- */
-function RawAutocomplete({
+    inputProps?: React.HTMLAttributes<HTMLDivElement>;
+
+    enableTooltip?: boolean;
+
+    getOptionLabel?: (option: TOption) => string;
+
+    getOptionProps?: (option: TOption, i: number) => Partial<OptionProps>;
+
+    onInputChange?: (e: EventTarget) => string;
+
+    placeholder?: string;
+    /**
+     * @default false
+     */
+    freeSolo?: boolean;
+    /**
+     * @default true
+     */
+    localFilter?: boolean;
+  };
+
+function RawAutocomplete<TOption extends OptionType>({
   className = "",
-  onBlur = () => {},
   onClick = () => {},
-  onChange = () => {},
-  onInputChange = () => {},
+  onChange,
+  onInputChange = () => "",
   name,
   value: externalValue,
   optionsContainer = { className: "" },
   options: externalOptions = [],
   disabled,
-  getOptionLabel = (option) => option,
-  getValue = (value) => value,
-  getInputLabel = (label) => label,
+  getOptionLabel = () => "",
+  getInputLabel = () => "",
   getOptionProps = () => ({}),
-  getUniqueValue = (option) => option,
-  freeSolo,
+  getUniqueValue = () => "",
+  freeSolo = false,
   localFilter = true,
   placeholder,
   arrowDownProps = {},
+  multiple,
+  enableTooltip = true,
   ...props
-}) {
-  const [openDrop, setOpenDrop] = useState(false);
-  const [options, setOptions] = useState({});
-  const [value, setValue] = useState({});
+}: RawAutocomplete<TOption>) {
+  const {
+    handleOptionsKeyDown,
+    handleSelectKeyDown,
+    handleSelectValue,
+    inputLabel,
+    tooltipRef,
+    handleClick,
+    openDrop,
+    handleOpenDrop,
+  } = useRawSelectUtils<TOption>({
+    name,
+    disabled,
+    getUniqueValue,
+    onClick,
+    getInputLabel,
+    onChange,
+    value: externalValue,
+    multiple,
+  } as any);
+
   const [valueSearch, setValueSearch] = useState("");
   const inputRef = useRef(null);
-  const selectRef = useRef(null);
-  const optionsContainerRef = useRef(null);
+  const optionsContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleOpenDrop = useCallback(() => {
-    setOpenDrop(true);
-  }, []);
+  const handleValueSearch = (value: string) => {
+    setValueSearch(value);
+    onInputChange(new EventTarget(name, value));
+  };
 
-  const handleCloseDrop = useCallback(() => {
-    setOpenDrop(false);
-  }, []);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return;
+    const value = e.target.value;
 
-  const handleClick = useCallback(
-    (e) => {
-      if (disabled) return;
-
-      if (!openDrop) {
-        handleOpenDrop();
-      }
-
-      onClick(e);
-    },
-    [onClick, openDrop, handleOpenDrop, disabled]
-  );
-
-  const handleValue = useCallback((value) => {
-    setValue(value);
-  }, []);
-
-  const handleChange = useCallback(
-    (option) => {
-      onChange(new EventTarget(name, option));
-    },
-    [name, onChange]
-  );
-
-  const handleSelectValue = useCallback(
-    ({ option }) => {
-      handleChange(option);
-
-      handleCloseDrop();
-
-      inputRef.current.focus();
-
-      setValueSearch("");
-    },
-    [handleCloseDrop, handleChange]
-  );
-
-  const handleSelectKeyDown = useCallback(
-    (e) => {
-      const code = e.code.toLowerCase();
-      if (openSelectStatus.includes(code)) {
-        if (code !== "space") {
-          e.preventDefault();
-        }
-
-        handleClick();
-
-        return true;
-      }
-
-      return false;
-    },
-    [handleClick]
-  );
-
-  const handleOptionsKeyDown = useCallback(
-    (e) => {
-      const currentTarget = e.currentTarget;
-      const currentOption = e.target;
-      switch (e.code.toLowerCase()) {
-        case "arrowdown":
-          const nextOptionIndex = currentTarget.childNodes.item(
-            +currentOption.ariaRowIndex + 1
-          );
-
-          if (nextOptionIndex) {
-            nextOptionIndex.focus();
-          } else {
-            currentTarget.firstChild.focus();
-          }
-          break;
-        case "arrowup":
-          const previousOptionIndex = currentTarget.childNodes.item(
-            +currentOption.ariaRowIndex - 1
-          );
-
-          if (previousOptionIndex) {
-            previousOptionIndex.focus();
-          } else {
-            currentTarget.lastChild.focus();
-          }
-          break;
-        case "escape":
-          inputRef.current.focus();
-          handleCloseDrop();
-
-          break;
-        default:
-          return false;
-      }
-    },
-    [handleCloseDrop]
-  );
-
-  // Load selected value
-
-  const refreshOptions = useCallback(
-    (externalOptions) => {
-      setOptions(
-        Object.fromEntries(
-          externalOptions.map((option) => [getUniqueValue(option), option])
-        )
-      );
-    },
-    [setOptions, getUniqueValue]
-  );
-
-  const handleValueSearch = useCallback(
-    (value) => {
-      setValueSearch(value);
-      onInputChange(new EventTarget(name, value));
-    },
-    [name, onInputChange]
-  );
-
-  const handleInputChange = useCallback(
-    (e) => {
-      if (disabled) return;
-      const value = e.target.value;
-
-      if (!openDrop) {
-        handleOpenDrop();
-      }
-
-      if (!value) {
-        handleChange({});
-        handleValue({});
-      }
-
-      handleValueSearch(value);
-    },
-    [
-      openDrop,
-      handleChange,
-      handleOpenDrop,
-      handleValue,
-      handleValueSearch,
-      disabled,
-    ]
-  );
-
-  const handleInputKeyDown = useCallback(
-    (e) => {
-      if (handleSelectKeyDown(e)) {
-        if (e.code.toLowerCase() !== "space") {
-          if (optionsContainerRef.current) {
-            optionsContainerRef.current?.firstChild?.focus();
-          }
-        }
-      }
-    },
-    [handleSelectKeyDown]
-  );
-
-  const handleOptionsContainerKeyDown = useCallback(
-    (e) => {
-      if (handleOptionsKeyDown(e) === false) {
-        if (inputRef.current) {
-          inputRef.current.focus();
-        }
-      }
-    },
-    [handleOptionsKeyDown]
-  );
-
-  useEffect(() => {
-    if (getUniqueValue(externalValue) !== getUniqueValue(value)) {
-      const selectedOption = options[getUniqueValue(externalValue)];
-
-      // if (selectedOption) {
-      handleValue(selectedOption || externalValue);
-      // }
+    if (!openDrop) {
+      handleOpenDrop();
     }
-  }, [externalValue, getUniqueValue, handleValue, value, options]);
 
-  // Load children options
-  useEffect(() => {
-    if (externalOptions) {
-      refreshOptions(externalOptions);
+    if (!value) {
+      if (multiple) {
+        onChange(new EventTarget(name, new Map()));
+      } else {
+        onChange(new EventTarget(name));
+      }
     }
-  }, [externalOptions, refreshOptions]);
 
-  useEffect(() => {
-    /**
-     * @param {MouseEvent} e
-     */
-    const handleMouseClickOutside = (e) => {
-      if (selectRef.current) {
-        if (!selectRef.current.contains(e.target)) {
-          handleCloseDrop();
+    handleValueSearch(value);
+  };
 
-          if (!freeSolo) {
-            handleValueSearch("");
-          }
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (handleSelectKeyDown(e)) {
+      if (e.code.toLowerCase() !== "space") {
+        if (optionsContainerRef.current) {
+          (optionsContainerRef.current.firstChild as HTMLElement)?.focus();
         }
       }
-    };
+    }
+  };
 
-    document.addEventListener("mousedown", handleMouseClickOutside);
+  const handleOptionsContainerKeyDown = (
+    e: React.KeyboardEvent<HTMLDivElement>
+  ) => {
+    if (handleOptionsKeyDown(e) === false) {
+      if (inputRef.current) {
+        (inputRef.current as HTMLElement).focus();
+      }
+    }
+  };
 
-    return () => {
-      document.removeEventListener("mousedown", handleMouseClickOutside);
-    };
-  }, [handleCloseDrop, freeSolo, handleValueSearch]);
+  useFocusout(tooltipRef, () => {
+    if (!freeSolo) {
+      handleValueSearch("");
+    }
+  });
 
-  const filteredOptions = useMemo(
-    () =>
-      localFilter
-        ? externalOptions.filter(
-            (option) =>
-              option?.helperElement ||
-              getOptionLabel(option)
-                .toLowerCase()
-                .includes(valueSearch.toLowerCase())
-          )
-        : externalOptions,
-    [externalOptions, valueSearch, getOptionLabel, localFilter]
-  );
-
-  const containerClassNameMemo = useMemo(
-    () =>
-      twMerge(
-        `border-[1px] border-black ${
-          disabled ? `opacity-60` : `focus:border-[2px]`
-        } h-[35px] rounded-md relative w-max select-none `,
-        className
-      ),
-    [className, disabled]
-  );
-
-  const optionsContainerClassNameMemo = useMemo(
-    () =>
-      twMerge(
-        "max-h-64 absolute z-50 w-full overflow-y-auto overflow-x-hidden bg-white border-[1px] border-black",
-        optionsContainer.className
-      ),
-    [optionsContainer.className]
-  );
+  const filteredOptions = localFilter
+    ? externalOptions.filter(
+        (option) =>
+          option?.helperElement ||
+          getOptionLabel(option)
+            .toLowerCase()
+            .includes(valueSearch.toLowerCase())
+      )
+    : externalOptions;
 
   return (
-    <div
-      className={containerClassNameMemo}
-      ref={selectRef}
+    <Tooltip
+      className={cn(
+        `border border-black h-12 relative select-none w-full`,
+        disabled ? `opacity-60` : `focus:border-2`,
+        className
+      )}
+      ref={tooltipRef}
+      tabIndex={disabled ? -1 : 0}
       onClick={handleClick}
+      onKeyDown={handleSelectKeyDown}
+      title={enableTooltip ? inputLabel : ""}
+      placement={openDrop ? "top" : "bottom"}
       {...props}
     >
       <div className="flex justify-between items-center h-full pe-1">
@@ -317,7 +171,7 @@ function RawAutocomplete({
           type="text"
           ref={inputRef}
           onChange={handleInputChange}
-          value={valueSearch || getInputLabel(value) || ""}
+          value={valueSearch || inputLabel || ""}
           onKeyDown={handleInputKeyDown}
           placeholder={placeholder}
           disabled={disabled}
@@ -329,35 +183,54 @@ function RawAutocomplete({
           onKeyDown={handleOptionsContainerKeyDown}
           ref={optionsContainerRef}
           {...optionsContainer}
-          className={optionsContainerClassNameMemo}
+          className={cn(
+            "max-h-64 absolute z-50 w-full overflow-y-auto overflow-x-hidden bg-white border border-black",
+            optionsContainer.className
+          )}
         >
           {filteredOptions.length ? (
             filteredOptions.map((option, i) => {
-              if (option.helperElement) return option.content();
+              if (option.helperElement)
+                return option.content ? option.content() : "";
 
-              const selected = getUniqueValue(option) === getUniqueValue(value);
+              let selected: boolean = false;
+
+              const optionUniqueValue = getUniqueValue(option);
+
+              if (externalValue) {
+                if (multiple) {
+                  selected = (externalValue as RawSelectMap<TOption>).has(
+                    optionUniqueValue
+                  );
+                } else {
+                  selected =
+                    optionUniqueValue ===
+                    getUniqueValue(externalValue as TOption);
+                }
+              }
 
               return (
-                <ParentOption
-                  className={`${selected ? "text-white" : "text-black"}`}
+                <Option
                   key={getUniqueValue(option)}
-                  {...getOptionProps(option, i)}
-                  i={i}
+                  className={cn(selected ? "text-white" : "text-black")}
                   onSelectValue={handleSelectValue}
-                  option={option}
+                  value={option}
                   selected={selected}
+                  data-index={i}
+                  multiple={multiple}
+                  {...getOptionProps(option, i)}
                 >
                   {getOptionLabel(option)}
-                </ParentOption>
+                </Option>
               );
             })
           ) : (
-            <ParentOption disabled>No options</ParentOption>
+            <Option disabled>No options</Option>
           )}
         </div>
       )}
-    </div>
+    </Tooltip>
   );
 }
 
-export default memo(RawAutocomplete);
+export default RawAutocomplete;
