@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { forwardRef, useRef, useState, type ForwardedRef } from "react";
 import { cn } from "src/utils/cn";
 export type InputIconProps = React.InputHTMLAttributes<HTMLInputElement> & {
   ref?: HTMLInputElement | null;
@@ -20,18 +20,21 @@ export type InputIconProps = React.InputHTMLAttributes<HTMLInputElement> & {
   iconClassName?: string;
 };
 
-function InputIcon({
-  className,
-  helperText = "",
-  helperTextProps = {},
-  containerProps = {},
-  inputFrameProps = {},
-  error,
-  StartIcon,
-  EndIcon,
-  iconClassName,
-  ...props
-}: InputIconProps) {
+function InputIcon(
+  {
+    className,
+    helperText = "",
+    helperTextProps = {},
+    containerProps = {},
+    inputFrameProps = {},
+    error,
+    StartIcon,
+    EndIcon,
+    iconClassName,
+    ...props
+  }: InputIconProps,
+  ref: ForwardedRef<HTMLInputElement>
+) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [focus, setFocus] = useState(false);
 
@@ -41,10 +44,13 @@ function InputIcon({
     iconClassName
   );
 
-  const handleInputRef = useCallback((ref: HTMLInputElement | null) => {
-    inputRef.current = ref;
-    props.ref = ref;
-  }, []);
+  const handleInputRef = (el: HTMLInputElement | null) => {
+    if (el) {
+      inputRef.current = el;
+      if (typeof ref === "function") ref(el);
+      else if (ref) ref.current = el;
+    }
+  };
 
   return (
     <div
@@ -110,4 +116,4 @@ function InputIcon({
   );
 }
 
-export default InputIcon;
+export default forwardRef(InputIcon);
