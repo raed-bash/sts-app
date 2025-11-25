@@ -1,19 +1,20 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "./useDebounce";
 
-export default function useDebouncedValue(value, delay, onChange) {
+export default function useDebouncedValue<T>(
+  value: T,
+  delay: number,
+  onChange?: (value: T) => void
+) {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
-  const handleDebounceValueChange = useCallback(
-    (...args) => {
-      if (onChange) {
-        onChange(...args);
-      }
+  const handleDebounceValueChange = (value: T) => {
+    if (onChange) {
+      onChange(value);
+    }
 
-      setDebouncedValue(...args);
-    },
-    [onChange]
-  );
+    setDebouncedValue(value);
+  };
 
   const setDebouncedValueDebounce = useDebounce(
     handleDebounceValueChange,
