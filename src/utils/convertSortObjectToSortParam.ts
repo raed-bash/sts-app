@@ -1,5 +1,5 @@
-export const convertSortsObjectToSortParams = (sorts) =>
+export const convertSortsObjectToSortParams = (sorts: object) =>
   Object.entries(sorts)
-    .filter(([_, value]) => ["DESC", "ASC"].includes(value))
+    .filter(([, value]) => ["DESC", "ASC"].includes(value))
     .map(([key, value]) => `${value === "DESC" ? "-" : ""}${key}`)
     .toString();

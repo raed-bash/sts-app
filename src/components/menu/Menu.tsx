@@ -1,21 +1,24 @@
-import React, { memo, useCallback, useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import Tooltip from "../Tooltip";
-import { ReactComponent as MoreIcon } from "src/assets/icons/more.svg";
+import MoreIcon from "src/assets/icons/more.svg?react";
 import useFocusout from "src/hooks/useFocusout";
 import IconButton from "../buttons/IconButton";
+import { cn } from "src/utils/cn";
 
-function Menu({ children }) {
+export type MenuProps = { children: ReactNode };
+
+function Menu({ children }: MenuProps) {
   const [openMenu, setOpenMenu] = useState(false);
 
   const menuRef = useRef(null);
 
-  const handleOpenMenu = useCallback(() => {
+  const handleOpenMenu = () => {
     setOpenMenu(true);
-  }, []);
+  };
 
-  const handleCloseMenu = useCallback(() => {
+  const handleCloseMenu = () => {
     setOpenMenu(false);
-  }, []);
+  };
 
   useFocusout(menuRef, handleCloseMenu);
 
@@ -27,9 +30,11 @@ function Menu({ children }) {
         </IconButton>
       </Tooltip>
       <div
-        className={`${
-          openMenu ? "opacity-100 shadow-md " : "opacity-0 hidden "
-        } duration-75 absolute left-0 py-2 max-h-96 px-3 overflow-auto min-w-max bg-white rounded-md z-[10000] flex flex-col gap-3  `}
+        className={cn(
+          openMenu ? "opacity-100 shadow-md " : "opacity-0 hidden ",
+          `duration-75 absolute left-0 py-2 max-h-96 px-3 overflow-auto
+           min-w-max bg-white rounded-md z-10000 flex flex-col gap-3`
+        )}
         ref={menuRef}
       >
         {children}
@@ -38,4 +43,4 @@ function Menu({ children }) {
   );
 }
 
-export default memo(Menu);
+export default Menu;

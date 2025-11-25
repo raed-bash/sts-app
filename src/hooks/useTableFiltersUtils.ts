@@ -22,11 +22,9 @@ export default function useTableFiltersUtils({
 }) {
   const paginationUtils = usePagination(name, defaultPage, { cashing });
 
-  const setPage_1 = useCallback(() => {
+  const setPage_1 = () => {
     paginationUtils.setPage(1);
-
-    // eslint-disable-next-line
-  }, []);
+  };
 
   const filtersUtils = useFilters(name, defaultFilters, setPage_1, { cashing });
 

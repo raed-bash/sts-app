@@ -1,29 +1,18 @@
-import { memo, useMemo } from "react";
-import { twMerge } from "tailwind-merge";
-/**
- * @typedef utils
- * @property
- */
-/**
- * @typedef containerProps
- * @type {React.HTMLAttributes<HTMLDivElement> & utils}
- */
+import type React from "react";
+import { cn } from "src/utils/cn";
 
-/**
- * @param {containerProps} props
- */
-function Container({ className, children, ...props }) {
-  const classNameMemo = useMemo(
-    () =>
-      twMerge("bg-secondary-main  flex flex-col justify-between", className),
-    [className]
-  );
+export type ContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
+function Container(props: ContainerProps) {
   return (
-    <div className={classNameMemo} {...props}>
-      {children}
-    </div>
+    <div
+      {...props}
+      className={cn(
+        "bg-secondary-main  flex flex-col justify-between",
+        props.className
+      )}
+    />
   );
 }
 
-export default memo(Container);
+export default Container;

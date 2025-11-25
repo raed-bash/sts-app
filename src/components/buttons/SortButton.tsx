@@ -1,14 +1,19 @@
-import { ReactComponent as TriangleDownIcon } from "src/assets/icons/triangle-down.svg";
+import TriangleDownIcon from "src/assets/icons/triangle-down.svg?react";
 import { cn } from "src/utils/cn";
 
 export type SortButtonStatus = "ASC" | "DESC" | null;
 
-export type SortButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+export type SortButtonEventHandler = (
+  sortStatus: SortButtonStatus,
+  e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+) => void;
+
+export type SortButtonProps = Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  "onClick"
+> & {
   sortStatus: SortButtonStatus;
-  onClick: (
-    sortStatus: SortButtonStatus | undefined,
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => void;
+  onClick?: SortButtonEventHandler;
 };
 
 function SortButton({
@@ -37,7 +42,7 @@ function SortButton({
       case "ASC":
         return "DESC";
       case "DESC":
-        return;
+        return null;
       default:
         return "ASC";
     }
@@ -46,7 +51,9 @@ function SortButton({
   const handleSortClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    onClick(handleSortStatus(), e);
+    if (onClick) {
+      onClick(handleSortStatus(), e);
+    }
   };
 
   return (

@@ -1,25 +1,35 @@
-import React, { memo, useCallback, useMemo, useState } from "react";
+import React, { useState } from "react";
 import Menu from "../menu/Menu";
 import InputIcon from "../inputs/InputIcon";
 import Button from "../buttons/Button";
-import { ReactComponent as SearchIcon } from "src/assets/icons/search.svg";
+import SearchIcon from "src/assets/icons/search.svg?react";
+import type { TableColumn } from "./Table";
+
+export type MenuHideColumnsProps = {
+  columns: TableColumn[];
+  onReset: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  handleToggleColumns: (
+    column: TableColumn
+  ) => React.MouseEventHandler<HTMLDivElement> | undefined;
+  hiddenColumns: Set<TableColumn["name"]>;
+};
 
 function MenuHideColumns({
   columns,
   onReset,
   handleToggleColumns,
   hiddenColumns,
-}) {
+}: MenuHideColumnsProps) {
   const [searchMenuCols, setSearchMenuCols] = useState("");
 
-  const handleSearchChange = useCallback((e) => {
+  const handleSearchChange:
+    | React.ChangeEventHandler<HTMLInputElement>
+    | undefined = (e) => {
     setSearchMenuCols(e.target.value);
-  }, []);
+  };
 
-  const filteredColumns = useMemo(
-    () =>
-      columns.filter((column) => column.headerName.includes(searchMenuCols)),
-    [columns, searchMenuCols]
+  const filteredColumns = columns.filter((column) =>
+    column.headerName.includes(searchMenuCols)
   );
 
   return (
@@ -63,4 +73,4 @@ function MenuHideColumns({
   );
 }
 
-export default memo(MenuHideColumns);
+export default MenuHideColumns;

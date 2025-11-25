@@ -1,4 +1,4 @@
-export class EventTarget<T extends any> {
+export class EventTarget<T = any> {
   target!: { name?: string; value?: T; checked?: boolean };
 
   constructor(name?: string, value?: T, checked?: boolean) {

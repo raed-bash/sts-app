@@ -1,9 +1,28 @@
-import { memo, useMemo } from "react";
-import Option from "./RawSelect/Option";
-import RawSelect from "./RawSelect/RawSelect";
+import React, { useId, type ReactNode } from "react";
+import Option from "./select/Option";
+import RawSelect from "./select/RawSelect";
 import Loading from "../skeleton/Loading";
-import useSelectApi from "../../hooks/useSelectApi";
-import { twMerge } from "tailwind-merge";
+import useSelectApi, { type QueryFn } from "../../hooks/useSelectApi";
+import { cn } from "src/utils/cn";
+
+export type SelectApiProps<TData> = {
+  queryFn: QueryFn<TData>;
+
+  queryKey: readonly unknown[];
+
+  helperText?: string;
+
+  error?: boolean;
+
+  helperTextProps?: React.HTMLAttributes<HTMLParagraphElement>;
+
+  /**
+   * @default true
+   */
+  noneValue: boolean;
+
+  children?: (data: TData) => ReactNode;
+};
 
 /**
  * @callback children
@@ -24,35 +43,26 @@ import { twMerge } from "tailwind-merge";
 /**
  * @param {selectApiProps} props
  */
-function SelectApi({
-  fetchData = () => {},
+function SelectApi<TData>({
+  queryFn,
   queryKey = [],
-  children = () => {},
-  useInfiniteQueryOptions = () => {},
+  children = () => "",
   helperText,
   helperTextProps = {},
   error,
   noneValue = true,
   ...props
-}) {
+}: SelectApiProps<TData>) {
   const {
     handleScroll,
     allData,
     infiniteQueryOptions: { isFetching },
-    uniqueKeys,
-  } = useSelectApi({
-    fetchData,
+  } = useSelectApi<TData>({
+    queryFn,
     queryKey,
-    useInfiniteQueryOptions,
   });
-  const classNameMemo = useMemo(
-    () =>
-      twMerge(
-        `w-full h-[35px] ${helperText && error ? "border-danger-main" : ""}`,
-        props.className
-      ),
-    [props.className, helperText, error]
-  );
+
+  const [id1, id2] = [useId(), useId()];
 
   return (
     <div>
@@ -61,16 +71,20 @@ function SelectApi({
           onScroll: handleScroll,
         }}
         {...props}
-        className={classNameMemo}
+        className={cn(
+          `w-full h-[35px]`,
+          helperText && error ? "border-danger-main" : "",
+          props.className
+        )}
       >
-        {allData?.length &&
+        {allData.length &&
           [
-            ...(!props.multipleSelect && noneValue
+            ...(!props.multiple && noneValue
               ? [
                   {
                     info: true,
                     content: (
-                      <Option key={uniqueKeys[0] + 1} value="">
+                      <Option key={id1 + 1} value="">
                         لا شيء
                       </Option>
                     ),
@@ -85,7 +99,7 @@ function SelectApi({
                   disabled
                   value={null}
                   className="flex justify-center py-1 "
-                  key={uniqueKeys[0]}
+                  key={id1}
                 >
                   <Loading className="w-5 h-5" />
                 </Option>
@@ -94,19 +108,23 @@ function SelectApi({
                   disabled
                   value={null}
                   className="flex justify-center py-1"
-                  key={uniqueKeys[1]}
+                  key={id2}
                 >
                   لا يوجد بيانات آخرى...
                 </Option>
               ),
             },
-          ].map((data) => (data.info === true ? data.content : children(data)))}
+          ].map((data) =>
+            data.info === true ? data.content : children(data as TData)
+          )}
       </RawSelect>
       <p
         {...helperTextProps}
-        className={
-          (error && "text-red-600 ") + helperTextProps.className + " text-sm"
-        }
+        className={cn(
+          "text-sm",
+          error && "text-red-600 ",
+          helperTextProps.className
+        )}
       >
         {helperText}
       </p>
@@ -114,4 +132,4 @@ function SelectApi({
   );
 }
 
-export default memo(SelectApi);
+export default SelectApi;

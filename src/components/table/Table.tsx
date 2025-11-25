@@ -1,213 +1,148 @@
-import React, { useCallback, useMemo, useState } from "react";
-import Pagination from "../pagination/Pagination";
-import Container from "./Container";
-import Body from "./Body";
-import Head from "./Head";
+import React, { type ReactNode } from "react";
+import Pagination, { type PaginationProps } from "./Pagination";
+import Container, { type ContainerProps } from "./Container";
+import TBody, { type TBodyProps } from "./TBody";
+import THead from "./THead";
 import MenuHideColumns from "./MenuHideColumns";
-/**
- * @callback getCell
- * @param {object} row
- * @param {any} value
- */
+import type { ThProps } from "./Th";
+import type { TdProps } from "./Td";
+import type { SortButtonStatus } from "../buttons/SortButton";
+import type { TrProps } from "./Tr";
+import type { UseTableUtilsSortEventHandler } from "./hooks/useTableUtils";
+import useTableUtils from "./hooks/useTableUtils";
 
-/**
- * @typedef sortStatus
- * @type {"ASC"|"DESC"}
- */
+export interface TableColumn<Row = any> {
+  name: string;
 
-/**
- * @typedef type
- * @type {"actions"}
- */
+  headerName: string;
 
-/**
- * @typedef headerCellProps
- * @type {import('./HeaderCell').headerCellProps}
- */
+  getCell?: (value: any, row: Row) => ReactNode;
 
-/**
- * @typedef bodyCellProps
- * @type {import("./BodyCell").bodyCellProps}
- */
+  className?: string;
 
-/**
- * @typedef column
- * @type {object}
- * @property {string} name - must be unique
- * @property {string} headerName
- * @property {getCell} getCell
- * @property {string} className - (header and body) cells className
- * @property {type} type
- * @property {boolean} sort
- * @property {headerCellProps} headerCellProps - header cell props
- * @property {bodyCellProps} bodyCellProps - body cell props
- * @property {bodyCellProps|headerCellProps} props - (header and body) cells props
- * @property {boolean} hidden - default hidden
- */
-/**
- * @typedef utils
- * @property {column[]} columns
- * @property {[]} rows
- * @property {number} currentPage
- * @property {number} totalPages
- * @property {number} perPage
- * @property {number} count
- * @property {function} onPageChange
- * @property {React.HTMLAttributes<HTMLDivElement>} containerProps
- * @property {React.HTMLAttributes<HTMLTableSectionElement>} headProps
- * @property {React.HTMLAttributes<HTMLTableSectionElement>} bodyProps
- * @property {boolean} loading
- * @property {boolean} secondaryLoading
- * @property {object} sortStatuses
- * @property {(name:string, sortStatus:sortStatus)=>void} onSortChange
- * @property {(selectedRows:Set<number>)=>void} onSelectRows
- * @property {Set<number>} selectedRows
- * @property {boolean} selectable
- * @property {number} maxVisibleNeighbors - Number of neighbors to show on each side of the current page (the default: 2)
- * @property {import("./Row").rowProps} bodyRowProps
- * @property {import("./Row").rowProps} headRowProps
- * @property {headerCellProps} headerCellsProps - all header cells props
- * @property {bodyCellProps} bodyCellsProps - all body cells props
- * @property {headerCellProps} headerCheckboxCellProps
- * @property {bodyCellProps} bodyCheckboxCellProps
- * @property {headerCellProps|bodyCellProps} checkboxCellProps - all (body and header) checkbox cells props
- * @property {headerCellProps|bodyCellProps} cellsProps - all (body and header) cells props
- * @property {(hiddenColumns: Set)=>} setHiddenColumns
- * @property {Set} hiddenColumns
- * @property {boolean} hideableColumns
- */
+  type?: "actions";
 
-/**
- * @typedef tableProps
- * @type {utils}
- */
+  sort?: boolean;
 
-/**
- * @param {tableProps} props
- */
-function Table(props = { columns: [], rows: [] }) {
+  thhProps?: ThProps;
+
+  tbdProps?: TdProps;
+
+  hidden?: boolean;
+}
+
+export type TableRow<Row = any | { id: number }> = Row;
+
+export type TableSortStatuses = Record<string, SortButtonStatus>;
+
+export type TableProps<Row> = {
+  rows: TableRow<Row>[];
+
+  columns: TableColumn<Row>[];
+
+  currentPage?: number;
+
+  totalPages?: number;
+
+  perPage?: number;
+
+  count?: number;
+
+  onPageChange?: PaginationProps["onPageChange"];
+
+  maxVisibleNeighbors?: PaginationProps["maxVisibleNeighbors"];
+
+  containerProps?: ContainerProps;
+
+  theadProps?: React.HTMLAttributes<HTMLTableSectionElement>;
+
+  tbodyProps?: React.HTMLAttributes<HTMLTableSectionElement>;
+
+  loading?: boolean;
+
+  scLoading?: boolean;
+
+  sortStatuses?: TableSortStatuses;
+
+  onSortChange?: UseTableUtilsSortEventHandler;
+
+  onSelectRows?: (selectedRows: Set<number>) => void;
+
+  selectedRows?: Set<number>;
+
+  selectable?: boolean;
+  /**
+   * A table head row props; <tr></tr> element
+   */
+  thrProps?: TrProps;
+  /**
+   * A table head props; <th></th> element
+   */
+  thhsProps?: ThProps;
+
+  thCheckboxProps?: ThProps;
+  /**
+   * A table body row props; <tr></tr> element
+   */
+  tbrProps?: TBodyProps["tbrProps"];
+  /**
+   * A table body data props; <td></td> element
+   */
+  tbdsProps?: TdProps;
+
+  tdCheckboxProps?: TdProps;
+
+  setHiddenColumns?: (hiddenColumns: Set<TableColumn<Row>["name"]>) => void;
+
+  hiddenColumns?: Set<TableColumn["name"]>;
+
+  hideableColumns?: boolean;
+};
+function Table<Row>({
+  columns = [],
+  rows = [],
+  currentPage = 1,
+  onPageChange = () => {},
+  totalPages = 2,
+  perPage = 20,
+  count = 0,
+  containerProps = {},
+  tbodyProps = {},
+  theadProps = {},
+  loading,
+  scLoading,
+  sortStatuses = {},
+  onSortChange = () => {},
+  onSelectRows = () => {},
+  selectedRows = new Set(),
+  selectable = false,
+  maxVisibleNeighbors = 2,
+  tbrProps,
+  thrProps,
+  thhsProps,
+  tbdsProps,
+  thCheckboxProps,
+  tdCheckboxProps,
+  hiddenColumns = new Set(),
+  setHiddenColumns = () => {},
+  hideableColumns = false,
+}: TableProps<Row>) {
   const {
+    displayedColumns,
+    handleResetHiddenColumns,
+    handleSelectRow,
+    handleSortClick,
+    handleToggleColumns,
+    selectAll,
+  } = useTableUtils({
     columns,
+    hiddenColumns,
+    onSelectRows,
+    onSortChange,
     rows,
-    currentPage,
-    onPageChange,
-    totalPages,
-    perPage = 20,
-    count,
-    containerProps = { className: "" },
-    headProps = { className: "" },
-    bodyProps = { className: "" },
-    loading,
-    secondaryLoading,
-    sortStatuses,
-    onSortChange = () => {},
-    onSelectRows = () => {},
     selectedRows,
-    selectable,
-    maxVisibleNeighbors = 2,
-    bodyRowProps,
-    headRowProps,
-    headerCellsProps,
-    bodyCellsProps,
-    headerCheckboxCellProps,
-    bodyCheckboxCellProps,
-    cellsProps,
-    checkboxCellProps,
-    hiddenColumns: hiddenColumnsExt,
-    setHiddenColumns: setHiddenColumnsExt = () => {},
-    hideableColumns = false,
-  } = props;
-
-  const handleSortClick = useCallback(
-    /**
-     * @param {column} column
-     */
-    (column) => (sortStatus) => {
-      onSortChange(column.name, sortStatus);
-    },
-    [onSortChange]
-  );
-
-  const handleSelectRow = useCallback(
-    (row) =>
-      /**
-       * @param {React.ChangeEvent<HTMLInputElement>} e
-       */
-      (e) => {
-        const name = e.target.name;
-        const checked = e.target.checked;
-
-        if (name === "selectAll") {
-          if (checked) {
-            const newSelectedRows = new Set();
-
-            rows.forEach((row) => {
-              newSelectedRows.add(row.id);
-            });
-
-            onSelectRows(newSelectedRows);
-          } else {
-            onSelectRows(new Set());
-          }
-
-          return;
-        }
-        const newSelectedRows = new Set(selectedRows);
-
-        if (checked) {
-          newSelectedRows.add(row.id);
-        } else {
-          newSelectedRows.delete(row.id);
-        }
-
-        onSelectRows(newSelectedRows);
-      },
-    [rows, onSelectRows, selectedRows]
-  );
-
-  const selectAll = rows.length ? selectedRows.size === rows.length : false;
-
-  const defaultHiddenCols = useMemo(
-    () =>
-      new Set(
-        columns.filter((column) => !column.hidden).map((column) => column.name)
-      ),
-    [columns]
-  );
-
-  const [hiddenColumns, setHiddenColumns] = useState(
-    hiddenColumnsExt || defaultHiddenCols
-  );
-
-  const handleResetHiddenColumns = useCallback(() => {
-    setHiddenColumns(defaultHiddenCols);
-    setHiddenColumnsExt(defaultHiddenCols);
-  }, [defaultHiddenCols, setHiddenColumnsExt]);
-
-  const displayedColumns = useMemo(
-    () =>
-      columns
-        .filter((column) => hiddenColumns.has(column.name))
-        .map((column) => column),
-    [columns, hiddenColumns]
-  );
-
-  const handleToggleColumns = useCallback(
-    (column) => () => {
-      const newHiddenColumns = new Set(hiddenColumns);
-
-      if (hiddenColumns.has(column.name)) {
-        newHiddenColumns.delete(column.name);
-      } else {
-        newHiddenColumns.add(column.name);
-      }
-
-      setHiddenColumns(newHiddenColumns);
-
-      setHiddenColumnsExt(newHiddenColumns);
-    },
-    [hiddenColumns, setHiddenColumns, setHiddenColumnsExt]
-  );
+    setHiddenColumns,
+  });
 
   return (
     <Container {...containerProps}>
@@ -223,34 +158,30 @@ function Table(props = { columns: [], rows: [] }) {
       )}
       <div className="overflow-x-auto w-full max-w-full">
         <table className="w-full min-w-max table-auto border-collapse relative">
-          <Head
+          <THead
             columns={displayedColumns}
-            handleSelectRow={handleSelectRow}
-            handleSortClick={handleSortClick}
+            onSelectRow={handleSelectRow}
+            onSortClick={handleSortClick}
             selectAll={selectAll}
             sortStatuses={sortStatuses}
             selectable={selectable}
-            headRowProps={headRowProps}
-            headerCellsProps={headerCellsProps}
-            headerCheckboxCellProps={headerCheckboxCellProps}
-            cellsProps={cellsProps}
-            checkboxCellProps={checkboxCellProps}
-            {...headProps}
+            thrProps={thrProps}
+            thhsProps={thhsProps}
+            thCheckboxProps={thCheckboxProps}
+            {...tbodyProps}
           />
-          <Body
-            secondaryLoading={secondaryLoading}
+          <TBody
+            scLoading={scLoading}
             columns={displayedColumns}
-            bodyRowProps={bodyRowProps}
-            handleSelectRow={handleSelectRow}
+            tbrProps={tbrProps}
+            onSelectRow={handleSelectRow}
             loading={loading}
             rows={rows}
             selectedRows={selectedRows}
             selectable={selectable}
-            bodyCellsProps={bodyCellsProps}
-            bodyCheckboxCellProps={bodyCheckboxCellProps}
-            cellsProps={cellsProps}
-            checkboxCellProps={checkboxCellProps}
-            {...bodyProps}
+            tbdsProps={tbdsProps}
+            tdCheckboxProps={tdCheckboxProps}
+            {...theadProps}
           />
         </table>
       </div>

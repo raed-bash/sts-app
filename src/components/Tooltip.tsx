@@ -1,4 +1,4 @@
-import React, { useState, type ReactNode } from "react";
+import React, { useState, type ReactNode, type Ref } from "react";
 import { cn } from "src/utils/cn";
 
 export const TooltipPlacementStyle = {
@@ -10,7 +10,10 @@ export const TooltipPlacementStyle = {
 
 export type TooltipPlacement = keyof typeof TooltipPlacementStyle;
 
-export type TooltipProps = React.HTMLAttributes<HTMLDivElement> & {
+export type TooltipProps = Omit<
+  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+  "title"
+> & {
   title?: ReactNode;
   placement?: TooltipPlacement;
   tooltipProps?: React.HTMLAttributes<HTMLDivElement>;

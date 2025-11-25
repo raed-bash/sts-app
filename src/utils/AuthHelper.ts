@@ -7,12 +7,12 @@ export class AuthHelper {
       const accessToken = LocalStorageHelper.getItem(keyStore);
 
       return accessToken;
-    } catch (err) {
+    } catch {
       return null;
     }
   }
 
-  static setAccessToken(token) {
+  static setAccessToken(token: string) {
     LocalStorageHelper.setItem(keyStore, token);
   }
 

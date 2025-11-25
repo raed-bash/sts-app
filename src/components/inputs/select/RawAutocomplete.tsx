@@ -9,7 +9,7 @@ import React, {
 import { twMerge } from "tailwind-merge";
 import { ReactComponent as ArrowDown } from "../../assets/icons/arrow-down.svg";
 import { EventTarget } from "../../utils/EventTarget";
-import ParentOption from "./RawSelect/ParentOption";
+import ParentOption from "./select/Option";
 
 const openSelectStatus = ["enter", "space", "arrowdown", "arrowup"];
 
