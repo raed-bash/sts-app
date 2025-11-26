@@ -1,53 +1,58 @@
-import { memo, useMemo } from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "src/utils/cn";
 
-function TextArea(props = { className: "", helperText: "" }) {
-  const {
-    newClassName,
-    helperTextProps = { className: "" },
-    containerProps = { className: "" },
+export type TextAreaProps = React.DetailedHTMLProps<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  HTMLTextAreaElement
+> & {
+  helperText?: string;
+
+  error?: boolean;
+
+  helperTextProps?: React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLParagraphElement>,
+    HTMLParagraphElement
+  >;
+
+  containerProps?: React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  >;
+};
+
+function TextArea(
+  {
+    helperTextProps = {},
+    containerProps = {},
     error,
     helperText,
-    ...otherProps
-  } = props;
-  const { newClassNameContainer, ...otherContainerProps } = containerProps;
-  const { newClassNameHelperText, ...otherHelperTextProps } = helperTextProps;
-  const classNameMemo = useMemo(
-    () =>
-      twMerge(
-        ` min-h-[100px] w-full rounded-lg indent-1 border-black p-1 border-[1px] ${
-          props.helperText && error ? "border-danger-main" : ""
-        }`,
-        `${otherProps.className || ""} ${props.disabled ? "opacity-60" : ""}`
-      ),
-    [props.helperText, otherProps.className, props.disabled, error]
-  );
-
+    ...props
+  }: TextAreaProps = { helperText: "" }
+) {
   return (
     <div
-      {...otherContainerProps}
-      className={otherContainerProps.className + " w-full"}
-      {...(newClassNameContainer ? { className: newClassNameContainer } : {})}
+      {...containerProps}
+      className={cn(containerProps.className, " w-full")}
     >
       <textarea
-        {...otherProps}
-        className={classNameMemo}
-        {...(newClassName ? { className: newClassName } : {})}
+        {...props}
+        className={cn(
+          `min-h-[100px] w-full rounded-lg indent-1 border-black p-1 border`,
+          helperText && error ? "border-danger-main" : "",
+          props.className,
+          props.disabled ? "opacity-60" : ""
+        )}
       />
       <p
-        {...otherHelperTextProps}
-        className={
-          (error && "text-red-600 ") +
-          otherHelperTextProps.className +
-          " text-sm"
-        }
-        {...(newClassNameHelperText
-          ? { className: newClassNameHelperText }
-          : {})}
+        {...helperTextProps}
+        className={cn(
+          error && "text-red-600 ",
+          helperTextProps.className,
+          "text-sm"
+        )}
       >
         {helperText}
       </p>
     </div>
   );
 }
-export default memo(TextArea);
+export default TextArea;
