@@ -1,13 +1,39 @@
 import Skeleton, { type SkeletonProps } from "../skeleton/Skeleton";
-import Input from "./Input";
-import TextArea from "./TextArea";
-import SelectApi from "./SelectApi";
-import RawSelect from "./select/RawSelect";
-import AutocompleteApi from "./AutocompleteApi";
+import Input, { type InputProps } from "./Input";
+import TextArea, { type TextAreaProps } from "./TextArea";
+import RawSelect, { type RawSelectProps } from "./select/RawSelect";
 import { cn } from "src/utils/cn";
-import type { ReactNode } from "react";
+import type { HTMLInputTypeAttribute, ReactNode } from "react";
+import type { OptionType } from "./select/hooks/useRawSelectUtils";
+import RawAutocomplete, {
+  type RawAutocompleteProps,
+} from "./select/RawAutocomplete";
+import type { OnlyStringLiterals } from "src/types/utils";
 
-export type InputPlusProps = React.InputHTMLAttributes<HTMLInputElement> & {
+export type InputPropsWithType = InputProps & {
+  type: OnlyStringLiterals<HTMLInputTypeAttribute>;
+};
+
+export type SelectPropsWithType<TOption extends OptionType> =
+  RawSelectProps<TOption> & {
+    type: "select";
+  };
+
+export type AutocompletePropsWithType<TOption extends OptionType> =
+  RawAutocompleteProps<TOption> & {
+    type: "autocomplete";
+  };
+
+export type TextAreaPropsWithType = TextAreaProps & {
+  type: "textarea";
+};
+
+export type InputPlusProps<TOption extends OptionType> = (
+  | InputPropsWithType
+  | SelectPropsWithType<TOption>
+  | AutocompletePropsWithType<TOption>
+  | TextAreaPropsWithType
+) & {
   title: string;
 
   titleIcon?: ReactNode;
@@ -23,25 +49,7 @@ export type InputPlusProps = React.InputHTMLAttributes<HTMLInputElement> & {
   id?: string;
 };
 
-/**
- * @typedef utils
- * @property {string} title
- * @property {React.JSX.Element} titleIcon
- * @property {boolean} loading
- * @property {React.HTMLAttributes<HTMLDivElement>} inputPlusContainerProps
- * @property {import("../Skeleton/Skeleton").skeletonProps} skeletonProps
- * @property {React.HTMLAttributes<HTMLDivElement>} titleProps
- */
-
-/**
- * @typedef inputPlusProps
- * @type {React.InputHTMLAttributes<HTMLInputElement> & import("./Input").utils & utils}
- */
-
-/**
- *  @param {inputPlusProps} props
- */
-function InputPlus({
+function InputPlus<TOption extends OptionType>({
   title,
   titleIcon,
   loading,
@@ -49,7 +57,7 @@ function InputPlus({
   skeletonProps = {},
   titleProps = {},
   ...props
-}: InputPlusProps) {
+}: InputPlusProps<TOption>) {
   return (
     <div
       {...inputPlusContainerProps}
@@ -67,21 +75,22 @@ function InputPlus({
       </h2>
       {loading ? (
         <Skeleton {...skeletonProps} />
-      ) : inputProps.type === "select" ? (
-        <RawSelect {...inputProps} />
-      ) : inputProps.type === "textarea" ? (
-        <TextArea {...inputProps} />
-      ) : inputProps.type === "selectApi" ? (
-        <SelectApi {...inputProps} />
-      ) : inputProps.type === "autocompleteApi" ? (
-        <AutocompleteApi {...inputProps} />
+      ) : props.type === "select" ? (
+        <RawSelect {...props} />
+      ) : props.type === "autocomplete" ? (
+        <RawAutocomplete {...props} />
+      ) : props.type === "textarea" ? (
+        <TextArea {...props} />
       ) : (
-        <Input {...inputProps} />
+        // props.type === "selectApi" ? (
+        // <SelectApi {...props} />
+        // ) : props.type === "autocompleteApi" ? (
+        // <AutocompleteApi {...props} />
+        // ) :
+        <Input {...props} />
       )}
     </div>
   );
 }
 
 export default InputPlus;
-
-export const SelectsTypes = ["select", "selectApi", "autocompleteApi"];

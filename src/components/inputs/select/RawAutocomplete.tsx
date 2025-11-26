@@ -11,7 +11,7 @@ import { cn } from "src/utils/cn";
 import Tooltip, { type TooltipProps } from "src/components/tooltip/Tooltip";
 import useFocusout from "src/hooks/useFocusout";
 
-export type RawAutocomplete<TOption extends OptionType> = Omit<
+export type RawAutocompleteProps<TOption extends OptionType> = Omit<
   TooltipProps,
   "title" | "onChange" | "onClick"
 > &
@@ -65,7 +65,7 @@ function RawAutocomplete<TOption extends OptionType>({
   multiple,
   enableTooltip = true,
   ...props
-}: RawAutocomplete<TOption>) {
+}: RawAutocompleteProps<TOption>) {
   const {
     handleOptionsKeyDown,
     handleSelectKeyDown,
