@@ -26,9 +26,9 @@ export type SignleSelectProps<TOption> = {
 
   onChange: (e: EventTarget<TOption>) => void;
 
-  value?: TOption;
-
   getInputLabel: (option: TOption) => string | number;
+
+  value?: TOption;
 };
 
 export type UseRawSelectUtilsOptions<TOption> = (
@@ -49,17 +49,17 @@ export default function useRawSelectUtils<TOption extends OptionType>({
   getInputLabel,
   getUniqueValue = () => "",
   onClick = () => {},
-  value: externalValue,
+  value,
   multiple,
   name,
   disabled,
 }: UseRawSelectUtilsOptions<TOption>) {
-  const inputLabel: string | number = externalValue
+  const inputLabel: string | number = value
     ? (() => {
         if (multiple) {
-          return getInputLabel(externalValue);
+          return getInputLabel(value);
         } else {
-          return getInputLabel(externalValue);
+          return getInputLabel(value);
         }
       })()
     : "";
@@ -87,24 +87,22 @@ export default function useRawSelectUtils<TOption extends OptionType>({
   };
 
   const handleSelectValue = (option: OptionProps) => {
-    const value = option.value;
-
     if (multiple) {
-      const externalValueMap = new Map(externalValue as RawSelectMap<TOption>);
+      const valueMap = new Map(value as RawSelectMap<TOption>);
 
-      const uniqueValue = getUniqueValue(value);
+      const uniqueValue = getUniqueValue(option.value);
 
-      const selectedValue = externalValueMap.get(uniqueValue);
+      const selectedValue = valueMap.get(uniqueValue);
 
       if (selectedValue) {
-        externalValueMap.delete(uniqueValue);
+        valueMap.delete(uniqueValue);
       } else {
-        externalValueMap.set(uniqueValue, value);
+        valueMap.set(uniqueValue, option.value);
       }
 
-      onChange(new EventTarget(name, externalValueMap));
+      onChange(new EventTarget(name, valueMap));
     } else {
-      onChange(new EventTarget(name, value as TOption));
+      onChange(new EventTarget(name, option.value as TOption));
 
       handleCloseDrop();
 
@@ -138,18 +136,23 @@ export default function useRawSelectUtils<TOption extends OptionType>({
 
     switch (e.code.toLowerCase()) {
       case "arrowdown": {
+        const nextEl = container.children[index + 1];
+
         const next =
-          container.children[index + 1] ??
-          (container.children[0] as HTMLElement);
+          nextEl?.ariaDisabled !== "true"
+            ? nextEl
+            : (container.children[0] as HTMLElement);
 
         (next as HTMLElement).focus();
+
         break;
       }
 
       case "arrowup": {
+        const prevEl = container.children[index - 1];
+
         const prev =
-          container.children[index - 1] ??
-          container.children[container.children.length - 1];
+          prevEl ?? container.children[container.children.length - 2];
 
         (prev as HTMLElement).focus();
         break;
@@ -166,6 +169,22 @@ export default function useRawSelectUtils<TOption extends OptionType>({
     }
   };
 
+  const isSelectedOption = (option: TOption) => {
+    let isSelected: boolean = false;
+
+    const optionUniqueValue = getUniqueValue(option);
+
+    if (value) {
+      if (multiple) {
+        isSelected = value.has(optionUniqueValue);
+      } else {
+        isSelected = optionUniqueValue === getUniqueValue(value);
+      }
+    }
+
+    return isSelected;
+  };
+
   useFocusout(tooltipRef, handleCloseDrop);
 
   return {
@@ -177,5 +196,6 @@ export default function useRawSelectUtils<TOption extends OptionType>({
     tooltipRef,
     openDrop,
     handleOpenDrop,
+    isSelectedOption,
   };
 }

@@ -36,7 +36,7 @@ function Tooltip({
         <div
           {...tooltipProps}
           className={cn(
-            `absolute p-2 text-sm bg-dark-light text-white rounded font-medium z-50`,
+            `absolute p-2 text-sm bg-(--background) text-(--text) rounded font-medium z-50 shadow-md`,
             TooltipPlacementStyle[placement],
             tooltipProps.className
           )}

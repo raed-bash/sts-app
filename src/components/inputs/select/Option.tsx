@@ -31,6 +31,7 @@ function Option(props: OptionProps) {
     onKeyDown = () => {},
     selected,
     multiple,
+    value,
     ...otherProps
   } = props;
 
@@ -79,7 +80,7 @@ function Option(props: OptionProps) {
       className={cn(
         `px-2 py-1 w-full focus:border border-black outline-none`,
         disabled
-          ? "text-gray-500 hover:bg-none bg-[#e0e0e0ff]"
+          ? "text-gray-500 hover:bg-none bg-[#f1f1f1] opacity-70"
           : "hover:bg-(--primary) hover:text-white text-black",
         selected ? "bg-blue-500 text-white" : "",
         className
@@ -89,8 +90,9 @@ function Option(props: OptionProps) {
       ref={handleOptionRef}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      aria-disabled={disabled}
     >
-      {multiple && otherProps.value && (
+      {multiple && value && (
         <input
           type="checkbox"
           className="w-5 h-5 max-lg:w-4 max-lg:h-4"

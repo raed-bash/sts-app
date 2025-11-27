@@ -4,7 +4,6 @@ import Tooltip, { type TooltipProps } from "src/components/tooltip/Tooltip";
 import { cn } from "src/utils/cn";
 import useRawSelectUtils, {
   type OptionType,
-  type RawSelectMap,
   type UseRawSelectUtilsOptions,
 } from "./hooks/useRawSelectUtils";
 
@@ -24,28 +23,34 @@ export type RawSelectProps<TOption extends OptionType> = Omit<
 
     enableTooltip?: boolean;
 
-    getOptionLabel?: (option: TOption) => string;
+    getOptionLabel: (option: TOption) => string;
 
     getOptionProps?: (option: TOption, i: number) => Partial<OptionProps>;
+
+    startHelperOptions?: OptionProps[];
+
+    endHelperOptions?: OptionProps[];
   };
 
 function RawSelect<TOption extends OptionType>({
   className,
   onClick = () => {},
   onChange,
-  options: externalOptions = [],
+  options = [],
   name,
   optionsContainer = {},
   disabled,
   inputProps = {},
   arrowDownProps = {},
   multiple,
-  value: externalValue,
+  value,
   enableTooltip = true,
   getUniqueValue = () => "",
   getInputLabel = () => "",
   getOptionLabel = () => "",
   getOptionProps = () => ({}),
+  startHelperOptions = [],
+  endHelperOptions = [],
   ...props
 }: RawSelectProps<TOption>) {
   const {
@@ -56,6 +61,7 @@ function RawSelect<TOption extends OptionType>({
     tooltipRef,
     handleClick,
     openDrop,
+    isSelectedOption,
   } = useRawSelectUtils({
     name,
     disabled,
@@ -63,9 +69,13 @@ function RawSelect<TOption extends OptionType>({
     onClick,
     getInputLabel,
     onChange,
-    value: externalValue,
+    value,
     multiple,
   } as any);
+
+  const optionsLength = options.length;
+
+  const startHelperOptionsLength = startHelperOptions.length;
 
   return (
     <Tooltip
@@ -102,37 +112,34 @@ function RawSelect<TOption extends OptionType>({
             optionsContainer.className
           )}
         >
-          {externalOptions.map((option, i) => {
-            let selected: boolean = false;
-
-            const optionUniqueValue = getUniqueValue(option);
-
-            if (externalValue) {
-              if (multiple) {
-                selected = (externalValue as RawSelectMap<TOption>).has(
-                  optionUniqueValue
-                );
-              } else {
-                selected =
-                  optionUniqueValue ===
-                  getUniqueValue(externalValue as TOption);
-              }
-            }
-
-            return (
-              <Option
-                key={optionUniqueValue}
-                selected={selected}
-                onSelectValue={handleSelectValue}
-                multiple={multiple}
-                value={option}
-                data-index={i}
-                {...getOptionProps(option, i)}
-              >
-                {getOptionLabel(option)}
-              </Option>
-            );
-          })}
+          {startHelperOptions.map((helperOptionProps, i) => (
+            <Option
+              key={i}
+              selected={value === ""}
+              onSelectValue={handleSelectValue}
+              data-index={i}
+              {...helperOptionProps}
+            />
+          ))}
+          {options.map((option, i) => (
+            <Option
+              key={getUniqueValue(option)}
+              selected={isSelectedOption(option)}
+              onSelectValue={handleSelectValue}
+              multiple={multiple}
+              value={option}
+              data-index={i + startHelperOptionsLength}
+              {...getOptionProps(option, i)}
+            >
+              {getOptionLabel(option)}
+            </Option>
+          ))}
+          {endHelperOptions.map((helperOptionProps, i) => (
+            <Option
+              key={i + optionsLength + startHelperOptionsLength}
+              {...helperOptionProps}
+            />
+          ))}
         </div>
       )}
     </Tooltip>

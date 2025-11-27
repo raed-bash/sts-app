@@ -1,33 +1,31 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-export type ResponseType<TData> = {
+export type QueryResponseType<TData> = {
   count: number;
   pageParam: number;
   data: TData[];
 };
 
-export type QueryFn<TData> = (params: {
+export type QueryFnParams = {
   pageParam: number;
-}) => ResponseType<TData>;
+};
+
+export type QueryFn<TData> = (
+  params: QueryFnParams
+) => Promise<QueryResponseType<TData>>;
 
 export type UseSelectApiOptions<TData> = {
   queryFn: QueryFn<TData>;
 
   queryKey: readonly unknown[];
 };
-const handleQueryFn =
-  <TData>(queryFn: QueryFn<TData>) =>
-  ({ pageParam }: Parameters<QueryFn<TData>>[number]) => ({
-    ...queryFn({ pageParam }),
-    pageParam,
-  });
 
 export default function useSelectApi<TData>({
   queryFn,
   queryKey,
 }: UseSelectApiOptions<TData>) {
   const { data, ...infiniteQueryOptions } = useInfiniteQuery({
-    queryFn: handleQueryFn<TData>(queryFn),
+    queryFn: queryFn,
     queryKey: queryKey,
     getNextPageParam: (lastPage, allPages) => {
       const length = allPages.reduce(

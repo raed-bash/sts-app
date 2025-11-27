@@ -1,35 +1,56 @@
-import { useMemo, useState } from "react";
-import useSelectApi from "../../hooks/useSelectApi";
-import RawAutocomplete from "./RawAutocomplete";
+import { useState } from "react";
+import useSelectApi, {
+  type QueryFnParams,
+  type QueryResponseType,
+  type UseSelectApiOptions,
+} from "../../hooks/useSelectApi";
+import RawAutocomplete, {
+  type RawAutocompleteProps,
+} from "./select/RawAutocomplete";
 import Loading from "../skeleton/Loading";
-import { twMerge } from "tailwind-merge";
-import ParentOption from "./select/Option";
 import useDebouncedValue from "../../hooks/useDebouncedValue";
+import type {
+  MultiSelectProps,
+  OptionType,
+  SignleSelectProps,
+} from "./select/hooks/useRawSelectUtils";
+import { cn } from "src/utils/cn";
 
-/**
- * @typedef utils
- * @property {any[]} options
- */
+export type AutocompleteApiFnParams = QueryFnParams & { search: string };
 
-/**
- * @typedef selectApiProps
- * @type {import("./RawSelect/RawSelect").rawSelectProps & utils & import("../../hooks/useSelectApi").useSelectApiOptions & import("./Input").utils}
- */
+export type AutocompleteApiProps<TData extends OptionType> = Omit<
+  RawAutocompleteProps<TData>,
+  "onChange" | "multiple" | "getInputLabel" | "value" | "options"
+> &
+  (SignleSelectProps<TData> | MultiSelectProps<TData>) &
+  Omit<UseSelectApiOptions<TData>, "queryFn"> & {
+    delay?: number;
 
-/**
- * @param {selectApiProps} props
- */
-function AutocompleteApi({
-  fetchData = () => {},
+    helperText?: string;
+
+    error?: boolean;
+
+    helperTextProps?: React.HTMLAttributes<HTMLParagraphElement>;
+
+    /**
+     * @default true
+     */
+    noneValue?: boolean;
+
+    queryFn: (
+      params: AutocompleteApiFnParams
+    ) => Promise<QueryResponseType<TData>>;
+  };
+
+function AutocompleteApi<TData extends OptionType>({
+  queryFn,
   queryKey = [],
-  useInfiniteQueryOptions = () => {},
   helperText,
   helperTextProps = {},
   error,
-  options,
   delay = 500,
   ...props
-}) {
+}: AutocompleteApiProps<TData>) {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search, delay);
 
@@ -37,33 +58,11 @@ function AutocompleteApi({
     allData,
     handleScroll,
     infiniteQueryOptions: { isFetching },
-    uniqueKeys,
   } = useSelectApi({
-    fetchData: (query, ...args) =>
-      fetchData({ search: debouncedSearch, ...query }, ...args),
+    queryFn: (query, ...args) =>
+      queryFn({ search: debouncedSearch, ...query }, ...args),
     queryKey: [...queryKey, debouncedSearch],
-    useInfiniteQueryOptions: {
-      ...useInfiniteQueryOptions,
-      enabled: !props.disabled,
-    },
   });
-
-  const classNameMemo = useMemo(
-    () =>
-      twMerge(
-        `w-full h-[35px] ${helperText && error && "border-danger-main"}`,
-        props.className
-      ),
-    [props.className, error, helperText]
-  );
-  const helperTextClassNameMemo = useMemo(
-    () =>
-      twMerge(
-        (error && "text-danger-main ") + " text-sm",
-        helperTextProps.className
-      ),
-    [error, helperTextProps.className]
-  );
 
   return (
     <div>
@@ -74,44 +73,37 @@ function AutocompleteApi({
         onInputChange={(e) => {
           setSearch(e.target.value);
         }}
-        options={[
-          ...(allData || []),
-          ...(isFetching
-            ? [
-                {
-                  helperElement: true,
-                  content: () => (
-                    <ParentOption
-                      disabled
-                      value={null}
-                      className="flex justify-center py-1 "
-                      key={uniqueKeys[0]}
-                    >
-                      <Loading className="w-5 h-5" />
-                    </ParentOption>
-                  ),
-                },
-              ]
-            : [
-                {
-                  helperElement: true,
-                  content: () => (
-                    <ParentOption
-                      disabled
-                      value={null}
-                      className="flex justify-center py-1"
-                      key={uniqueKeys[1]}
-                    >
-                      لايوجد بيانات آخرى...
-                    </ParentOption>
-                  ),
-                },
-              ]),
-        ]}
+        options={allData}
         {...props}
-        className={classNameMemo}
-      ></RawAutocomplete>
-      <p {...helperTextProps} className={helperTextClassNameMemo}>
+        className={cn(
+          helperText && error && "border-danger-main",
+          props.className
+        )}
+        endHelperOptions={[
+          isFetching
+            ? {
+                disabled: true,
+                value: null,
+                className: "flex justify-center py-1",
+                children: <Loading className="w-5 h-5" />,
+              }
+            : {
+                disabled: true,
+                value: null,
+                className: "flex justify-center py-1",
+                children: "لا يوجد بيانات آخرى...",
+              },
+        ]}
+        localFilter={false}
+      />
+      <p
+        {...helperTextProps}
+        className={cn(
+          "text-sm",
+          error && "text-danger-main ",
+          helperTextProps.className
+        )}
+      >
         {helperText}
       </p>
     </div>

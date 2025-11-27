@@ -1,52 +1,39 @@
-import React, { useId, type ReactNode } from "react";
-import Option from "./select/Option";
-import RawSelect from "./select/RawSelect";
+import React from "react";
+import RawSelect, { type RawSelectProps } from "./select/RawSelect";
 import Loading from "../skeleton/Loading";
-import useSelectApi, { type QueryFn } from "../../hooks/useSelectApi";
+import useSelectApi, {
+  type UseSelectApiOptions,
+} from "../../hooks/useSelectApi";
 import { cn } from "src/utils/cn";
+import type {
+  MultiSelectProps,
+  OptionType,
+  SignleSelectProps,
+} from "./select/hooks/useRawSelectUtils";
+import { wrapInArrayIf } from "src/utils/wrapInArrayIf";
+import type { OptionProps } from "./select/Option";
 
-export type SelectApiProps<TData> = {
-  queryFn: QueryFn<TData>;
+export type SelectApiProps<TData extends OptionType> = Omit<
+  RawSelectProps<TData>,
+  "onChange" | "multiple" | "getInputLabel" | "value" | "options"
+> &
+  UseSelectApiOptions<TData> &
+  (SignleSelectProps<TData> | MultiSelectProps<TData>) & {
+    helperText?: string;
 
-  queryKey: readonly unknown[];
+    error?: boolean;
 
-  helperText?: string;
+    helperTextProps?: React.HTMLAttributes<HTMLParagraphElement>;
 
-  error?: boolean;
+    /**
+     * @default true
+     */
+    noneValue?: boolean;
+  };
 
-  helperTextProps?: React.HTMLAttributes<HTMLParagraphElement>;
-
-  /**
-   * @default true
-   */
-  noneValue: boolean;
-
-  children?: (data: TData) => ReactNode;
-};
-
-/**
- * @callback children
- * @param {object} data
- * @returns {Option}
- */
-
-/**
- * @typedef utils
- * @property {children} children
- */
-
-/**
- * @typedef selectApiProps
- * @type {import("./RawSelect/RawSelect").rawSelectProps & utils & import("../../hooks/useSelectApi").useSelectApiOptions & import("./Input").utils}
- */
-
-/**
- * @param {selectApiProps} props
- */
-function SelectApi<TData>({
+function SelectApi<TData extends OptionType>({
   queryFn,
   queryKey = [],
-  children = () => "",
   helperText,
   helperTextProps = {},
   error,
@@ -62,8 +49,6 @@ function SelectApi<TData>({
     queryKey,
   });
 
-  const [id1, id2] = [useId(), useId()];
-
   return (
     <div>
       <RawSelect
@@ -76,48 +61,30 @@ function SelectApi<TData>({
           helperText && error ? "border-danger-main" : "",
           props.className
         )}
-      >
-        {allData.length &&
-          [
-            ...(!props.multiple && noneValue
-              ? [
-                  {
-                    info: true,
-                    content: (
-                      <Option key={id1 + 1} value="">
-                        لا شيء
-                      </Option>
-                    ),
-                  },
-                ]
-              : []),
-            ...allData,
-            {
-              info: true,
-              content: isFetching ? (
-                <Option
-                  disabled
-                  value={null}
-                  className="flex justify-center py-1 "
-                  key={id1}
-                >
-                  <Loading className="w-5 h-5" />
-                </Option>
-              ) : (
-                <Option
-                  disabled
-                  value={null}
-                  className="flex justify-center py-1"
-                  key={id2}
-                >
-                  لا يوجد بيانات آخرى...
-                </Option>
-              ),
-            },
-          ].map((data) =>
-            data.info === true ? data.content : children(data as TData)
-          )}
-      </RawSelect>
+        options={allData}
+        startHelperOptions={[
+          ...wrapInArrayIf(!props.multiple || noneValue, {
+            value: "",
+            children: "لا شيء",
+            selected: props.value === "" || props.value === undefined,
+          } as OptionProps),
+        ]}
+        endHelperOptions={[
+          isFetching
+            ? {
+                disabled: true,
+                value: null,
+                className: "flex justify-center py-1",
+                children: <Loading className="w-5 h-5" />,
+              }
+            : {
+                disabled: true,
+                value: null,
+                className: "flex justify-center py-1",
+                children: "لا يوجد بيانات آخرى...",
+              },
+        ]}
+      />
       <p
         {...helperTextProps}
         className={cn(

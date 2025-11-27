@@ -1,24 +1,17 @@
-import { useRef, useState, type ReactNode } from "react";
 import ArrowDown from "../../../assets/icons/arrow-down.svg?react";
-import { EventTarget } from "../../../utils/EventTarget";
 import Option, { type OptionProps } from "./Option";
-import useRawSelectUtils, {
-  type OptionType,
-  type RawSelectMap,
-  type UseRawSelectUtilsOptions,
-} from "./hooks/useRawSelectUtils";
+import { type OptionType } from "./hooks/useRawSelectUtils";
 import { cn } from "src/utils/cn";
 import Tooltip, { type TooltipProps } from "src/components/tooltip/Tooltip";
-import useFocusout from "src/hooks/useFocusout";
+import type { UseRawAutocompleteUtilsOptions } from "./hooks/useRawAutocompleteUtils";
+import useRawAutocompleteUtils from "./hooks/useRawAutocompleteUtils";
 
 export type RawAutocompleteProps<TOption extends OptionType> = Omit<
   TooltipProps,
   "title" | "onChange" | "onClick"
 > &
   Partial<Pick<TooltipProps, "title">> &
-  UseRawSelectUtilsOptions<TOption> & {
-    options: (TOption & { helperElement?: true; content?: () => ReactNode })[];
-
+  UseRawAutocompleteUtilsOptions<TOption> & {
     optionsContainer?: React.HTMLAttributes<HTMLDivElement>;
 
     arrowDownProps?: React.SVGProps<SVGSVGElement>;
@@ -27,21 +20,13 @@ export type RawAutocompleteProps<TOption extends OptionType> = Omit<
 
     enableTooltip?: boolean;
 
-    getOptionLabel?: (option: TOption) => string;
-
     getOptionProps?: (option: TOption, i: number) => Partial<OptionProps>;
 
-    onInputChange?: (e: EventTarget) => string;
-
     placeholder?: string;
-    /**
-     * @default false
-     */
-    freeSolo?: boolean;
-    /**
-     * @default true
-     */
-    localFilter?: boolean;
+
+    startHelperOptions?: OptionProps[];
+
+    endHelperOptions?: OptionProps[];
   };
 
 function RawAutocomplete<TOption extends OptionType>({
@@ -50,9 +35,9 @@ function RawAutocomplete<TOption extends OptionType>({
   onChange,
   onInputChange = () => "",
   name,
-  value: externalValue,
+  value,
   optionsContainer = { className: "" },
-  options: externalOptions = [],
+  options = [],
   disabled,
   getOptionLabel = () => "",
   getInputLabel = () => "",
@@ -64,91 +49,40 @@ function RawAutocomplete<TOption extends OptionType>({
   arrowDownProps = {},
   multiple,
   enableTooltip = true,
+  startHelperOptions = [],
+  endHelperOptions = [],
   ...props
 }: RawAutocompleteProps<TOption>) {
   const {
-    handleOptionsKeyDown,
     handleSelectKeyDown,
     handleSelectValue,
     inputLabel,
     tooltipRef,
     handleClick,
     openDrop,
-    handleOpenDrop,
-  } = useRawSelectUtils<TOption>({
+    isSelectedOption,
+    filteredOptions,
+    handleInputChange,
+    handleInputKeyDown,
+    handleOptionsContainerKeyDown,
+    optionsContainerRef,
+    inputRef,
+    valueSearch,
+  } = useRawAutocompleteUtils<TOption>({
     name,
     disabled,
     getUniqueValue,
     onClick,
     getInputLabel,
     onChange,
-    value: externalValue,
+    value,
+    getOptionLabel,
+    onInputChange,
+    localFilter,
+    freeSolo,
+    options,
     multiple,
   } as any);
-
-  const [valueSearch, setValueSearch] = useState("");
-  const inputRef = useRef(null);
-  const optionsContainerRef = useRef<HTMLDivElement>(null);
-
-  const handleValueSearch = (value: string) => {
-    setValueSearch(value);
-    onInputChange(new EventTarget(name, value));
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (disabled) return;
-    const value = e.target.value;
-
-    if (!openDrop) {
-      handleOpenDrop();
-    }
-
-    if (!value) {
-      if (multiple) {
-        onChange(new EventTarget(name, new Map()));
-      } else {
-        onChange(new EventTarget(name));
-      }
-    }
-
-    handleValueSearch(value);
-  };
-
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (handleSelectKeyDown(e)) {
-      if (e.code.toLowerCase() !== "space") {
-        if (optionsContainerRef.current) {
-          (optionsContainerRef.current.firstChild as HTMLElement)?.focus();
-        }
-      }
-    }
-  };
-
-  const handleOptionsContainerKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>
-  ) => {
-    if (handleOptionsKeyDown(e) === false) {
-      if (inputRef.current) {
-        (inputRef.current as HTMLElement).focus();
-      }
-    }
-  };
-
-  useFocusout(tooltipRef, () => {
-    if (!freeSolo) {
-      handleValueSearch("");
-    }
-  });
-
-  const filteredOptions = localFilter
-    ? externalOptions.filter(
-        (option) =>
-          option?.helperElement ||
-          getOptionLabel(option)
-            .toLowerCase()
-            .includes(valueSearch.toLowerCase())
-      )
-    : externalOptions;
 
   return (
     <Tooltip
@@ -189,41 +123,33 @@ function RawAutocomplete<TOption extends OptionType>({
           )}
         >
           {filteredOptions.length ? (
-            filteredOptions.map((option, i) => {
-              if (option.helperElement)
-                return option.content ? option.content() : "";
-
-              let selected: boolean = false;
-
-              const optionUniqueValue = getUniqueValue(option);
-
-              if (externalValue) {
-                if (multiple) {
-                  selected = (externalValue as RawSelectMap<TOption>).has(
-                    optionUniqueValue
-                  );
-                } else {
-                  selected =
-                    optionUniqueValue ===
-                    getUniqueValue(externalValue as TOption);
-                }
-              }
-
-              return (
+            <>
+              {startHelperOptions.map((helperOptionProps, i) => (
+                <Option
+                  key={i}
+                  selected={value === ""}
+                  onSelectValue={handleSelectValue}
+                  data-index={-1}
+                  {...helperOptionProps}
+                />
+              ))}
+              {filteredOptions.map((option, i) => (
                 <Option
                   key={getUniqueValue(option)}
-                  className={cn(selected ? "text-white" : "text-black")}
+                  selected={isSelectedOption(option)}
                   onSelectValue={handleSelectValue}
-                  value={option}
-                  selected={selected}
-                  data-index={i}
                   multiple={multiple}
+                  value={option}
+                  data-index={i}
                   {...getOptionProps(option, i)}
                 >
                   {getOptionLabel(option)}
                 </Option>
-              );
-            })
+              ))}
+              {endHelperOptions.map((helperOptionProps, i) => (
+                <Option key={i} {...helperOptionProps} />
+              ))}
+            </>
           ) : (
             <Option disabled>No options</Option>
           )}
