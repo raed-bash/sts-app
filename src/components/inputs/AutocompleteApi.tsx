@@ -26,12 +26,6 @@ export type AutocompleteApiProps<TData extends OptionType> = Omit<
   Omit<UseSelectApiOptions<TData>, "queryFn"> & {
     delay?: number;
 
-    helperText?: string;
-
-    error?: boolean;
-
-    helperTextProps?: React.HTMLAttributes<HTMLParagraphElement>;
-
     /**
      * @default true
      */
@@ -45,9 +39,6 @@ export type AutocompleteApiProps<TData extends OptionType> = Omit<
 function AutocompleteApi<TData extends OptionType>({
   queryFn,
   queryKey = [],
-  helperText,
-  helperTextProps = {},
-  error,
   delay = 500,
   ...props
 }: AutocompleteApiProps<TData>) {
@@ -65,48 +56,33 @@ function AutocompleteApi<TData extends OptionType>({
   });
 
   return (
-    <div>
-      <RawAutocomplete
-        optionsContainer={{
-          onScroll: handleScroll,
-        }}
-        onInputChange={(e) => {
-          setSearch(e.target.value);
-        }}
-        options={allData}
-        {...props}
-        className={cn(
-          helperText && error && "border-danger-main",
-          props.className
-        )}
-        endHelperOptions={[
-          isFetching
-            ? {
-                disabled: true,
-                value: null,
-                className: "flex justify-center py-1",
-                children: <Loading className="w-5 h-5" />,
-              }
-            : {
-                disabled: true,
-                value: null,
-                className: "flex justify-center py-1",
-                children: "لا يوجد بيانات آخرى...",
-              },
-        ]}
-        localFilter={false}
-      />
-      <p
-        {...helperTextProps}
-        className={cn(
-          "text-sm",
-          error && "text-danger-main ",
-          helperTextProps.className
-        )}
-      >
-        {helperText}
-      </p>
-    </div>
+    <RawAutocomplete
+      optionsContainer={{
+        onScroll: handleScroll,
+      }}
+      onInputChange={(e) => {
+        setSearch(e.target.value);
+      }}
+      options={allData}
+      {...props}
+      className={cn(props.className)}
+      endHelperOptions={[
+        isFetching
+          ? {
+              disabled: true,
+              value: null,
+              className: "flex justify-center py-1",
+              children: <Loading className="w-5 h-5" />,
+            }
+          : {
+              disabled: true,
+              value: null,
+              className: "flex justify-center py-1",
+              children: "لا يوجد بيانات آخرى...",
+            },
+      ]}
+      localFilter={false}
+    />
   );
 }
 

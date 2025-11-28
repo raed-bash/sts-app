@@ -9,6 +9,10 @@ import RawAutocomplete, {
   type RawAutocompleteProps,
 } from "./select/RawAutocomplete";
 import type { OnlyStringLiterals } from "src/types/utils";
+import type { AutocompleteApiProps } from "./AutocompleteApi";
+import AutocompleteApi from "./AutocompleteApi";
+import type { SelectApiProps } from "./SelectApi";
+import SelectApi from "./SelectApi";
 
 export type InputPropsWithType = InputProps & {
   type: OnlyStringLiterals<HTMLInputTypeAttribute>;
@@ -19,9 +23,19 @@ export type SelectPropsWithType<TOption extends OptionType> =
     type: "select";
   };
 
+export type SelectApiPropsWithType<TOption extends OptionType> =
+  SelectApiProps<TOption> & {
+    type: "selectApi";
+  };
+
 export type AutocompletePropsWithType<TOption extends OptionType> =
   RawAutocompleteProps<TOption> & {
     type: "autocomplete";
+  };
+
+export type AutocompleteApiPropsWithType<TOption extends OptionType> =
+  AutocompleteApiProps<TOption> & {
+    type: "autocompleteApi";
   };
 
 export type TextAreaPropsWithType = TextAreaProps & {
@@ -33,6 +47,8 @@ export type InputPlusProps<TOption extends OptionType> = (
   | SelectPropsWithType<TOption>
   | AutocompletePropsWithType<TOption>
   | TextAreaPropsWithType
+  | AutocompleteApiPropsWithType<TOption>
+  | SelectApiPropsWithType<TOption>
 ) & {
   title: string;
 
@@ -47,6 +63,12 @@ export type InputPlusProps<TOption extends OptionType> = (
   titleProps?: React.HTMLAttributes<HTMLDivElement>;
 
   id?: string;
+
+  error?: boolean;
+
+  helperText?: string;
+
+  helperTextProps?: React.HTMLAttributes<HTMLParagraphElement>;
 };
 
 function InputPlus<TOption extends OptionType>({
@@ -56,6 +78,9 @@ function InputPlus<TOption extends OptionType>({
   inputPlusContainerProps = {},
   skeletonProps = {},
   titleProps = {},
+  error,
+  helperText,
+  helperTextProps = {},
   ...props
 }: InputPlusProps<TOption>) {
   return (
@@ -81,14 +106,23 @@ function InputPlus<TOption extends OptionType>({
         <RawAutocomplete {...props} />
       ) : props.type === "textarea" ? (
         <TextArea {...props} />
+      ) : props.type === "selectApi" ? (
+        <SelectApi {...props} />
+      ) : props.type === "autocompleteApi" ? (
+        <AutocompleteApi {...props} />
       ) : (
-        // props.type === "selectApi" ? (
-        // <SelectApi {...props} />
-        // ) : props.type === "autocompleteApi" ? (
-        // <AutocompleteApi {...props} />
-        // ) :
         <Input {...props} />
       )}
+      <p
+        {...helperTextProps}
+        className={cn(
+          error && "text-danger-main ",
+          "text-sm",
+          helperTextProps.className
+        )}
+      >
+        {helperText}
+      </p>
     </div>
   );
 }

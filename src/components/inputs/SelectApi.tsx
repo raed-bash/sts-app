@@ -1,4 +1,3 @@
-import React from "react";
 import RawSelect, { type RawSelectProps } from "./select/RawSelect";
 import Loading from "../skeleton/Loading";
 import useSelectApi, {
@@ -19,12 +18,6 @@ export type SelectApiProps<TData extends OptionType> = Omit<
 > &
   UseSelectApiOptions<TData> &
   (SignleSelectProps<TData> | MultiSelectProps<TData>) & {
-    helperText?: string;
-
-    error?: boolean;
-
-    helperTextProps?: React.HTMLAttributes<HTMLParagraphElement>;
-
     /**
      * @default true
      */
@@ -34,9 +27,6 @@ export type SelectApiProps<TData extends OptionType> = Omit<
 function SelectApi<TData extends OptionType>({
   queryFn,
   queryKey = [],
-  helperText,
-  helperTextProps = {},
-  error,
   noneValue = true,
   ...props
 }: SelectApiProps<TData>) {
@@ -50,52 +40,36 @@ function SelectApi<TData extends OptionType>({
   });
 
   return (
-    <div>
-      <RawSelect
-        optionsContainer={{
-          onScroll: handleScroll,
-        }}
-        {...props}
-        className={cn(
-          `w-full h-[35px]`,
-          helperText && error ? "border-danger-main" : "",
-          props.className
-        )}
-        options={allData}
-        startHelperOptions={[
-          ...wrapInArrayIf(!props.multiple || noneValue, {
-            value: "",
-            children: "لا شيء",
-            selected: props.value === "" || props.value === undefined,
-          } as OptionProps),
-        ]}
-        endHelperOptions={[
-          isFetching
-            ? {
-                disabled: true,
-                value: null,
-                className: "flex justify-center py-1",
-                children: <Loading className="w-5 h-5" />,
-              }
-            : {
-                disabled: true,
-                value: null,
-                className: "flex justify-center py-1",
-                children: "لا يوجد بيانات آخرى...",
-              },
-        ]}
-      />
-      <p
-        {...helperTextProps}
-        className={cn(
-          "text-sm",
-          error && "text-red-600 ",
-          helperTextProps.className
-        )}
-      >
-        {helperText}
-      </p>
-    </div>
+    <RawSelect
+      optionsContainer={{
+        onScroll: handleScroll,
+      }}
+      {...props}
+      className={cn(`w-full h-[35px]`, props.className)}
+      options={allData}
+      startHelperOptions={[
+        ...wrapInArrayIf(!props.multiple || noneValue, {
+          value: "",
+          children: "لا شيء",
+          selected: props.value === "" || props.value === undefined,
+        } as OptionProps),
+      ]}
+      endHelperOptions={[
+        isFetching
+          ? {
+              disabled: true,
+              value: null,
+              className: "flex justify-center py-1",
+              children: <Loading className="w-5 h-5" />,
+            }
+          : {
+              disabled: true,
+              value: null,
+              className: "flex justify-center py-1",
+              children: "لا يوجد بيانات آخرى...",
+            },
+      ]}
+    />
   );
 }
 

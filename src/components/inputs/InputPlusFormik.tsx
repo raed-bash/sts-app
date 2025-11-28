@@ -1,32 +1,28 @@
-import { memo } from "react";
-import InputPlus from "./InputPlus";
+import InputPlus, { type InputPlusProps } from "./InputPlus";
+import type { OptionType } from "./select/hooks/useRawSelectUtils";
 
-/**
- * @typedef utils
- * @property {string} language
- * @property {object} values
- * @property {object} errors
- */
+export type InputPlusFormikProps<TOption extends OptionType> =
+  InputPlusProps<TOption> & {
+    name: string;
 
-/**
- * @typedef inputPlusFormikProps
- * @type {import('./InputPlus').inputPlusProps & utils}
- */
+    values?: Record<any, any>;
 
-/**
- * @param {inputPlusFormikProps} props
- */
-function InputPlusFormik(props) {
-  const { language, values = {}, errors = {}, ...otherProps } = props;
+    errors?: Record<any, any>;
+  };
 
+function InputPlusFormik<TOption extends OptionType>({
+  values = {},
+  errors = {},
+  ...props
+}: InputPlusFormikProps<TOption>) {
   return (
     <InputPlus
-      {...otherProps}
+      {...props}
       error
-      helperText={errors[otherProps.name]}
-      value={values[otherProps.name]}
+      helperText={errors[props.name]}
+      value={values[props.name]}
     />
   );
 }
 
-export default memo(InputPlusFormik);
+export default InputPlusFormik;
