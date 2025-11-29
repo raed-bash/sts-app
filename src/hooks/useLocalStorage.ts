@@ -1,12 +1,15 @@
 import { useCallback, useState } from "react";
 import { LocalStorageHelper } from "src/utils/LocalStorageHelper";
 
-export default function useLocalStorage(
-  name,
-  defaultValue,
-  { onStore = (value) => value, onGet = (value) => value }
-) {
-  const [value, setValue] = useState(() => {
+export default function useLocalStorage<T>(
+  name: string,
+  defaultValue: T,
+  { onStore, onGet } = {
+    onStore: (value: T) => value as string,
+    onGet: (value: string) => value as T,
+  }
+): [T, (newValue: T) => void] {
+  const [value, setValue] = useState<T>(() => {
     const oldValue = onGet(LocalStorageHelper.getItem(name));
 
     if (oldValue) {
@@ -19,7 +22,7 @@ export default function useLocalStorage(
   });
 
   const handleSetValue = useCallback(
-    (newValue) => {
+    (newValue: T) => {
       LocalStorageHelper.setItem(name, onStore(newValue));
 
       setValue(newValue);

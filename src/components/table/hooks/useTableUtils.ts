@@ -12,7 +12,7 @@ export type UseTableUtilsSortEventHandler = (
 ) => void;
 
 export type UseTableUtilsSelectRowsEventHandler = (
-  selectedRows: Set<number>
+  selectedRows: Set<number | string>
 ) => void;
 
 export type UseTableUtilsOptions = {
@@ -24,7 +24,7 @@ export type UseTableUtilsOptions = {
 
   onSelectRows: UseTableUtilsSelectRowsEventHandler;
 
-  selectedRows: Set<number>;
+  selectedRows: Set<number | string>;
 
   setHiddenColumns: (hiddenColumns: Set<TableColumn["name"]>) => void;
 
@@ -78,7 +78,7 @@ export default function useTableUtils({
   };
 
   const defaultHiddenCols = new Set(
-    columns.filter((column) => !column.hidden).map((column) => column.name)
+    columns.filter((column) => column.hidden).map((column) => column.name)
   );
 
   const [hiddenColumns, setHiddenColumns] = useState(
@@ -91,7 +91,7 @@ export default function useTableUtils({
   };
 
   const displayedColumns = columns
-    .filter((column) => hiddenColumns.has(column.name))
+    .filter((column) => !hiddenColumns.has(column.name))
     .map((column) => column);
 
   const handleToggleColumns = (column: TableColumn) => () => {

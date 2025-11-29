@@ -4,7 +4,7 @@ import useCashingState from "./useCashingState";
 const defaultSelectRowsDef = new Set();
 
 export default function useSelectRows(
-  name,
+  name: string,
   defaultSelectRows = defaultSelectRowsDef,
   { cashing = true } = {}
 ) {

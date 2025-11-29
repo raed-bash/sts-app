@@ -1,38 +1,21 @@
 export class LocalStorageHelper {
-  /**
-   * @typedef keys
-   * @type {'currentSection'|'accessToken'}
-   */
-
-  /**
-   * @param {keys} key
-   */
-  static setItem(key, value) {
+  static setItem(key: string, value: string) {
     localStorage.setItem(key, value);
   }
 
-  /**
-   *
-   * @param {keys} key
-   */
-  static getItem(key) {
-    return localStorage.getItem(key);
+  static getItem(key: string) {
+    return localStorage.getItem(key) || "";
   }
 
-  /**
-   * @param {keys} key
-   */
-  static safeParsedGetItem(key) {
+  static safeParsedGetItem(key: string) {
     try {
-      return JSON.parse(localStorage.getItem(key));
+      return JSON.parse(this.getItem(key));
     } catch {
       return null;
     }
   }
-  /**
-   * @param {keys} key
-   */
-  static removeItem(key) {
+
+  static removeItem(key: string) {
     localStorage.removeItem(key);
   }
 }

@@ -52,7 +52,7 @@ function MenuHideColumns({
                 className="w-4 h-4 cursor-pointer"
                 type="checkbox"
                 readOnly
-                checked={hiddenColumns.has(column.name)}
+                checked={!hiddenColumns.has(column.name)}
               />
               {column.headerName}
             </div>

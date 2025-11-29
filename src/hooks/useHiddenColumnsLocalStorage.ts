@@ -1,23 +1,22 @@
 import useLocalStorage from "./useLocalStorage";
 
-export default function useHiddenColumnsLocalStorage(name, defaultValue) {
+export default function useHiddenColumnsLocalStorage(
+  name: string,
+  defaultValue: Set<string> = new Set()
+) {
   const [hiddenColumns, setHiddenColumns] = useLocalStorage(
     name,
     defaultValue,
     {
       onGet: (value) => {
-        if (value) {
-          try {
-            return new Set(JSON.parse(value));
-          } catch {
-            return defaultValue;
-          }
+        try {
+          return new Set<string>(JSON.parse(value));
+        } catch {
+          return defaultValue;
         }
       },
-      onStore: (value) => {
-        if (value) {
-          return JSON.stringify([...value]);
-        }
+      onStore: (value: Set<string>) => {
+        return JSON.stringify([...value]);
       },
     }
   );

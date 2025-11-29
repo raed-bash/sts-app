@@ -8,7 +8,7 @@ type UseTBodyUtilsSelectRowHandler = THeadSelectRowEventHandler;
 export type UseTBodyUtilsOptions = {
   onSelectRow: UseTBodyUtilsSelectRowHandler;
 
-  selectedRows: Set<number>;
+  selectedRows: Set<string | number>;
 
   rows: TableRow[];
 };

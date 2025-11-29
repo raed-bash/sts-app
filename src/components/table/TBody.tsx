@@ -13,9 +13,8 @@ export type TBodyProps = React.HTMLAttributes<HTMLTableSectionElement> & {
 
   columns: TableColumn[];
 
-  selectedRows: Set<number>;
+  selectedRows: Set<string | number>;
 
-  // __test__
   onSelectRow: (row: TableRow) => (e: EventTarget<any>) => void;
   /**
    * A table body row props; <tr></tr> element

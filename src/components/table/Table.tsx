@@ -35,69 +35,91 @@ export type TableRow<Row = any | { id: number }> = Row;
 
 export type TableSortStatuses = Record<string, SortButtonStatus>;
 
-export type TableProps<Row> = {
-  rows: TableRow<Row>[];
+export type TableHiddenColumns<Row> = {
+  hideableColumns: true;
 
-  columns: TableColumn<Row>[];
+  setHiddenColumns: (hiddenColumns: Set<TableColumn<Row>["name"]>) => void;
 
-  currentPage?: number;
-
-  totalPages?: number;
-
-  perPage?: number;
-
-  count?: number;
-
-  onPageChange?: PaginationProps["onPageChange"];
-
-  maxVisibleNeighbors?: PaginationProps["maxVisibleNeighbors"];
-
-  containerProps?: ContainerProps;
-
-  theadProps?: React.HTMLAttributes<HTMLTableSectionElement>;
-
-  tbodyProps?: React.HTMLAttributes<HTMLTableSectionElement>;
-
-  loading?: boolean;
-
-  scLoading?: boolean;
-
-  sortStatuses?: TableSortStatuses;
-
-  onSortChange?: UseTableUtilsSortEventHandler;
-
-  onSelectRows?: (selectedRows: Set<number>) => void;
-
-  selectedRows?: Set<number>;
-
-  selectable?: boolean;
-  /**
-   * A table head row props; <tr></tr> element
-   */
-  thrProps?: TrProps;
-  /**
-   * A table head props; <th></th> element
-   */
-  thhsProps?: ThProps;
-
-  thCheckboxProps?: ThProps;
-  /**
-   * A table body row props; <tr></tr> element
-   */
-  tbrProps?: TBodyProps["tbrProps"];
-  /**
-   * A table body data props; <td></td> element
-   */
-  tbdsProps?: TdProps;
-
-  tdCheckboxProps?: TdProps;
-
-  setHiddenColumns?: (hiddenColumns: Set<TableColumn<Row>["name"]>) => void;
-
-  hiddenColumns?: Set<TableColumn["name"]>;
-
-  hideableColumns?: boolean;
+  hiddenColumns: Set<TableColumn["name"]>;
 };
+
+export type TableNoHiddenColumns = {
+  hideableColumns?: false;
+
+  setHiddenColumns?: never;
+
+  hiddenColumns?: never;
+};
+
+export type TableSelectRows = {
+  selectable: true;
+
+  onSelectRows: (selectedRows: Set<string | number>) => void;
+
+  selectedRows: Set<string | number>;
+};
+
+export type TableNoSelectRows = {
+  selectable?: false;
+
+  onSelectRows?: never;
+
+  selectedRows?: never;
+};
+
+export type TableProps<Row> = (TableHiddenColumns<Row> | TableNoHiddenColumns) &
+  (TableSelectRows | TableNoSelectRows) & {
+    rows: TableRow<Row>[];
+
+    columns: TableColumn<Row>[];
+
+    currentPage?: number;
+
+    totalPages?: number;
+
+    perPage?: number;
+
+    count?: number;
+
+    onPageChange?: PaginationProps["onPageChange"];
+
+    maxVisibleNeighbors?: PaginationProps["maxVisibleNeighbors"];
+
+    containerProps?: ContainerProps;
+
+    theadProps?: React.HTMLAttributes<HTMLTableSectionElement>;
+
+    tbodyProps?: React.HTMLAttributes<HTMLTableSectionElement>;
+
+    loading?: boolean;
+
+    scLoading?: boolean;
+
+    sortStatuses?: TableSortStatuses;
+
+    onSortChange?: UseTableUtilsSortEventHandler;
+
+    /**
+     * A table head row props; <tr></tr> element
+     */
+    thrProps?: TrProps;
+    /**
+     * A table head props; <th></th> element
+     */
+    thhsProps?: ThProps;
+
+    thCheckboxProps?: ThProps;
+    /**
+     * A table body row props; <tr></tr> element
+     */
+    tbrProps?: TBodyProps["tbrProps"];
+    /**
+     * A table body data props; <td></td> element
+     */
+    tbdsProps?: TdProps;
+
+    tdCheckboxProps?: TdProps;
+  };
 function Table<Row>({
   columns = [],
   rows = [],
@@ -105,7 +127,7 @@ function Table<Row>({
   onPageChange = () => {},
   totalPages = 2,
   perPage = 20,
-  count = 0,
+  count = rows.length,
   containerProps = {},
   tbodyProps = {},
   theadProps = {},
@@ -192,6 +214,7 @@ function Table<Row>({
             <span>{count}</span>
           </div>
         </div>
+
         <Pagination
           currentPage={currentPage}
           onPageChange={onPageChange}
