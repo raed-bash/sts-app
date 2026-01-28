@@ -1,7 +1,7 @@
 import { EventTarget } from "../../utils/EventTarget";
 import ButtonOption, { type ButtonOptionProps } from "./ButtonOption";
-import type { ButtonColor, ButtonVariant } from "./Button";
 import { cn } from "src/utils/cn";
+import type { ButtonColor, ButtonVariant } from "./ButtonTheme";
 
 export type ButtonGroupOption = Omit<ButtonOptionProps, "index"> & {
   name: string;
@@ -42,7 +42,7 @@ function ButtonGroup({
     (
       name: string,
       value: any,
-      option: Omit<ButtonGroupOption, "value" | "label">
+      option: Omit<ButtonGroupOption, "value" | "label">,
     ) =>
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       onChange(new EventTarget(name, value));
@@ -64,7 +64,7 @@ function ButtonGroup({
             label: "",
             name: "",
           },
-          index
+          index,
         ) => (
           <ButtonOption
             key={value}
@@ -83,7 +83,7 @@ function ButtonGroup({
           >
             {label}
           </ButtonOption>
-        )
+        ),
       )}
     </div>
   );

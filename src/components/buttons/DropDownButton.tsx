@@ -2,7 +2,7 @@ import { useMemo, useRef, useState, type ReactNode } from "react";
 import useFocusout from "src/hooks/useFocusout";
 import { EventTarget } from "src/utils/EventTarget";
 import DropDownOption, { type DropDownOptionProps } from "./DropDownOption";
-import { ReactComponent as ArrowDownLine } from "src/assets/icons/arrow-line-down.svg";
+import ArrowDownLine from "src/assets/icons/arrow-line-down.svg?react";
 import { cn } from "src/utils/cn";
 
 export type DropDownButtonOption = DropDownOptionProps & {
@@ -19,28 +19,6 @@ export type DropDownButtonProps = {
   placeholder?: string;
 };
 
-/**
- * @typedef dropDownOption
- * @type {import('./DropDownOption').dropDownOptionProps & {selectedClassName:string, label: any}}
- */
-
-/**
- * @typedef utils
- * @property {dropDownOption[]} options
- * @property {string} name
- * @property {(e:EventTarget)=>void} onChange
- * @property {any} value
- * @property {string} placeholder
- */
-
-/**
- * @typedef dropDownButtonProps
- * @type {utils}
- */
-
-/**
- * @param {dropDownButtonProps} props
- */
 function DropDownButton({
   name,
   onChange,
@@ -75,7 +53,7 @@ function DropDownButton({
         selectedClassName: "text-black",
         arrowDownClassName: "stroke-black",
       },
-    [options, value, placeholder]
+    [options, value, placeholder],
   );
 
   return (
@@ -85,7 +63,7 @@ function DropDownButton({
         onClick={handleClickDropDown}
         className={cn(
           `flex items-center justify-between px-6 py-2 text-white rounded-full shadow-md  gap-2`,
-          selectedOption.selectedClassName || ""
+          selectedOption.selectedClassName || "",
         )}
       >
         <span>{selectedOption.label}</span>
@@ -94,7 +72,7 @@ function DropDownButton({
             className={cn(
               `duration-150 stroke-white`,
               isOpen ? "rotate-180" : "",
-              selectedOption.arrowDownClassName || ""
+              selectedOption.arrowDownClassName || "",
             )}
           />
         </span>

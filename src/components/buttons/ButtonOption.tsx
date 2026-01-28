@@ -1,9 +1,6 @@
-import Button, {
-  type ButtonColor,
-  type ButtonProps,
-  type ButtonVariant,
-} from "./Button";
+import Button, { type ButtonProps } from "./Button";
 import { cn } from "src/utils/cn";
+import type { ButtonColor, ButtonVariant } from "./ButtonTheme";
 
 export type ButtonOptionProps = ButtonProps & {
   index: number;
@@ -47,7 +44,7 @@ function ButtonOption({
         `w-full flex gap-x-2 px-14 justify-center items-center transition-all `,
         buttonClassName,
         className,
-        active ? `z-100 ${activeButtonClassName}` : `z-[${20 + index * 10}]`
+        active ? `z-100 ${activeButtonClassName}` : `z-[${20 + index * 10}]`,
       )}
       color={active ? color || buttonColor : buttonSecondaryColor}
       variant={variant || buttonVariant}
