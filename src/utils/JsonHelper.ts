@@ -1,5 +1,5 @@
 export class JsonHelper {
-  static parse(text) {
+  static parse(text: string) {
     try {
       return JSON.parse(text);
     } catch {
@@ -7,7 +7,7 @@ export class JsonHelper {
     }
   }
 
-  static stringify(value) {
+  static stringify(value: any) {
     try {
       return JSON.stringify(value);
     } catch {

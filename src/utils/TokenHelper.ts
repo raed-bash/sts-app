@@ -1,19 +1,16 @@
-/**
- * @typedef TokenPayload
- * @property {boolean} is_staff
- * @property {boolean} is_manager
- * @property {string} username
- * @property {number} committee
- * @property {number} user_id
- * @property {number} exp
- * @property {number} iat
- * @property {string} jti
- * @property {"access"|"refresh"} token_type
- *
- */
-
+type TokenPayload = {
+  is_staff: boolean;
+  is_manager: boolean;
+  username: string;
+  committee: number;
+  user_id: number;
+  exp: number;
+  iat: number;
+  jti: string;
+  token_type: "access" | "refresh";
+};
 export class TokenHelpers {
-  static decodedToken(token) {
+  static decodedToken(token: string): TokenPayload | null {
     try {
       const base64Url = token.split(".")[1];
       const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
@@ -24,12 +21,7 @@ export class TokenHelpers {
     }
   }
 
-  /**
-   *
-   * @param {string} token
-   * @returns {TokenPayload|null}
-   */
-  static getPayload(token) {
+  static getPayload(token: string) {
     if (!token) {
       return null;
     }

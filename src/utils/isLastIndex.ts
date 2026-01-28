@@ -1,1 +1,2 @@
-export const isLastIndex = (i, arrayLength) => arrayLength - 1 === i;
+export const isLastIndex = (i: number, arrayLength: number) =>
+  arrayLength - 1 === i;

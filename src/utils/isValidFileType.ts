@@ -1,8 +1,11 @@
 import { validFileExtensions } from "src/constants/validFileExtensions";
 
-export function isValidFileType(fileName, fileType) {
+export function isValidFileType(fileName: string, fileType: string) {
+  const fileExtension = fileName.split(".").pop();
+
   return (
     fileName &&
-    validFileExtensions[fileType].indexOf(fileName.split(".").pop()) > -1
+    fileExtension &&
+    validFileExtensions[fileType].indexOf(fileExtension) > -1
   );
 }
