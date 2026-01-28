@@ -7,7 +7,27 @@ import {
 } from "@headlessui/react";
 import { Fragment, memo, useCallback, useState } from "react";
 
-function Popup({ isOpen, onClose, title, children }) {
+type PopupProps = {
+  isOpen?: boolean;
+
+  onClose?: () => void;
+
+  title?: string;
+
+  children:
+    | React.ReactNode
+    | ((
+        props: {
+          open: boolean;
+          setOpen: (open: boolean) => void;
+          inPopup: boolean;
+          handleClose: () => void;
+          handleOpen: () => void;
+        },
+        triggerProps?: { onClick: () => void },
+      ) => React.ReactNode);
+};
+function Popup({ isOpen, onClose, title, children }: PopupProps) {
   const [open, setOpen] = useState(false);
 
   const show = typeof isOpen === "boolean" ? isOpen : open;
@@ -25,7 +45,7 @@ function Popup({ isOpen, onClose, title, children }) {
       {typeof children === "function" ? (
         children(
           { open, setOpen, inPopup: false, handleClose, handleOpen },
-          { onClick: handleOpen }
+          { onClick: handleOpen },
         )
       ) : (
         <></>
@@ -33,10 +53,10 @@ function Popup({ isOpen, onClose, title, children }) {
       <Transition appear show={show} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-[100000]"
+          className="relative z-100000"
           onClose={onClose || handleClose}
         >
-          <div className="fixed inset-0 bg-black bg-opacity-30" />
+          <div className="fixed inset-0 bg-black opacity-30" />
           <div className="fixed inset-0 flex items-center justify-center p-4">
             <TransitionChild
               as={Fragment}
