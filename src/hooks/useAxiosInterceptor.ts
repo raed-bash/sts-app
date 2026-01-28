@@ -2,12 +2,13 @@ import { useCallback, useLayoutEffect } from "react";
 import toast from "react-hot-toast";
 import useLogout from "./useLogout";
 import { axiosInstance } from "src/app/axios";
+import type { AxiosResponse } from "axios";
 
 export default function useAxiosInterceptor() {
   const handleLogout = useLogout();
 
   const handleResponse = useCallback(
-    (res) => {
+    (res: AxiosResponse<any, any, {}>) => {
       const status = res.status;
       const data = res.data;
 
@@ -45,10 +46,10 @@ export default function useAxiosInterceptor() {
         toast.error(message);
       }
     },
-    [handleLogout]
+    [handleLogout],
   );
 
-  const handleErrNetwork = useCallback((err) => {
+  const handleErrNetwork = useCallback((err: any) => {
     if (err.message) {
       const message = err.message;
 
@@ -60,9 +61,10 @@ export default function useAxiosInterceptor() {
     const idResponse = axiosInstance.interceptors.response.use(
       (res) => {
         handleResponse(res);
+
         return res;
       },
-      (err) => {
+      (err: any) => {
         if (err.response) {
           handleResponse(err.response);
         }
@@ -72,29 +74,11 @@ export default function useAxiosInterceptor() {
         }
 
         return Promise.reject(err);
-      }
-    );
-
-    const idRequest = axiosInstance.interceptors.request.use(
-      (config) => {
-        config.baseURL =
-          config.baseURL + `:${servicesPorts[config.url?.split("/")?.[0]]}`;
-        return config;
       },
-      (err) => Promise.reject(err)
     );
 
     return () => {
       axiosInstance.interceptors.response.eject(idResponse);
-      axiosInstance.interceptors.request.eject(idRequest);
     };
   }, [handleResponse, handleErrNetwork]);
 }
-
-const servicesPorts = {
-  account: 8000,
-  general: 8001,
-  shipment: 8002,
-  family: 8003,
-  foundation: 8004,
-};
