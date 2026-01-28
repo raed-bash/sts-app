@@ -8,12 +8,12 @@ export type UseSortOptions = {
   cashing?: boolean;
 };
 
-const defaultSortsDef = {};
+const defaultSortsDefault = {};
 
 export default function useSorts(
   name: string,
-  defaultSorts = defaultSortsDef,
-  { multi = false, cashing = true }: UseSortOptions = {}
+  defaultSorts = defaultSortsDefault,
+  { multi = false, cashing = true }: UseSortOptions = {},
 ) {
   const state = useState(defaultSorts);
 
@@ -34,7 +34,7 @@ export default function useSorts(
         });
       }
     },
-    [setSorts, sorts, multi]
+    [setSorts, sorts, multi],
   );
 
   return { sorts, setSorts, handleSortChange };

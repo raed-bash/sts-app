@@ -8,7 +8,7 @@ export default function useAxiosInterceptor() {
   const handleLogout = useLogout();
 
   const handleResponse = useCallback(
-    (res: AxiosResponse<any, any, {}>) => {
+    (res: AxiosResponse) => {
       const status = res.status;
       const data = res.data;
 

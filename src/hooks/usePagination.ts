@@ -2,9 +2,9 @@ import { useState } from "react";
 import useCashingState from "./useCashingState";
 
 export default function usePagination(
-  key = "",
-  defaultPage = 1,
-  { cashing = true } = {}
+  key: string = "",
+  defaultPage: number = 1,
+  { cashing = true } = {},
 ) {
   const state = useState(defaultPage);
 

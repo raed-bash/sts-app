@@ -5,6 +5,17 @@ import useSorts from "./useSorts";
 import useSelectRows from "./useSelectRows";
 import usePagination from "./usePagination";
 
+type UseTableFiltersUtilsOptions = {
+  defaultFilters?: Record<string, any>;
+  defaultDebounceFilters?: Record<string, any>;
+  name?: string;
+  debounceDelay?: number;
+  defaultSorts?: Record<string, any>;
+  sortOptions?: Record<string, any>;
+  defaultSelectRows?: Set<any>;
+  defaultPage?: number;
+  cashing?: boolean;
+};
 const defaultObj = {};
 
 const defaultSetObj = new Set();
@@ -19,7 +30,7 @@ export default function useTableFiltersUtils({
   defaultSelectRows = defaultSetObj,
   defaultPage = 1,
   cashing = true,
-}) {
+}: UseTableFiltersUtilsOptions) {
   const paginationUtils = usePagination(name, defaultPage, { cashing });
 
   const setPage_1 = () => {
@@ -33,7 +44,7 @@ export default function useTableFiltersUtils({
     defaultDebounceFilters,
     debounceDelay,
     setPage_1,
-    { cashing }
+    { cashing },
   );
 
   const selectRowsUtils = useSelectRows(name, defaultSelectRows, { cashing });

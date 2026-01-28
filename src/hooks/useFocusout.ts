@@ -1,9 +1,15 @@
 import { useEffect } from "react";
 
-export default function useFocusout(elementRef, onFocusout) {
+export default function useFocusout(
+  elementRef: React.RefObject<HTMLElement>,
+  onFocusout: () => void,
+) {
   useEffect(() => {
-    const handleClickOutSideMenu = (e) => {
-      if (elementRef.current && !elementRef.current.contains(e.target)) {
+    const handleClickOutSideMenu = (e: MouseEvent) => {
+      if (
+        elementRef.current &&
+        !elementRef.current.contains(e.target as Node)
+      ) {
         onFocusout();
       }
     };

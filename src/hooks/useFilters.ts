@@ -1,13 +1,13 @@
 import { useCallback, useState } from "react";
 import useCashingState from "./useCashingState";
 
-const defaultObj = {};
+const defaultObj: Record<string, any> = {};
 
 export default function useFilters(
-  name,
-  defaultFilters = defaultObj,
-  onChange,
-  { cashing = true } = {}
+  name: string,
+  defaultFilters: Record<string, any> = defaultObj,
+  onChange: ((e: any) => void) | null = null,
+  { cashing = true } = {},
 ) {
   const state = useState(defaultFilters);
 
@@ -16,7 +16,7 @@ export default function useFilters(
   const [filters, setFilters] = cashing ? cashingState : state;
 
   const handleFiltersChange = useCallback(
-    (e) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       const name = e.target.name;
       const value = e.target.value;
 
@@ -26,7 +26,7 @@ export default function useFilters(
 
       setFilters({ ...filters, [name]: value || undefined });
     },
-    [filters, setFilters, onChange]
+    [filters, setFilters, onChange],
   );
 
   const handleResetFilter = useCallback(() => {

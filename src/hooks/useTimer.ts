@@ -1,7 +1,11 @@
 import { useEffect, useRef } from "react";
 
-export default function useTimer(execute, delay = 1000, pause = false) {
-  const timeIdRef = useRef(null);
+export default function useTimer(
+  execute: () => void,
+  delay = 1000,
+  pause = false,
+) {
+  const timeIdRef = useRef<number | null>(null);
   const savedCallback = useRef(execute);
 
   useEffect(() => {
@@ -11,7 +15,10 @@ export default function useTimer(execute, delay = 1000, pause = false) {
   }, [execute]);
 
   useEffect(() => {
-    if (pause || typeof savedCallback.current !== "function" || delay <= 0) {
+    if (
+      timeIdRef.current &&
+      (pause || typeof savedCallback.current !== "function" || delay <= 0)
+    ) {
       return clearInterval(timeIdRef.current);
     }
 
@@ -19,6 +26,10 @@ export default function useTimer(execute, delay = 1000, pause = false) {
       savedCallback.current();
     }, delay);
 
-    return () => clearInterval(timeIdRef.current);
+    return () => {
+      if (timeIdRef.current) {
+        clearInterval(timeIdRef.current);
+      }
+    };
   }, [pause, delay]);
 }
