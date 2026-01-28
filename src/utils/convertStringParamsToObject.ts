@@ -1,27 +1,42 @@
 /**
  *
- * @param {string} stringParams - Example ('key1::value1,,key2::value2')
- * @returns {object} - Example {key1:value1,key2:value2}
+ * @param {string} stringParams - Not sensitive to spaces
+ *
+ * @param {string} adopterKey - key for unadopted value
+ *
+ * @example
+ *
+ * ```ts
+ * const obj = convertStringParamsToObject("key1::value1,, key2::  value2,, value3", "key3");
+ * // {key1: "value1", key2: "value2", key3: "value3"}
+ * ```
  */
-export const convertStringParamsToObject = (stringParams, notSpecifyKey) => {
+export const convertStringParamsToObject = (
+  stringParams: string,
+  adopterKey: string,
+): Record<string | number, string | number> => {
   return Object.fromEntries(
     stringParams
       .split(",,")
       .map((param) => {
-        param = param.split("::");
+        const splittedParam = param.split("::");
 
-        if (param.length === 1) {
-          if (param[0]) {
-            return [notSpecifyKey, param[0]];
+        const hasKey = splittedParam.length === 2;
+
+        if (!hasKey) {
+          const value = splittedParam[0];
+
+          if (value) {
+            return [adopterKey, value.trim()];
           }
 
-          return undefined;
+          return;
         }
 
-        const [key, value] = param;
+        const [key, value] = splittedParam;
 
-        return [key.trim(), value];
+        return [key.trim(), value.trim()];
       })
-      .filter((param) => param)
+      .filter((param) => param !== undefined),
   );
 };
