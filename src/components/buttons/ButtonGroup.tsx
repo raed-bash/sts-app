@@ -1,7 +1,7 @@
 import { EventTarget } from "../../utils/EventTarget";
 import ButtonOption, { type ButtonOptionProps } from "./ButtonOption";
 import { cn } from "src/utils/cn";
-import type { ButtonColor, ButtonVariant } from "./ButtonTheme";
+import type { ButtonColor, ButtonVariant } from "./button-theme";
 
 export type ButtonGroupOption = Omit<ButtonOptionProps, "index"> & {
   name: string;
