@@ -3,7 +3,7 @@ import { cn } from "src/utils/cn";
 import {
   TooltipPlacementStyle,
   type TooltipPlacement,
-} from "./TooltipPlacementStyle";
+} from "./tooltip-placement-style";
 
 export type TooltipProps = Omit<
   React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
@@ -38,7 +38,7 @@ function Tooltip({
           className={cn(
             `absolute p-2 text-sm bg-(--background) text-(--text) rounded font-medium z-50 shadow-md`,
             TooltipPlacementStyle[placement],
-            tooltipProps.className
+            tooltipProps.className,
           )}
         >
           {title}
