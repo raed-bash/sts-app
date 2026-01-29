@@ -13,6 +13,7 @@ import type { AutocompleteApiProps } from "./AutocompleteApi";
 import AutocompleteApi from "./AutocompleteApi";
 import type { SelectApiProps } from "./SelectApi";
 import SelectApi from "./SelectApi";
+import InputPassword from "./InputPassword";
 
 export type InputPropsWithType = InputProps & {
   type: OnlyStringLiterals<HTMLInputTypeAttribute>;
@@ -91,9 +92,10 @@ function InputPlus<TOption extends OptionType>({
       <h2
         {...titleProps}
         className={cn(
-          "max-lg:text-[14px] text-[20px] font-medium flex gap-1",
-          titleProps.className
+          "text-[16px] font-medium flex gap-1 aria-invalid:text-(--danger-main)",
+          titleProps.className,
         )}
+        aria-invalid={Boolean(helperText)}
       >
         <label htmlFor={props.id}>{title}</label>
         {titleIcon}
@@ -110,15 +112,17 @@ function InputPlus<TOption extends OptionType>({
         <SelectApi {...props} />
       ) : props.type === "autocompleteApi" ? (
         <AutocompleteApi {...props} />
+      ) : props.type === "password" ? (
+        <InputPassword {...props} aria-invalid={Boolean(helperText)} />
       ) : (
-        <Input {...props} />
+        <Input {...props} aria-invalid={Boolean(helperText)} />
       )}
       <p
         {...helperTextProps}
         className={cn(
-          error && "text-danger-main ",
-          "text-sm",
-          helperTextProps.className
+          error && "text-(--danger-main)",
+          "text-xs",
+          helperTextProps.className,
         )}
       >
         {helperText}

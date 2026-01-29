@@ -5,7 +5,7 @@ import {
   ButtonTheme,
   type ButtonColor,
   type ButtonVariant,
-} from "../buttons/ButtonTheme";
+} from "../buttons/button-theme";
 
 export type CheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label: ReactNode;
@@ -69,7 +69,7 @@ function Checkbox({
            py-2 px-10 w-full cursor-pointer aria-disabled:pointer-events-none
            border text-center flex items-center justify-center`,
           checked ? checkedClassName : notCheckedClassName,
-          className
+          className,
         )}
         aria-disabled={disabled}
       >
