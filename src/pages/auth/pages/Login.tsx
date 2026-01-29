@@ -6,9 +6,12 @@ import { authApi } from "../auth.api";
 import { useAppFormik } from "src/app/formik";
 import { loginSchema } from "../schemas/login.schema";
 import Alert from "src/components/alert/Alert";
+import { useAuthContext } from "src/contexts/AuthContext";
+import toast from "react-hot-toast";
 
 export default function Login() {
   const [error, setError] = useState<string | null>(null);
+  const authContext = useAuthContext();
 
   const formik = useAppFormik({
     initialValues: {
@@ -22,8 +25,12 @@ export default function Login() {
 
       authApi
         .login(values)
-        .then(() => {
+        .then((data) => {
           setError(null);
+
+          authContext.login(data);
+
+          toast.success(data.message);
         })
         .catch((error) => {
           setError(error?.response?.data?.message || "Something went wrong");
