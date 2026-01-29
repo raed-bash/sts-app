@@ -1,25 +1,8 @@
-import Table from "./components/table/Table";
+import Login from "./pages/auth/pages/Login";
+import "./App.css";
+
 function App() {
-  return (
-    <Table
-      columns={[
-        {
-          name: "id",
-          headerName: "ID",
-        },
-        {
-          name: "name",
-          headerName: "Name",
-          hidden: true,
-          sort: true,
-        },
-      ]}
-      rows={[
-        { id: 1, name: "raed" },
-        { id: 3, name: "fadel" },
-      ]}
-    />
-  );
+  return <Login />;
 }
 
 export default App;
