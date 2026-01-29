@@ -15,35 +15,21 @@ export default function useAxiosInterceptor() {
       let message = null;
 
       if (status > 199 && status < 300) {
-        if (status === 200) {
-          message = data.result;
-        }
-
         if (message) {
           toast.success(message);
         }
       } else if (status > 399) {
-        if (status === 400) {
-          message = data.non_field_errors || data.detail;
-        }
+        message = data.message;
 
         if (status === 401) {
-          const messages = data.messages;
-
-          message = messages?.[0].message;
-
           handleLogout();
         }
 
-        if (status === 403) {
-          message = `${res.config.url}:
-           ${data.detail}`;
+        if (!res.config.hideToasterMessage) {
+          toast.error(message, {
+            id: message,
+          });
         }
-        if (status === 404) {
-          message = `${data.detail}`;
-        }
-
-        toast.error(message);
       }
     },
     [handleLogout],

@@ -5,5 +5,9 @@ import { LoginResponseDto } from "./dtos/login-response.dto";
 
 export const authApi = {
   login: async (data: LoginDataDto) =>
-    (await api.post<LoginResponseDto>(ep("auth", "login"), data)).data,
+    (
+      await api.post<LoginResponseDto>(ep("auth", "login"), data, {
+        hideToasterMessage: true,
+      })
+    ).data,
 };
