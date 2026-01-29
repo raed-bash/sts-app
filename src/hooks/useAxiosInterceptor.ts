@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect } from "react";
 import toast from "react-hot-toast";
 import useLogout from "./useLogout";
-import { axiosInstance } from "src/app/axios";
+import { api } from "src/app/axios";
 import type { AxiosResponse } from "axios";
 
 export default function useAxiosInterceptor() {
@@ -58,7 +58,7 @@ export default function useAxiosInterceptor() {
   }, []);
 
   useLayoutEffect(() => {
-    const idResponse = axiosInstance.interceptors.response.use(
+    const idResponse = api.interceptors.response.use(
       (res) => {
         handleResponse(res);
 
@@ -78,7 +78,7 @@ export default function useAxiosInterceptor() {
     );
 
     return () => {
-      axiosInstance.interceptors.response.eject(idResponse);
+      api.interceptors.response.eject(idResponse);
     };
   }, [handleResponse, handleErrNetwork]);
 }
