@@ -7,7 +7,7 @@ export type PageFallbackProps = SuspenseProps & {
 
 function PageFallback({
   children,
-  height = "65vh",
+  height = "100vh",
   ...props
 }: PageFallbackProps) {
   return (

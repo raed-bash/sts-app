@@ -1,11 +1,10 @@
 import { type ReactNode } from "react";
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router";
 
 export type PrivateRouteProps = { children: ReactNode };
 
 function PrivateRoute({ children }: PrivateRouteProps) {
-  const loggedIn = useSelector((state) => state.app.loggedIn);
+  const loggedIn = false;
 
   if (loggedIn) {
     return children;
