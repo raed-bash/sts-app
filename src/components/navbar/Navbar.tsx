@@ -1,8 +1,8 @@
 import IconButton from "../buttons/IconButton";
 import SunIcon from "src/assets/icons/sun.svg?react";
 import CrescentIcon from "src/assets/icons/crescent.svg?react";
-import ProfileIcon from "src/assets/icons/profile.svg?react";
 import { useThemeContext } from "src/contexts/ThemeContext";
+import Profile from "../Profile";
 
 export default function Navbar() {
   const { darkMode, toggleDarkMode } = useThemeContext();
@@ -24,9 +24,7 @@ export default function Navbar() {
             <CrescentIcon width={22} height={22} />
           )}
         </IconButton>
-        <IconButton>
-          <ProfileIcon className="fill-(--text)" />
-        </IconButton>
+        <Profile />
       </div>
     </nav>
   );
