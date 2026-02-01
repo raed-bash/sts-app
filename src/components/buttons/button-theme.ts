@@ -2,7 +2,7 @@ export const ButtonTheme = {
   contained: {
     primary: "text-white bg-(--accent) hover:bg-(--primary)",
     secondary: "text-black bg-(--secondary) hover:bg-dark-dark",
-    danger: "text-white bg-danger-main hover:bg-danger-dark",
+    danger: "text-white bg-(--danger-main) hover:bg-(--danger-dark)",
     dark: "text-white bg-black hover:bg-dark-light",
   },
   outlined: {

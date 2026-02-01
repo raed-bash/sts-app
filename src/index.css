@@ -24,6 +24,7 @@ html {
   --secondary: #8b9ced;
   --accent: #4a67f3;
   --danger-main: #dc3545;
+  --danger-dark: #730000;
   --warning-main: #ffc107;
   --info-main: #0dcaf0;
   --success-main: #198754;
@@ -39,6 +40,7 @@ html.dark {
   --secondary: #b3b6c6;
   --accent: #0c28b6;
   --danger-main: #dc3545;
+  --danger-dark: #730000;
   --warning-main: #ffca2c;
   --info-main: #31d2f2;
   --success-main: #198754;
