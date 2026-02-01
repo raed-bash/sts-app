@@ -3,7 +3,7 @@ import type { LoginResponseDto } from "src/pages/auth/dtos/login-response.dto";
 
 export type AuthContextType = {
   loggedIn: boolean;
-  login: (response: LoginResponseDto) => void;
+  login: (response: Omit<LoginResponseDto, "message">) => void;
   logout: () => void;
   user: LoginResponseDto["user"] | null;
   setUser?: (user: LoginResponseDto["user"] | null) => void;

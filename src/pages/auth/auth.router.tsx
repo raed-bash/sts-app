@@ -4,6 +4,7 @@ import AuthRoute from "src/components/AuthRoute";
 import PageFallback from "src/components/PageFallback";
 
 const Login = lazy(() => import("./pages/Login"));
+const SignUp = lazy(() => import("./pages/SignUp"));
 
 export const authRouter: RouteObject[] = [
   {
@@ -12,6 +13,16 @@ export const authRouter: RouteObject[] = [
       <AuthRoute>
         <PageFallback>
           <Login />
+        </PageFallback>
+      </AuthRoute>
+    ),
+  },
+  {
+    path: "sign-up",
+    element: (
+      <AuthRoute>
+        <PageFallback>
+          <SignUp />
         </PageFallback>
       </AuthRoute>
     ),

@@ -15,7 +15,7 @@ export default function AuthProvider({
 
   const [user, setUser] = useState<LoginResponseDto["user"] | null>(null);
 
-  const login = (response: LoginResponseDto) => {
+  const login = (response: Omit<LoginResponseDto, "message">) => {
     setLoggedIn(true);
 
     setUser(response.user);
