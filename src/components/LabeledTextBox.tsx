@@ -1,12 +1,35 @@
 import { type ReactNode } from "react";
+import { cn } from "src/utils/cn";
 
-export type LabeledTextBoxProps = { label: string; children: ReactNode };
+export type LabeledTextBoxProps = React.HTMLAttributes<HTMLDivElement> & {
+  label: string;
+  children: ReactNode;
+  labelProps?: React.HTMLAttributes<HTMLDivElement>;
 
-function LabeledTextBox({ label, children }: LabeledTextBoxProps) {
+  valueProps?: React.HTMLAttributes<HTMLDivElement>;
+};
+
+function LabeledTextBox({
+  label,
+  children,
+  labelProps = {},
+  valueProps = {},
+  ...props
+}: LabeledTextBoxProps) {
   return (
-    <div className="flex border-2 border-vehicle-main w-full p-3 rounded-lg text-lg gap-2">
-      <p className="text-vehicle-main min-w-max">{label}: </p>
-      <div className="text-industrial-main">{children}</div>
+    <div
+      {...props}
+      className={cn(
+        "flex border-2 border-(--secondary) w-full p-2 rounded-lg text-md gap-2",
+        props.className,
+      )}
+    >
+      <p {...labelProps} className={cn(" min-w-max", labelProps.className)}>
+        {label}:{" "}
+      </p>
+      <div {...valueProps} className={cn("", valueProps.className)}>
+        {children}
+      </div>
     </div>
   );
 }

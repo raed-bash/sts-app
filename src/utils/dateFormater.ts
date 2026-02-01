@@ -1,11 +1,7 @@
-/**
- *
- * @param {string} date
- * @param {'date'|'justYear'} type
- * @default 'date'
- * @returns {string}
- */
-export function dateFormater(date, type = "date") {
+export function dateFormater(
+  date: Date | string | undefined,
+  type: "date" | "justYear" = "date",
+) {
   if (date) {
     date = new Date(date);
     const year = date.getFullYear();
@@ -32,7 +28,7 @@ export function dateFormater(date, type = "date") {
  *
  * @param {number} month
  */
-const monthFormater = (month) => {
+const monthFormater = (month: number) => {
   month++;
   return handleViewFormat(month);
 };
@@ -40,11 +36,11 @@ const monthFormater = (month) => {
 /**
  * @param {number} hour
  */
-const hourFormater = (hour) => {
-  const isGreaterThan12 = (hour) => hour > 12;
-  const isSmallestThan1 = (hour) => hour < 1;
+const hourFormater = (hour: number) => {
+  const isGreaterThan12 = (hour: number) => hour > 12;
+  const isSmallestThan1 = (hour: number) => hour < 1;
 
-  const localViewHour = (hour) => {
+  const localViewHour = (hour: number) => {
     if (isGreaterThan12(hour)) {
       return hour - 12;
     } else if (isSmallestThan1(hour)) {
@@ -64,4 +60,4 @@ const hourFormater = (hour) => {
  *
  * @param {number} value
  */
-const handleViewFormat = (value) => (value < 10 ? `0${value}` : value);
+const handleViewFormat = (value: number) => (value < 10 ? `0${value}` : value);
