@@ -80,15 +80,16 @@ function RawSelect<TOption extends OptionType>({
   return (
     <Tooltip
       className={cn(
-        `border border-black h-12 relative select-none w-full`,
-        disabled ? `opacity-60` : `focus:border-2`,
-        className
+        "w-full h-9 rounded-sm indent-1 p-1 border border-[lab(90.952%_0_-.0000119209)] duration-75 bg-transparent shadow-xs",
+        "focus-visible:border-(--primary) outline-none focus-visible:ring-[3px] focus-visible:ring-(--primary)/30 ",
+        "aria-invalid:border-(--danger-main) aria-invalid:ring-(--danger-main)/30",
+        className,
       )}
       ref={tooltipRef}
       tabIndex={disabled ? -1 : 0}
       onClick={handleClick}
       onKeyDown={handleSelectKeyDown}
-      title={enableTooltip ? inputLabel : ""}
+      title={multiple && enableTooltip ? inputLabel : ""}
       placement={openDrop ? "top" : "bottom"}
       {...props}
     >
@@ -96,7 +97,7 @@ function RawSelect<TOption extends OptionType>({
         <div
           className={cn(
             "ps-1 pe-2 inline-block truncate",
-            inputProps.className
+            inputProps.className,
           )}
         >
           {inputLabel}
@@ -108,8 +109,8 @@ function RawSelect<TOption extends OptionType>({
           onKeyDown={handleOptionsKeyDown}
           {...optionsContainer}
           className={cn(
-            "max-h-64 absolute z-1000 w-full overflow-y-auto overflow-x-hidden bg-white border border-black",
-            optionsContainer.className
+            "max-h-64 absolute z-1000 -ms-[3px] mt-1 w-full overflow-y-auto overflow-x-hidden bg-white border border-black rounded-sm",
+            optionsContainer.className,
           )}
         >
           {startHelperOptions.map((helperOptionProps, i) => (

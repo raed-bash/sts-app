@@ -14,6 +14,7 @@ import AutocompleteApi from "./AutocompleteApi";
 import type { SelectApiProps } from "./SelectApi";
 import SelectApi from "./SelectApi";
 import InputPassword from "./InputPassword";
+import Checkbox from "./Checkbox";
 
 export type InputPropsWithType = InputProps & {
   type: OnlyStringLiterals<HTMLInputTypeAttribute>;
@@ -53,6 +54,8 @@ export type InputPlusProps<TOption extends OptionType> = (
 ) & {
   title: string;
 
+  oneline?: boolean;
+
   titleIcon?: ReactNode;
 
   loading?: boolean;
@@ -82,12 +85,17 @@ function InputPlus<TOption extends OptionType>({
   error,
   helperText,
   helperTextProps = {},
+  oneline = false,
   ...props
 }: InputPlusProps<TOption>) {
   return (
     <div
       {...inputPlusContainerProps}
-      className={cn("flex flex-col gap-1", inputPlusContainerProps.className)}
+      className={cn(
+        "flex flex-col gap-1",
+        oneline ? "flex-row" : "",
+        inputPlusContainerProps.className,
+      )}
     >
       <h2
         {...titleProps}
@@ -103,7 +111,7 @@ function InputPlus<TOption extends OptionType>({
       {loading ? (
         <Skeleton {...skeletonProps} />
       ) : props.type === "select" ? (
-        <RawSelect {...props} />
+        <RawSelect {...props} aria-invalid={Boolean(helperText)} />
       ) : props.type === "autocomplete" ? (
         <RawAutocomplete {...props} />
       ) : props.type === "textarea" ? (
@@ -114,6 +122,8 @@ function InputPlus<TOption extends OptionType>({
         <AutocompleteApi {...props} />
       ) : props.type === "password" ? (
         <InputPassword {...props} aria-invalid={Boolean(helperText)} />
+      ) : props.type === "checkbox" ? (
+        <Checkbox {...props} aria-invalid={Boolean(helperText)} />
       ) : (
         <Input {...props} aria-invalid={Boolean(helperText)} />
       )}
