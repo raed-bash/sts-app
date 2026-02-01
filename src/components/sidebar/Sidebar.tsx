@@ -18,7 +18,7 @@ export default function Sidebar() {
             className="inline-block no-underline"
           >
             <IconButton
-              className="w-full justify-start rounded-lg fill-(--text) aria-selected:bg-[#DFDFDF]/40"
+              className="w-full justify-start rounded-lg fill-(--text) aria-selected:bg-(--primary) aria-selected:fill-white aria-selected:text-white"
               aria-selected={location.pathname.startsWith(`/${link.to}`)}
             >
               {link.Icon && <span className="me-2">{link.Icon}</span>}
