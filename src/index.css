@@ -14,7 +14,7 @@
   --success-main: #198754;
 }
 
-body {
+html {
   --text: #040508;
   --background: #f8f9fc;
   --primary: #4159cd;
@@ -26,9 +26,9 @@ body {
   --success-main: #198754;
 }
 
-body.dark {
-  --text: #f8f9fc;
-  --background: #030407;
+html.dark {
+  --text: #cccccc;
+  --background: #1f1f1f;
   --primary: #324abd;
   --secondary: #b3b6c6;
   --accent: #0c28b6;
