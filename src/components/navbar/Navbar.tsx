@@ -8,7 +8,7 @@ export default function Navbar() {
   const { darkMode, toggleDarkMode } = useThemeContext();
 
   return (
-    <nav className="w-screen px-6 py-3 flex items-center justify-between bg-(--background) fixed border-b-[#cacaca] dark:border-b-[#DFDFDF]/40 border-b">
+    <nav className="w-screen px-6 py-3 flex items-center justify-between bg-(--background) fixed z-100 border-b-[#cacaca] dark:border-b-[#DFDFDF]/40 border-b">
       <h1 className="text-xl font-semibold text-(--text)">
         Student Testing System
       </h1>
