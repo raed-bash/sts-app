@@ -8,7 +8,7 @@ export type RoleViewProps = HTMLAttributes<HTMLDivElement> & {
 
 const ROLE_STYLES: Record<UserRole, string> = {
   SUPER_ADMIN: "bg-green-400",
-  STUDENT: "bg-red-400",
+  STUDENT: "bg-blue-400",
   TEACHER: "bg-yellow-400",
 };
 
