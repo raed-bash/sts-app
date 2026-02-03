@@ -3,6 +3,7 @@ import Container from "./components/container/Container";
 import PrivateRoute from "./components/PrivateRoute";
 import Layout from "./components/layout/Layout";
 import { authRouter } from "./pages/auth/auth.router";
+import { usersRouter } from "./pages/users/users.router";
 
 export default function AppRouter() {
   const routers = createBrowserRouter([
@@ -26,10 +27,7 @@ export default function AppRouter() {
                 </div>
               ),
             },
-            {
-              path: "users",
-              element: <h1>Users</h1>,
-            },
+            ...usersRouter,
             {
               path: "settings",
               element: <h1>Settings</h1>,
