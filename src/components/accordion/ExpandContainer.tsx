@@ -1,4 +1,4 @@
-import { cn } from "src/utils/cn";
+import Animation from "../Animation";
 
 export type ExpandContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   expand: boolean;
@@ -7,23 +7,21 @@ export type ExpandContainerProps = React.HTMLAttributes<HTMLDivElement> & {
 };
 
 function ExpandContainer({
-  className,
+  children,
   expand = false,
   expanedClassName = "",
   notExpanedClassName = "",
   ...props
 }: ExpandContainerProps) {
   return (
-    <div
-      className={cn(
-        `duration-150 ease-in-out`,
-        expand
-          ? `max-h-[10000px] overflow-animate ${expanedClassName}`
-          : `max-h-0 overflow-hidden ${notExpanedClassName}`,
-        className
-      )}
+    <Animation
+      openClassName={`max-h-[10000px] ${expanedClassName}`}
+      notOpenClassName={`max-h-0 ${notExpanedClassName}`}
+      isOpen={expand}
       {...props}
-    />
+    >
+      {children}
+    </Animation>
   );
 }
 
