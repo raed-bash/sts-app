@@ -8,11 +8,11 @@ import type React from "react";
 import type { EventTarget } from "src/utils/EventTarget";
 
 export type THeadSortEventHandler = (
-  column: TableColumn
+  column: TableColumn,
 ) => SortButtonEventHandler;
 
 export type THeadSelectRowEventHandler = (
-  row?: TableRow
+  row?: TableRow,
 ) => (e: EventTarget) => void;
 
 export type THeadProps = React.HTMLAttributes<HTMLTableSectionElement> & {
@@ -53,7 +53,10 @@ function THead({
 }: THeadProps) {
   return (
     <thead {...props}>
-      <Tr {...thrProps} className={cn("bg-primary-light ", thrProps.className)}>
+      <Tr
+        {...thrProps}
+        className={cn("bg-(--primary)/30 ", thrProps.className)}
+      >
         {selectable && (
           <Th
             {...thhsProps}
@@ -61,7 +64,7 @@ function THead({
             className={cn(
               `w-20`,
               thhsProps.className,
-              thCheckboxProps.className
+              thCheckboxProps.className,
             )}
           >
             <input

@@ -88,9 +88,9 @@ function TBody({
             {...tbrProps}
             key={row.id}
             className={cn(
-              (i & 1) === 1 ? "bg-primary-light" : "bg-secondary-main",
+              (i & 1) === 1 ? "bg-(--primary)/30" : "bg-(--secondary)/10",
               tbrProps.className,
-              handleSelectArea(i)
+              handleSelectArea(i),
             )}
           >
             {selectable && (
@@ -102,7 +102,7 @@ function TBody({
                 className={cn(
                   tbdsProps.className,
                   tdCheckboxProps.className,
-                  `select-none`
+                  `select-none`,
                 )}
               >
                 <input
@@ -121,7 +121,7 @@ function TBody({
                 className={cn(
                   className,
                   tbdsProps.className,
-                  tbdProps.className
+                  tbdProps.className,
                 )}
               >
                 {column.getCell
