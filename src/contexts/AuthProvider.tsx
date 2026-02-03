@@ -22,7 +22,7 @@ export default function AuthProvider({
 
     LocalStorageHelper.setItem("token", response.token);
 
-    api.defaults.headers.post.Authorization = `Bearer ${response.token}`;
+    api.defaults.headers.Authorization = `Bearer ${response.token}`;
   };
 
   const logout = () => {
@@ -32,7 +32,7 @@ export default function AuthProvider({
 
     LocalStorageHelper.removeItem("token");
 
-    api.defaults.headers.delete.Authorization = null;
+    api.defaults.headers.Authorization = null;
   };
 
   return (
