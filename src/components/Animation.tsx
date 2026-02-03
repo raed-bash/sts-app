@@ -5,27 +5,28 @@ export type AnimationProps = React.HTMLAttributes<HTMLDivElement> & {
   isOpen: boolean;
   openClassName?: string;
   notOpenClassName?: string;
+  duration?: number;
 };
 
 export default function Animation({
-  className,
   children,
   isOpen = false,
   openClassName = "opacity-100",
   notOpenClassName = "opacity-0",
+  duration = 300,
   ...props
 }: AnimationProps) {
-  const { show, showAnimation } = useAnimation({ isOpen });
+  const { show, showAnimation } = useAnimation({ isOpen, duration });
 
   return (
     <div
-      className={cn(
-        `transition-all duration-300 ease-in-out ${
-          showAnimation ? openClassName : notOpenClassName
-        }`,
-        className,
-      )}
       {...props}
+      className={cn(
+        "transition-all ease-in-out",
+        showAnimation ? openClassName : notOpenClassName,
+        props.className,
+      )}
+      style={{ transitionDuration: `${duration}ms`, ...props.style }}
     >
       {show ? children : null}
     </div>

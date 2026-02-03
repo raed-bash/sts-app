@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 
 export type UseAnimationOptions = {
   isOpen?: boolean;
+  duration?: number;
 };
 
-export default function useAnimation({ isOpen = false }: UseAnimationOptions) {
+export default function useAnimation({
+  isOpen = false,
+  duration = 300,
+}: UseAnimationOptions) {
   const [show, setShow] = useState(isOpen);
 
   const [showAnimation, setShowAnimation] = useState(isOpen);
@@ -16,10 +20,10 @@ export default function useAnimation({ isOpen = false }: UseAnimationOptions) {
       setShowAnimation(true);
     } else {
       setShowAnimation(false);
-      const id = setTimeout(() => setShow(false), 300);
+      const id = setTimeout(() => setShow(false), duration);
       return () => clearTimeout(id);
     }
-  }, [isOpen]);
+  }, [isOpen, duration]);
 
   return { show, showAnimation };
 }
