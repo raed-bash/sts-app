@@ -93,7 +93,7 @@ function InputPlus<TOption extends OptionType>({
       {...inputPlusContainerProps}
       className={cn(
         "flex flex-col gap-1",
-        oneline ? "flex-row" : "",
+        oneline ? "flex-row items-center" : "",
         inputPlusContainerProps.className,
       )}
     >
