@@ -1,46 +1,18 @@
-import React, { useRef, useState } from "react";
-import IconButton from "./buttons/IconButton";
-import ProfileIcon from "src/assets/icons/profile.svg?react";
 import ProfileFilledIcon from "src/assets/icons/profile-filled.svg?react";
+import ProfileIcon from "src/assets/icons/profile.svg?react";
 import SettingsIcon from "src/assets/icons/settings.svg?react";
 import LogoutIcon from "src/assets/icons/logout.svg?react";
 import { useQuery } from "@tanstack/react-query";
 import { usersApi } from "src/pages/users/users.api";
-import Loading from "./skeleton/Loading";
-import RoleView from "./RoleView";
-import Button from "./buttons/Button";
+import Loading from "../skeleton/Loading";
+import RoleView from "../RoleView";
+import Button from "../buttons/Button";
 import useLogout from "src/hooks/useLogout";
-import Animation from "./Animation";
+import Animation from "../Animation";
 import { cn } from "src/utils/cn";
-import AppLink from "./AppLink";
-import useFocusout from "src/hooks/useFocusout";
+import AppLink from "../AppLink";
 
-export default function Profile() {
-  const [openProfile, setOpenProfile] = useState(false);
-
-  const handleToggleProfile = () => {
-    setOpenProfile((openProfile) => !openProfile);
-  };
-
-  const profileMenuRef = useRef(null);
-
-  useFocusout(profileMenuRef, () => setOpenProfile(false));
-
-  return (
-    <div className="relative" ref={profileMenuRef}>
-      <IconButton
-        onClick={handleToggleProfile}
-        className="aria-expanded:bg-[#DFDFDF]/40"
-        aria-expanded={openProfile}
-      >
-        <ProfileIcon className="fill-(--text)" />
-      </IconButton>
-      <ProfileMenu open={openProfile} />
-    </div>
-  );
-}
-
-function ProfileMenu({ open }: { open: boolean }) {
+export default function ProfileMenu({ open }: { open: boolean }) {
   const handleLogout = useLogout();
 
   const meQuery = useQuery({ queryKey: ["me"], queryFn: () => usersApi.me() });
