@@ -22,20 +22,20 @@ export default function ProfileMenu({ open }: { open: boolean }) {
   return (
     <Animation
       isOpen={open}
-      className="absolute flex gap-8 flex-col justify-center items-center top-[160%] right-0  min-w-[218px] min-h-32 bg-white shadow-base rounded-lg"
+      className="absolute flex gap-8 flex-col justify-center items-center top-[160%] right-0  min-w-[218px] min-h-32 bg-(--surface)  shadow-base rounded-lg"
       tabIndex={0}
     >
       {meQuery.isLoading ? (
         <Loading />
       ) : (
         <div className="w-full flex flex-col gap-5">
-          <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-300 mb-3">
+          <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-300">
             <div className="w-[45px] h-[45px]">
               <ProfileIcon className="fill-(--text) w-full h-full" />
             </div>
             <div className="flex justify-center items-start flex-col">
               <p className="text-sm">{me?.username}</p>
-              <RoleView role={me?.role} className="text-xs" />
+              <RoleView role={me?.role} className="text-xs " />
             </div>
           </div>
           <div className="px-4 flex flex-col gap-5">
@@ -52,7 +52,7 @@ export default function ProfileMenu({ open }: { open: boolean }) {
                 >
                   <opt.Icon className="fill-white " />
                 </span>
-                <span className="block text-sm group-hover:text-(--primary) capitalize text-gray-700 ">
+                <span className="block text-sm group-hover:text-(--primary-hover) capitalize text-(--text-muted) ">
                   {opt.label}
                 </span>
               </AppLink>

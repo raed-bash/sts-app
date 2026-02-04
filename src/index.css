@@ -4,8 +4,12 @@
 
 @theme {
   --text: #040508;
-  --background: #f8f9fc;
+  --text-muted: #4b5563;
+  --background: #fafafd;
+  --surface: #ffffff;
   --primary: #4159cd;
+  --primary-hover: #3948bc;
+  --primary-active: #343e99;
   --secondary: #8b9ced;
   --accent: #4a67f3;
   --danger-main: #dc3545;
@@ -19,8 +23,12 @@
 
 html {
   --text: #040508;
-  --background: #f8f9fc;
+  --text-muted: #4b5563;
+  --background: #fafafd;
+  --surface: #ffffff;
   --primary: #4159cd;
+  --primary-hover: #3948bc;
+  --primary-active: #343e99;
   --secondary: #8b9ced;
   --accent: #4a67f3;
   --danger-main: #dc3545;
@@ -35,10 +43,14 @@ html {
 
 html.dark {
   --text: #cccccc;
-  --background: #1f1f1f;
+  --text-muted: #d1d5db;
+  --background: #0f172a;
+  --surface: #1f2937;
   --primary: #324abd;
+  --primary-hover: #3d5fd3;
+  --primary-active: #517ae0;
   --secondary: #b3b6c6;
-  --accent: #0c28b6;
+  --accent: #6366f1;
   --danger-main: #dc3545;
   --danger-dark: #730000;
   --warning-main: #ffca2c;

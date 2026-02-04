@@ -10,7 +10,7 @@ export default function Navbar() {
 
   return (
     <header className="ms-[280px] mb-5 sticky top-0 pt-5 transition-all duration-300 z-99 after:content-[''] after:w-full after:backdrop-blur-md after:absolute after:left-0 after:top-0 after:h-full after:-z-10">
-      <nav className="px-6 py-3 mx-6 flex items-center justify-between bg-white shadow-base z-100 rounded-md">
+      <nav className="px-6 py-3 mx-6 flex items-center justify-between bg-(--surface) shadow-base z-100 rounded-md">
         <InputPlus
           type="text"
           title=""

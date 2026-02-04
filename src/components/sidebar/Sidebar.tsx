@@ -8,8 +8,8 @@ export default function Sidebar() {
   const location = useLocation();
 
   return (
-    <div className="w-[280px] bg-white top-0 text-(--text) h-full fixed z-100 shadow-base">
-      <div className="flex justify-between items-center bg-white py-6 px-4">
+    <div className="w-[280px] bg-(--surface) top-0 text-(--text) h-full fixed z-100 shadow-base">
+      <div className="flex justify-between items-center py-6 px-4">
         <h1 className="text-xl font-semibold text-(--text)">
           Student Testing System
         </h1>
@@ -22,7 +22,7 @@ export default function Sidebar() {
             className="inline-block no-underline"
           >
             <IconButton
-              className="w-full justify-start rounded-lg fill-(--text) aria-selected:bg-(--primary) aria-selected:fill-white aria-selected:text-white"
+              className="w-full justify-start rounded-lg fill-(--text) aria-selected:bg-(--primary-active) aria-selected:fill-white aria-selected:text-white"
               aria-selected={location.pathname.startsWith(`/${link.to}`)}
             >
               {link.Icon && <span className="me-2">{link.Icon}</span>}

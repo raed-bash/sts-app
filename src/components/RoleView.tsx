@@ -25,7 +25,7 @@ export default function RoleView({ role, ...props }: RoleViewProps) {
       className={cn(
         // "px-2 py-1 rounded-lg text-white font-bold",
         // role && ROLE_STYLES[role],
-        "block font-light text-xs   capitalize text-gray-700",
+        "block font-light text-xs capitalize text-(--text-muted)",
         props.className,
       )}
     >
