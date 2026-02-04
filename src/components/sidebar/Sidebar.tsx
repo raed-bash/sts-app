@@ -8,7 +8,12 @@ export default function Sidebar() {
   const location = useLocation();
 
   return (
-    <div className="w-64 bg-(--background) text-(--text) py-4 h-full pt-[73px] fixed z-100 border-r-[#cacaca] dark:border-r-[#DFDFDF]/40 border-r">
+    <div className="w-[280px] bg-white top-0 text-(--text) h-full fixed z-100 shadow-base">
+      <div className="flex justify-between items-center bg-white py-6 px-4">
+        <h1 className="text-xl font-semibold text-(--text)">
+          Student Testing System
+        </h1>
+      </div>
       <div className="flex flex-col px-2 gap-2">
         {links.map((link) => (
           <AppLink
