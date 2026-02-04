@@ -1,7 +1,8 @@
+import type { ComponentPropsWithRef } from "react";
 import useAnimation from "src/hooks/useAnimation";
 import { cn } from "src/utils/cn";
 
-export type AnimationProps = React.HTMLAttributes<HTMLDivElement> & {
+export type AnimationProps = ComponentPropsWithRef<"div"> & {
   isOpen: boolean;
   openClassName?: string;
   notOpenClassName?: string;
