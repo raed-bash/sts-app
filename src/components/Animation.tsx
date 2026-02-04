@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef } from "react";
+import type { ComponentPropsWithRef, CSSProperties } from "react";
 import useAnimation from "src/hooks/useAnimation";
 import { cn } from "src/utils/cn";
 
@@ -7,6 +7,8 @@ export type AnimationProps = ComponentPropsWithRef<"div"> & {
   openClassName?: string;
   notOpenClassName?: string;
   duration?: number;
+  openStyle?: CSSProperties;
+  notOpenStyle?: CSSProperties;
 };
 
 export default function Animation({
@@ -15,6 +17,8 @@ export default function Animation({
   openClassName = "opacity-100",
   notOpenClassName = "opacity-0",
   duration = 300,
+  openStyle = {},
+  notOpenStyle = {},
   ...props
 }: AnimationProps) {
   const { show, showAnimation } = useAnimation({ isOpen, duration });
@@ -27,7 +31,11 @@ export default function Animation({
         showAnimation ? openClassName : notOpenClassName,
         props.className,
       )}
-      style={{ transitionDuration: `${duration}ms`, ...props.style }}
+      style={{
+        transitionDuration: `${duration}ms`,
+        ...(showAnimation ? openStyle : notOpenStyle),
+        ...props.style,
+      }}
     >
       {show ? children : null}
     </div>
