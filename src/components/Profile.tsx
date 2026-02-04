@@ -1,17 +1,18 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import IconButton from "./buttons/IconButton";
-import LabeledTextBox from "./LabeledTextBox";
 import ProfileIcon from "src/assets/icons/profile.svg?react";
+import ProfileFilledIcon from "src/assets/icons/profile-filled.svg?react";
+import SettingsIcon from "src/assets/icons/settings.svg?react";
 import LogoutIcon from "src/assets/icons/logout.svg?react";
 import { useQuery } from "@tanstack/react-query";
 import { usersApi } from "src/pages/users/users.api";
-import { dateFormater } from "src/utils/dateFormater";
 import Loading from "./skeleton/Loading";
 import RoleView from "./RoleView";
-import StatusView from "./StatusView";
 import Button from "./buttons/Button";
 import useLogout from "src/hooks/useLogout";
 import Animation from "./Animation";
+import { cn } from "src/utils/cn";
+import AppLink from "./AppLink";
 
 export default function Profile() {
   const handleLogout = useLogout();
@@ -35,56 +36,80 @@ export default function Profile() {
       </IconButton>
       <Animation
         isOpen={openProfile}
-        className="absolute flex gap-8 flex-col justify-center items-center top-full right-0 min-w-[470px] min-h-32 p-4 bg-(--background)  shadow-(--shadow) rounded-lg"
+        className="absolute flex gap-8 flex-col justify-center items-center top-[160%] right-0  min-w-[218px] min-h-32 bg-white shadow-base rounded-lg"
+        tabIndex={0}
       >
         {meQuery.isLoading ? (
           <Loading />
         ) : (
-          <>
-            <div className="flex gap-8 flex-row">
-              <div className="h-full w-48 gap-5">
-                <ProfileIcon className="fill-(--text)" />
+          <div className="w-full flex flex-col gap-5">
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-300 mb-3">
+              <div className="w-[45px] h-[45px]">
+                <ProfileIcon className="fill-(--text) w-full h-full" />
               </div>
-              <div className="flex flex-col">
-                <LabeledTextBox label="Username" className="border-none">
-                  {me?.username}
-                </LabeledTextBox>
-                <LabeledTextBox
-                  label="Role"
-                  className="border-none items-center"
-                >
-                  <RoleView role={me?.role} />
-                </LabeledTextBox>
-                <LabeledTextBox
-                  label="Status"
-                  className="border-none items-center"
-                >
-                  <StatusView status={me?.status} />
-                </LabeledTextBox>
-                <LabeledTextBox
-                  label="Created At"
-                  className="border-none min-w-max"
-                >
-                  {dateFormater(me?.created_at)}
-                </LabeledTextBox>
+              <div className="flex justify-center items-start flex-col">
+                <p className="text-sm">{me?.username}</p>
+                <RoleView role={me?.role} className="text-xs" />
               </div>
             </div>
-            <div className="w-full">
+            <div className="px-4 flex flex-col gap-5">
+              {profileOptions.map((opt) => (
+                <AppLink
+                  to={opt.to}
+                  className="flex items-center gap-3 group duration-75 cursor-pointer  no-underline"
+                >
+                  <span
+                    className={cn(
+                      "h-9 w-9 inline-flex items-center justify-center group-hover:scale-110 transition-all duration-200  rounded-full text-2xl  text-white  ",
+                      opt.bgColorClassName,
+                    )}
+                  >
+                    <opt.Icon className="fill-white " />
+                  </span>
+                  <span className="block text-sm group-hover:text-(--primary) capitalize text-gray-700 ">
+                    {opt.label}
+                  </span>
+                </AppLink>
+              ))}
+            </div>
+            <div className="px-4 py-3 border-t border-gray-300">
               <Button
                 variant="contained"
-                color="danger"
-                className="flex gap-2 items-center ps-8"
+                color="primary"
+                className="flex gap-2 items-center justify-center w-full h-10 text-sm"
                 onClick={handleLogout}
               >
-                <div className="w-7">
-                  <LogoutIcon className="fill-white " />
-                </div>{" "}
+                <LogoutIcon className="fill-white  w-5 h-5" />
                 Logout
               </Button>
             </div>
-          </>
+          </div>
         )}
       </Animation>
     </div>
   );
 }
+
+type ProfileOption = {
+  Icon: (props: React.SVGProps<SVGSVGElement>) => React.ReactNode;
+  bgColorClassName: string;
+  label: string;
+  to: string;
+};
+
+const profileOptions: ProfileOption[] = [
+  {
+    Icon: (props: React.SVGProps<SVGSVGElement>) => (
+      <ProfileFilledIcon {...props} />
+    ),
+    bgColorClassName: "bg-green-500",
+    label: "Profile",
+    to: "profile",
+  },
+  {
+    Icon: (props: React.SVGProps<SVGSVGElement>) => <SettingsIcon {...props} />,
+    bgColorClassName: "bg-yellow-500",
+    label: "Settings",
+    to: "settings",
+  },
+];
