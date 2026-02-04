@@ -2,7 +2,6 @@ import { useLocation } from "react-router";
 import AppLink from "../AppLink";
 import HomeIcon from "src/assets/icons/home.svg?react";
 import UsersIcon from "src/assets/icons/users.svg?react";
-import SettingsIcon from "src/assets/icons/settings.svg?react";
 import IconButton from "../buttons/IconButton";
 
 export default function Sidebar() {
@@ -42,10 +41,5 @@ const links = [
     to: "users",
     label: "Users",
     Icon: <UsersIcon />,
-  },
-  {
-    to: "settings",
-    label: "Settings",
-    Icon: <SettingsIcon />,
   },
 ];
