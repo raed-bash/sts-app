@@ -17,11 +17,18 @@ export default function Sidebar() {
           Student Testing System
         </h1>
       </div>
-      <SidebarLinks
-        expanded={expanded}
-        setExpanded={setExpanded}
-        links={links}
-      />
+      {categories.map((category) => (
+        <div>
+          <div className="ps-8 my-4 text-xs uppercase text-(--text-muted) font-medium">
+            {category.title}
+          </div>
+          <SidebarLinks
+            expanded={expanded}
+            setExpanded={setExpanded}
+            links={category.links}
+          />
+        </div>
+      ))}
     </div>
   );
 }
@@ -178,15 +185,25 @@ type Link = (
   Icon: ReactNode;
 };
 
-const links: Link[] = [
+type Category = {
+  title: string;
+  links: Link[];
+};
+
+const categories: Category[] = [
   {
-    to: "home",
-    label: "Home",
-    Icon: <HomeIcon />,
-  },
-  {
-    to: "users",
-    label: "Users",
-    Icon: <UsersIcon />,
+    title: "Menu",
+    links: [
+      {
+        to: "home",
+        label: "Home",
+        Icon: <HomeIcon />,
+      },
+      {
+        to: "users",
+        label: "Users",
+        Icon: <UsersIcon />,
+      },
+    ],
   },
 ];
