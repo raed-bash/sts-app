@@ -1,11 +1,33 @@
 import { useLocation } from "react-router";
 import AppLink, { type AppLinkProps } from "../AppLink";
 import HomeIcon from "src/assets/icons/home.svg?react";
-import UsersIcon from "src/assets/icons/users.svg?react";
 import ArrowLineDownIcon from "src/assets/icons/arrow-line-down.svg?react";
 import IconButton, { type IconButtonProps } from "../buttons/IconButton";
-import { Fragment, useState, type ReactNode } from "react";
+import { Fragment, useState } from "react";
 import Animation from "../Animation";
+import { UserPages } from "src/pages/users/users.pages";
+import type { AppPageNestedPages, AppPageSidebar } from "src/types/app-page";
+
+type Category = {
+  title: string;
+  links: AppPageSidebar[];
+};
+
+const categories: Category[] = [
+  {
+    title: "Menu",
+    links: [
+      {
+        key: "home",
+        to: "home",
+        label: "Home",
+        Icon: <HomeIcon />,
+        sidebar: true,
+      },
+      UserPages.users,
+    ],
+  },
+];
 
 export default function Sidebar() {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
@@ -33,45 +55,38 @@ export default function Sidebar() {
   );
 }
 
-function SidebarLinks({
-  setExpanded,
-  expanded,
-  links,
-  nested,
-}: {
+export type SidebarNestedLinksProps = { links: AppPageNestedPages["pages"] };
+
+function SidebarNestedLinks({ links }: SidebarNestedLinksProps) {
+  return (
+    <div className="flex flex-col text-(--text-muted) inset-shadow-black shadow-base ps-5">
+      {links.map((link) =>
+        link.to ? (
+          <SidebarNestedLink
+            key={link.label}
+            to={link.to}
+            aria-selected={location.pathname.startsWith(`/${link.to}`)}
+          >
+            <span className="rounded-full bg-(--text-muted) w-[7px] h-[7px] me-2"></span>
+
+            {link.label}
+          </SidebarNestedLink>
+        ) : (
+          <></>
+        ),
+      )}
+    </div>
+  );
+}
+
+export type SidebarLinksProps = {
   setExpanded: React.Dispatch<React.SetStateAction<Set<string>>>;
   expanded: Set<string>;
-  links: Link[];
-  nested?: boolean;
-}) {
+  links: AppPageSidebar[];
+};
+
+function SidebarLinks({ setExpanded, expanded, links }: SidebarLinksProps) {
   const location = useLocation();
-
-  if (nested) {
-    return (
-      <div
-        className={
-          "flex flex-col text-(--text-muted) " +
-          (nested ? "inset-shadow-black shadow-base ps-5 " : "")
-        }
-      >
-        {links.map((link) =>
-          link.to ? (
-            <SidebarNestedLink
-              key={link.label}
-              to={link.to}
-              aria-selected={location.pathname.startsWith(`/${link.to}`)}
-            >
-              <span className="rounded-full bg-(--text-muted) w-[7px] h-[7px] me-2"></span>
-
-              {link.label}
-            </SidebarNestedLink>
-          ) : (
-            <></>
-          ),
-        )}
-      </div>
-    );
-  }
 
   const handleExpand = (name: string) => {
     setExpanded((oldExpanded) => {
@@ -89,49 +104,48 @@ function SidebarLinks({
 
   return (
     <div className="flex flex-col text-(--text-muted) ">
-      {links.map((link) =>
-        link.to ? (
-          <SidebarLink
-            key={link.label}
-            to={link.to}
-            aria-selected={location.pathname.startsWith(`/${link.to}`)}
-          >
-            {link.Icon && <span className="me-2">{link.Icon}</span>}
-
-            {link.label}
-          </SidebarLink>
-        ) : Array.isArray(link.links) ? (
-          <Fragment key={link.name as string}>
-            <SidebarButton
+      {links.map((link) => {
+        if (link.to) {
+          return (
+            <SidebarLink
               key={link.label}
-              aria-expanded={expanded.has(link.name as string)}
-              onClick={() => handleExpand(link.name as string)}
+              to={link.to}
+              aria-selected={location.pathname.startsWith(`/${link.to}`)}
             >
-              <span className="flex gap-2 items-center">
-                {link.Icon}
-                {link.label}
-              </span>
-              <ArrowLineDownIcon className="justify-self-end -rotate-90 " />
-            </SidebarButton>
-            <Animation
-              isOpen={expanded.has(link.name as string)}
-              duration={300}
-              notOpenClassName="h-0"
-              className="overflow-hidden "
-              openStyle={{ height: `${link.links.length * 50}px` }}
-            >
-              <SidebarLinks
-                expanded={expanded}
-                links={link.links}
-                setExpanded={setExpanded}
-                nested
-              />
-            </Animation>
-          </Fragment>
-        ) : (
-          <></>
-        ),
-      )}
+              {link.Icon && <span className="me-2">{link.Icon}</span>}
+
+              {link.label}
+            </SidebarLink>
+          );
+        }
+
+        if (link.to === undefined) {
+          return (
+            <Fragment key={link.key}>
+              <SidebarButton
+                key={link.label}
+                aria-expanded={expanded.has(link.key)}
+                onClick={() => handleExpand(link.key)}
+              >
+                <span className="flex gap-2 items-center">
+                  {link.Icon}
+                  {link.label}
+                </span>
+                <ArrowLineDownIcon className="justify-self-end -rotate-90 " />
+              </SidebarButton>
+              <Animation
+                isOpen={expanded.has(link.key)}
+                duration={300}
+                notOpenClassName="h-0"
+                className="overflow-hidden "
+                openStyle={{ height: `${link.pages.length * 50}px` }}
+              >
+                <SidebarNestedLinks links={link.pages} />
+              </Animation>
+            </Fragment>
+          );
+        }
+      })}
     </div>
   );
 }
@@ -172,38 +186,3 @@ const SidebarNestedLink = (props: AppLinkProps) => (
                ${props.className}`}
   />
 );
-
-type Link = (
-  | {
-      to: string;
-      name?: unknown;
-      links?: unknown;
-    }
-  | { to?: unknown; name: string; links: Omit<Link, "links">[] }
-) & {
-  label: string;
-  Icon: ReactNode;
-};
-
-type Category = {
-  title: string;
-  links: Link[];
-};
-
-const categories: Category[] = [
-  {
-    title: "Menu",
-    links: [
-      {
-        to: "home",
-        label: "Home",
-        Icon: <HomeIcon />,
-      },
-      {
-        to: "users",
-        label: "Users",
-        Icon: <UsersIcon />,
-      },
-    ],
-  },
-];

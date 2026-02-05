@@ -11,10 +11,11 @@ import EditIcon from "src/assets/icons/edit.svg?react";
 import RemoveIcon from "src/assets/icons/remove.svg?react";
 import IconButton from "src/components/buttons/IconButton";
 import Tooltip from "src/components/tooltip/Tooltip";
+import { UserPages } from "../users.pages";
 
 export default function UsersList() {
   const usersQuery = useQuery({
-    queryKey: ["users"],
+    queryKey: [UserPages.users.key],
     queryFn: () => usersApi.getUsers(),
   });
 
