@@ -33,15 +33,15 @@ function InputIcon(
     iconClassName,
     ...props
   }: InputIconProps,
-  ref: ForwardedRef<HTMLInputElement>
+  ref: ForwardedRef<HTMLInputElement>,
 ) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [focus, setFocus] = useState(false);
 
   const iconClassNameCN = cn(
     `h-full`,
-    focus ? "stroke-primary-main " : "",
-    iconClassName
+    focus ? "stroke-(--primary)" : "",
+    iconClassName,
   );
 
   const handleInputRef = (el: HTMLInputElement | null) => {
@@ -70,12 +70,14 @@ function InputIcon(
         {...inputFrameProps}
         className={cn(
           `flex items-stretch 
-           bg-secondary-main rounded-full
+           bg-gray-400/10 rounded-full
            px-3 py-2 h-full justify-between`,
           props.disabled ? "opacity-60" : "",
-          focus ? " outline outline-primary-main " : "",
-          helperText && error ? "border-danger-main border border-solid" : "",
-          inputFrameProps.className
+          focus ? " outline outline-(--primary) " : "",
+          helperText && error
+            ? "border-(--danger-main) border border-solid"
+            : "",
+          inputFrameProps.className,
         )}
         style={{ outlineWidth: 1 }}
       >
@@ -97,7 +99,7 @@ function InputIcon(
           }}
           className={cn(
             ` bg-transparent focus:outline-none w-full indent-1 p-1`,
-            className
+            className,
           )}
         />
         {EndIcon && <EndIcon className={iconClassNameCN} />}
@@ -106,8 +108,8 @@ function InputIcon(
         {...helperTextProps}
         className={cn(
           "text-sm",
-          error ? "text-danger-main" : "",
-          helperTextProps.className
+          error ? "text-(--danger-main)" : "",
+          helperTextProps.className,
         )}
       >
         {helperText}

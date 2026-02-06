@@ -4,6 +4,7 @@ import MoreIcon from "src/assets/icons/more.svg?react";
 import useFocusout from "src/hooks/useFocusout";
 import IconButton from "../buttons/IconButton";
 import { cn } from "src/utils/cn";
+import Animation from "../Animation";
 
 export type MenuProps = { children: ReactNode };
 
@@ -24,21 +25,21 @@ function Menu({ children }: MenuProps) {
 
   return (
     <div className="relative">
-      <Tooltip title="الأعمدة">
-        <IconButton className="max-w-min relative " onClick={handleOpenMenu}>
-          <MoreIcon className="rotate-90 fill-primary-main " />
+      <Tooltip title="show\hide columns">
+        <IconButton onClick={handleOpenMenu}>
+          <MoreIcon className="rotate-90 fill-(--primary) " />
         </IconButton>
       </Tooltip>
-      <div
+      <Animation
         className={cn(
-          openMenu ? "opacity-100 shadow-md " : "opacity-0 hidden ",
-          `duration-75 absolute left-0 py-2 max-h-96 px-3 overflow-auto
-           min-w-max bg-white rounded-md z-10000 flex flex-col gap-3`
+          `duration-75 absolute rtl:left-0 ltr:right-0 py-2 max-h-96 px-3 overflow-auto
+           min-w-max bg-(--surface) rounded-md z-10000 flex flex-col gap-3 shadow-base `,
         )}
         ref={menuRef}
+        isOpen={openMenu}
       >
         {children}
-      </div>
+      </Animation>
     </div>
   );
 }
