@@ -40,7 +40,7 @@ export default function Sidebar() {
         </h1>
       </div>
       {categories.map((category) => (
-        <div>
+        <div key={category.title}>
           <div className="ps-8 my-4 text-xs uppercase text-(--text-muted) font-medium">
             {category.title}
           </div>
