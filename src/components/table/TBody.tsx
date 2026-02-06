@@ -60,7 +60,13 @@ function TBody({
   } = useTBodyUtils({ onSelectRow, rows, selectedRows });
 
   return (
-    <tbody {...props} className={cn("", className)}>
+    <tbody
+      {...props}
+      className={cn(
+        " [&>tr[aria-rowindex]:not([aria-rowindex='0']):not([aria-selected='true'])]:border-gray-100/60  [&>tr[aria-rowindex]:not([aria-rowindex='0']):not([aria-selected='true'])]:border-t-[0.833333px] ",
+        className,
+      )}
+    >
       {!loading && scLoading ? (
         <tr>
           <td>
@@ -88,10 +94,12 @@ function TBody({
             {...tbrProps}
             key={row.id}
             className={cn(
-              (i & 1) === 1 ? "bg-(--primary)/30" : "bg-(--secondary)/10",
+              "hover:bg-gray-100/30 dark:hover:bg-gray-700",
               tbrProps.className,
               handleSelectArea(i),
             )}
+            aria-rowindex={i}
+            aria-selected={selectedRows ? selectedRows.has(row?.id) : false}
           >
             {selectable && (
               <Td
@@ -108,7 +116,7 @@ function TBody({
                 <input
                   type="checkbox"
                   checked={selectedRows.has(row.id)}
-                  className="w-5 h-5 max-lg:w-4 max-lg:h-4"
+                  className="w-4 h-4"
                   onChange={handleCheckBoxChange(row)}
                 />
               </Td>

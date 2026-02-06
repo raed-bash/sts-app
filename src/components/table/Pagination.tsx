@@ -1,7 +1,13 @@
+import ArrowLineDownIcon from "src/assets/icons/arrow-line-down.svg?react";
+import InputPlus from "../inputs/InputPlus";
+import { useDebounce } from "src/hooks/useDebounce";
+import IconButton from "../buttons/IconButton";
+import { useState } from "react";
+
 const getVisiblePages = (
   currentPage: number,
   totalPages: number,
-  maxVisibleNeighbors = 2 // Number of neighbors to show on each side of the current page
+  maxVisibleNeighbors = 2, // Number of neighbors to show on each side of the current page
 ) => {
   const pages = [];
 
@@ -37,9 +43,8 @@ const getVisiblePages = (
 
 export type PaginationProps = {
   currentPage: number;
-  totalPages: number;
   count: number;
-  onPageChange: (page: number) => void;
+  onChange: (page: number) => void;
   /**
    * @default 2
    */
@@ -52,66 +57,88 @@ export type PaginationProps = {
 
 function Pagination({
   currentPage,
-  totalPages,
   count,
-  onPageChange,
+  onChange,
   maxVisibleNeighbors = 2,
   perPage = 10,
 }: PaginationProps) {
-  totalPages = totalPages || Math.ceil(count / perPage);
+  const totalPages = Math.ceil(count / perPage);
+
+  const [pageTracker, setPageTracker] = useState(currentPage);
 
   const pages = getVisiblePages(currentPage, totalPages, maxVisibleNeighbors);
 
+  const handleChange = (newPage: number) => {
+    onChange(newPage);
+
+    setPageTracker(newPage);
+  };
+
+  const handleDebounceChange = useDebounce(handleChange, 500);
+
   return (
-    <div className="flex items-center justify-center space-x-2 py-4">
-      {/* Previous Button */}
-      <button
-        className={`px-1 sm:px-2 lg:px-3 py-1  text-[10px] sm:text-[14px] rounded bg-gray-200 hover:bg-gray-300 ${
-          currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
-        }`}
-        disabled={currentPage === 1}
-        onClick={() => {
-          onPageChange(currentPage - 1);
-        }}
-      >
-        السابق
-      </button>
+    <div className="flex gap-2">
+      <div className="flex items-center justify-center gap-x-2 py-4">
+        {/* Previous Button */}
+        <IconButton
+          className="px-2 py-[9.5px] rotate-90 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={currentPage === 1}
+          onClick={() => {
+            handleChange(currentPage - 1);
+          }}
+        >
+          <ArrowLineDownIcon className="stroke-(--text)" />
+        </IconButton>
 
-      {/* Dynamic Page Numbers */}
-      {pages.map((page, idx) =>
-        page === "..." ? (
-          <span key={idx} className="px-1 sm:px-2 lg:px-3 py-1 text-gray-500">
-            ...
-          </span>
-        ) : (
-          <button
-            key={idx}
-            className={`px-1 sm:px-2 lg:px-3 py-1  text-[10px] sm:text-[14px] rounded ${
-              page === currentPage
-                ? "bg-primary-main text-white"
-                : "bg-gray-200 hover:bg-gray-main"
-            }`}
-            onClick={() => {
-              if (typeof page === "number") onPageChange(page);
-            }}
-          >
-            {page}
-          </button>
-        )
-      )}
+        {/* Dynamic Page Numbers */}
+        {pages.map((page, idx) =>
+          page === "..." ? (
+            <span key={idx} className="px-3 py-1 text-gray-500">
+              ...
+            </span>
+          ) : (
+            <IconButton
+              key={idx}
+              className="px-3 py-1 text-[14px] rounded 
+             aria-selected:bg-(--primary) aria-selected:text-white"
+              aria-selected={page === currentPage}
+              onClick={() => {
+                if (typeof page === "number") handleChange(page);
+              }}
+            >
+              {page}
+            </IconButton>
+          ),
+        )}
 
-      {/* Next Button */}
-      <button
-        className={`px-1 sm:px-2 lg:px-3 py-1 text-[10px] sm:text-[14px] rounded bg-gray-200 hover:bg-gray-300 ${
-          currentPage === totalPages ? "cursor-not-allowed opacity-50" : ""
-        }`}
-        disabled={currentPage === totalPages}
-        onClick={() => {
-          onPageChange(currentPage + 1);
+        {/* Next Button */}
+        <IconButton
+          className="px-2 py-[9.5px] -rotate-90 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 "
+          disabled={currentPage === totalPages}
+          onClick={() => {
+            onChange(currentPage + 1);
+          }}
+        >
+          <ArrowLineDownIcon className="stroke-(--text)" />
+        </IconButton>
+      </div>
+      <InputPlus
+        oneline
+        title="Go:"
+        type="number"
+        inputPlusContainerProps={{ className: "w-30" }}
+        onChange={(e) => {
+          const newPage = +e.target.value;
+
+          if (newPage > 0 && newPage <= totalPages) {
+            handleDebounceChange(newPage);
+            setPageTracker(newPage);
+          }
         }}
-      >
-        التالي
-      </button>
+        min={1}
+        max={totalPages}
+        value={pageTracker}
+      />
     </div>
   );
 }

@@ -5,12 +5,11 @@ export type ThProps = React.ThHTMLAttributes<HTMLTableCellElement>;
 function Th(props: ThProps) {
   return (
     <th
-      align="center"
       title={typeof props.children === "string" ? props.children : ""}
       {...props}
       className={cn(
-        "text-primary-main text-base max-lg:text-xs max-lg:py-2 py-5 px-2",
-        props.className
+        "text-gray-800 dark:text-gray-200 text-xs font-semibold uppercase py-3 px-4 text-left",
+        props.className,
       )}
     />
   );

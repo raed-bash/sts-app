@@ -75,13 +75,11 @@ export type TableProps<Row> = (TableHiddenColumns<Row> | TableNoHiddenColumns) &
 
     currentPage?: number;
 
-    totalPages?: number;
-
     perPage?: number;
 
     count?: number;
 
-    onPageChange?: PaginationProps["onPageChange"];
+    onPageChange?: PaginationProps["onChange"];
 
     maxVisibleNeighbors?: PaginationProps["maxVisibleNeighbors"];
 
@@ -125,7 +123,6 @@ function Table<Row>({
   rows = [],
   currentPage = 1,
   onPageChange = () => {},
-  totalPages = 2,
   perPage = 20,
   count = rows.length,
   containerProps = {},
@@ -178,7 +175,7 @@ function Table<Row>({
           />
         </div>
       )}
-      <div className="overflow-x-auto w-full max-w-full">
+      <div className="overflow-x-auto w-full max-w-full rounded-lg pb-[5px]">
         <table className="w-full min-w-max table-auto border-collapse relative">
           <THead
             columns={displayedColumns}
@@ -207,27 +204,26 @@ function Table<Row>({
           />
         </table>
       </div>
-      <div className="flex justify-between items-center px-10">
-        <div className="flex gap-5">
-          <div className="flex items-center gap-1 font-medium">
-            <p className="text-lg">المجموع: </p>
+      <div className="flex justify-between items-center px-4">
+        <div className="flex gap-5 text-(--text)">
+          <div className="flex items-center gap-1 font-medium text-sm">
+            <p>Total: </p>
             <span>{count}</span>
+          </div>
+
+          <div className="flex items-center gap-1 font-medium text-sm">
+            <p>PerPage: </p>
+            <span>{perPage}</span>
           </div>
         </div>
 
         <Pagination
           currentPage={currentPage}
-          onPageChange={onPageChange}
-          totalPages={totalPages}
+          onChange={onPageChange}
           maxVisibleNeighbors={maxVisibleNeighbors}
           count={count}
           perPage={perPage}
         />
-
-        <div className="flex items-center gap-1 font-medium">
-          <p className="text-lg">عدد الصفوف لكل صفحة: </p>
-          <span>{perPage}</span>
-        </div>
       </div>
     </Container>
   );

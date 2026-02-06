@@ -8,8 +8,8 @@ function Container(props: ContainerProps) {
     <div
       {...props}
       className={cn(
-        "bg-secondary-main  flex flex-col justify-between",
-        props.className
+        "bg-secondary-main flex flex-col justify-between rounded-lg",
+        props.className,
       )}
     />
   );

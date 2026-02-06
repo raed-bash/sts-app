@@ -55,7 +55,7 @@ function THead({
     <thead {...props}>
       <Tr
         {...thrProps}
-        className={cn("bg-(--primary)/30 ", thrProps.className)}
+        className={cn("bg-gray-100 dark:bg-gray-700 ", thrProps.className)}
       >
         {selectable && (
           <Th
@@ -72,7 +72,7 @@ function THead({
               onChange={onSelectRow()}
               name="selectAll"
               checked={Boolean(selectAll)}
-              className="w-5 h-5 max-lg:w-4 max-lg:h-4"
+              className="w-4 h-4"
             />
           </Th>
         )}
@@ -86,16 +86,16 @@ function THead({
             {...thhProps}
             className={cn(className, thhsProps.className, thhProps.className)}
           >
-            <div className="flex items-center justify-center">
-              {column.headerName}
-              {column.sort && (
-                <SortButton
-                  className="mt-0"
-                  onClick={onSortClick(column)}
-                  sortStatus={sortStatuses[column.name]}
-                />
-              )}
-            </div>
+            {!column.sort && column.headerName}
+            {column.sort && (
+              <SortButton
+                className="mt-0 align-middle ms-1 py-1 uppercase"
+                onClick={onSortClick(column)}
+                sortStatus={sortStatuses[column.name]}
+              >
+                {column.headerName}
+              </SortButton>
+            )}
           </Th>
         ))}
       </Tr>
