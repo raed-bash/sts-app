@@ -52,12 +52,12 @@ export default function useTBodyUtils({
     const nextRowId = rows?.[i + 1]?.id;
     const isNextRowSelected = selectedRows.has(nextRowId);
 
-    const style = `border-r-[3px] border-l-[3px] border-solid border-primary-main `;
+    const style = `border-r-[2px] border-l-[2px] border-solid border-blue-500 `;
 
     return (
       style +
-      `${!isPrevRowSelected ? "border-t-[3px]" : ""} ${
-        !isNextRowSelected ? "border-b-[3px]" : ""
+      `${!isPrevRowSelected ? "border-t-[2px]" : ""} ${
+        !isNextRowSelected ? "border-b-[2px]" : ""
       } `
     );
   };
@@ -69,7 +69,7 @@ export default function useTBodyUtils({
         nativeEvent: {
           pointerType: string;
         };
-      }
+      },
     ) => {
       if (
         e.nativeEvent.pointerType === "mouse" ||
