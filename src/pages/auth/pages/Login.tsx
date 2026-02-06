@@ -43,14 +43,13 @@ export default function Login() {
   });
 
   return (
-    <div className="h-screen flex items-center justify-center bg-(--background)">
+    <div className="h-screen flex flex-col items-center justify-center bg-(--background) text-(--text)">
+      <h2 className="text-[26px] mb-1 font-medium ">Welcome Back</h2>
+      <p className="text-(--text-muted) text-sm">Please Login to continue</p>
       <Paper
-        className="max-w-lg px-10 py-8 w-full aria-invalid:border-(--danger-main) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger-main)/30 "
+        className="max-w-md w-full mt-5 aria-invalid:border-(--danger-main) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger-main)/30 "
         aria-invalid={Boolean(error)}
       >
-        <h2 className="text-[24px] mb-3 font-medium ">
-          Login in to Student Testing System
-        </h2>
         <form className="flex flex-col gap-2 " onSubmit={formik.handleSubmit}>
           <InputPlus
             type="text"
