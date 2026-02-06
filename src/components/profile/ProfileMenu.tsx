@@ -5,12 +5,12 @@ import LogoutIcon from "src/assets/icons/logout.svg?react";
 import { useQuery } from "@tanstack/react-query";
 import { usersApi } from "src/pages/users/users.api";
 import Loading from "../skeleton/Loading";
-import RoleView from "../RoleView";
 import Button from "../buttons/Button";
 import useLogout from "src/hooks/useLogout";
 import Animation from "../Animation";
 import { cn } from "src/utils/cn";
 import AppLink from "../AppLink";
+import { ROLE_TITLES } from "src/constants/user-role";
 
 export default function ProfileMenu({ open }: { open: boolean }) {
   const handleLogout = useLogout();
@@ -35,7 +35,10 @@ export default function ProfileMenu({ open }: { open: boolean }) {
             </div>
             <div className="flex justify-center items-start flex-col">
               <p className="text-sm">{me?.username}</p>
-              <RoleView role={me?.role} className="text-xs " />
+
+              <p className="font-light text-xs capitalize text-(--text-muted)">
+                {me?.role && ROLE_TITLES[me.role]}
+              </p>
             </div>
           </div>
           <div className="px-4 flex flex-col gap-5">

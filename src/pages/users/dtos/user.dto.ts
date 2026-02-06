@@ -1,10 +1,8 @@
 import { pick } from "lodash";
 import type { StudentDto } from "./student.dto";
 import type { TeacherDto } from "./teacher.dto";
-
-export type UserStatus = "PENDING" | "ACTIVE" | "BLOCKED";
-
-export type UserRole = "SUPER_ADMIN" | "TEACHER" | "STUDENT";
+import type { UserRole } from "src/constants/user-role";
+import type { UserStatus } from "src/constants/user-status";
 
 export class UserDto {
   id!: number;

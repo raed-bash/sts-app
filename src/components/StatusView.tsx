@@ -1,4 +1,4 @@
-import type { UserStatus } from "src/pages/users/dtos/user.dto";
+import { STATUS_TITLES, type UserStatus } from "src/constants/user-status";
 import { cn } from "src/utils/cn";
 
 export type StatusViewProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -11,18 +11,12 @@ const STATUS_STYLES: Record<UserStatus, string> = {
   PENDING: "bg-(--warning-main)",
 };
 
-const STATUS_TITLES: Record<UserStatus, string> = {
-  ACTIVE: "Active",
-  BLOCKED: "Blocked",
-  PENDING: "Pending",
-};
-
 export default function StatusView({ status, ...props }: StatusViewProps) {
   return (
     <div
       {...props}
       className={cn(
-        "px-2 py-1 rounded-lg text-white font-bold",
+        "px-2 py-1 inline-block rounded-lg text-white font-bold",
         status && STATUS_STYLES[status],
         props.className,
       )}
