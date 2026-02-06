@@ -11,13 +11,13 @@ const ROLE_STYLES: Record<UserRole, string> = {
   STUDENT: "bg-blue-400",
   TEACHER: "bg-yellow-400",
 };
-
+// rename to RoleBadge
 export default function RoleView({ role, ...props }: RoleViewProps) {
   return (
     <div
       {...props}
       className={cn(
-        "px-2 py-1 inline-block rounded-lg text-white font-bold",
+        "px-2 py-1 inline-block rounded-lg text-white font-bold text-xs",
         role && ROLE_STYLES[role],
         props.className,
       )}

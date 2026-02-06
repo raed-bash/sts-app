@@ -16,7 +16,7 @@ export default function StatusView({ status, ...props }: StatusViewProps) {
     <div
       {...props}
       className={cn(
-        "px-2 py-1 inline-block rounded-lg text-white font-bold",
+        "px-2 py-1 inline-block rounded-lg text-white font-bold text-xs",
         status && STATUS_STYLES[status],
         props.className,
       )}
