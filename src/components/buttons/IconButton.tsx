@@ -16,7 +16,7 @@ function IconButton({
     {
       ...props,
       className: cn(
-        "hover:bg-(--secondary)/20 duration-150 ease-in-out cursor-pointer p-2 rounded-full flex justify-center items-center",
+        "[&:not(:disabled):not([aria-selected='true'])]:hover:bg-(--secondary)/20 duration-150 ease-in-out cursor-pointer p-2 rounded-full flex justify-center items-center",
         className,
       ),
     },
