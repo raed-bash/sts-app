@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useCashingState from "./useCashingState";
 
-const defaultSelectRowsDefault = new Set();
+const defaultSelectRowsDefault = new Set<string | number>();
 
 export default function useSelectRows(
   name: string,

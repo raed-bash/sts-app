@@ -2,7 +2,7 @@ import { useRef } from "react";
 
 export function useDebounce<T extends (...args: any[]) => void>(
   func: T,
-  delay: number
+  delay: number = 300,
 ) {
   const timerId = useRef<number>(0);
 
