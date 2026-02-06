@@ -5,7 +5,10 @@ export type PaperProps = React.HTMLAttributes<HTMLDivElement>;
 function Paper({ className, ...props }: PaperProps) {
   return (
     <div
-      className={cn("bg-white rounded-xl shadow-sm p-5", className)}
+      className={cn(
+        "bg-(--surface) rounded-lg shadow-base p-6 text-(--text)",
+        className,
+      )}
       {...props}
     />
   );
