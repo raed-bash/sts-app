@@ -7,7 +7,7 @@ export const ButtonTheme = {
   },
   outlined: {
     primary:
-      "text-primary-main border-primary-main border-[1px] hover:bg-primary-light",
+      "text-(--primary) border-(--primary) border hover:bg-(--primary)/10",
     secondary:
       "text-muted-secondary border-secondary-secondary border-[1px] hover:bg-secondary-main",
     danger:
