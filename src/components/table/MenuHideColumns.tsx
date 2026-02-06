@@ -9,7 +9,7 @@ export type MenuHideColumnsProps = {
   columns: TableColumn[];
   onReset: React.MouseEventHandler<HTMLButtonElement> | undefined;
   handleToggleColumns: (
-    column: TableColumn
+    column: TableColumn,
   ) => React.MouseEventHandler<HTMLDivElement> | undefined;
   hiddenColumns: Set<TableColumn["name"]>;
 };
@@ -29,15 +29,21 @@ function MenuHideColumns({
   };
 
   const filteredColumns = columns.filter((column) =>
-    column.headerName.includes(searchMenuCols)
+    column.headerName.includes(searchMenuCols),
   );
 
   return (
     <Menu>
       <InputIcon
-        placeholder="بحث"
-        EndIcon={SearchIcon}
+        placeholder="Search..."
+        EndIcon={(props) => (
+          <SearchIcon
+            {...props}
+            className={`dark:stroke-(--text) ${props.className}`}
+          />
+        )}
         inputFrameProps={{ className: "rounded-md h-10" }}
+        className="placeholder:text-sm w-40"
         onChange={handleSearchChange}
       />
       <div>
@@ -58,16 +64,17 @@ function MenuHideColumns({
             </div>
           ))
         ) : (
-          <p className="text-gray-400">لا أعمدة...</p>
+          <p className="text-gray-400">no columns...</p>
         )}
       </div>
 
       <Button
+        color="primary"
         variant="outlined"
-        className="h-fit  rounded-sm py-2 text-sm px-1 border-none disabled:bg-white disabled:text-black hover:text-primary-main   "
+        className="py-2 px-1 text-sm border-none shadow-none"
         onClick={onReset}
       >
-        إعادة تعيين
+        Reset
       </Button>
     </Menu>
   );
