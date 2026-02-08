@@ -127,12 +127,10 @@ export default function useRawSelectUtils<TOption extends OptionType>({
     const container = e.currentTarget;
 
     const option = (e.target as HTMLElement).closest(
-      "[data-index]"
+      "[data-index]",
     ) as HTMLElement | null;
 
-    if (!option) return false;
-
-    const index = Number(option.dataset.index);
+    const index = Number(option?.dataset?.index || 0);
 
     switch (e.code.toLowerCase()) {
       case "arrowdown": {

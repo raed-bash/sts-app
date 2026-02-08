@@ -94,14 +94,12 @@ function RawSelect<TOption extends OptionType>({
       {...props}
     >
       <div className="flex justify-between items-center px-1 h-full ">
-        <div
-          className={cn(
-            "ps-1 pe-2 inline-block truncate",
-            inputProps.className,
-          )}
-        >
-          {inputLabel}
-        </div>
+        <input
+          className={cn("ps-1 pe-2  w-full truncate", inputProps.className)}
+          tabIndex={-1}
+          value={inputLabel}
+          readOnly
+        />
         <ArrowDown {...arrowDownProps} />
       </div>
       {openDrop && (
@@ -130,6 +128,7 @@ function RawSelect<TOption extends OptionType>({
               multiple={multiple}
               value={option}
               data-index={i + startHelperOptionsLength}
+              tabIndex={0}
               {...getOptionProps(option, i)}
             >
               {getOptionLabel(option)}
