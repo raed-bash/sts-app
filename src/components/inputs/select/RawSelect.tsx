@@ -62,6 +62,7 @@ function RawSelect<TOption extends OptionType>({
     handleClick,
     openDrop,
     isSelectedOption,
+    optionsContainerRef,
   } = useRawSelectUtils({
     name,
     disabled,
@@ -80,8 +81,8 @@ function RawSelect<TOption extends OptionType>({
   return (
     <Tooltip
       className={cn(
-        "w-full h-9 rounded-sm indent-1 p-1 border border-[lab(90.952%_0_-.0000119209)] duration-75 bg-transparent shadow-xs",
-        "focus-visible:border-(--primary) outline-none focus-visible:ring-[3px] focus-visible:ring-(--primary)/30 ",
+        "w-full h-[33px] rounded-sm indent-1 p-1 border border-[lab(90.952%_0_-.0000119209)] duration-75 bg-transparent shadow-xs",
+        "focus-visible:border-(-- primary) outline-none focus-visible:ring-[3px] focus-visible:ring-(--primary)/30 ",
         "aria-invalid:border-(--danger-main) aria-invalid:ring-(--danger-main)/30",
         className,
       )}
@@ -91,21 +92,26 @@ function RawSelect<TOption extends OptionType>({
       onKeyDown={handleSelectKeyDown}
       title={multiple && enableTooltip ? inputLabel : ""}
       placement={openDrop ? "top" : "bottom"}
+      id={name}
+      role="combobox"
       {...props}
     >
       <div className="flex justify-between items-center px-1 h-full ">
-        <input
-          className={cn("ps-1 pe-2  w-full truncate", inputProps.className)}
-          tabIndex={-1}
-          value={inputLabel}
-          readOnly
-        />
+        <div
+          className={cn(
+            "ps-1 pe-2 inline-block truncate",
+            inputProps.className,
+          )}
+        >
+          {inputLabel}
+        </div>
         <ArrowDown {...arrowDownProps} />
       </div>
       {openDrop && (
         <div
           onKeyDown={handleOptionsKeyDown}
           {...optionsContainer}
+          ref={optionsContainerRef}
           className={cn(
             "max-h-64 absolute z-1000 -ms-[3px] mt-1 w-full overflow-y-auto overflow-x-hidden bg-white border border-black rounded-sm",
             optionsContainer.className,

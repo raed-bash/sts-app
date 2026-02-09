@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useFocusout from "src/hooks/useFocusout";
 import { EventTarget } from "src/utils/EventTarget";
 import type { OptionProps } from "../Option";
@@ -67,6 +67,7 @@ export default function useRawSelectUtils<TOption extends OptionType>({
   const [openDrop, setOpenDrop] = useState<boolean>(false);
 
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const optionsContainerRef = useRef<HTMLDivElement>(null);
 
   const handleOpenDrop = () => {
     setOpenDrop(true);
@@ -118,6 +119,7 @@ export default function useRawSelectUtils<TOption extends OptionType>({
     if (OpenSelectStatus.includes(code)) {
       e.preventDefault();
       handleClick();
+
       return true;
     }
     return false;
@@ -185,6 +187,12 @@ export default function useRawSelectUtils<TOption extends OptionType>({
 
   useFocusout(tooltipRef, handleCloseDrop);
 
+  useEffect(() => {
+    if (openDrop && optionsContainerRef.current) {
+      optionsContainerRef.current.focus();
+    }
+  }, [openDrop]);
+
   return {
     handleSelectValue,
     handleOptionsKeyDown,
@@ -195,5 +203,6 @@ export default function useRawSelectUtils<TOption extends OptionType>({
     openDrop,
     handleOpenDrop,
     isSelectedOption,
+    optionsContainerRef,
   };
 }
