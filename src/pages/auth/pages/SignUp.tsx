@@ -8,7 +8,8 @@ import Alert from "src/components/alert/Alert";
 import { useAuthContext } from "src/contexts/AuthContext";
 import { signUpSchema } from "../schemas/sign-up.schema";
 import { SignUpDto } from "../dtos/sign-up.dto";
-import type { Gender } from "src/constants/gender";
+import { type Gender } from "src/constants/gender";
+import { capitalize } from "lodash";
 
 export default function SignUp() {
   const [error, setError] = useState<string | null>(null);
@@ -99,9 +100,9 @@ export default function SignUp() {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error
-            options={["FEMALE", "MALE"] as Gender[]}
-            getInputLabel={(gender) => gender}
-            getOptionLabel={(gender) => gender}
+            options={["MALE", "FEMALE"] as Gender[]}
+            getInputLabel={(gender) => capitalize(gender)}
+            getOptionLabel={(gender) => capitalize(gender)}
             getUniqueValue={(gender) => gender}
             multiple={false}
           />
