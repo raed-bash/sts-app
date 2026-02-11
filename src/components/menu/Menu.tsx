@@ -27,7 +27,7 @@ function Menu({ children }: MenuProps) {
     <div className="relative">
       <Tooltip title="show\hide columns">
         <IconButton onClick={handleOpenMenu}>
-          <MoreIcon className="rotate-90 fill-(--primary) " />
+          <MoreIcon className="rotate-90 fill-(--primary) w-5 h-5 " />
         </IconButton>
       </Tooltip>
       <Animation
