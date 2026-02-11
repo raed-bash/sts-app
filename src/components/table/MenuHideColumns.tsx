@@ -42,15 +42,15 @@ function MenuHideColumns({
             className={`dark:stroke-(--text) ${props.className}`}
           />
         )}
-        inputFrameProps={{ className: "rounded-md h-10" }}
-        className="placeholder:text-sm w-40"
+        inputFrameProps={{ className: "rounded-md h-8 " }}
+        className="placeholder:text-xs w-30"
         onChange={handleSearchChange}
       />
       <div>
         {filteredColumns.length ? (
           filteredColumns.map((column) => (
             <div
-              className="flex gap-3 cursor-pointer hover:bg-secondary-secondary py-1  items-center"
+              className="flex gap-3 cursor-pointer hover:bg-(--primary) rounded text-[13px] hover:text-(--primary-foreground) ps-2 py-1  items-center"
               key={column.name}
               onClick={handleToggleColumns(column)}
             >
@@ -71,7 +71,7 @@ function MenuHideColumns({
       <Button
         color="primary"
         variant="outlined"
-        className="py-2 px-1 text-sm border-none shadow-none"
+        className="py-2 px-1 text-[13px] border-none shadow-none"
         onClick={onReset}
       >
         Reset
