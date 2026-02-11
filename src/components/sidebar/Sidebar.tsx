@@ -58,17 +58,18 @@ export default function Sidebar() {
 export type SidebarNestedLinksProps = { links: AppPageNestedPages["pages"] };
 
 function SidebarNestedLinks({ links }: SidebarNestedLinksProps) {
+  const location = useLocation();
   return (
-    <div className="flex flex-col text-(--text-muted) inset-shadow-black shadow-base ps-5">
+    <div className="flex flex-col text-(--text-muted) ">
       {links.map((link) =>
         link.to ? (
           <SidebarNestedLink
             key={link.label}
             to={link.to}
             aria-selected={location.pathname.startsWith(`/${link.to}`)}
+            className=" not-last:border-b border-(--primary)/20"
           >
             <span className="rounded-full bg-(--text-muted) w-[7px] h-[7px] me-2"></span>
-
             {link.label}
           </SidebarNestedLink>
         ) : (
@@ -124,7 +125,12 @@ function SidebarLinks({ setExpanded, expanded, links }: SidebarLinksProps) {
             <Fragment key={link.key}>
               <SidebarButton
                 key={link.label}
-                aria-expanded={expanded.has(link.key)}
+                aria-expanded={
+                  expanded.has(link.key) ||
+                  link.pages.some((link) =>
+                    location.pathname.startsWith(`/${link.to}`),
+                  )
+                }
                 onClick={() => handleExpand(link.key)}
               >
                 <span className="flex gap-2 items-center">
@@ -155,10 +161,10 @@ const SidebarButton = (props: IconButtonProps) => (
     {...props}
     className={`
               hover:bg-(--secondary)/20 duration-150 ease-in-out cursor-pointer p-2 flex items-center
-              w-full relative justify-between rounded-none py-3 px-6 fill-(--text-muted) text-sm 
-              aria-expanded:bg-(--secondary)/30 aria-expanded:fill-(--primary) aria-expanded:text-(--primary)  
+              w-full relative justify-between rounded-none py-3 px-6 fill-(--text) [&>svg]:stroke-(--text) text-sm 
+              aria-expanded:bg-(--secondary)/30 aria-expanded:fill-(--text) aria-expanded:text-(--text)  
               after:content-[''] after:absolute after:top-0 after:left-0 aria-expanded:after:h-full after:w-1 after:bg-(--accent) after:h-0 after:duration-200 
-              aria-expanded:[&>svg]:stroke-(--primary) aria-expanded:[&>svg]:rotate-0 [&>svg]:duration-150
+              aria-expanded:[&>svg]:rotate-0 [&>svg]:duration-150 has-[aria-selected=true]:bg-red-500
                ${props.className}`}
   />
 );
@@ -169,7 +175,7 @@ const SidebarLink = (props: AppLinkProps) => (
     className={`no-underline  
               hover:bg-(--secondary)/20 duration-150 ease-in-out cursor-pointer p-2 flex items-center
               w-full relative justify-start rounded-none py-3 px-6 fill-(--text-muted) text-sm 
-              aria-selected:bg-(--secondary)/30 aria-selected:fill-(--primary) aria-selected:text-(--primary)  
+              aria-selected:bg-(--secondary)/30 aria-selected:fill-(--text) aria-selected:text-(--text)  
               after:content-[''] after:absolute after:top-0 after:left-0 aria-selected:after:h-full after:w-1 after:bg-(--accent) after:h-0 after:duration-200 
                ${props.className}`}
   />
@@ -178,11 +184,11 @@ const SidebarLink = (props: AppLinkProps) => (
 const SidebarNestedLink = (props: AppLinkProps) => (
   <AppLink
     {...props}
-    className={`no-underline 
-              duration-150 ease-in-out cursor-pointer p-2 flex items-center
-              w-full relative justify-start rounded-none py-3 px-6 fill-(--text-muted) text-sm 
-              hover:text-(--primary)/80 hover:[&>span]:bg-(--primary)
-              aria-selected:fill-(--primary) aria-selected:text-(--primary) aria-selected:[&>span]:bg-(--primary)  
+    className={`no-underline bg-(--secondary)/15
+              ease-in-out cursor-pointer p-2 flex items-center
+               w-full relative justify-start rounded-none py-3 px-6 fill-(--text-muted) text-sm 
+               hover:ps-9 duration-300 aria-selected:ps-9 
+              aria-selected:fill-(--text) aria-selected:bg-(--accent)/25 aria-selected:[&>span]:bg-(--accent) 
                ${props.className}`}
   />
 );
