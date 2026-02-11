@@ -93,7 +93,11 @@ function InputPlus<TOption extends OptionType>({
       {...inputPlusContainerProps}
       className={cn(
         "flex flex-col gap-1",
-        oneline ? "flex-row items-center" : "",
+        oneline
+          ? props.type === "checkbox"
+            ? "items-center justify-end  flex-row-reverse "
+            : "flex-row items-center"
+          : "",
         inputPlusContainerProps.className,
       )}
     >

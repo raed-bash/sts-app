@@ -6,6 +6,7 @@ import { cn } from "src/utils/cn";
 import type { TableColumn, TableRow, TableSortStatuses } from "./Table";
 import type React from "react";
 import type { EventTarget } from "src/utils/EventTarget";
+import Checkbox from "../inputs/Checkbox";
 
 export type THeadSortEventHandler = (
   column: TableColumn,
@@ -25,6 +26,8 @@ export type THeadProps = React.HTMLAttributes<HTMLTableSectionElement> & {
   onSelectRow: THeadSelectRowEventHandler;
 
   selectAll: boolean;
+
+  selectedRows: Set<string | number>;
 
   selectable: boolean;
   /**
@@ -49,6 +52,7 @@ function THead({
   thrProps = {},
   thhsProps = {},
   thCheckboxProps = {},
+  selectedRows,
   ...props
 }: THeadProps) {
   return (
@@ -67,12 +71,12 @@ function THead({
               thCheckboxProps.className,
             )}
           >
-            <input
-              type="checkbox"
+            <Checkbox
               onChange={onSelectRow()}
               name="selectAll"
               checked={Boolean(selectAll)}
               className="w-4 h-4"
+              secondaryStatus={!selectAll && selectedRows.size > 0}
             />
           </Th>
         )}

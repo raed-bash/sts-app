@@ -187,6 +187,7 @@ function Table<Row>({
             thrProps={thrProps}
             thhsProps={thhsProps}
             thCheckboxProps={thCheckboxProps}
+            selectedRows={selectedRows}
             {...tbodyProps}
           />
           <TBody

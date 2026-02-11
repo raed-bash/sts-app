@@ -63,22 +63,22 @@ export default function useTBodyUtils({
   };
 
   const handleCheckBoxChange =
-    (row: TableRow) =>
-    (
-      e: React.ChangeEvent<HTMLInputElement> & {
-        nativeEvent: {
-          pointerType: string;
-        };
-      },
-    ) => {
-      if (
-        e.nativeEvent.pointerType === "mouse" ||
-        e.nativeEvent.pointerType === "touch"
-      )
-        return;
-
-      onSelectRow(row)(e);
-    };
+    () =>
+    // row: TableRow
+    () =>
+      // e: React.ChangeEvent<HTMLInputElement> & {
+      //   nativeEvent: {
+      //     pointerType: string;
+      //   };
+      // },
+      {
+        // if (
+        //   e.nativeEvent.pointerType === "mouse" ||
+        //   e.nativeEvent.pointerType === "touch"
+        // )
+        //   return;
+        // onSelectRow(row)(e);
+      };
 
   const getRowValue = (row: TableRow, name: TableColumn["name"]) => {
     if (Object.prototype.toString.call(row) === "[object Object]") {

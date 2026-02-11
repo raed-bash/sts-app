@@ -7,6 +7,7 @@ import type { EventTarget } from "src/utils/EventTarget";
 import TOverlay from "./TOverlay";
 import useTBodyUtils from "./hooks/useTBodyUtils";
 import type { TableColumn, TableRow } from "./Table";
+import Checkbox from "../inputs/Checkbox";
 
 export type TBodyProps = React.HTMLAttributes<HTMLTableSectionElement> & {
   rows: TableRow[];
@@ -113,11 +114,10 @@ function TBody({
                   `select-none`,
                 )}
               >
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={selectedRows.has(row.id)}
                   className="w-4 h-4"
-                  onChange={handleCheckBoxChange(row)}
+                  onChange={handleCheckBoxChange()}
                 />
               </Td>
             )}
