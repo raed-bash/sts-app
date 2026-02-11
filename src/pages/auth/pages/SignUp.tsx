@@ -10,6 +10,7 @@ import { signUpSchema } from "../schemas/sign-up.schema";
 import { SignUpDto } from "../dtos/sign-up.dto";
 import { type Gender } from "src/constants/gender";
 import { capitalize } from "lodash";
+import AppLink from "src/components/AppLink";
 
 export default function SignUp() {
   const [error, setError] = useState<string | null>(null);
@@ -110,6 +111,7 @@ export default function SignUp() {
             type="checkbox"
             title="View name publicly"
             name="is_name_viewed"
+            id="is_name_viewed"
             checked={formik.values.is_name_viewed}
             onChange={formik.handleChange}
             inputPlusContainerProps={{ className: " gap-3" }}
@@ -128,12 +130,12 @@ export default function SignUp() {
             <p className="inline-block text-gray-400 font-medium me-2">
               Have an account?
             </p>
-            <a
-              href="/login"
+            <AppLink
+              to="/login"
               className="text-(--accent) hover:text-(--primary) mt-1 duration-150 underline text-shadow-2xs w-fit"
             >
               Login
-            </a>
+            </AppLink>
           </div>
         </form>
       </Paper>
