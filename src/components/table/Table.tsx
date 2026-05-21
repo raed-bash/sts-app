@@ -11,9 +11,20 @@ import type { TrProps } from "./Tr";
 import type { UseTableUtilsSortEventHandler } from "./hooks/useTableUtils";
 import useTableUtils from "./hooks/useTableUtils";
 
-export interface TableColumn<Row = any> {
-  name: string;
+export type RowType = Record<string, any>;
 
+type LooseKey<Row extends RowType> = keyof Row | (string & {});
+
+export type TableColumn<Row extends RowType> = (
+  | {
+      strict?: true;
+      name: keyof Row;
+    }
+  | {
+      strict: false;
+      name: LooseKey<Row>;
+    }
+) & {
   headerName: string;
 
   getCell?: (value: any, row: Row) => ReactNode;
@@ -29,18 +40,18 @@ export interface TableColumn<Row = any> {
   tbdProps?: TdProps;
 
   hidden?: boolean;
-}
+};
 
 export type TableRow<Row = any | { id: number }> = Row;
 
 export type TableSortStatuses = Record<string, SortButtonStatus>;
 
-export type TableHiddenColumns<Row> = {
+export type TableHiddenColumns<Row extends RowType> = {
   hideableColumns: true;
 
   setHiddenColumns: (hiddenColumns: Set<TableColumn<Row>["name"]>) => void;
 
-  hiddenColumns: Set<TableColumn["name"]>;
+  hiddenColumns: Set<TableColumn<Row>["name"]>;
 };
 
 export type TableNoHiddenColumns = {
@@ -67,7 +78,10 @@ export type TableNoSelectRows = {
   selectedRows?: never;
 };
 
-export type TableProps<Row> = (TableHiddenColumns<Row> | TableNoHiddenColumns) &
+export type TableProps<Row extends RowType> = (
+  | TableHiddenColumns<Row>
+  | TableNoHiddenColumns
+) &
   (TableSelectRows | TableNoSelectRows) & {
     rows: TableRow<Row>[];
 
@@ -95,7 +109,7 @@ export type TableProps<Row> = (TableHiddenColumns<Row> | TableNoHiddenColumns) &
 
     sortStatuses?: TableSortStatuses;
 
-    onSortChange?: UseTableUtilsSortEventHandler;
+    onSortChange?: UseTableUtilsSortEventHandler<Row>;
 
     /**
      * A table head row props; <tr></tr> element
@@ -110,7 +124,7 @@ export type TableProps<Row> = (TableHiddenColumns<Row> | TableNoHiddenColumns) &
     /**
      * A table body row props; <tr></tr> element
      */
-    tbrProps?: TBodyProps["tbrProps"];
+    tbrProps?: TBodyProps<Row>["tbrProps"];
     /**
      * A table body data props; <td></td> element
      */
@@ -118,7 +132,7 @@ export type TableProps<Row> = (TableHiddenColumns<Row> | TableNoHiddenColumns) &
 
     tdCheckboxProps?: TdProps;
   };
-function Table<Row>({
+function Table<Row extends RowType>({
   columns = [],
   rows = [],
   currentPage = 1,
@@ -153,7 +167,7 @@ function Table<Row>({
     handleSortClick,
     handleToggleColumns,
     selectAll,
-  } = useTableUtils({
+  } = useTableUtils<Row>({
     columns,
     hiddenColumns,
     onSelectRows,

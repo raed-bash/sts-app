@@ -1,13 +1,13 @@
 import type { SortButtonStatus } from "src/components/buttons/SortButton";
-import type { TableColumn, TableRow } from "../Table";
+import type { RowType, TableColumn, TableRow } from "../Table";
 import type {
   THeadSelectRowEventHandler,
   THeadSortEventHandler,
 } from "../THead";
 import { useState } from "react";
 
-export type UseTableUtilsSortEventHandler = (
-  name: string,
+export type UseTableUtilsSortEventHandler<Row extends RowType> = (
+  name: TableColumn<Row>["name"],
   sortStatus: SortButtonStatus
 ) => void;
 
@@ -15,23 +15,23 @@ export type UseTableUtilsSelectRowsEventHandler = (
   selectedRows: Set<number | string>
 ) => void;
 
-export type UseTableUtilsOptions = {
-  columns: TableColumn[];
+export type UseTableUtilsOptions<Row extends RowType> = {
+  columns: TableColumn<Row>[];
 
   rows: TableRow[];
 
-  onSortChange: UseTableUtilsSortEventHandler;
+  onSortChange: UseTableUtilsSortEventHandler<Row>;
 
   onSelectRows: UseTableUtilsSelectRowsEventHandler;
 
   selectedRows: Set<number | string>;
 
-  setHiddenColumns: (hiddenColumns: Set<TableColumn["name"]>) => void;
+  setHiddenColumns: (hiddenColumns: Set<TableColumn<Row>["name"]>) => void;
 
-  hiddenColumns?: Set<TableColumn["name"]>;
+  hiddenColumns?: Set<TableColumn<Row>["name"]>;
 };
 
-export default function useTableUtils({
+export default function useTableUtils<Row extends RowType>({
   columns,
   rows,
   onSortChange,
@@ -39,10 +39,11 @@ export default function useTableUtils({
   selectedRows,
   hiddenColumns: hiddenColumnsExt,
   setHiddenColumns: setHiddenColumnsExt,
-}: UseTableUtilsOptions) {
-  const handleSortClick: THeadSortEventHandler = (column) => (sortStatus) => {
-    onSortChange(column.name, sortStatus);
-  };
+}: UseTableUtilsOptions<Row>) {
+  const handleSortClick: THeadSortEventHandler<Row> =
+    (column) => (sortStatus) => {
+      onSortChange(column.name, sortStatus);
+    };
 
   const handleSelectRow: THeadSelectRowEventHandler = (row) => (e) => {
     const name = e.target.name;
@@ -94,7 +95,7 @@ export default function useTableUtils({
     .filter((column) => !hiddenColumns.has(column.name))
     .map((column) => column);
 
-  const handleToggleColumns = (column: TableColumn) => () => {
+  const handleToggleColumns = (column: TableColumn<Row>) => () => {
     const newHiddenColumns = new Set(hiddenColumns);
 
     if (hiddenColumns.has(column.name)) {

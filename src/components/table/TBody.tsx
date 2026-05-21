@@ -6,38 +6,39 @@ import { cn } from "src/utils/cn";
 import type { EventTarget } from "src/utils/EventTarget";
 import TOverlay from "./TOverlay";
 import useTBodyUtils from "./hooks/useTBodyUtils";
-import type { TableColumn, TableRow } from "./Table";
+import type { RowType, TableColumn, TableRow } from "./Table";
 import Checkbox from "../inputs/Checkbox";
 
-export type TBodyProps = React.HTMLAttributes<HTMLTableSectionElement> & {
-  rows: TableRow[];
+export type TBodyProps<Row extends RowType> =
+  React.HTMLAttributes<HTMLTableSectionElement> & {
+    rows: TableRow[];
 
-  columns: TableColumn[];
+    columns: TableColumn<Row>[];
 
-  selectedRows: Set<string | number>;
+    selectedRows: Set<string | number>;
 
-  onSelectRow: (row: TableRow) => (e: EventTarget<any>) => void;
-  /**
-   * A table body row props; <tr></tr> element
-   */
-  tbrProps?: TrProps;
-  /**
-   * A table body data props; <td></td> element
-   */
-  tbdsProps?: TdProps;
+    onSelectRow: (row: TableRow) => (e: EventTarget<any>) => void;
+    /**
+     * A table body row props; <tr></tr> element
+     */
+    tbrProps?: TrProps;
+    /**
+     * A table body data props; <td></td> element
+     */
+    tbdsProps?: TdProps;
 
-  loading?: boolean;
+    loading?: boolean;
 
-  scLoading?: boolean;
+    scLoading?: boolean;
 
-  selectable?: boolean;
+    selectable?: boolean;
 
-  tdCheckboxProps?: TdProps;
+    tdCheckboxProps?: TdProps;
 
-  className?: string;
-};
+    className?: string;
+  };
 
-function TBody({
+function TBody<Row extends RowType>({
   loading,
   rows,
   columns,
@@ -50,7 +51,7 @@ function TBody({
   tbdsProps = {},
   tdCheckboxProps = {},
   ...props
-}: TBodyProps) {
+}: TBodyProps<Row>) {
   const {
     handleCheckBoxChange,
     handleMouseDown,
@@ -65,7 +66,7 @@ function TBody({
       {...props}
       className={cn(
         " [&>tr[aria-rowindex]:not([aria-rowindex='0']):not([aria-selected='true'])]:border-gray-100/60  [&>tr[aria-rowindex]:not([aria-rowindex='0']):not([aria-selected='true'])]:border-t-[0.833333px] ",
-        className,
+        className
       )}
     >
       {!loading && scLoading ? (
@@ -97,7 +98,7 @@ function TBody({
             className={cn(
               "hover:bg-gray-100/30 dark:hover:bg-gray-700",
               tbrProps.className,
-              handleSelectArea(i),
+              handleSelectArea(i)
             )}
             aria-rowindex={i}
             aria-selected={selectedRows ? selectedRows.has(row?.id) : false}
@@ -111,7 +112,7 @@ function TBody({
                 className={cn(
                   tbdsProps.className,
                   tdCheckboxProps.className,
-                  `select-none`,
+                  `select-none`
                 )}
               >
                 <Checkbox
@@ -123,18 +124,18 @@ function TBody({
             )}
             {columns.map(({ tbdProps = {}, className, ...column }) => (
               <Td
-                key={column.name}
+                key={String(column.name)}
                 {...tbdsProps}
                 {...tbdProps}
                 className={cn(
                   className,
                   tbdsProps.className,
-                  tbdProps.className,
+                  tbdProps.className
                 )}
               >
                 {column.getCell
-                  ? column.getCell(getRowValue(row, column.name), row)
-                  : getRowValue(row, column.name)}
+                  ? column.getCell(getRowValue(row, String(column.name)), row)
+                  : getRowValue(row, String(column.name))}
               </Td>
             ))}
           </Tr>

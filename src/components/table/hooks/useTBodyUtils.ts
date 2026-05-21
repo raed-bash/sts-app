@@ -1,7 +1,8 @@
 import { useState } from "react";
 import useMouseUp from "src/hooks/useMouseUp";
-import type { TableColumn, TableRow } from "../Table";
+import type { RowType, TableColumn, TableRow } from "../Table";
 import type { THeadSelectRowEventHandler } from "../THead";
+import { getObjectValue } from "src/utils/getObjectValue";
 
 type UseTBodyUtilsSelectRowHandler = THeadSelectRowEventHandler;
 
@@ -13,7 +14,7 @@ export type UseTBodyUtilsOptions = {
   rows: TableRow[];
 };
 
-export default function useTBodyUtils({
+export default function useTBodyUtils<Row extends RowType>({
   onSelectRow,
   selectedRows,
   rows,
@@ -80,9 +81,9 @@ export default function useTBodyUtils({
         // onSelectRow(row)(e);
       };
 
-  const getRowValue = (row: TableRow, name: TableColumn["name"]) => {
+  const getRowValue = (row: TableRow, name: TableColumn<Row>["name"]) => {
     if (Object.prototype.toString.call(row) === "[object Object]") {
-      return row[name];
+      return getObjectValue(row, String(name));
     }
 
     return row;

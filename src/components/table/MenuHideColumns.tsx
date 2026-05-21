@@ -3,23 +3,23 @@ import Menu from "../menu/Menu";
 import InputIcon from "../inputs/InputIcon";
 import Button from "../buttons/Button";
 import SearchIcon from "src/assets/icons/search.svg?react";
-import type { TableColumn } from "./Table";
+import type { RowType, TableColumn } from "./Table";
 
-export type MenuHideColumnsProps = {
-  columns: TableColumn[];
+export type MenuHideColumnsProps<Row extends RowType> = {
+  columns: TableColumn<Row>[];
   onReset: React.MouseEventHandler<HTMLButtonElement> | undefined;
   handleToggleColumns: (
-    column: TableColumn,
+    column: TableColumn<Row>
   ) => React.MouseEventHandler<HTMLDivElement> | undefined;
-  hiddenColumns: Set<TableColumn["name"]>;
+  hiddenColumns: Set<TableColumn<Row>["name"]>;
 };
 
-function MenuHideColumns({
+function MenuHideColumns<Row extends RowType>({
   columns,
   onReset,
   handleToggleColumns,
   hiddenColumns,
-}: MenuHideColumnsProps) {
+}: MenuHideColumnsProps<Row>) {
   const [searchMenuCols, setSearchMenuCols] = useState("");
 
   const handleSearchChange:
@@ -29,7 +29,7 @@ function MenuHideColumns({
   };
 
   const filteredColumns = columns.filter((column) =>
-    column.headerName.includes(searchMenuCols),
+    column.headerName.includes(searchMenuCols)
   );
 
   return (
@@ -51,7 +51,7 @@ function MenuHideColumns({
           filteredColumns.map((column) => (
             <div
               className="flex gap-3 cursor-pointer hover:bg-(--primary) rounded text-[13px] hover:text-(--primary-foreground) ps-2 py-1  items-center"
-              key={column.name}
+              key={String(column.name)}
               onClick={handleToggleColumns(column)}
             >
               <input
