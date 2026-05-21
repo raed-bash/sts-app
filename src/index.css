@@ -2,18 +2,81 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-body {
+@theme {
   --text: #040508;
-  --background: #f8f9fc;
+  --text-muted: #4b5563;
+  --background: #fafafd;
+  --surface: #ffffff;
   --primary: #4159cd;
+  --primary-foreground: #ffffff;
+  --primary-hover: #3948bc;
+  --primary-active: #343e99;
   --secondary: #8b9ced;
+  --secondary-foreground: #000000;
   --accent: #4a67f3;
+  --accent-foreground: #ffffff;
+  --danger-main: #dc3545;
+  --warning-main: #ffc107;
+  --info-main: #0dcaf0;
+  --success-main: #198754;
+  --shadow:
+    0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+    0 1px 18px 0 rgba(0, 0, 0, 0.12);
 }
 
-body.dark {
-  --text: #f8f9fc;
-  --background: #030407;
+html {
+  --text: #040508;
+  --text-muted: #4b5563;
+  --background: #fafafd;
+  --surface: #ffffff;
+  --primary: #4159cd;
+  --primary-foreground: #ffffff;
+  --primary-hover: #3948bc;
+  --primary-active: #343e99;
+  --secondary: #8b9ced;
+  --secondary-foreground: #000000;
+  --accent: #4a67f3;
+  --accent-foreground: #ffffff;
+  --danger-main: #dc3545;
+  --danger-dark: #730000;
+  --warning-main: #ffc107;
+  --info-main: #0dcaf0;
+  --success-main: #198754;
+  --shadow:
+    0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+    0 1px 18px 0 rgba(0, 0, 0, 0.12);
+}
+
+html.dark {
+  --text: #cccccc;
+  --text-muted: #d1d5db;
+  --background: #0f172a;
+  --surface: #1f2937;
   --primary: #324abd;
+  --primary-foreground: #ffffff;
+  --primary-hover: #3d5fd3;
+  --primary-active: #517ae0;
   --secondary: #b3b6c6;
-  --accent: #0c28b6;
+  --secondary-foreground: #140001;
+  --accent: #6366f1;
+  --accent-foreground: #ffffff;
+  --danger-main: #dc3545;
+  --danger-dark: #730000;
+  --warning-main: #ffca2c;
+  --info-main: #31d2f2;
+  --success-main: #198754;
+  --shadow:
+    0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+    0 1px 18px 0 rgba(0, 0, 0, 0.12);
+}
+
+.shadow-base {
+  --tw-shadow:
+    0 2px 6px rgba(47, 43, 61, 0.14), 0 0 transparent, 0 0 transparent;
+  --tw-shadow-colored:
+    0 2px 6px var(--tw-shadow-color), 0 0 var(--tw-shadow-color),
+    0 0 var(--tw-shadow-color);
+  box-shadow:
+    var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
+    var(--tw-shadow);
 }
