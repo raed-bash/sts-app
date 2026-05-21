@@ -3,46 +3,52 @@ import Th from "./Th";
 import SortButton, { type SortButtonEventHandler } from "../buttons/SortButton";
 import type { ThProps } from "./Th";
 import { cn } from "src/utils/cn";
-import type { TableColumn, TableRow, TableSortStatuses } from "./Table";
+import type {
+  RowType,
+  TableColumn,
+  TableRow,
+  TableSortStatuses,
+} from "./Table";
 import type React from "react";
 import type { EventTarget } from "src/utils/EventTarget";
 import Checkbox from "../inputs/Checkbox";
 
-export type THeadSortEventHandler = (
-  column: TableColumn,
+export type THeadSortEventHandler<Row extends RowType> = (
+  column: TableColumn<Row>
 ) => SortButtonEventHandler;
 
 export type THeadSelectRowEventHandler = (
-  row?: TableRow,
+  row?: TableRow
 ) => (e: EventTarget) => void;
 
-export type THeadProps = React.HTMLAttributes<HTMLTableSectionElement> & {
-  columns: TableColumn[];
+export type THeadProps<Row extends RowType> =
+  React.HTMLAttributes<HTMLTableSectionElement> & {
+    columns: TableColumn<Row>[];
 
-  onSortClick: THeadSortEventHandler;
+    onSortClick: THeadSortEventHandler<Row>;
 
-  sortStatuses: TableSortStatuses;
+    sortStatuses: TableSortStatuses;
 
-  onSelectRow: THeadSelectRowEventHandler;
+    onSelectRow: THeadSelectRowEventHandler;
 
-  selectAll: boolean;
+    selectAll: boolean;
 
-  selectedRows: Set<string | number>;
+    selectedRows: Set<string | number>;
 
-  selectable: boolean;
-  /**
-   * A table head row props; <tr></tr> element
-   */
-  thrProps?: TrProps;
-  /**
-   * A table head props; <th></th> element
-   */
-  thhsProps?: ThProps;
+    selectable: boolean;
+    /**
+     * A table head row props; <tr></tr> element
+     */
+    thrProps?: TrProps;
+    /**
+     * A table head props; <th></th> element
+     */
+    thhsProps?: ThProps;
 
-  thCheckboxProps?: ThProps;
-};
+    thCheckboxProps?: ThProps;
+  };
 
-function THead({
+function THead<Row extends RowType>({
   onSortClick,
   sortStatuses,
   onSelectRow,
@@ -54,7 +60,7 @@ function THead({
   thCheckboxProps = {},
   selectedRows,
   ...props
-}: THeadProps) {
+}: THeadProps<Row>) {
   return (
     <thead {...props}>
       <Tr
@@ -68,7 +74,7 @@ function THead({
             className={cn(
               `w-20`,
               thhsProps.className,
-              thCheckboxProps.className,
+              thCheckboxProps.className
             )}
           >
             <Checkbox
@@ -82,7 +88,7 @@ function THead({
         )}
         {columns.map(({ thhProps = {}, className, ...column }) => (
           <Th
-            key={column.name}
+            key={column.name.toString()}
             title={
               typeof column.headerName === "string" ? column.headerName : ""
             }
@@ -95,7 +101,7 @@ function THead({
               <SortButton
                 className="mt-0 align-middle ms-1 py-1 uppercase"
                 onClick={onSortClick(column)}
-                sortStatus={sortStatuses[column.name]}
+                sortStatus={sortStatuses[column.name.toString()]}
               >
                 {column.headerName}
               </SortButton>

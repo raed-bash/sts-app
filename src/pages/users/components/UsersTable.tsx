@@ -9,7 +9,7 @@ import RemoveIcon from "src/assets/icons/remove.svg?react";
 import type { UseTableUtilsSortEventHandler } from "src/components/table/hooks/useTableUtils";
 
 export type UsersTableProps = {
-  handleSortChange: UseTableUtilsSortEventHandler;
+  handleSortChange: UseTableUtilsSortEventHandler<UserDto>;
   sorts: TableSortStatuses;
   setSelectedRows: (sortsStatuses: Set<string | number>) => void;
   selectedRows: Set<string | number>;
@@ -46,6 +46,7 @@ export default function UsersTable(props: UsersTableProps) {
         {
           name: "full_name",
           headerName: "Full Name",
+          strict: false,
           getCell(_, row) {
             return row.student?.full_name || row.teacher?.full_name;
           },
@@ -74,6 +75,7 @@ export default function UsersTable(props: UsersTableProps) {
         {
           name: "actions",
           headerName: "Actions",
+          strict: false,
           getCell() {
             return (
               <div className="flex gap-3 justify-start  ">
