@@ -4,11 +4,11 @@ import type { UserDto } from "./user.dto";
 export class StudentDto {
   id!: number;
 
-  full_name!: string;
+  fullName!: string;
 
   user!: UserDto;
 
   gender!: Gender;
 
-  is_name_viewed!: boolean;
+  isNameViewed!: boolean;
 }

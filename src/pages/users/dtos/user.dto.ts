@@ -13,11 +13,11 @@ export class UserDto {
 
   role!: UserRole;
 
-  created_at!: Date;
+  createdAt!: Date;
 
-  updated_at?: Date | null;
+  updatedAt?: Date | null;
 
-  deleted_at?: Date | null;
+  deletedAt?: Date | null;
 
   student?: StudentDto | null;
 
@@ -31,12 +31,12 @@ export class UserDto {
         "username",
         "status",
         "role",
-        "created_at",
-        "updated_at",
-        "deleted_at",
+        "createdAt",
+        "updatedAt",
+        "deletedAt",
         "student",
         "teacher",
-      ]),
+      ])
     );
   }
 }
