@@ -7,11 +7,11 @@ export const signUpSchema = zod.object({
     .string()
     .min(8, "Password must be longer than or equal to 8 characters")
     .nonempty("Password is required"),
-  full_name: zod.string().nonempty("Full name is required"),
+  fullName: zod.string().nonempty("Full name is required"),
   gender: zod
     .enum(["FEMALE", "MALE"] as Gender[], { error: "Gender is required" })
     .nonoptional(),
-  is_name_viewed: zod
+  isNameViewed: zod
     .boolean({ error: "Is name viewed is required" })
     .nonoptional(),
 });

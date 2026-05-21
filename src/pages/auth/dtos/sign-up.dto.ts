@@ -6,11 +6,11 @@ export class SignUpDto {
 
   password!: string;
 
-  full_name!: string;
+  fullName!: string;
 
   gender!: Gender;
 
-  is_name_viewed!: boolean;
+  isNameViewed!: boolean;
 
   constructor(signUp: SignUpDto) {
     Object.assign(
@@ -18,10 +18,10 @@ export class SignUpDto {
       pick(signUp, [
         "username",
         "password",
-        "full_name",
+        "fullName",
         "gender",
-        "is_name_viewed",
-      ]),
+        "isNameViewed",
+      ])
     );
   }
 }

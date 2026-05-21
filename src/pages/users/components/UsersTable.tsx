@@ -44,11 +44,11 @@ export default function UsersTable(props: UsersTableProps) {
           headerName: "Username",
         },
         {
-          name: "full_name",
+          name: "fullName",
           headerName: "Full Name",
           strict: false,
           getCell(_, row) {
-            return row.student?.full_name || row.teacher?.full_name;
+            return row.student?.fullName || row.teacher?.fullName;
           },
         },
         {
@@ -66,7 +66,7 @@ export default function UsersTable(props: UsersTableProps) {
           },
         },
         {
-          name: "created_at",
+          name: "createdAt",
           headerName: "Created at",
           getCell(value) {
             return dateFormater(value);

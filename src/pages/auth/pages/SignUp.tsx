@@ -24,9 +24,9 @@ export default function SignUp() {
     initialValues: {
       username: "",
       password: "",
-      full_name: "",
+      fullName: "",
       gender: "",
-      is_name_viewed: true,
+      isNameViewed: true,
     },
     validationZodSchema: signUpSchema,
     onSubmit: (values, { setSubmitting }) => {
@@ -84,10 +84,10 @@ export default function SignUp() {
           />
           <InputPlus
             type="text"
-            name="full_name"
+            name="fullName"
             title="Full Name"
-            value={formik.values.full_name}
-            helperText={formik.touchedErrors.full_name}
+            value={formik.values.fullName}
+            helperText={formik.touchedErrors.fullName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error
@@ -110,9 +110,9 @@ export default function SignUp() {
           <InputPlus
             type="checkbox"
             title="View name publicly"
-            name="is_name_viewed"
-            id="is_name_viewed"
-            checked={formik.values.is_name_viewed}
+            name="isNameViewed"
+            id="isNameViewed"
+            checked={formik.values.isNameViewed}
             onChange={formik.handleChange}
             inputPlusContainerProps={{ className: " gap-3" }}
             oneline
