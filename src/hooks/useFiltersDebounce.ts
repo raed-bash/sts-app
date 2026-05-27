@@ -5,41 +5,47 @@ import type { EventTarget } from "src/utils/EventTarget";
 
 const defaultDebounceFiltersDefault: Record<string, any> = {};
 
+const VITE_DEBOUNCE_DELAY = import.meta.env.VITE_DEBOUNCE_DELAY;
+
+const DEBOUNCE_DELAY = !isNaN(VITE_DEBOUNCE_DELAY)
+  ? parseFloat(VITE_DEBOUNCE_DELAY)
+  : 1000;
+
 export default function useFiltersDebounce(
   name: string,
   defaultDebounceFilters = defaultDebounceFiltersDefault,
-  delay = 1000,
+  delay = DEBOUNCE_DELAY,
   onChange?: (value: any) => void,
-  { cashing = true } = {},
+  { cashing = true } = {}
 ) {
   const state = useState(defaultDebounceFilters);
 
   const cashingState = useCashingState(
     `${name}DebounceFilters`,
-    defaultDebounceFilters,
+    defaultDebounceFilters
   );
 
-  const [debounceFilters, setDebounceFilters] = cashing ? cashingState : state;
+  const [filtersDebounce, setFiltersDebounce] = cashing ? cashingState : state;
 
-  const filterDebounced = useDebouncedValue(debounceFilters, delay, onChange);
+  const filterDebounced = useDebouncedValue(filtersDebounce, delay, onChange);
 
-  const handleDebounceFiltersChange = useCallback(
+  const handleFiltersDebounceChange = useCallback(
     (e: EventTarget) => {
       const name = e.target.name;
       const value = e.target.value;
 
-      setDebounceFilters({
-        ...debounceFilters,
-        [name || ""]: value || undefined,
+      setFiltersDebounce({
+        ...filtersDebounce,
+        [name ?? ""]: value ?? "",
       });
     },
-    [debounceFilters, setDebounceFilters],
+    [filtersDebounce, setFiltersDebounce]
   );
 
   return {
-    debounceFilters,
-    setDebounceFilters,
-    handleDebounceFiltersChange,
+    filtersDebounce,
+    setFiltersDebounce,
+    handleFiltersDebounceChange,
     filterDebounced,
   };
 }
