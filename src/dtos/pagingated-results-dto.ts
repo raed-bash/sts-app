@@ -1,4 +1,4 @@
-class PaginatedMetadata {
+export class PaginatedMetadata {
   total!: number;
 
   lastPage!: number;
@@ -15,7 +15,7 @@ class PaginatedMetadata {
 export class PaginatedQueryDto {
   page: number = 1;
 
-  perPage: number = 10;
+  perPage?: number = 10;
 }
 
 export class PaginatedResultsDto<T> {
