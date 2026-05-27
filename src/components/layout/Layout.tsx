@@ -8,7 +8,7 @@ export default function Layout() {
       <Navbar />
       <Sidebar />
       <div className="flex h-full">
-        <main className="flex-1 ps-[280px]">
+        <main className="flex-1 ps-[280px] w-full">
           <div className="p-6">
             <Outlet />
           </div>
