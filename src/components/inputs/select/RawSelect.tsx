@@ -84,7 +84,7 @@ function RawSelect<TOption extends OptionType>({
         "w-full h-[33px] rounded-sm indent-1 p-1 border border-[lab(90.952%_0_-.0000119209)] duration-75 bg-transparent shadow-xs",
         "focus-visible:border-(-- primary) outline-none focus-visible:ring-[3px] focus-visible:ring-(--primary)/30 ",
         "aria-invalid:border-(--danger-main) aria-invalid:ring-(--danger-main)/30",
-        className,
+        className
       )}
       ref={tooltipRef}
       tabIndex={disabled ? -1 : 0}
@@ -99,13 +99,17 @@ function RawSelect<TOption extends OptionType>({
       <div className="flex justify-between items-center px-1 h-full ">
         <div
           className={cn(
-            "ps-1 pe-2 inline-block truncate",
-            inputProps.className,
+            "ps-1 pe-2 inline-block truncate select-none",
+            inputProps.className
           )}
         >
           {inputLabel}
         </div>
-        <ArrowDown {...arrowDownProps} />
+        <ArrowDown
+          {...arrowDownProps}
+          className="min-w-[15px] min-h-[15px] aria-invalid:fill-(--danger-main)"
+          aria-invalid={props["aria-invalid"]}
+        />
       </div>
       {openDrop && (
         <div
@@ -114,7 +118,7 @@ function RawSelect<TOption extends OptionType>({
           ref={optionsContainerRef}
           className={cn(
             "max-h-64 absolute z-1000 -ms-[3px] mt-1 w-full overflow-y-auto overflow-x-hidden bg-white border border-black rounded-sm",
-            optionsContainer.className,
+            optionsContainer.className
           )}
         >
           {startHelperOptions.map((helperOptionProps, i) => (

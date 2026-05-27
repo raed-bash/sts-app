@@ -110,7 +110,7 @@ function RawAutocomplete<TOption extends OptionType>({
           placeholder={placeholder}
           disabled={disabled}
         />
-        <ArrowDown {...arrowDownProps} />
+        <ArrowDown {...arrowDownProps} className="min-w-[15px] min-h-[15px]" />
       </div>
       {openDrop && (
         <div

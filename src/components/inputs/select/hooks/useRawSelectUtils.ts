@@ -3,7 +3,7 @@ import useFocusout from "src/hooks/useFocusout";
 import { EventTarget } from "src/utils/EventTarget";
 import type { OptionProps } from "../Option";
 
-const OpenSelectStatus = ["enter", "space", "arrowdown", "arrowup"];
+const OPEN_SELECT_STATUSES = ["enter", "space", "arrowdown", "arrowup"];
 
 export type OptionType = string | number | Record<string | number, any>;
 
@@ -82,6 +82,8 @@ export default function useRawSelectUtils<TOption extends OptionType>({
 
     if (!openDrop) {
       handleOpenDrop();
+    } else {
+      handleCloseDrop();
     }
 
     onClick(e);
@@ -116,8 +118,9 @@ export default function useRawSelectUtils<TOption extends OptionType>({
   const handleSelectKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const code = e.code.toLowerCase();
 
-    if (OpenSelectStatus.includes(code)) {
+    if (OPEN_SELECT_STATUSES.includes(code) && !openDrop) {
       e.preventDefault();
+
       handleClick();
 
       return true;
@@ -129,7 +132,7 @@ export default function useRawSelectUtils<TOption extends OptionType>({
     const container = e.currentTarget;
 
     const option = (e.target as HTMLElement).closest(
-      "[data-index]",
+      "[data-index]"
     ) as HTMLElement | null;
 
     const index = Number(option?.dataset?.index || 0);
