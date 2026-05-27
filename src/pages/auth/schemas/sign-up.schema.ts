@@ -12,6 +12,6 @@ export const signUpSchema = zod.object({
     .enum(["FEMALE", "MALE"] as Gender[], { error: "Gender is required" })
     .nonoptional(),
   isNameViewed: zod
-    .boolean({ error: "Is name viewed is required" })
+    .boolean({ error: "View name publicly is required" })
     .nonoptional(),
 });

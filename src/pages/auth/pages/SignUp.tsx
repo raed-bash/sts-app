@@ -99,7 +99,6 @@ export default function SignUp() {
             value={formik.values.gender}
             helperText={formik.touchedErrors.gender}
             onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
             error
             options={["MALE", "FEMALE"] as Gender[]}
             getInputLabel={(gender) => capitalize(gender)}
