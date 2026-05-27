@@ -1,10 +1,10 @@
 import type { SortButtonStatus } from "src/components/buttons/SortButton";
 import type { RowType, TableColumn, TableRow } from "../Table";
-import type {
-  THeadSelectRowEventHandler,
-  THeadSortEventHandler,
-} from "../THead";
-import { useState } from "react";
+import type { THeadSortEventHandler } from "../THead";
+import { useEffect, useState } from "react";
+import type { EventTarget } from "src/utils/EventTarget";
+
+export type UseTableUtilsSelectedRows = Set<string | number>;
 
 export type UseTableUtilsSortEventHandler<Row extends RowType> = (
   name: TableColumn<Row>["name"],
@@ -12,11 +12,15 @@ export type UseTableUtilsSortEventHandler<Row extends RowType> = (
 ) => void;
 
 export type UseTableUtilsSelectRowsEventHandler = (
-  selectedRows: Set<number | string>
+  selectedRows: UseTableUtilsSelectedRows
 ) => void;
 
+export type UseTableUtilsSelectRowEventHandler = (
+  row?: TableRow
+) => (e: EventTarget) => void;
+
 export type UseTableUtilsOptions<Row extends RowType> = {
-  columns: TableColumn<Row>[];
+  originalColumns: TableColumn<Row>[];
 
   rows: TableRow[];
 
@@ -24,28 +28,43 @@ export type UseTableUtilsOptions<Row extends RowType> = {
 
   onSelectRows: UseTableUtilsSelectRowsEventHandler;
 
-  selectedRows: Set<number | string>;
+  selectedRows: UseTableUtilsSelectedRows;
 
   setHiddenColumns: (hiddenColumns: Set<TableColumn<Row>["name"]>) => void;
 
   hiddenColumns?: Set<TableColumn<Row>["name"]>;
+
+  orderedColumns: TableColumn<Row>["name"][];
+
+  setOrderedColumns: (orderedColumns: TableColumn<Row>["name"][]) => void;
 };
 
 export default function useTableUtils<Row extends RowType>({
-  columns,
+  originalColumns,
   rows,
   onSortChange,
   onSelectRows,
   selectedRows,
   hiddenColumns: hiddenColumnsExt,
   setHiddenColumns: setHiddenColumnsExt,
+  setOrderedColumns,
+  orderedColumns,
 }: UseTableUtilsOptions<Row>) {
+  const [columns, setColumns] = useState(
+    orderedColumns.length > 0
+      ? originalColumns.sort(
+          (a, b) =>
+            orderedColumns.indexOf(a.name) - orderedColumns.indexOf(b.name)
+        )
+      : originalColumns
+  );
+
   const handleSortClick: THeadSortEventHandler<Row> =
     (column) => (sortStatus) => {
       onSortChange(column.name, sortStatus);
     };
 
-  const handleSelectRow: THeadSelectRowEventHandler = (row) => (e) => {
+  const handleSelectRow: UseTableUtilsSelectRowEventHandler = (row) => (e) => {
     const name = e.target.name;
     const checked = e.target.checked;
 
@@ -111,6 +130,10 @@ export default function useTableUtils<Row extends RowType>({
 
   const selectAll = rows.length ? selectedRows.size === rows.length : false;
 
+  useEffect(() => {
+    setOrderedColumns(columns.map((column) => column.name));
+  }, [columns, setOrderedColumns]);
+
   return {
     handleSortClick,
     handleSelectRow,
@@ -118,5 +141,7 @@ export default function useTableUtils<Row extends RowType>({
     handleResetHiddenColumns,
     displayedColumns,
     handleToggleColumns,
+    columns,
+    setColumns,
   };
 }

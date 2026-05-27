@@ -3,23 +3,17 @@ import Th from "./Th";
 import SortButton, { type SortButtonEventHandler } from "../buttons/SortButton";
 import type { ThProps } from "./Th";
 import { cn } from "src/utils/cn";
-import type {
-  RowType,
-  TableColumn,
-  TableRow,
-  TableSortStatuses,
-} from "./Table";
+import type { RowType, TableColumn, TableSortStatuses } from "./Table";
 import type React from "react";
-import type { EventTarget } from "src/utils/EventTarget";
 import Checkbox from "../inputs/Checkbox";
+import type {
+  UseTableUtilsSelectedRows,
+  UseTableUtilsSelectRowEventHandler,
+} from "./hooks/useTableUtils";
 
 export type THeadSortEventHandler<Row extends RowType> = (
   column: TableColumn<Row>
 ) => SortButtonEventHandler;
-
-export type THeadSelectRowEventHandler = (
-  row?: TableRow
-) => (e: EventTarget) => void;
 
 export type THeadProps<Row extends RowType> =
   React.HTMLAttributes<HTMLTableSectionElement> & {
@@ -29,11 +23,11 @@ export type THeadProps<Row extends RowType> =
 
     sortStatuses: TableSortStatuses;
 
-    onSelectRow: THeadSelectRowEventHandler;
+    onSelectRow: UseTableUtilsSelectRowEventHandler;
 
     selectAll: boolean;
 
-    selectedRows: Set<string | number>;
+    selectedRows: UseTableUtilsSelectedRows;
 
     selectable: boolean;
     /**
@@ -81,7 +75,6 @@ function THead<Row extends RowType>({
               onChange={onSelectRow()}
               name="selectAll"
               checked={Boolean(selectAll)}
-              className="w-4 h-4"
               secondaryStatus={!selectAll && selectedRows.size > 0}
             />
           </Th>

@@ -15,11 +15,11 @@ function TOverlay({
 }: TOverlayProps) {
   return (
     <Tr {...TrProps} className={cn("hover:bg-none", TrProps.className)}>
-      <Td {...TdProps} className={cn("h-96", TdProps.className)}>
+      <Td {...TdProps} className={cn("h-14", TdProps.className)}>
         <div
           {...props}
           className={cn(
-            "flex justify-center items-center absolute top-1/2 rtl:right-1/2 ltr:left-1/2 ltr:-translate-x-1/2 ltr:-translate-y-1/2 rtl:translate-x-1/2 rtl:translate-y-1/2 w-fit",
+            "flex justify-center items-center absolute top-[80%] rtl:right-1/2 ltr:left-1/2 ltr:-translate-x-1/2 ltr:-translate-y-1/2 rtl:translate-x-1/2 rtl:translate-y-1/2 w-fit",
             props.className
           )}
         >

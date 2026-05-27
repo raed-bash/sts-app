@@ -3,11 +3,14 @@ import Tr, { type TrProps } from "./Tr";
 import Td, { type TdProps } from "./Td";
 import LinearLoading from "../skeleton/LinearLoading";
 import { cn } from "src/utils/cn";
-import type { EventTarget } from "src/utils/EventTarget";
 import TOverlay from "./TOverlay";
 import useTBodyUtils from "./hooks/useTBodyUtils";
 import type { RowType, TableColumn, TableRow } from "./Table";
 import Checkbox from "../inputs/Checkbox";
+import type {
+  UseTableUtilsSelectedRows,
+  UseTableUtilsSelectRowEventHandler,
+} from "./hooks/useTableUtils";
 
 export type TBodyProps<Row extends RowType> =
   React.HTMLAttributes<HTMLTableSectionElement> & {
@@ -15,9 +18,9 @@ export type TBodyProps<Row extends RowType> =
 
     columns: TableColumn<Row>[];
 
-    selectedRows: Set<string | number>;
+    selectedRows: UseTableUtilsSelectedRows;
 
-    onSelectRow: (row: TableRow) => (e: EventTarget<any>) => void;
+    onSelectRow: UseTableUtilsSelectRowEventHandler;
     /**
      * A table body row props; <tr></tr> element
      */
@@ -87,7 +90,7 @@ function TBody<Row extends RowType>({
           {loading ? (
             <Loading />
           ) : (
-            <p className="min-w-max text-xl">لا يوجد بيانات...</p>
+            <p className="min-w-max text-lg">No data...</p>
           )}
         </TOverlay>
       ) : (
@@ -117,8 +120,7 @@ function TBody<Row extends RowType>({
               >
                 <Checkbox
                   checked={selectedRows.has(row.id)}
-                  className="w-4 h-4"
-                  onChange={handleCheckBoxChange()}
+                  onChange={handleCheckBoxChange(row)}
                 />
               </Td>
             )}

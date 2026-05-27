@@ -1,18 +1,18 @@
 import type React from "react";
 import { cn } from "src/utils/cn";
 
-export type ContainerProps = React.HTMLAttributes<HTMLDivElement>;
+export type TContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
-function Container(props: ContainerProps) {
+function TContainer(props: TContainerProps) {
   return (
     <div
       {...props}
       className={cn(
         "bg-secondary-main flex flex-col justify-between rounded-lg",
-        props.className,
+        props.className
       )}
     />
   );
 }
 
-export default Container;
+export default TContainer;

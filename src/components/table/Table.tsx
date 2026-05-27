@@ -1,15 +1,22 @@
 import React, { type ReactNode } from "react";
-import Pagination, { type PaginationProps } from "./Pagination";
-import Container, { type ContainerProps } from "./Container";
+import { type PaginationProps } from "./Pagination";
+import TContainer, { type TContainerProps } from "./TContainer";
 import TBody, { type TBodyProps } from "./TBody";
-import THead from "./THead";
-import MenuHideColumns from "./MenuHideColumns";
 import type { ThProps } from "./Th";
 import type { TdProps } from "./Td";
 import type { SortButtonStatus } from "../buttons/SortButton";
 import type { TrProps } from "./Tr";
-import type { UseTableUtilsSortEventHandler } from "./hooks/useTableUtils";
+import type {
+  UseTableUtilsSelectedRows,
+  UseTableUtilsSortEventHandler,
+} from "./hooks/useTableUtils";
 import useTableUtils from "./hooks/useTableUtils";
+import TFooter from "./TFooter";
+import THeader, {
+  type THeaderHiddenColumns,
+  type THeaderNoHiddenColumns,
+} from "./THeader";
+import THead from "./THead";
 
 export type RowType = Record<string, any>;
 
@@ -65,9 +72,9 @@ export type TableNoHiddenColumns = {
 export type TableSelectRows = {
   selectable: true;
 
-  onSelectRows: (selectedRows: Set<string | number>) => void;
+  onSelectRows: (selectedRows: UseTableUtilsSelectedRows) => void;
 
-  selectedRows: Set<string | number>;
+  selectedRows: UseTableUtilsSelectedRows;
 };
 
 export type TableNoSelectRows = {
@@ -97,7 +104,7 @@ export type TableProps<Row extends RowType> = (
 
     maxVisibleNeighbors?: PaginationProps["maxVisibleNeighbors"];
 
-    containerProps?: ContainerProps;
+    containerProps?: TContainerProps;
 
     theadProps?: React.HTMLAttributes<HTMLTableSectionElement>;
 
@@ -131,13 +138,17 @@ export type TableProps<Row extends RowType> = (
     tbdsProps?: TdProps;
 
     tdCheckboxProps?: TdProps;
+
+    orderedColumns: TableColumn<Row>["name"][];
+
+    setOrderedColumns: (orderedColumns: TableColumn<Row>["name"][]) => void;
   };
 function Table<Row extends RowType>({
-  columns = [],
+  columns: originalColumns = [],
   rows = [],
   currentPage = 1,
   onPageChange = () => {},
-  perPage = 20,
+  perPage = 10,
   count = rows.length,
   containerProps = {},
   tbodyProps = {},
@@ -158,7 +169,9 @@ function Table<Row extends RowType>({
   tdCheckboxProps,
   hiddenColumns = new Set(),
   setHiddenColumns = () => {},
-  hideableColumns = false,
+  hideableColumns,
+  orderedColumns,
+  setOrderedColumns,
 }: TableProps<Row>) {
   const {
     displayedColumns,
@@ -167,28 +180,39 @@ function Table<Row extends RowType>({
     handleSortClick,
     handleToggleColumns,
     selectAll,
-  } = useTableUtils<Row>({
     columns,
+    setColumns,
+  } = useTableUtils<Row>({
     hiddenColumns,
     onSelectRows,
     onSortChange,
     rows,
     selectedRows,
     setHiddenColumns,
+    originalColumns,
+    orderedColumns,
+    setOrderedColumns,
   });
 
+  const theaderProps = {
+    hideableColumns: hideableColumns,
+
+    ...(hideableColumns && {
+      hiddenColumns: hiddenColumns,
+      handleResetHiddenColumns: handleResetHiddenColumns,
+      handleToggleColumns: handleToggleColumns,
+    }),
+  } as THeaderNoHiddenColumns | THeaderHiddenColumns<Row>;
+
   return (
-    <Container {...containerProps}>
-      {hideableColumns && (
-        <div className="bg-primary-light flex justify-end py-2 pe-2">
-          <MenuHideColumns
-            onReset={handleResetHiddenColumns}
-            handleToggleColumns={handleToggleColumns}
-            hiddenColumns={hiddenColumns}
-            columns={columns}
-          />
-        </div>
-      )}
+    <TContainer {...containerProps}>
+      <THeader
+        columns={columns}
+        setColumns={setColumns}
+        selectedRows={selectedRows}
+        {...theaderProps}
+      />
+
       <div className="overflow-x-auto w-full max-w-full rounded-lg pb-[5px]">
         <table className="w-full min-w-max table-auto border-collapse relative">
           <THead
@@ -219,28 +243,14 @@ function Table<Row extends RowType>({
           />
         </table>
       </div>
-      <div className="flex justify-between items-center px-4">
-        <div className="flex gap-5 text-(--text)">
-          <div className="flex items-center gap-1 font-medium text-sm">
-            <p>Total: </p>
-            <span>{count}</span>
-          </div>
-
-          <div className="flex items-center gap-1 font-medium text-sm">
-            <p>PerPage: </p>
-            <span>{perPage}</span>
-          </div>
-        </div>
-
-        <Pagination
-          currentPage={currentPage}
-          onChange={onPageChange}
-          maxVisibleNeighbors={maxVisibleNeighbors}
-          count={count}
-          perPage={perPage}
-        />
-      </div>
-    </Container>
+      <TFooter
+        count={count}
+        currentPage={currentPage}
+        onPageChange={onPageChange}
+        maxVisibleNeighbors={maxVisibleNeighbors}
+        perPage={perPage}
+      />
+    </TContainer>
   );
 }
 

@@ -14,7 +14,7 @@ function Menu({ children }: MenuProps) {
   const menuRef = useRef(null);
 
   const handleOpenMenu = () => {
-    setOpenMenu(true);
+    setOpenMenu((prevOpenMenu) => !prevOpenMenu);
   };
 
   const handleCloseMenu = () => {
@@ -24,8 +24,8 @@ function Menu({ children }: MenuProps) {
   useFocusout(menuRef, handleCloseMenu);
 
   return (
-    <div className="relative">
-      <Tooltip title="show\hide columns">
+    <div className="relative" ref={menuRef}>
+      <Tooltip title={!openMenu && "show/hide columns"}>
         <IconButton onClick={handleOpenMenu}>
           <MoreIcon className="rotate-90 fill-(--primary) dark:fill-(--text) w-5 h-5 " />
         </IconButton>
@@ -33,9 +33,8 @@ function Menu({ children }: MenuProps) {
       <Animation
         className={cn(
           `duration-75 absolute rtl:left-0 ltr:right-0 py-2 max-h-96 px-3 overflow-auto
-           min-w-max bg-(--surface) rounded-md z-10000 flex flex-col gap-3 shadow-base `,
+           min-w-max bg-(--surface) rounded-md z-10000 flex flex-col gap-3 shadow-base `
         )}
-        ref={menuRef}
         isOpen={openMenu}
       >
         {children}

@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useRef } from "react";
 import useMouseUp from "src/hooks/useMouseUp";
 import type { RowType, TableColumn, TableRow } from "../Table";
-import type { THeadSelectRowEventHandler } from "../THead";
 import { getObjectValue } from "src/utils/getObjectValue";
-
-type UseTBodyUtilsSelectRowHandler = THeadSelectRowEventHandler;
+import type {
+  UseTableUtilsSelectedRows,
+  UseTableUtilsSelectRowEventHandler,
+} from "./useTableUtils";
 
 export type UseTBodyUtilsOptions = {
-  onSelectRow: UseTBodyUtilsSelectRowHandler;
+  onSelectRow: UseTableUtilsSelectRowEventHandler;
 
-  selectedRows: Set<string | number>;
+  selectedRows: UseTableUtilsSelectedRows;
 
   rows: TableRow[];
 };
@@ -19,7 +20,7 @@ export default function useTBodyUtils<Row extends RowType>({
   selectedRows,
   rows,
 }: UseTBodyUtilsOptions) {
-  const [rowMouseDown, setRowMouseDown] = useState(false);
+  const rowMouseDownRef = useRef(false);
 
   const changeLikeCheckBox = (row: TableRow) => {
     onSelectRow(row)({
@@ -30,7 +31,7 @@ export default function useTBodyUtils<Row extends RowType>({
   };
 
   const handleMouseEnter = (row: TableRow) => () => {
-    if (rowMouseDown) {
+    if (rowMouseDownRef.current) {
       changeLikeCheckBox(row);
     }
   };
@@ -38,7 +39,7 @@ export default function useTBodyUtils<Row extends RowType>({
   const handleMouseDown = (row: TableRow) => () => {
     changeLikeCheckBox(row);
 
-    setRowMouseDown(true);
+    rowMouseDownRef.current = true;
   };
 
   const handleSelectArea = (i: number) => {
@@ -64,22 +65,21 @@ export default function useTBodyUtils<Row extends RowType>({
   };
 
   const handleCheckBoxChange =
-    () =>
-    // row: TableRow
-    () =>
-      // e: React.ChangeEvent<HTMLInputElement> & {
-      //   nativeEvent: {
-      //     pointerType: string;
-      //   };
-      // },
-      {
-        // if (
-        //   e.nativeEvent.pointerType === "mouse" ||
-        //   e.nativeEvent.pointerType === "touch"
-        // )
-        //   return;
-        // onSelectRow(row)(e);
-      };
+    (row: TableRow) =>
+    (
+      e: React.ChangeEvent<HTMLInputElement> & {
+        nativeEvent: {
+          pointerType: string;
+        };
+      }
+    ) => {
+      if (
+        e.nativeEvent.pointerType === "mouse" ||
+        e.nativeEvent.pointerType === "touch"
+      )
+        return;
+      onSelectRow(row)(e);
+    };
 
   const getRowValue = (row: TableRow, name: TableColumn<Row>["name"]) => {
     if (Object.prototype.toString.call(row) === "[object Object]") {
@@ -89,7 +89,7 @@ export default function useTBodyUtils<Row extends RowType>({
     return row;
   };
 
-  useMouseUp(() => setRowMouseDown(false));
+  useMouseUp(() => (rowMouseDownRef.current = false));
 
   const noRows = rows.length === 0;
 
