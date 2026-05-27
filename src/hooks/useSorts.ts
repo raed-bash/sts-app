@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import useCashingState from "./useCashingState";
 
-export type UseSortStatus = "ASC" | "DESC" | null;
+export type UseSortStatus = "asc" | "desc" | null;
 
 export type UseSortOptions = {
   multi?: boolean;
@@ -10,10 +10,12 @@ export type UseSortOptions = {
 
 const defaultSortsDefault = {};
 
-export default function useSorts(
+export type DefaultSorts<T extends string> = { [P in T]?: UseSortStatus };
+
+export default function useSorts<T extends string>(
   name: string,
-  defaultSorts = defaultSortsDefault,
-  { multi = false, cashing = true }: UseSortOptions = {},
+  defaultSorts: DefaultSorts<T> = defaultSortsDefault,
+  { multi = false, cashing = true }: UseSortOptions = {}
 ) {
   const state = useState(defaultSorts);
 
@@ -31,10 +33,10 @@ export default function useSorts(
       } else {
         setSorts({
           [name]: sortStatus,
-        });
+        } as DefaultSorts<T>);
       }
     },
-    [setSorts, sorts, multi],
+    [setSorts, sorts, multi]
   );
 
   return { sorts, setSorts, handleSortChange };

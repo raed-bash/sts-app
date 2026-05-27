@@ -1,11 +1,11 @@
 import TriangleDownIcon from "src/assets/icons/triangle-down.svg?react";
 import { cn } from "src/utils/cn";
 
-export type SortButtonStatus = "ASC" | "DESC" | null;
+export type SortButtonStatus = "asc" | "desc" | null;
 
 export type SortButtonEventHandler = (
   sortStatus: SortButtonStatus,
-  e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  e: React.MouseEvent<HTMLButtonElement, MouseEvent>
 ) => void;
 
 export type SortButtonProps = Omit<
@@ -28,9 +28,9 @@ function SortButton({
      */
     (sortStatus: SortButtonProps["sortStatus"]) => {
       switch (sortStatus) {
-        case "DESC":
+        case "desc":
           return "rotate-0";
-        case "ASC":
+        case "asc":
           return "rotate-180";
         default:
           return "rotate-90";
@@ -39,17 +39,17 @@ function SortButton({
 
   const handleSortStatus = () => {
     switch (sortStatus) {
-      case "ASC":
-        return "DESC";
-      case "DESC":
+      case "asc":
+        return "desc";
+      case "desc":
         return null;
       default:
-        return "ASC";
+        return "asc";
     }
   };
 
   const handleSortClick = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     if (onClick) {
       onClick(handleSortStatus(), e);
@@ -61,15 +61,15 @@ function SortButton({
       onClick={handleSortClick}
       className={cn(
         `mt-1 inline-flex gap-1 items-center cursor-pointer`,
-        className,
+        className
       )}
       {...props}
     >
       {props.children}
       <TriangleDownIcon
         className={cn(
-          `w-3 h-3 duration-150 `,
-          handleSortStatusStyle(sortStatus),
+          `w-3 h-3 duration-150 fill-(--text)`,
+          handleSortStatusStyle(sortStatus)
         )}
       />
     </button>
