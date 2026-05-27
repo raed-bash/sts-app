@@ -46,6 +46,10 @@ function Option(props: OptionProps) {
   const optionRef = useRef<HTMLDivElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.ctrlKey || e.metaKey) {
+      return;
+    }
+
     e.preventDefault();
 
     onKeyDown(e);
@@ -78,7 +82,7 @@ function Option(props: OptionProps) {
     <div
       {...otherProps}
       className={cn(
-        `px-2 py-1 w-full focus:border border-black outline-none`,
+        `px-2 py-1 w-full focus:border border-black outline-none select-none`,
         disabled
           ? "text-gray-500 hover:bg-none bg-[#f1f1f1] opacity-70"
           : "hover:bg-(--primary) hover:text-white text-black",
