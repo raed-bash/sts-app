@@ -98,16 +98,16 @@ function InputPlus<TOption extends OptionType>({
             ? "items-center justify-end  flex-row-reverse "
             : "flex-row items-center"
           : "",
-        inputPlusContainerProps.className,
+        inputPlusContainerProps.className
       )}
     >
       <h2
         {...titleProps}
         className={cn(
           "text-[16px] font-medium flex gap-1 aria-invalid:text-(--danger-main)",
-          titleProps.className,
+          titleProps.className
         )}
-        aria-invalid={Boolean(helperText)}
+        aria-invalid={Boolean(helperText && error)}
       >
         <label htmlFor={props.id}>{title}</label>
         {titleIcon}
@@ -115,7 +115,7 @@ function InputPlus<TOption extends OptionType>({
       {loading ? (
         <Skeleton {...skeletonProps} />
       ) : props.type === "select" ? (
-        <RawSelect {...props} aria-invalid={Boolean(helperText)} />
+        <RawSelect {...props} aria-invalid={Boolean(helperText && error)} />
       ) : props.type === "autocomplete" ? (
         <RawAutocomplete {...props} />
       ) : props.type === "textarea" ? (
@@ -125,18 +125,18 @@ function InputPlus<TOption extends OptionType>({
       ) : props.type === "autocompleteApi" ? (
         <AutocompleteApi {...props} />
       ) : props.type === "password" ? (
-        <InputPassword {...props} aria-invalid={Boolean(helperText)} />
+        <InputPassword {...props} aria-invalid={Boolean(helperText && error)} />
       ) : props.type === "checkbox" ? (
-        <Checkbox {...props} aria-invalid={Boolean(helperText)} />
+        <Checkbox {...props} aria-invalid={Boolean(helperText && error)} />
       ) : (
-        <Input {...props} aria-invalid={Boolean(helperText)} />
+        <Input {...props} aria-invalid={Boolean(helperText && error)} />
       )}
       <p
         {...helperTextProps}
         className={cn(
           error && "text-(--danger-main)",
           "text-xs",
-          helperTextProps.className,
+          helperTextProps.className
         )}
       >
         {helperText}
