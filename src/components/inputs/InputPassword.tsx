@@ -5,7 +5,7 @@ import EyeSlashIcon from "./icons/eye-slash.svg?react";
 import IconButton from "../buttons/IconButton";
 
 const iconStyle =
-  "fill-(--text) group-hover:fill-(--primary) duration-75 aria-invalid:fill-(--danger-main)";
+  "fill-(--text) group-hover:fill-(--primary) duration-75 aria-invalid:fill-(--danger)";
 
 export default function InputPassword(props: Omit<InputProps, "type">) {
   const [showPassword, setShowPassword] = useState(false);

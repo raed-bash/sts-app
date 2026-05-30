@@ -6,9 +6,9 @@ export type StatusViewProps = React.HTMLAttributes<HTMLDivElement> & {
 };
 
 const STATUS_STYLES: Record<UserStatus, string> = {
-  ACTIVE: "bg-(--success-main)",
-  BLOCKED: "bg-(--danger-main)",
-  PENDING: "bg-(--warning-main)",
+  ACTIVE: "bg-(--success)",
+  BLOCKED: "bg-(--danger)",
+  PENDING: "bg-(--warning)",
 };
 
 export default function StatusView({ status, ...props }: StatusViewProps) {
@@ -18,7 +18,7 @@ export default function StatusView({ status, ...props }: StatusViewProps) {
       className={cn(
         "px-2 py-1 inline-block rounded-lg text-white font-bold text-xs",
         status && STATUS_STYLES[status],
-        props.className,
+        props.className
       )}
     >
       {status && STATUS_TITLES[status]}

@@ -9,22 +9,20 @@ export type AlertProps = {
 
 export default function Alert({ children, color }: AlertProps) {
   const colorClasses = {
-    danger: "bg-(--danger-main)/10 text-(--danger-main)",
-    warning: "bg-(--warning-main)/10 text-(--warning-main)",
-    info: "bg-(--info-main)/10 text-(--info-main)",
-    success: "bg-(--success-main)/10 text-(--success-main)",
+    danger: "bg-(--danger)/10 text-(--danger)",
+    warning: "bg-(--warning)/10 text-(--warning)",
+    info: "bg-(--info)/10 text-(--info)",
+    success: "bg-(--success)/10 text-(--success)",
   };
 
   const icons = {
-    danger: (
-      <InfoIcon className="inline-block me-1 w-6 stroke-(--danger-main)" />
-    ),
+    danger: <InfoIcon className="inline-block me-1 w-6 stroke-(--danger)" />,
     warning: (
-      <WarningIcon className="inline-block me-1 w-6 stroke-(--warning-main) fill-(--warning-main)" />
+      <WarningIcon className="inline-block me-1 w-6 stroke-(--warning) fill-(--warning)" />
     ),
-    info: <InfoIcon className="inline-block me-1 w-6 stroke-(--info-main)" />,
+    info: <InfoIcon className="inline-block me-1 w-6 stroke-(--info)" />,
     success: (
-      <SuccessIcon className="inline-block me-1 w-6 stroke-(--success-main) fill-(--success-main)" />
+      <SuccessIcon className="inline-block me-1 w-6 stroke-(--success) fill-(--success)" />
     ),
   };
 

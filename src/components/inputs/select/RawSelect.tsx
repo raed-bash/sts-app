@@ -76,7 +76,7 @@ function RawSelect<TOption extends OptionType>({
       className={cn(
         "relative w-full h-[33px] rounded-sm indent-1 p-1 border border-[lab(90.952%_0_-.0000119209)] duration-75 bg-transparent shadow-xs",
         "focus-visible:border-(--primary) outline-none focus-visible:ring-[3px] focus-visible:ring-(--primary)/30 ",
-        "aria-invalid:border-(--danger-main) aria-invalid:ring-(--danger-main)/30",
+        "aria-invalid:border-(--danger) aria-invalid:ring-(--danger)/30",
         className
       )}
       ref={containerRef}
@@ -98,7 +98,7 @@ function RawSelect<TOption extends OptionType>({
         </div>
         <ArrowDown
           {...arrowDownProps}
-          className="min-w-[15px] min-h-[15px] aria-invalid:fill-(--danger-main)"
+          className="min-w-[15px] min-h-[15px] aria-invalid:fill-(--danger)"
           aria-invalid={props["aria-invalid"]}
         />
       </div>

@@ -58,7 +58,7 @@ export default function SignUp() {
       <p className="text-(--text-muted) text-sm">Please sign up to continue</p>
 
       <Paper
-        className="max-w-md w-full mt-5 aria-invalid:border-(--danger-main) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger-main)/30 "
+        className="max-w-md w-full mt-5 aria-invalid:border-(--danger) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger)/30 "
         aria-invalid={Boolean(error)}
       >
         <form className="flex flex-col gap-2 " onSubmit={formik.handleSubmit}>

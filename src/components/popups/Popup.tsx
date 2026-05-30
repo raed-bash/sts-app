@@ -24,7 +24,7 @@ type PopupProps = {
           handleClose: () => void;
           handleOpen: () => void;
         },
-        triggerProps?: { onClick: () => void },
+        triggerProps?: { onClick: () => void }
       ) => React.ReactNode);
 };
 function Popup({ isOpen, onClose, title, children }: PopupProps) {
@@ -45,7 +45,7 @@ function Popup({ isOpen, onClose, title, children }: PopupProps) {
       {typeof children === "function" ? (
         children(
           { open, setOpen, inPopup: false, handleClose, handleOpen },
-          { onClick: handleOpen },
+          { onClick: handleOpen }
         )
       ) : (
         <></>
@@ -67,8 +67,8 @@ function Popup({ isOpen, onClose, title, children }: PopupProps) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <DialogPanel className=" bg-white rounded-lg p-6 shadow-lg font-[Calibri]">
-                <DialogTitle className="text-center font- text-lg font-medium text-gray-900">
+              <DialogPanel className=" bg-(--surface) rounded-lg p-6 shadow-lg font-[Calibri]">
+                <DialogTitle className="text-center text-lg font-medium text-(--text)">
                   {title}
                 </DialogTitle>
                 <div className="mt-4 flex justify-center gap-4">

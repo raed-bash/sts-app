@@ -104,7 +104,7 @@ function InputPlus<TOption extends OptionType>({
       <h2
         {...titleProps}
         className={cn(
-          "text-[16px] font-medium flex gap-1 aria-invalid:text-(--danger-main)",
+          "text-[16px] font-medium flex gap-1 aria-invalid:text-(--danger)",
           titleProps.className
         )}
         aria-invalid={Boolean(helperText && error)}
@@ -134,7 +134,7 @@ function InputPlus<TOption extends OptionType>({
       <p
         {...helperTextProps}
         className={cn(
-          error && "text-(--danger-main)",
+          error && "text-(--danger)",
           "text-xs",
           helperTextProps.className
         )}
