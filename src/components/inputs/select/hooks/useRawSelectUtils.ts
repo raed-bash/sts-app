@@ -66,7 +66,7 @@ export default function useRawSelectUtils<TOption extends OptionType>({
 
   const [openDrop, setOpenDrop] = useState<boolean>(false);
 
-  const tooltipRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const optionsContainerRef = useRef<HTMLDivElement>(null);
 
   const handleOpenDrop = () => {
@@ -109,8 +109,8 @@ export default function useRawSelectUtils<TOption extends OptionType>({
 
       handleCloseDrop();
 
-      if (tooltipRef.current) {
-        tooltipRef.current.focus();
+      if (containerRef.current) {
+        containerRef.current.focus();
       }
     }
   };
@@ -162,7 +162,7 @@ export default function useRawSelectUtils<TOption extends OptionType>({
       }
 
       case "escape":
-        tooltipRef.current?.focus();
+        containerRef.current?.focus();
 
         handleCloseDrop();
         break;
@@ -188,7 +188,7 @@ export default function useRawSelectUtils<TOption extends OptionType>({
     return isSelected;
   };
 
-  useFocusout(tooltipRef, handleCloseDrop);
+  useFocusout(containerRef, handleCloseDrop);
 
   useEffect(() => {
     if (openDrop && optionsContainerRef.current) {
@@ -202,7 +202,7 @@ export default function useRawSelectUtils<TOption extends OptionType>({
     handleSelectKeyDown,
     handleClick,
     inputLabel,
-    tooltipRef,
+    containerRef,
     openDrop,
     handleOpenDrop,
     isSelectedOption,

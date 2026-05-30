@@ -1,36 +1,30 @@
 import ArrowDown from "../../../assets/icons/arrow-down.svg?react";
 import Option, { type OptionProps } from "./Option";
-import Tooltip, { type TooltipProps } from "src/components/tooltip/Tooltip";
 import { cn } from "src/utils/cn";
 import useRawSelectUtils, {
   type OptionType,
   type UseRawSelectUtilsOptions,
 } from "./hooks/useRawSelectUtils";
 
-export type RawSelectProps<TOption extends OptionType> = Omit<
-  TooltipProps,
-  "title" | "onChange" | "onClick"
-> &
-  Partial<Pick<TooltipProps, "title">> &
-  UseRawSelectUtilsOptions<TOption> & {
-    options: TOption[];
+export type RawSelectProps<TOption extends OptionType> =
+  React.ComponentProps<"div"> &
+    UseRawSelectUtilsOptions<TOption> & {
+      options: TOption[];
 
-    optionsContainer?: React.HTMLAttributes<HTMLDivElement>;
+      optionsContainer?: React.HTMLAttributes<HTMLDivElement>;
 
-    arrowDownProps?: React.SVGProps<SVGSVGElement>;
+      arrowDownProps?: React.SVGProps<SVGSVGElement>;
 
-    inputProps?: React.HTMLAttributes<HTMLDivElement>;
+      inputProps?: React.HTMLAttributes<HTMLDivElement>;
 
-    enableTooltip?: boolean;
+      getOptionLabel: (option: TOption) => string;
 
-    getOptionLabel: (option: TOption) => string;
+      getOptionProps?: (option: TOption, i: number) => Partial<OptionProps>;
 
-    getOptionProps?: (option: TOption, i: number) => Partial<OptionProps>;
+      startHelperOptions?: OptionProps[];
 
-    startHelperOptions?: OptionProps[];
-
-    endHelperOptions?: OptionProps[];
-  };
+      endHelperOptions?: OptionProps[];
+    };
 
 function RawSelect<TOption extends OptionType>({
   className,
@@ -44,7 +38,6 @@ function RawSelect<TOption extends OptionType>({
   arrowDownProps = {},
   multiple,
   value,
-  enableTooltip = true,
   getUniqueValue = () => "",
   getInputLabel = () => "",
   getOptionLabel = () => "",
@@ -58,7 +51,7 @@ function RawSelect<TOption extends OptionType>({
     handleSelectKeyDown,
     handleSelectValue,
     inputLabel,
-    tooltipRef,
+    containerRef,
     handleClick,
     openDrop,
     isSelectedOption,
@@ -79,19 +72,17 @@ function RawSelect<TOption extends OptionType>({
   const startHelperOptionsLength = startHelperOptions.length;
 
   return (
-    <Tooltip
+    <div
       className={cn(
-        "w-full h-[33px] rounded-sm indent-1 p-1 border border-[lab(90.952%_0_-.0000119209)] duration-75 bg-transparent shadow-xs",
-        "focus-visible:border-(-- primary) outline-none focus-visible:ring-[3px] focus-visible:ring-(--primary)/30 ",
+        "relative w-full h-[33px] rounded-sm indent-1 p-1 border border-[lab(90.952%_0_-.0000119209)] duration-75 bg-transparent shadow-xs",
+        "focus-visible:border-(--primary) outline-none focus-visible:ring-[3px] focus-visible:ring-(--primary)/30 ",
         "aria-invalid:border-(--danger-main) aria-invalid:ring-(--danger-main)/30",
         className
       )}
-      ref={tooltipRef}
+      ref={containerRef}
       tabIndex={disabled ? -1 : 0}
       onClick={handleClick}
       onKeyDown={handleSelectKeyDown}
-      title={multiple && enableTooltip ? inputLabel : ""}
-      placement={openDrop ? "top" : "bottom"}
       id={name}
       role="combobox"
       {...props}
@@ -152,7 +143,7 @@ function RawSelect<TOption extends OptionType>({
           ))}
         </div>
       )}
-    </Tooltip>
+    </div>
   );
 }
 
