@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import useFocusout from "src/hooks/useFocusout";
 import { EventTarget } from "src/utils/EventTarget";
 import type { OptionProps } from "../Option";
@@ -18,7 +18,9 @@ export type MultiSelectProps<TOption> = {
 
   value?: RawSelectMap<TOption>;
 
-  getInputLabel: (option: Map<UniqueValue, TOption>) => string | number;
+  getInputLabel: (
+    option: Map<UniqueValue, TOption>,
+  ) => string | number | ReactNode;
 };
 
 export type SignleSelectProps<TOption> = {
@@ -26,7 +28,7 @@ export type SignleSelectProps<TOption> = {
 
   onChange: (e: EventTarget<TOption>) => void;
 
-  getInputLabel: (option: TOption) => string | number;
+  getInputLabel: (option: TOption) => string | number | ReactNode;
 
   value?: TOption;
 };
@@ -54,7 +56,7 @@ export default function useRawSelectUtils<TOption extends OptionType>({
   name,
   disabled,
 }: UseRawSelectUtilsOptions<TOption>) {
-  const inputLabel: string | number = value
+  const inputLabel: string | number | ReactNode = value
     ? (() => {
         if (multiple) {
           return getInputLabel(value);
@@ -82,7 +84,7 @@ export default function useRawSelectUtils<TOption extends OptionType>({
 
     if (!openDrop) {
       handleOpenDrop();
-    } else {
+    } else if (!multiple) {
       handleCloseDrop();
     }
 
@@ -132,7 +134,7 @@ export default function useRawSelectUtils<TOption extends OptionType>({
     const container = e.currentTarget;
 
     const option = (e.target as HTMLElement).closest(
-      "[data-index]"
+      "[data-index]",
     ) as HTMLElement | null;
 
     const index = Number(option?.dataset?.index || 0);

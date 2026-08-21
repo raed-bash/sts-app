@@ -43,7 +43,7 @@ export default function useRawAutocompleteUtils<TOption extends OptionType>({
     handleSelectKeyDown,
     handleSelectValue,
     inputLabel,
-    tooltipRef,
+    containerRef,
     handleClick,
     openDrop,
     handleOpenDrop,
@@ -98,7 +98,7 @@ export default function useRawAutocompleteUtils<TOption extends OptionType>({
   };
 
   const handleOptionsContainerKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>
+    e: React.KeyboardEvent<HTMLDivElement>,
   ) => {
     if (handleOptionsKeyDown(e) === false) {
       if (inputRef.current) {
@@ -107,7 +107,7 @@ export default function useRawAutocompleteUtils<TOption extends OptionType>({
     }
   };
 
-  useFocusout(tooltipRef, () => {
+  useFocusout(containerRef, () => {
     if (!freeSolo) {
       handleValueSearch("");
     }
@@ -115,7 +115,9 @@ export default function useRawAutocompleteUtils<TOption extends OptionType>({
 
   const filteredOptions = localFilter
     ? options.filter((option) =>
-        getOptionLabel(option).toLowerCase().includes(valueSearch.toLowerCase())
+        getOptionLabel(option)
+          .toLowerCase()
+          .includes(valueSearch.toLowerCase()),
       )
     : options;
 
@@ -129,7 +131,7 @@ export default function useRawAutocompleteUtils<TOption extends OptionType>({
     handleInputKeyDown,
     handleOptionsContainerKeyDown,
     openDrop,
-    tooltipRef,
+    containerRef,
     handleSelectKeyDown,
     optionsContainerRef,
     inputRef,
