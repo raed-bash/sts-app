@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { cn } from "src/utils/cn";
+import Checkbox from "../Checkbox";
 
 export type OptionProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLDivElement>,
@@ -17,7 +18,7 @@ export type OptionProps = React.DetailedHTMLProps<
 
   onSelectValue?: (
     props: OptionProps,
-    e?: React.MouseEvent<HTMLDivElement>
+    e?: React.MouseEvent<HTMLDivElement>,
   ) => void;
 };
 
@@ -87,7 +88,7 @@ function Option(props: OptionProps) {
           ? "text-gray-500 hover:bg-none bg-[#f1f1f1] opacity-70"
           : "hover:bg-(--primary) hover:text-white text-black",
         selected ? "bg-blue-500 text-white" : "",
-        className
+        className,
       )}
       aria-selected={selected}
       tabIndex={disabled ? undefined : selected ? 0 : -1}
@@ -96,14 +97,7 @@ function Option(props: OptionProps) {
       onKeyDown={handleKeyDown}
       aria-disabled={disabled}
     >
-      {multiple && value && (
-        <input
-          type="checkbox"
-          className="w-5 h-5 max-lg:w-4 max-lg:h-4"
-          readOnly
-          checked={selected}
-        />
-      )}
+      {multiple && value && <Checkbox readOnly checked={selected} />}
       {"  "}
       {otherProps.children}
     </div>
