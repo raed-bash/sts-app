@@ -10,7 +10,7 @@ export type MenuHideColumnsProps<Row extends RowType> = {
   columns: TableColumn<Row>[];
   onReset: React.MouseEventHandler<HTMLButtonElement>;
   handleToggleColumns: (
-    column: TableColumn<Row>
+    column: TableColumn<Row>,
   ) => React.MouseEventHandler<HTMLButtonElement>;
   hiddenColumns: Set<TableColumn<Row>["name"]>;
   setColumns: React.Dispatch<React.SetStateAction<TableColumn<Row>[]>>;
@@ -45,9 +45,11 @@ function MenuHideColumns<Row extends RowType>({
       columns
         .map((column, originalIndex) => ({ column, originalIndex }))
         .filter(({ column }) =>
-          column.headerName.toLowerCase().includes(searchMenuCols.toLowerCase())
+          column.headerName
+            .toLowerCase()
+            .includes(searchMenuCols.toLowerCase()),
         ),
-    [columns, searchMenuCols]
+    [columns, searchMenuCols],
   );
 
   const getFilteredIndexFromY = (y: number): number => {
@@ -80,7 +82,7 @@ function MenuHideColumns<Row extends RowType>({
   const handlePointerDown = (
     e: React.PointerEvent<HTMLButtonElement>,
     originalIndex: number,
-    filteredIndex: number
+    filteredIndex: number,
   ) => {
     if (e.pointerId) e.currentTarget.setPointerCapture(e.pointerId);
 
@@ -124,7 +126,7 @@ function MenuHideColumns<Row extends RowType>({
       if (ghostRef.current) ghostRef.current.style.display = "flex";
 
       const fromName = String(
-        filteredColumns[drag.current.fromFilteredIndex]?.column.name ?? ""
+        filteredColumns[drag.current.fromFilteredIndex]?.column.name ?? "",
       );
       setButtonAttr(fromName, "data-dragging", "true");
     }
@@ -137,7 +139,7 @@ function MenuHideColumns<Row extends RowType>({
 
     if (newFilteredIdx !== drag.current.toFilteredIndex) {
       const oldName = String(
-        filteredColumns[drag.current.toFilteredIndex]?.column.name ?? ""
+        filteredColumns[drag.current.toFilteredIndex]?.column.name ?? "",
       );
       setButtonAttr(oldName, "data-drag-over", null);
 
@@ -145,7 +147,7 @@ function MenuHideColumns<Row extends RowType>({
 
       if (newFilteredIdx !== drag.current.fromFilteredIndex) {
         const newName = String(
-          filteredColumns[newFilteredIdx]?.column.name ?? ""
+          filteredColumns[newFilteredIdx]?.column.name ?? "",
         );
         setButtonAttr(newName, "data-drag-over", "true");
       }
@@ -181,7 +183,7 @@ function MenuHideColumns<Row extends RowType>({
 
   const handleClick = (
     e: React.MouseEvent<HTMLButtonElement>,
-    column: TableColumn<Row>
+    column: TableColumn<Row>,
   ) => {
     if (drag.current.suppressClick) {
       drag.current.suppressClick = false;
@@ -195,7 +197,7 @@ function MenuHideColumns<Row extends RowType>({
     setSearchMenuCols(e.target.value);
 
   return (
-    <Menu>
+    <Menu tooltipTitle="show/hide columns">
       <InputIcon
         placeholder="Search..."
         EndIcon={(props) => (
