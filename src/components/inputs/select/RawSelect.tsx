@@ -6,25 +6,27 @@ import useRawSelectUtils, {
   type UseRawSelectUtilsOptions,
 } from "./hooks/useRawSelectUtils";
 
-export type RawSelectProps<TOption extends OptionType> =
-  React.ComponentProps<"div"> &
-    UseRawSelectUtilsOptions<TOption> & {
-      options: TOption[];
+export type RawSelectProps<TOption extends OptionType> = Omit<
+  React.ComponentProps<"div">,
+  "onChange"
+> &
+  UseRawSelectUtilsOptions<TOption> & {
+    options: TOption[];
 
-      optionsContainer?: React.HTMLAttributes<HTMLDivElement>;
+    optionsContainer?: React.HTMLAttributes<HTMLDivElement>;
 
-      arrowDownProps?: React.SVGProps<SVGSVGElement>;
+    arrowDownProps?: React.SVGProps<SVGSVGElement>;
 
-      inputProps?: React.HTMLAttributes<HTMLDivElement>;
+    inputProps?: React.HTMLAttributes<HTMLDivElement>;
 
-      getOptionLabel: (option: TOption) => string;
+    getOptionLabel: (option: TOption) => string;
 
-      getOptionProps?: (option: TOption, i: number) => Partial<OptionProps>;
+    getOptionProps?: (option: TOption, i: number) => Partial<OptionProps>;
 
-      startHelperOptions?: OptionProps[];
+    startHelperOptions?: OptionProps[];
 
-      endHelperOptions?: OptionProps[];
-    };
+    endHelperOptions?: OptionProps[];
+  };
 
 function RawSelect<TOption extends OptionType>({
   className,
@@ -77,7 +79,7 @@ function RawSelect<TOption extends OptionType>({
         "relative w-full h-[33px] rounded-sm indent-1 p-1 border border-[lab(90.952%_0_-.0000119209)] duration-75 bg-transparent shadow-xs",
         "focus-visible:border-(--primary) outline-none focus-visible:ring-[3px] focus-visible:ring-(--primary)/30 ",
         "aria-invalid:border-(--danger) aria-invalid:ring-(--danger)/30",
-        className
+        className,
       )}
       ref={containerRef}
       tabIndex={disabled ? -1 : 0}
@@ -91,7 +93,7 @@ function RawSelect<TOption extends OptionType>({
         <div
           className={cn(
             "ps-1 pe-2 inline-block truncate select-none",
-            inputProps.className
+            inputProps.className,
           )}
         >
           {inputLabel}
@@ -109,7 +111,7 @@ function RawSelect<TOption extends OptionType>({
           ref={optionsContainerRef}
           className={cn(
             "max-h-64 absolute z-1000 -ms-[3px] mt-1 w-full overflow-y-auto overflow-x-hidden bg-white border border-black rounded-sm",
-            optionsContainer.className
+            optionsContainer.className,
           )}
         >
           {startHelperOptions.map((helperOptionProps, i) => (
