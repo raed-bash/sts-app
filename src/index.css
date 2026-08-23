@@ -168,9 +168,9 @@ html.dark {
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  /* --primary: oklch(0.205 0 0); */
+  --primary: #4159cd;
   --primary-foreground: oklch(0.985 0 0);
-  /* --secondary: oklch(0.97 0 0); */
+  --secondary: #8b9ced;
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -199,13 +199,13 @@ html.dark {
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
+  --card: #1f2937;
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  /* --primary: oklch(0.922 0 0); */
+  --primary: #324abd;
   --primary-foreground: oklch(0.205 0 0);
-  /* --secondary: oklch(0.269 0 0); */
+  --secondary: #b3b6c6;
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
