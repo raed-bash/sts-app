@@ -53,6 +53,7 @@ function RawAutocomplete<TOption extends OptionType>({
   enableTooltip = true,
   startHelperOptions = [],
   endHelperOptions = [],
+  inputProps,
   ...props
 }: RawAutocompleteProps<TOption>) {
   const {
@@ -112,6 +113,7 @@ function RawAutocomplete<TOption extends OptionType>({
                 onKeyDown={handleInputKeyDown}
                 placeholder={placeholder}
                 disabled={disabled}
+                {...inputProps}
               />
               <ArrowDown
                 {...arrowDownProps}
