@@ -4,7 +4,7 @@ import Td, { type TdProps } from "./Td";
 import LinearLoading from "../skeleton/LinearLoading";
 import { cn } from "src/utils/cn";
 import TOverlay from "./TOverlay";
-import useTBodyUtils from "./hooks/useTBodyUtils";
+import { useTBodyUtils } from "./hooks/useTBodyUtils";
 import type { RowType, TableColumn, TableRow } from "./Table";
 import Checkbox from "../inputs/Checkbox";
 import type {
@@ -69,7 +69,7 @@ function TBody<Row extends RowType>({
       {...props}
       className={cn(
         " [&>tr[aria-rowindex]:not([aria-rowindex='0']):not([aria-selected='true'])]:border-gray-100/60  [&>tr[aria-rowindex]:not([aria-rowindex='0']):not([aria-selected='true'])]:border-t-[0.833333px] ",
-        className
+        className,
       )}
     >
       {!loading && scLoading ? (
@@ -101,7 +101,7 @@ function TBody<Row extends RowType>({
             className={cn(
               "hover:bg-gray-100/30 dark:hover:bg-gray-700",
               tbrProps.className,
-              handleSelectArea(i)
+              handleSelectArea(i),
             )}
             aria-rowindex={i}
             aria-selected={selectedRows ? selectedRows.has(row?.id) : false}
@@ -115,7 +115,7 @@ function TBody<Row extends RowType>({
                 className={cn(
                   tbdsProps.className,
                   tdCheckboxProps.className,
-                  `select-none`
+                  `select-none`,
                 )}
               >
                 <Checkbox
@@ -132,7 +132,7 @@ function TBody<Row extends RowType>({
                 className={cn(
                   className,
                   tbdsProps.className,
-                  tbdProps.className
+                  tbdProps.className,
                 )}
               >
                 {column.getCell

@@ -1,17 +1,24 @@
 import Table, { type TableSortStatuses } from "src/components/table/Table";
 import type { UserDto } from "../dtos/user.dto";
-import Tooltip from "src/components/tooltip/Tooltip";
 import { dateFormater } from "src/utils/dateFormater";
 import RoleView from "src/components/RoleView";
 import StatusView from "src/components/StatusView";
-import EditIcon from "src/assets/icons/edit.svg?react";
-import RemoveIcon from "src/assets/icons/remove.svg?react";
 import type {
   UseTableUtilsSelectedRows,
   UseTableUtilsSortEventHandler,
 } from "src/components/table/hooks/useTableUtils";
 import useOrderedColumnsStore from "src/hooks/useOrderedColumnsStore";
 import useHiddenColumnsLocalStorage from "src/hooks/useHiddenColumnsLocalStorage";
+import type { EventTarget } from "src/utils/EventTarget";
+import { Edit, Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useState } from "react";
+import type { FilterItem } from "@/components/table/filter";
 
 export type UsersTableProps = {
   handleSortChange: UseTableUtilsSortEventHandler<UserDto>;
@@ -20,11 +27,13 @@ export type UsersTableProps = {
   selectedRows: UseTableUtilsSelectedRows;
   setPage: (page: number) => void;
   count: number;
-  rows?: UserDto[];
   page: number;
   perPage: number;
   loading: boolean;
   scLoading: boolean;
+  handleFiltersDebounceChange: (value: EventTarget) => void;
+  filtersDebounce: Record<string, any>;
+  rows?: UserDto[];
 };
 
 export default function UsersTable(props: UsersTableProps) {
@@ -34,8 +43,10 @@ export default function UsersTable(props: UsersTableProps) {
 
   const { hiddenColumns, setHiddenColumns } = useHiddenColumnsLocalStorage(
     "usersHiddenColumns",
-    new Set()
+    new Set(),
   );
+
+  const [filters, setFilters] = useState<FilterItem[]>([]);
 
   return (
     <Table<UserDto>
@@ -50,6 +61,8 @@ export default function UsersTable(props: UsersTableProps) {
       onPageChange={props.setPage}
       orderedColumns={orderedColumns}
       setOrderedColumns={setOrderedColumns}
+      filters={filters}
+      setFilters={setFilters}
       columns={[
         {
           name: "id",
@@ -60,18 +73,30 @@ export default function UsersTable(props: UsersTableProps) {
           name: "username",
           headerName: "Username",
           sort: true,
+          filterable: true,
+          filterProps: {
+            type: "text",
+          },
         },
         {
           name: "fullName",
           headerName: "Full Name",
           strict: false,
           getCell: (_, row) => row.student?.fullName || row.teacher?.fullName,
+          filterable: true,
+          filterProps: {
+            type: "text",
+          },
         },
         {
           name: "status",
           headerName: "Status",
           getCell: (status) => <StatusView status={status} />,
           sort: true,
+          filterable: true,
+          filterProps: {
+            type: "text",
+          },
         },
         {
           name: "role",
@@ -99,15 +124,26 @@ export default function UsersTable(props: UsersTableProps) {
           getCell() {
             return (
               <div className="flex gap-3 justify-start  ">
-                <Tooltip title="Edit" placement="top">
-                  {/* <IconButton> */}
-                  <EditIcon />
-                  {/* </IconButton> */}
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button variant="outline">
+                        <Edit />
+                      </Button>
+                    }
+                  />
+                  <TooltipContent>Edit</TooltipContent>
                 </Tooltip>
-                <Tooltip title="Remove" placement="top">
-                  {/* <IconButton> */}
-                  <RemoveIcon />
-                  {/* </IconButton> */}
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button variant="destructive">
+                        <Trash />
+                      </Button>
+                    }
+                  />
+
+                  <TooltipContent>Remove</TooltipContent>
                 </Tooltip>
               </div>
             );

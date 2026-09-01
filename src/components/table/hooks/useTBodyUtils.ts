@@ -15,7 +15,7 @@ export type UseTBodyUtilsOptions = {
   rows: TableRow[];
 };
 
-export default function useTBodyUtils<Row extends RowType>({
+export function useTBodyUtils<Row extends RowType>({
   onSelectRow,
   selectedRows,
   rows,
@@ -71,7 +71,7 @@ export default function useTBodyUtils<Row extends RowType>({
         nativeEvent: {
           pointerType: string;
         };
-      }
+      },
     ) => {
       if (
         e.nativeEvent.pointerType === "mouse" ||

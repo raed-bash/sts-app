@@ -10,15 +10,38 @@ import type {
   UseTableUtilsSelectedRows,
   UseTableUtilsSortEventHandler,
 } from "./hooks/useTableUtils";
-import useTableUtils from "./hooks/useTableUtils";
+import { useTableUtils } from "./hooks/useTableUtils";
 import TFooter from "./TFooter";
 import THeader, {
   type THeaderHiddenColumns,
   type THeaderNoHiddenColumns,
 } from "./THeader";
 import THead from "./THead";
+import type { FilterFilter } from "./filter/FilterBoard";
+import {
+  type FilterItem,
+  type UseFilterSetStateFiltersAction,
+} from "./filter/hooks/useFilter";
+import type { FilterOperation } from "./filter";
 
 export type RowType = Record<string, any>;
+
+export type FilterProps = {
+  type:
+    | "text"
+    | "number"
+    | "select"
+    | "selectApi"
+    | "autocompleteApi"
+    | "checkbox"
+    | "date";
+
+  selectOps?: FilterOperation[];
+
+  omitOps?: FilterOperation[];
+
+  options?: { value: string | number | boolean; label: string }[];
+};
 
 type LooseKey<Row extends RowType> = keyof Row | (string & {});
 
@@ -47,6 +70,10 @@ export type TableColumn<Row extends RowType> = (
   tbdProps?: TdProps;
 
   hidden?: boolean;
+
+  filterable?: boolean;
+
+  filterProps?: FilterFilter;
 };
 
 export type TableRow<Row = any | { id: number }> = Row;
@@ -142,7 +169,12 @@ export type TableProps<Row extends RowType> = (
     orderedColumns: TableColumn<Row>["name"][];
 
     setOrderedColumns: (orderedColumns: TableColumn<Row>["name"][]) => void;
+
+    filters: FilterItem[];
+
+    setFilters?: UseFilterSetStateFiltersAction;
   };
+
 function Table<Row extends RowType>({
   columns: originalColumns = [],
   rows = [],
@@ -172,6 +204,8 @@ function Table<Row extends RowType>({
   hideableColumns,
   orderedColumns,
   setOrderedColumns,
+  filters,
+  setFilters,
 }: TableProps<Row>) {
   const {
     displayedColumns,
@@ -182,6 +216,8 @@ function Table<Row extends RowType>({
     selectAll,
     columns,
     setColumns,
+    filterUtils,
+    createColumnFilterClickHandler,
   } = useTableUtils<Row>({
     hiddenColumns,
     onSelectRows,
@@ -192,6 +228,8 @@ function Table<Row extends RowType>({
     originalColumns,
     orderedColumns,
     setOrderedColumns,
+    filters,
+    setFilters,
   });
 
   const theaderProps = {
@@ -206,10 +244,11 @@ function Table<Row extends RowType>({
 
   return (
     <TContainer {...containerProps}>
-      <THeader
+      <THeader<Row>
         columns={columns}
         setColumns={setColumns}
         selectedRows={selectedRows}
+        filterUtils={filterUtils}
         {...theaderProps}
       />
 
@@ -226,6 +265,7 @@ function Table<Row extends RowType>({
             thhsProps={thhsProps}
             thCheckboxProps={thCheckboxProps}
             selectedRows={selectedRows}
+            createColumnFilterClickHandler={createColumnFilterClickHandler}
             {...tbodyProps}
           />
           <TBody
