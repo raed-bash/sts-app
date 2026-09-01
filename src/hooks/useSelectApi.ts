@@ -51,6 +51,9 @@ export default function useSelectApi<TData>({
 
   const handleScroll = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
     const listbox = event.currentTarget;
+
+    if (infiniteQueryOptions.isFetching) return;
+
     if (listbox.scrollTop + listbox.clientHeight + 10 >= listbox.scrollHeight) {
       if (infiniteQueryOptions.hasNextPage) {
         infiniteQueryOptions.fetchNextPage();

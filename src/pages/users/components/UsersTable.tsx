@@ -118,6 +118,13 @@ export default function UsersTable(props: UsersTableProps) {
           strict: false,
         },
         {
+          name: "deletedAt",
+          headerName: "Deleted at",
+          getCell: (deletedAt) => dateFormater(deletedAt),
+          sort: true,
+          strict: false,
+        },
+        {
           name: "actions",
           headerName: "Actions",
           strict: false,
