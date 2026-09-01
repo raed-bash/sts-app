@@ -26,6 +26,8 @@ export type RawSelectProps<TOption extends OptionType> = Omit<
     startHelperOptions?: OptionProps[];
 
     endHelperOptions?: OptionProps[];
+
+    placeholder?: string;
   };
 
 function RawSelect<TOption extends OptionType>({
@@ -46,6 +48,7 @@ function RawSelect<TOption extends OptionType>({
   getOptionProps = () => ({}),
   startHelperOptions = [],
   endHelperOptions = [],
+  placeholder,
   ...props
 }: RawSelectProps<TOption>) {
   const {
@@ -79,6 +82,7 @@ function RawSelect<TOption extends OptionType>({
         "relative w-full h-[33px] rounded-sm indent-1 p-1 border border-[lab(90.952%_0_-.0000119209)] duration-75 bg-transparent shadow-xs",
         "focus-visible:border-(--primary) outline-none focus-visible:ring-[3px] focus-visible:ring-(--primary)/30 ",
         "aria-invalid:border-(--danger) aria-invalid:ring-(--danger)/30",
+        "aria-disabled:opacity-60 aria-[disabled=false]:focus:border-2",
         className,
       )}
       ref={containerRef}
@@ -86,6 +90,7 @@ function RawSelect<TOption extends OptionType>({
       onClick={handleClick}
       onKeyDown={handleSelectKeyDown}
       id={name}
+      aria-disabled={disabled}
       role="combobox"
       {...props}
     >
@@ -96,7 +101,9 @@ function RawSelect<TOption extends OptionType>({
             inputProps.className,
           )}
         >
-          {inputLabel}
+          {inputLabel || (
+            <input readOnly placeholder={placeholder} {...inputProps} />
+          )}
         </div>
         <ArrowDown
           {...arrowDownProps}
