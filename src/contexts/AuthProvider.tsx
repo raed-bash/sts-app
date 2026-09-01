@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { LocalStorageHelper } from "src/utils/LocalStorageHelper";
 import { LoginResponseDto } from "src/pages/auth/dtos/login-response.dto";
-import { api } from "src/app/axios";
+import { setAuthToken } from "src/app/axios";
 
 export default function AuthProvider({
   children,
@@ -22,7 +22,7 @@ export default function AuthProvider({
 
     LocalStorageHelper.setItem("token", response.token);
 
-    api.defaults.headers.Authorization = `Bearer ${response.token}`;
+    setAuthToken(response.token);
   };
 
   const logout = () => {
@@ -32,7 +32,7 @@ export default function AuthProvider({
 
     LocalStorageHelper.removeItem("token");
 
-    api.defaults.headers.Authorization = null;
+    setAuthToken(null);
   };
 
   return (

@@ -3,7 +3,7 @@ import { LocalStorageHelper } from "src/utils/LocalStorageHelper";
 
 const API_URL = "http://localhost:3000";
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
@@ -11,4 +11,10 @@ const api = axios.create({
   },
 });
 
-export { api };
+export function setAuthToken(token: string | null) {
+  if (token) {
+    api.defaults.headers.Authorization = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.Authorization;
+  }
+}
