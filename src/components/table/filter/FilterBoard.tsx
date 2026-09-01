@@ -22,6 +22,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { NativeSelectOption } from "@/components/ui/native-select";
 
 export type FilterFilter = Pick<
   FilterInputProps,
@@ -170,16 +171,13 @@ export default function FilterBoard<Row extends RowType>({
                   ) : (
                     i > 0 && (
                       <InputPlus
-                        type="select"
-                        getInputLabel={(o) => o}
-                        getOptionLabel={(o) => o}
-                        getUniqueValue={(o) => o}
-                        multiple={false}
-                        options={["AND", "OR"]}
+                        type="nativeSelect"
                         onChange={() => {}}
-                        title=""
-                        value={"OR"}
-                      />
+                        value="AND"
+                      >
+                        <NativeSelectOption value="AND">AND</NativeSelectOption>
+                        <NativeSelectOption value="OR">OR</NativeSelectOption>
+                      </InputPlus>
                     )
                   )}
                 </div>
@@ -203,31 +201,29 @@ export default function FilterBoard<Row extends RowType>({
                         },
                       })
                     }
-                    title=""
                     value={{
                       name: name || "",
                       headerName: column?.headerName || "",
                     }}
                   />
                   <InputPlus
-                    type="select"
+                    type="nativeSelect"
                     name="operation"
-                    options={filterOps}
-                    placeholder="Operation"
                     multiple={false}
                     onChange={createFilterOperationChangeHandler(i)}
-                    getInputLabel={(option) => option}
-                    getOptionLabel={(option) => option}
-                    getUniqueValue={(o) => o}
                     value={filter.operation || ""}
-                    title=""
-                  />
+                  >
+                    {filterOps.map((op) => (
+                      <NativeSelectOption key={op} value={op}>
+                        {op}
+                      </NativeSelectOption>
+                    ))}
+                  </InputPlus>
                   <InputPlus
                     name="value"
                     type={filterProps?.type || "text"}
                     value={filter.value || ""}
                     onChange={createFilterOperationChangeHandler(i)}
-                    title=""
                     placeholder={`${column?.headerName}`}
                     // type={column.filterProps?.type || "text"}
                     // name={column.name.toString()}
