@@ -53,7 +53,7 @@ export class QueryUserDto
 
   toUpdatedAt?: Date;
 
-  isDeleted?: boolean = false;
+  isDeleted?: boolean = true;
 
   fromDeletedAt?: Date;
 
