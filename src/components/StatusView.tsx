@@ -18,7 +18,7 @@ export default function StatusView({ status, ...props }: StatusViewProps) {
       className={cn(
         "px-2 py-1 inline-block rounded-lg text-white font-bold text-xs",
         status && STATUS_STYLES[status],
-        props.className
+        props.className,
       )}
     >
       {status && STATUS_TITLES[status]}

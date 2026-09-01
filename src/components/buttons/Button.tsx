@@ -24,7 +24,7 @@ function Button({
         " outline-none focus:ring-[3px] ",
         "disabled:text-white disabled:bg-[#888] disabled:border-[#888] disabled:opacity-60 disabled:cursor-wait disabled:hover:bg-[#888]",
         !disabled && ButtonTheme[variant][color],
-        className
+        className,
       )}
       disabled={disabled}
       {...otherProps}

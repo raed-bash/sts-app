@@ -1,6 +1,6 @@
 export function getObjectValue(
   value: any,
-  map: string | string[]
+  map: string | string[],
 ): string | undefined {
   if (value === undefined) return;
 

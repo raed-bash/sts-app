@@ -32,7 +32,7 @@ export type AutocompleteApiProps<TData extends OptionType> = Omit<
     noneValue?: boolean;
 
     queryFn: (
-      params: AutocompleteApiFnParams
+      params: AutocompleteApiFnParams,
     ) => Promise<QueryResponseType<TData>>;
   };
 

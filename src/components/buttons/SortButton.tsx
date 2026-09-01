@@ -5,7 +5,7 @@ export type SortButtonStatus = "asc" | "desc" | null;
 
 export type SortButtonEventHandler = (
   sortStatus: SortButtonStatus,
-  e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
 ) => void;
 
 export type SortButtonProps = Omit<
@@ -49,7 +49,7 @@ function SortButton({
   };
 
   const handleSortClick = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     if (onClick) {
       onClick(handleSortStatus(), e);
@@ -61,7 +61,7 @@ function SortButton({
       onClick={handleSortClick}
       className={cn(
         `mt-1 inline-flex gap-1 items-center cursor-pointer`,
-        className
+        className,
       )}
       {...props}
     >
@@ -69,7 +69,7 @@ function SortButton({
       <TriangleDownIcon
         className={cn(
           `w-3 h-3 duration-150 fill-(--text)`,
-          handleSortStatusStyle(sortStatus)
+          handleSortStatusStyle(sortStatus),
         )}
       />
     </button>

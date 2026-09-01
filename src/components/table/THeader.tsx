@@ -24,8 +24,7 @@ export type THeaderHiddenColumns<Row extends RowType> = {
 };
 
 export type THeaderProps<Row extends RowType> = (
-  | THeaderNoHiddenColumns
-  | THeaderHiddenColumns<Row>
+  THeaderNoHiddenColumns | THeaderHiddenColumns<Row>
 ) & {
   selectedRows: UseTableUtilsSelectedRows;
   columns: TableColumn<Row>[];

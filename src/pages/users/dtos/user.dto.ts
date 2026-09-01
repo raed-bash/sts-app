@@ -36,7 +36,7 @@ export class UserDto {
         "deletedAt",
         "student",
         "teacher",
-      ])
+      ]),
     );
   }
 }

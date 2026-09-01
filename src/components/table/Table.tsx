@@ -113,8 +113,7 @@ export type TableNoSelectRows = {
 };
 
 export type TableProps<Row extends RowType> = (
-  | TableHiddenColumns<Row>
-  | TableNoHiddenColumns
+  TableHiddenColumns<Row> | TableNoHiddenColumns
 ) &
   (TableSelectRows | TableNoSelectRows) & {
     rows: TableRow<Row>[];

@@ -12,7 +12,7 @@ function TextArea(props: TextAreaProps) {
       className={cn(
         `min-h-[100px] w-full rounded-lg indent-1 border-black p-1 border`,
         props.className,
-        props.disabled ? "opacity-60" : ""
+        props.disabled ? "opacity-60" : "",
       )}
     />
   );

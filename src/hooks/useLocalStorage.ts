@@ -7,7 +7,7 @@ export default function useLocalStorage<T>(
   { onStore, onGet } = {
     onStore: (value: T) => value as string,
     onGet: (value: string) => value as T,
-  }
+  },
 ): [T, (newValue: T) => void] {
   const [value, setValue] = useState<T>(() => {
     const oldValue = onGet(LocalStorageHelper.getItem(name));
@@ -27,7 +27,7 @@ export default function useLocalStorage<T>(
 
       setValue(newValue);
     },
-    [name, onStore]
+    [name, onStore],
   );
 
   return [value, handleSetValue];

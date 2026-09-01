@@ -26,7 +26,7 @@ function Checkbox({
         "checked:after:content-[''] after:absolute checked:after:w-1 after:-translate-x-[3.5px] after:translate-y-[1.6px] after:h-[1.5px] after:bg-white after:rotate-45",
 
         "data-[secondary=true]:before:w-2.5 data-[secondary=true]:before:rotate-0 data-[secondary=true]:before:left-[50%] data-[secondary=true]:before:-translate-x-[50%] ",
-        className
+        className,
       )}
       aria-checked={!secondaryStatus && props.checked}
       data-secondary={secondaryStatus}

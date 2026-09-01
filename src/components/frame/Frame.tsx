@@ -15,7 +15,7 @@ function Frame({
     <fieldset
       className={cn(
         `border-2 border-solid border-primary-main flex pb-8 px-4 gap-x-2 `,
-        className
+        className,
       )}
       {...props}
     >
@@ -23,7 +23,7 @@ function Frame({
         {...titleProps}
         className={cn(
           `text-primary-main text-xl font-semibold`,
-          titleProps.className
+          titleProps.className,
         )}
       >
         {title}

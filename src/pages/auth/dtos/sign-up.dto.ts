@@ -21,7 +21,7 @@ export class SignUpDto {
         "fullName",
         "gender",
         "isNameViewed",
-      ])
+      ]),
     );
   }
 }

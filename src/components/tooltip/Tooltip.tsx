@@ -16,7 +16,7 @@ const GAP = 8;
 
 function getAnchorStyle(
   rect: DOMRect,
-  placement: TooltipPlacement
+  placement: TooltipPlacement,
 ): CSSProperties {
   const cx = rect.left + rect.width / 2;
   const cy = rect.top + rect.height / 2;
@@ -96,7 +96,7 @@ function Tooltip({
     () => () => {
       if (timerRef.current !== null) clearTimeout(timerRef.current);
     },
-    []
+    [],
   );
 
   function assignRef<T>(ref: React.Ref<T> | undefined, value: T) {
@@ -113,13 +113,13 @@ function Tooltip({
 
       assignRef(childRef, node);
     },
-    [childRef]
+    [childRef],
   );
 
   const computeAnchor = useCallback(() => {
     if (!triggerRef.current) return;
     setAnchorStyle(
-      getAnchorStyle(triggerRef.current.getBoundingClientRect(), placement)
+      getAnchorStyle(triggerRef.current.getBoundingClientRect(), placement),
     );
   }, [placement]);
 
@@ -222,13 +222,13 @@ function Tooltip({
             className={cn(
               "p-2 text-sm bg-(--background) text-(--text) rounded font-medium",
               "z-9999 shadow-md whitespace-nowrap select-none",
-              tooltipProps.className
+              tooltipProps.className,
             )}
             aria-hidden={!isVisible}
           >
             {title}
           </div>,
-          tooltipRoot!
+          tooltipRoot!,
         )}
     </>
   );

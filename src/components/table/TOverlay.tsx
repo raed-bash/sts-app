@@ -20,7 +20,7 @@ function TOverlay({
           {...props}
           className={cn(
             "flex justify-center items-center absolute top-[80%] rtl:right-1/2 ltr:left-1/2 ltr:-translate-x-1/2 ltr:-translate-y-1/2 rtl:translate-x-1/2 rtl:translate-y-1/2 w-fit",
-            props.className
+            props.className,
           )}
         >
           {children}

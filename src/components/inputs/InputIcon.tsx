@@ -33,7 +33,7 @@ function InputIcon(
     iconClassName,
     ...props
   }: InputIconProps,
-  ref: ForwardedRef<HTMLInputElement>
+  ref: ForwardedRef<HTMLInputElement>,
 ) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [focus, setFocus] = useState(false);
@@ -41,7 +41,7 @@ function InputIcon(
   const iconClassNameCN = cn(
     `h-full`,
     focus ? "stroke-(--primary)" : "",
-    iconClassName
+    iconClassName,
   );
 
   const handleInputRef = (el: HTMLInputElement | null) => {
@@ -75,7 +75,7 @@ function InputIcon(
           props.disabled ? "opacity-60" : "",
           focus ? " outline outline-(--primary) " : "",
           helperText && error ? "border-(--danger) border border-solid" : "",
-          inputFrameProps.className
+          inputFrameProps.className,
         )}
         style={{ outlineWidth: 1 }}
       >
@@ -97,7 +97,7 @@ function InputIcon(
           }}
           className={cn(
             ` bg-transparent focus:outline-none w-full indent-1 p-1`,
-            className
+            className,
           )}
         />
         {EndIcon && <EndIcon className={iconClassNameCN} />}
@@ -107,7 +107,7 @@ function InputIcon(
         className={cn(
           "text-sm",
           error ? "text-(--danger)" : "",
-          helperTextProps.className
+          helperTextProps.className,
         )}
       >
         {helperText}

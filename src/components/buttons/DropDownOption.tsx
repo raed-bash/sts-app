@@ -8,7 +8,7 @@ function DropDownOption({ className, ...props }: DropDownOptionProps) {
     <button
       className={cn(
         `flex justify-between w-full text-right px-4 py-2 hover:bg-gray-100 disabled:bg-[#888] disabled:text-white disabled:opacity-60`,
-        className
+        className,
       )}
       type="button"
       {...props}

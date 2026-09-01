@@ -15,7 +15,7 @@ const writeSpreatedKeyValue = (keyValueArray: LabelType[]): string =>
   keyValueArray
     .filter(([, value]) => value)
     .map(
-      ([label, value]) => `${label !== undefined ? `${label}: ` : ""}${value}`
+      ([label, value]) => `${label !== undefined ? `${label}: ` : ""}${value}`,
     )
     .join(", ");
 

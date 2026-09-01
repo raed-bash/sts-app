@@ -15,8 +15,7 @@ export type FilterSelectOperations<T extends FilterOperation> = {
 };
 
 export type FilterOperationOptions<T extends FilterOperation> =
-  | FilterOmitOperations<T>
-  | FilterSelectOperations<T>;
+  FilterOmitOperations<T> | FilterSelectOperations<T>;
 
 export type FilterNumberProps = FilterOperationOptions<
   | "equals"

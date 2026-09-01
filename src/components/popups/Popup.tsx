@@ -24,7 +24,7 @@ type PopupProps = {
           handleClose: () => void;
           handleOpen: () => void;
         },
-        triggerProps?: { onClick: () => void }
+        triggerProps?: { onClick: () => void },
       ) => React.ReactNode);
 };
 function Popup({ isOpen, onClose, title, children }: PopupProps) {
@@ -45,7 +45,7 @@ function Popup({ isOpen, onClose, title, children }: PopupProps) {
       {typeof children === "function" ? (
         children(
           { open, setOpen, inPopup: false, handleClose, handleOpen },
-          { onClick: handleOpen }
+          { onClick: handleOpen },
         )
       ) : (
         <></>

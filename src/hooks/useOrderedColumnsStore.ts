@@ -2,7 +2,7 @@ import useLocalStorage from "./useLocalStorage";
 
 export default function useOrderedColumnsStore<T extends string>(
   name: string,
-  defaultValue: T[] = []
+  defaultValue: T[] = [],
 ) {
   const [orderedColumns, setOrderedColumns] = useLocalStorage<T[]>(
     name,
@@ -18,7 +18,7 @@ export default function useOrderedColumnsStore<T extends string>(
       onStore: (value) => {
         return JSON.stringify([...value]);
       },
-    }
+    },
   );
 
   return { orderedColumns, setOrderedColumns };

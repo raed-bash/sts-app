@@ -11,7 +11,7 @@ export type QueryFnParams = {
 };
 
 export type QueryFn<TData> = (
-  params: QueryFnParams
+  params: QueryFnParams,
 ) => Promise<QueryResponseType<TData>>;
 
 export type UseSelectApiOptions<TData> = {
@@ -30,7 +30,7 @@ export default function useSelectApi<TData>({
     getNextPageParam: (lastPage, allPages) => {
       const length = allPages.reduce(
         (prevL, currL) => prevL + currL?.data?.length,
-        0
+        0,
       );
 
       if (length >= lastPage?.count) {
@@ -45,7 +45,7 @@ export default function useSelectApi<TData>({
   const allData = data?.pages
     ? data?.pages.reduce<TData[]>(
         (prev, curr) => [...prev, ...(curr?.data || [])],
-        []
+        [],
       )
     : [];
 

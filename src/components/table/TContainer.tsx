@@ -9,7 +9,7 @@ function TContainer(props: TContainerProps) {
       {...props}
       className={cn(
         "bg-secondary-main flex flex-col justify-between rounded-lg",
-        props.className
+        props.className,
       )}
     />
   );

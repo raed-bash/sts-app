@@ -34,8 +34,7 @@ export type SignleSelectProps<TOption> = {
 };
 
 export type UseRawSelectUtilsOptions<TOption> = (
-  | MultiSelectProps<TOption>
-  | SignleSelectProps<TOption>
+  MultiSelectProps<TOption> | SignleSelectProps<TOption>
 ) & {
   name?: string;
 

@@ -7,7 +7,7 @@ function SubHeader({ className, ...props }: SubHeaderProps) {
     <Paper
       className={cn(
         "flex justify-between px-16 py-3 max-xl:px-4 max-lg:flex-col gap-2 lg:min-h-[74px] max-lg:min-h-[111px] rounded-none ",
-        className
+        className,
       )}
       {...props}
     />

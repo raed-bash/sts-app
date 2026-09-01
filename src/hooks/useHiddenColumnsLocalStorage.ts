@@ -2,7 +2,7 @@ import useLocalStorage from "./useLocalStorage";
 
 export default function useHiddenColumnsLocalStorage(
   name: string,
-  defaultValue: Set<string> = new Set()
+  defaultValue: Set<string> = new Set(),
 ) {
   const [hiddenColumns, setHiddenColumns] = useLocalStorage(
     name,
@@ -18,7 +18,7 @@ export default function useHiddenColumnsLocalStorage(
       onStore: (value: Set<string>) => {
         return JSON.stringify([...value]);
       },
-    }
+    },
   );
 
   return { hiddenColumns, setHiddenColumns };

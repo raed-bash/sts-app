@@ -15,7 +15,7 @@ export type DefaultSorts<T extends string> = { [P in T]?: UseSortStatus };
 export default function useSorts<T extends string>(
   name: string,
   defaultSorts: DefaultSorts<T> = defaultSortsDefault,
-  { multi = false, cashing = true }: UseSortOptions = {}
+  { multi = false, cashing = true }: UseSortOptions = {},
 ) {
   const state = useState(defaultSorts);
 
@@ -36,7 +36,7 @@ export default function useSorts<T extends string>(
         } as DefaultSorts<T>);
       }
     },
-    [setSorts, sorts, multi]
+    [setSorts, sorts, multi],
   );
 
   return { sorts, setSorts, handleSortChange };

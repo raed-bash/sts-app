@@ -4,7 +4,7 @@ import { useDebounce } from "./useDebounce";
 export default function useDebouncedValue<T>(
   value: T,
   delay: number,
-  onChange?: (value: T) => void
+  onChange?: (value: T) => void,
 ) {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -18,7 +18,7 @@ export default function useDebouncedValue<T>(
 
   const setDebouncedValueDebounce = useDebounce(
     handleDebounceValueChange,
-    delay
+    delay,
   );
 
   useEffect(() => {
