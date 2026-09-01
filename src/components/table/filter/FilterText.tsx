@@ -23,7 +23,6 @@ export default function FilterText(props: TFilterTextProps) {
       onChange={props.onChange}
       value={props.value}
       placeholder={`Filter ${props.name} column`}
-      title=""
     />
   );
 }

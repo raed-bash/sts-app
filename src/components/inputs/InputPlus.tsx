@@ -15,6 +15,7 @@ import type { SelectApiProps } from "./SelectApi";
 import SelectApi from "./SelectApi";
 import InputPassword from "./InputPassword";
 import Checkbox from "./Checkbox";
+import { NativeSelect, type NativeSelectProps } from "../ui/native-select";
 
 export type InputPropsWithType = InputProps & {
   type: OnlyStringLiterals<HTMLInputTypeAttribute>;
@@ -44,6 +45,10 @@ export type TextAreaPropsWithType = TextAreaProps & {
   type: "textarea";
 };
 
+export type NativeSelectPropsWithType = NativeSelectProps & {
+  type: "nativeSelect";
+};
+
 export type InputPlusProps<TOption extends OptionType> = (
   | InputPropsWithType
   | SelectPropsWithType<TOption>
@@ -51,8 +56,9 @@ export type InputPlusProps<TOption extends OptionType> = (
   | TextAreaPropsWithType
   | AutocompleteApiPropsWithType<TOption>
   | SelectApiPropsWithType<TOption>
+  | NativeSelectPropsWithType
 ) & {
-  title: string;
+  title?: string;
 
   oneline?: boolean;
 
@@ -88,34 +94,47 @@ function InputPlus<TOption extends OptionType>({
   oneline = false,
   ...props
 }: InputPlusProps<TOption>) {
+  const hasTitle = Boolean(title || titleIcon);
+
+  const hasMultiChilds = Boolean(hasTitle || helperText);
+
   return (
     <div
       {...inputPlusContainerProps}
       className={cn(
-        "flex flex-col gap-1",
+        "flex flex-col",
         oneline
           ? props.type === "checkbox"
             ? "items-center justify-end  flex-row-reverse "
             : "flex-row items-center"
           : "",
-        inputPlusContainerProps.className
+        hasMultiChilds ? "gap-1" : "",
+        inputPlusContainerProps.className,
       )}
     >
-      <h2
-        {...titleProps}
-        className={cn(
-          "text-[16px] font-medium flex gap-1 aria-invalid:text-(--danger)",
-          titleProps.className
-        )}
-        aria-invalid={Boolean(helperText && error)}
-      >
-        <label htmlFor={props.id}>{title}</label>
-        {titleIcon}
-      </h2>
+      {hasTitle && (
+        <h2
+          {...titleProps}
+          className={cn(
+            "text-[16px] font-medium flex gap-1 aria-invalid:text-(--danger)",
+            titleProps.className,
+          )}
+          aria-invalid={Boolean(helperText && error)}
+        >
+          <label htmlFor={props.id}>{title}</label>
+          {titleIcon}
+        </h2>
+      )}
       {loading ? (
         <Skeleton {...skeletonProps} />
       ) : props.type === "select" ? (
         <RawSelect {...props} aria-invalid={Boolean(helperText && error)} />
+      ) : props.type === "nativeSelect" ? (
+        <NativeSelect
+          {...props}
+          className={cn("w-full", props.className)}
+          aria-invalid={Boolean(helperText && error)}
+        />
       ) : props.type === "autocomplete" ? (
         <RawAutocomplete {...props} />
       ) : props.type === "textarea" ? (
@@ -131,16 +150,18 @@ function InputPlus<TOption extends OptionType>({
       ) : (
         <Input {...props} aria-invalid={Boolean(helperText && error)} />
       )}
-      <p
-        {...helperTextProps}
-        className={cn(
-          error && "text-(--danger)",
-          "text-xs",
-          helperTextProps.className
-        )}
-      >
-        {helperText}
-      </p>
+      {helperText && (
+        <p
+          {...helperTextProps}
+          className={cn(
+            error && "text-(--danger)",
+            "text-xs",
+            helperTextProps.className,
+          )}
+        >
+          {helperText}
+        </p>
+      )}
     </div>
   );
 }
