@@ -63,8 +63,27 @@ export default function useAxiosInterceptor() {
       },
     );
 
+    const idRequest = api.interceptors.request.use(
+      (config) => {
+        if (config.params) {
+          config.params = Object.fromEntries(
+            Object.entries(config.params).map(([key, value]) => [
+              key,
+              value !== "" ? value : undefined,
+            ]),
+          );
+        }
+
+        return config;
+      },
+      (err) => {
+        return Promise.reject(err);
+      },
+    );
+
     return () => {
       api.interceptors.response.eject(idResponse);
+      api.interceptors.request.eject(idRequest);
     };
   }, [handleResponse, handleErrNetwork]);
 }

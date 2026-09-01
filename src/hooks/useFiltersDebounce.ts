@@ -16,13 +16,13 @@ export default function useFiltersDebounce(
   defaultDebounceFilters = defaultDebounceFiltersDefault,
   delay = DEBOUNCE_DELAY,
   onChange?: (value: any) => void,
-  { cashing = true } = {}
+  { cashing = true } = {},
 ) {
   const state = useState(defaultDebounceFilters);
 
   const cashingState = useCashingState(
     `${name}DebounceFilters`,
-    defaultDebounceFilters
+    defaultDebounceFilters,
   );
 
   const [filtersDebounce, setFiltersDebounce] = cashing ? cashingState : state;
@@ -36,10 +36,10 @@ export default function useFiltersDebounce(
 
       setFiltersDebounce({
         ...filtersDebounce,
-        [name ?? ""]: value ?? "",
+        [name ?? ""]: value,
       });
     },
-    [filtersDebounce, setFiltersDebounce]
+    [filtersDebounce, setFiltersDebounce],
   );
 
   return {
