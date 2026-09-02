@@ -1,4 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useRef } from "react";
 
 export type QueryResponseType<TData> = {
   count: number;
@@ -61,9 +62,31 @@ export default function useSelectApi<TData>({
     }
   };
 
+  const listBoxRef = useRef<HTMLDivElement>(null);
+
+  const ref = (node: HTMLDivElement | null) => {
+    if (!node) return;
+
+    listBoxRef.current = node;
+    const el = listBoxRef.current;
+
+    // if there's no scrollbar yet but there's page exist, keep fetching
+    if (
+      el.scrollHeight <= el.clientHeight &&
+      infiniteQueryOptions.hasNextPage &&
+      !infiniteQueryOptions.isFetching
+    ) {
+      infiniteQueryOptions.fetchNextPage();
+    }
+  };
+
   return {
     allData,
     handleScroll,
     infiniteQueryOptions,
+    listBoxProps: {
+      onScroll: handleScroll,
+      ref: ref,
+    },
   };
 }
