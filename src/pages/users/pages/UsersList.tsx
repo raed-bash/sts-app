@@ -91,9 +91,6 @@ export default function UsersList() {
         onChange={handleUserChange}
         isItemEqualToValue={(item, value) => item.id === value.id}
         itemToStringLabel={(item) => item.username}
-        error
-        helperText="s"
-        className="w-full"
       >
         <SelectFieldTrigger>
           <SelectValue placeholder="User" />

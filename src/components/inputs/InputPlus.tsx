@@ -128,12 +128,16 @@ function InputPlus<TOption extends OptionType>({
       {loading ? (
         <Skeleton {...skeletonProps} />
       ) : props.type === "select" ? (
-        <SelectField {...props} aria-invalid={Boolean(helperText && error)} />
-      ) : props.type === "nativeSelect" ? (
-        <NativeSelect
+        <SelectField
+          aria-invalid={Boolean(helperText && error)}
           {...props}
           className={cn("w-full", props.className)}
+        />
+      ) : props.type === "nativeSelect" ? (
+        <NativeSelect
           aria-invalid={Boolean(helperText && error)}
+          {...props}
+          className={cn("w-full", props.className)}
         />
       ) : props.type === "autocomplete" ? (
         <RawAutocomplete {...props} />

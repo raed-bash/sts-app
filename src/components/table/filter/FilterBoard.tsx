@@ -23,6 +23,14 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { NativeSelectOption } from "@/components/ui/native-select";
+import { SelectFieldTrigger } from "@/components/inputs/select/SelectField";
+import {
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectValue,
+} from "@/components/ui/select";
 
 export type FilterFilter = Pick<
   FilterInputProps,
@@ -133,7 +141,7 @@ export default function FilterBoard<Row extends RowType>({
         side="top"
         className="w-[37vw]"
       >
-        <div className="">
+        <div className="flex flex-col gap-2">
           {filters.map((filter, i) => {
             const name = filter.name;
 
@@ -182,30 +190,32 @@ export default function FilterBoard<Row extends RowType>({
                   )}
                 </div>
                 <div className="grid grid-cols-3 gap-4">
-                  <InputPlus<{ name: string; headerName: string }>
+                  <InputPlus
                     type="select"
                     name="name"
-                    multiple={false}
-                    options={filterColumns.map((column) => ({
-                      name: column.name as string,
-                      headerName: column.headerName,
-                    }))}
-                    getInputLabel={(o) => o.headerName}
-                    getOptionLabel={(o) => o.headerName}
-                    getUniqueValue={(o) => o.name}
-                    onChange={(e) =>
-                      createFilterOperationChangeHandler(i)({
-                        target: {
-                          name: e.target.name,
-                          value: e.target.value?.name,
-                        },
-                      })
-                    }
-                    value={{
-                      name: name || "",
-                      headerName: column?.headerName || "",
-                    }}
-                  />
+                    onChange={createFilterOperationChangeHandler(i)}
+                    value={name}
+                  >
+                    <SelectFieldTrigger>
+                      <SelectValue placeholder="Select column">
+                        {column.headerName}
+                      </SelectValue>
+                    </SelectFieldTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>User</SelectLabel>
+                        {filterColumns.map((column) => (
+                          <SelectItem
+                            key={column.name.toString()}
+                            value={column.name}
+                          >
+                            {column.headerName}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </InputPlus>
+
                   <InputPlus
                     type="nativeSelect"
                     name="operation"
@@ -225,15 +235,6 @@ export default function FilterBoard<Row extends RowType>({
                     value={filter.value || ""}
                     onChange={createFilterOperationChangeHandler(i)}
                     placeholder={`${column?.headerName}`}
-                    // type={column.filterProps?.type || "text"}
-                    // name={column.name.toString()}
-                    // value={column.filterProps?.value}
-                    // onChange={column.filterProps?.onChange}
-
-                    // {...{
-                    // omitOps: column.filterProps?.omitOps,
-                    // selectOps: column.filterProps?.selectOps,
-                    // }}
                   />
                 </div>
               </div>
