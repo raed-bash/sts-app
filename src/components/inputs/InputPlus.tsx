@@ -10,8 +10,8 @@ import RawAutocomplete, {
 import type { OnlyStringLiterals } from "src/types/utils";
 import type { AutocompleteApiProps } from "./AutocompleteApi";
 import AutocompleteApi from "./AutocompleteApi";
-import type { SelectApiProps } from "./SelectApi";
-import SelectApi from "./SelectApi";
+import type { SelectApiProps } from "./select/SelectApi";
+import SelectApi from "./select/SelectApi";
 import InputPassword from "./InputPassword";
 import Checkbox from "./Checkbox";
 import { NativeSelect, type NativeSelectProps } from "../ui/native-select";
@@ -144,7 +144,11 @@ function InputPlus<TOption extends OptionType>({
       ) : props.type === "textarea" ? (
         <TextArea {...props} />
       ) : props.type === "selectApi" ? (
-        <SelectApi {...props} />
+        <SelectApi
+          aria-invalid={Boolean(helperText && error)}
+          {...props}
+          className={cn("w-full", props.className)}
+        />
       ) : props.type === "autocompleteApi" ? (
         <AutocompleteApi {...props} />
       ) : props.type === "password" ? (

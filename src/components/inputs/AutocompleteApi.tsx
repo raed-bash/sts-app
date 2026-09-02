@@ -1,9 +1,10 @@
 import { useState } from "react";
-import useSelectApi, {
+import {
+  useSelectApi,
   type QueryFnParams,
   type QueryResponseType,
   type UseSelectApiOptions,
-} from "../../hooks/useSelectApi";
+} from "../hooks";
 import RawAutocomplete, {
   type RawAutocompleteProps,
 } from "./select/RawAutocomplete";
@@ -46,9 +47,9 @@ function AutocompleteApi<TData extends OptionType>({
   const debouncedSearch = useDebouncedValue(search, delay);
 
   const {
-    allData,
-    handleScroll,
-    infiniteQueryOptions: { isFetching },
+    listBoxProps,
+    data,
+    infiniteQuery: { isFetching },
   } = useSelectApi({
     queryFn: (query, ...args) =>
       queryFn({ search: debouncedSearch, ...query }, ...args),
@@ -57,13 +58,11 @@ function AutocompleteApi<TData extends OptionType>({
 
   return (
     <RawAutocomplete
-      optionsContainer={{
-        onScroll: handleScroll,
-      }}
+      optionsContainer={listBoxProps}
       onInputChange={(e) => {
         setSearch(e.target.value);
       }}
-      options={allData}
+      options={data?.pages.flatMap((page) => page.data) || []}
       {...props}
       className={cn(props.className)}
       endHelperOptions={[

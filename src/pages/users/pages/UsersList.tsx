@@ -12,17 +12,15 @@ import useFilters from "src/hooks/useFilters";
 import useFiltersDebounce from "src/hooks/useFiltersDebounce";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  SelectContent,
   SelectGroup,
   SelectItem,
   SelectLabel,
   SelectValue,
 } from "@/components/ui/select";
-import useSelectApi from "@/hooks/useSelectApi";
-import { Spinner } from "@/components/ui/spinner";
 import useCachingState from "@/hooks/useCashingState";
 import { SelectFieldTrigger } from "@/components/inputs/select/SelectField";
 import type { SyntheticEvent } from "@/components/utils/events";
+import { SelectApiContent } from "@/components/inputs/select/SelectApi";
 
 export default function UsersList() {
   const { filters } = useFilters("usersFilters", new QueryUserDto({}));
@@ -47,24 +45,6 @@ export default function UsersList() {
       ),
   });
 
-  const { allData, listBoxProps, infiniteQueryOptions } = useSelectApi<UserDto>(
-    {
-      queryKey: ["users"],
-      queryFn: async (params) => {
-        const data = await usersApi.getUsers({
-          perPage: 10,
-          page: params.pageParam,
-        });
-
-        return {
-          data: data.data,
-          pageParam: params.pageParam,
-          count: data.meta.total,
-        };
-      },
-    },
-  );
-
   const [user, setUser] = useCachingState<UserDto | null>(
     "selectedUsers",
     null,
@@ -86,42 +66,35 @@ export default function UsersList() {
       />
 
       <InputPlus
-        type="select"
+        type="selectApi"
         value={user}
         onChange={handleUserChange}
         isItemEqualToValue={(item, value) => item.id === value.id}
         itemToStringLabel={(item) => item.username}
+        queryProps={{ queryFn: usersApi.getUsers, queryKey: ["selectedUser2"] }}
       >
-        <SelectFieldTrigger>
-          <SelectValue placeholder="User" />
-        </SelectFieldTrigger>
-        <SelectContent
-          className="max-h-72"
-          alignItemWithTrigger={false}
-          {...listBoxProps}
-        >
-          <SelectGroup>
-            <SelectLabel>User</SelectLabel>
-            {allData.map((item) => (
-              <SelectItem key={item.id} value={item}>
-                {item.username}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-          <SelectItem
-            disabled
-            itemTextProps={{ className: "justify-center " }}
-            className="pr-0"
-            unselectable="on"
-            value={crypto.randomUUID()}
-          >
-            {infiniteQueryOptions.isFetching ? (
-              <Spinner className="justify-center" />
-            ) : (
-              !infiniteQueryOptions.hasNextPage && "No more items"
-            )}
-          </SelectItem>
-        </SelectContent>
+        {(data) => (
+          <>
+            <SelectFieldTrigger>
+              <SelectValue placeholder="User" />
+            </SelectFieldTrigger>
+            <SelectApiContent>
+              <SelectGroup>
+                <SelectLabel>User</SelectLabel>
+                {data?.pages?.map((page) => (
+                  <SelectGroup>
+                    <SelectLabel>Page: {page.meta.currentPage}</SelectLabel>
+                    {page.data.map((item) => (
+                      <SelectItem key={item.id} value={item}>
+                        {item.username}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                ))}
+              </SelectGroup>
+            </SelectApiContent>
+          </>
+        )}
       </InputPlus>
 
       <Card className="pb-52">
@@ -134,7 +107,7 @@ export default function UsersList() {
             setSelectedRows={setSelectedRows}
             sorts={sorts}
             count={usersQuery.data?.meta.total || 0}
-            perPage={usersQuery.data?.meta.perPage || 10}
+            perPage={usersQuery.data?.meta.perPage}
             rows={usersQuery.data?.data}
             loading={usersQuery.isPending}
             scLoading={usersQuery.isFetching}

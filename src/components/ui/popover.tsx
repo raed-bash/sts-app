@@ -3,7 +3,7 @@ import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { Button } from "./button";
 import { GripVerticalIcon } from "lucide-react";
 import { cn } from "../lib";
-import { useMoveablePopover } from "../hooks/useMoveablePopover";
+import { useMoveablePopover } from "../hooks";
 
 function Popover({ ...props }: PopoverPrimitive.Root.Props) {
   return <PopoverPrimitive.Root data-slot="popover" {...props} modal={false} />;
