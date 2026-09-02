@@ -12,10 +12,12 @@ export class PaginatedMetadata {
   next?: number;
 }
 
+export const PER_PAGE = 10;
+
 export class PaginatedQueryDto {
   page: number = 1;
 
-  perPage?: number = 10;
+  perPage?: number = PER_PAGE;
 }
 
 export class PaginatedResultsDto<T> {
@@ -24,7 +26,7 @@ export class PaginatedResultsDto<T> {
   meta: PaginatedMetadata = {
     currentPage: 1,
     lastPage: 0,
-    perPage: 10,
+    perPage: PER_PAGE,
     total: 0,
   };
 }

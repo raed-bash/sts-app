@@ -28,7 +28,7 @@ export type UsersTableProps = {
   setPage: (page: number) => void;
   count: number;
   page: number;
-  perPage: number;
+  perPage?: number;
   loading: boolean;
   scLoading: boolean;
   handleFiltersDebounceChange: (value: EventTarget) => void;

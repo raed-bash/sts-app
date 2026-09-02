@@ -23,6 +23,7 @@ import {
   type UseFilterSetStateFiltersAction,
 } from "./filter/hooks/useFilter";
 import type { FilterOperation } from "./filter";
+import { PER_PAGE } from "@/dtos/pagingated-results-dto";
 
 export type RowType = Record<string, any>;
 
@@ -179,7 +180,7 @@ function Table<Row extends RowType>({
   rows = [],
   currentPage = 1,
   onPageChange = () => {},
-  perPage = 10,
+  perPage = PER_PAGE,
   count = rows.length,
   containerProps = {},
   tbodyProps = {},

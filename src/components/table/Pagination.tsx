@@ -3,6 +3,7 @@ import InputPlus from "../inputs/InputPlus";
 import { useDebounce } from "src/hooks/useDebounce";
 import IconButton from "../buttons/IconButton";
 import { useState } from "react";
+import { PER_PAGE } from "@/dtos/pagingated-results-dto";
 
 const getVisiblePages = (
   currentPage: number,
@@ -60,7 +61,7 @@ function Pagination({
   count,
   onChange,
   maxVisibleNeighbors = 2,
-  perPage = 10,
+  perPage = PER_PAGE,
 }: PaginationProps) {
   const totalPages = Math.ceil(count / perPage);
 
