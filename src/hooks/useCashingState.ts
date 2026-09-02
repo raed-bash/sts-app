@@ -10,7 +10,12 @@ export default function useCachingState<T>(
 
   const { data } = useQuery<T>({
     queryKey: [queryKey],
-    queryFn: async () => {
+    queryFn: (c) => {
+      const data = c.client.getQueryData<T>([queryKey]);
+
+      if (data) {
+        return data;
+      }
       // This will only run if no cached/initial data exists
       return typeof defaultData === "function"
         ? (defaultData as () => T)()
