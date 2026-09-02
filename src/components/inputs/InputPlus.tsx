@@ -1,7 +1,6 @@
 import Skeleton, { type SkeletonProps } from "../skeleton/Skeleton";
 import Input, { type InputProps } from "./Input";
 import TextArea, { type TextAreaProps } from "./TextArea";
-import RawSelect, { type RawSelectProps } from "./select/RawSelect";
 import { cn } from "src/utils/cn";
 import type { HTMLInputTypeAttribute, ReactNode } from "react";
 import type { OptionType } from "./select/hooks/useRawSelectUtils";
@@ -16,13 +15,14 @@ import SelectApi from "./SelectApi";
 import InputPassword from "./InputPassword";
 import Checkbox from "./Checkbox";
 import { NativeSelect, type NativeSelectProps } from "../ui/native-select";
+import SelectField, { type SelectFieldProps } from "./select/SelectField";
 
 export type InputPropsWithType = InputProps & {
   type: OnlyStringLiterals<HTMLInputTypeAttribute>;
 };
 
 export type SelectPropsWithType<TOption extends OptionType> =
-  RawSelectProps<TOption> & {
+  SelectFieldProps<TOption> & {
     type: "select";
   };
 
@@ -128,7 +128,7 @@ function InputPlus<TOption extends OptionType>({
       {loading ? (
         <Skeleton {...skeletonProps} />
       ) : props.type === "select" ? (
-        <RawSelect {...props} aria-invalid={Boolean(helperText && error)} />
+        <SelectField {...props} aria-invalid={Boolean(helperText && error)} />
       ) : props.type === "nativeSelect" ? (
         <NativeSelect
           {...props}

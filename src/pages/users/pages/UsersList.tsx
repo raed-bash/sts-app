@@ -12,16 +12,17 @@ import useFilters from "src/hooks/useFilters";
 import useFiltersDebounce from "src/hooks/useFiltersDebounce";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  Select,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectLabel,
-  SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import useSelectApi from "@/hooks/useSelectApi";
 import { Spinner } from "@/components/ui/spinner";
+import useCachingState from "@/hooks/useCashingState";
+import { SelectFieldTrigger } from "@/components/inputs/select/SelectField";
+import type { SyntheticEvent } from "@/components/utils/events";
 
 export default function UsersList() {
   const { filters } = useFilters("usersFilters", new QueryUserDto({}));
@@ -46,7 +47,7 @@ export default function UsersList() {
       ),
   });
 
-  const { handleScroll, allData, infiniteQueryOptions } = useSelectApi<UserDto>(
+  const { allData, listBoxProps, infiniteQueryOptions } = useSelectApi<UserDto>(
     {
       queryKey: ["users"],
       queryFn: async (params) => {
@@ -64,6 +65,15 @@ export default function UsersList() {
     },
   );
 
+  const [user, setUser] = useCachingState<UserDto | null>(
+    "selectedUsers",
+    null,
+  );
+
+  const handleUserChange = (e: SyntheticEvent) => {
+    setUser(e.target.value);
+  };
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-4">Users</h1>
@@ -75,20 +85,28 @@ export default function UsersList() {
         value={filtersDebounce.username || ""}
       />
 
-      <Select value="">
-        <SelectTrigger>
-          <SelectValue placeholder="Theme" />
-        </SelectTrigger>
+      <InputPlus
+        type="select"
+        value={user}
+        onChange={handleUserChange}
+        isItemEqualToValue={(item, value) => item.id === value.id}
+        itemToStringLabel={(item) => item.username}
+        error
+        helperText="s"
+        className="w-full"
+      >
+        <SelectFieldTrigger>
+          <SelectValue placeholder="User" />
+        </SelectFieldTrigger>
         <SelectContent
-          onScroll={handleScroll}
-          listProps={{
-            onScroll: handleScroll,
-          }}
+          className="max-h-72"
+          alignItemWithTrigger={false}
+          {...listBoxProps}
         >
           <SelectGroup>
-            <SelectLabel>Theme</SelectLabel>
+            <SelectLabel>User</SelectLabel>
             {allData.map((item) => (
-              <SelectItem key={item.id} value={item.id}>
+              <SelectItem key={item.id} value={item}>
                 {item.username}
               </SelectItem>
             ))}
@@ -97,15 +115,17 @@ export default function UsersList() {
             disabled
             itemTextProps={{ className: "justify-center " }}
             className="pr-0"
+            unselectable="on"
+            value={crypto.randomUUID()}
           >
             {infiniteQueryOptions.isFetching ? (
               <Spinner className="justify-center" />
             ) : (
-              "No more items"
+              !infiniteQueryOptions.hasNextPage && "No more items"
             )}
           </SelectItem>
         </SelectContent>
-      </Select>
+      </InputPlus>
 
       <Card className="pb-52">
         <CardContent>
