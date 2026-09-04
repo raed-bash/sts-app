@@ -16,6 +16,7 @@ import InputPassword from "./InputPassword";
 import Checkbox from "./Checkbox";
 import { NativeSelect, type NativeSelectProps } from "../ui/native-select";
 import SelectField, { type SelectFieldProps } from "./select/SelectField";
+import ComboboxField, { type ComboboxFieldProps } from "./select/ComboboxField";
 
 export type InputPropsWithType = InputProps & {
   type: OnlyStringLiterals<HTMLInputTypeAttribute>;
@@ -36,6 +37,13 @@ export type AutocompletePropsWithType<TOption extends OptionType> =
     type: "autocomplete";
   };
 
+export type ComboboxPropsWithType<
+  TOption extends OptionType,
+  Multiple extends boolean | undefined = false,
+> = ComboboxFieldProps<TOption, Multiple> & {
+  type: "combobox";
+};
+
 export type AutocompleteApiPropsWithType<TOption extends OptionType> =
   AutocompleteApiProps<TOption> & {
     type: "autocompleteApi";
@@ -49,7 +57,11 @@ export type NativeSelectPropsWithType = NativeSelectProps & {
   type: "nativeSelect";
 };
 
-export type InputPlusProps<TOption extends OptionType> = (
+export type InputPlusProps<
+  TOption extends OptionType,
+  Multiple extends boolean | undefined = false,
+> = (
+  | ComboboxPropsWithType<TOption, Multiple>
   | InputPropsWithType
   | SelectPropsWithType<TOption>
   | AutocompletePropsWithType<TOption>
@@ -81,7 +93,10 @@ export type InputPlusProps<TOption extends OptionType> = (
   helperTextProps?: React.HTMLAttributes<HTMLParagraphElement>;
 };
 
-function InputPlus<TOption extends OptionType>({
+function InputPlus<
+  TOption extends OptionType,
+  Multiple extends boolean | undefined = false,
+>({
   title,
   titleIcon,
   loading,
@@ -93,7 +108,7 @@ function InputPlus<TOption extends OptionType>({
   helperTextProps = {},
   oneline = false,
   ...props
-}: InputPlusProps<TOption>) {
+}: InputPlusProps<TOption, Multiple>) {
   const hasTitle = Boolean(title || titleIcon);
 
   const hasMultiChilds = Boolean(hasTitle || helperText);
@@ -127,6 +142,12 @@ function InputPlus<TOption extends OptionType>({
       )}
       {loading ? (
         <Skeleton {...skeletonProps} />
+      ) : props.type === "combobox" ? (
+        <ComboboxField
+          aria-invalid={Boolean(helperText && error)}
+          {...props}
+          className={cn("w-full", props.className)}
+        />
       ) : props.type === "select" ? (
         <SelectField
           aria-invalid={Boolean(helperText && error)}
