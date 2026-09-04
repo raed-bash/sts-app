@@ -17,6 +17,8 @@ import Checkbox from "./Checkbox";
 import { NativeSelect, type NativeSelectProps } from "../ui/native-select";
 import SelectField, { type SelectFieldProps } from "./select/SelectField";
 import ComboboxField, { type ComboboxFieldProps } from "./select/ComboboxField";
+import type { ComboboxApiProps } from "./select/ComboboxApi";
+import ComboboxApi from "./select/ComboboxApi";
 
 export type InputPropsWithType = InputProps & {
   type: OnlyStringLiterals<HTMLInputTypeAttribute>;
@@ -31,6 +33,12 @@ export type SelectApiPropsWithType<TOption extends OptionType> =
   SelectApiProps<TOption> & {
     type: "selectApi";
   };
+export type ComboboxApiPropsWithType<
+  TOption,
+  Multiple extends boolean | undefined = false,
+> = ComboboxApiProps<TOption, Multiple> & {
+  type: "comboboxApi";
+};
 
 export type AutocompletePropsWithType<TOption extends OptionType> =
   RawAutocompleteProps<TOption> & {
@@ -61,6 +69,7 @@ export type InputPlusProps<
   TOption extends OptionType,
   Multiple extends boolean | undefined = false,
 > = (
+  | ComboboxApiPropsWithType<TOption, Multiple>
   | ComboboxPropsWithType<TOption, Multiple>
   | InputPropsWithType
   | SelectPropsWithType<TOption>
@@ -142,6 +151,12 @@ function InputPlus<
       )}
       {loading ? (
         <Skeleton {...skeletonProps} />
+      ) : props.type === "comboboxApi" ? (
+        <ComboboxApi
+          aria-invalid={Boolean(helperText && error)}
+          {...props}
+          className={cn("w-full", props.className)}
+        />
       ) : props.type === "combobox" ? (
         <ComboboxField
           aria-invalid={Boolean(helperText && error)}

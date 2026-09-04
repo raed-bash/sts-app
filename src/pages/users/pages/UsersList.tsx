@@ -28,14 +28,11 @@ import {
   ComboboxGroup,
   ComboboxItem,
   ComboboxLabel,
-  ComboboxList,
   ComboboxValue,
 } from "@/components/ui/combobox";
-import { useSelectApi } from "@/components/hooks";
-import { Spinner } from "@/components/ui/spinner";
-import useDebouncedValue from "@/hooks/useDebouncedValue";
 import { useComboboxAnchor } from "@/components/hooks/useComboboxAnchor";
 import { ComboboxFieldChipsInput } from "@/components/inputs/select/ComboboxField";
+import { ComboboxApiList } from "@/components/inputs/select/ComboboxApi";
 
 export default function UsersList() {
   const { filters } = useFilters("usersFilters", new QueryUserDto({}));
@@ -71,16 +68,6 @@ export default function UsersList() {
     setUser(e.target.value);
   };
 
-  const [search, setSearch] = useState("");
-
-  const debouncedSearch = useDebouncedValue(search, 400);
-
-  const { data, listBoxProps, infiniteQuery } = useSelectApi({
-    queryFn: (params) =>
-      usersApi.getUsers({ ...params, username: debouncedSearch }),
-    queryKey: ["ComboboxselectedUser", debouncedSearch],
-  });
-
   const comboboxAnchor = useComboboxAnchor();
   const handleComboboxChange = (e: SyntheticEvent) => {
     setUsers(e.target.value);
@@ -89,68 +76,54 @@ export default function UsersList() {
     <div>
       <h1 className="text-3xl font-bold mb-4">Users</h1>
 
-      <InputPlus
-        type="combobox"
+      <InputPlus<UserDto, true>
+        type="comboboxApi"
         isItemEqualToValue={(item, value) => item.id === value.id}
         itemToStringLabel={(item) => item.username}
-
-        onInputValueChange={(inputValue) => {
-          setSearch(inputValue);
-        }}
 
         onChange={handleComboboxChange}
         value={users}
         multiple
+        queryProps={{ queryFn: usersApi.getUsers, queryKey: ["selectUserssa"] }}
       >
-        <ComboboxChips ref={comboboxAnchor}>
-          <ComboboxValue>
-            {(values: UserDto[]) => (
-              <>
-                {values.map((value) => (
-                  <ComboboxChip key={value.id}>{value.username}</ComboboxChip>
-                ))}
-                <ComboboxFieldChipsInput placeholder="Select users" />
-              </>
-            )}
-          </ComboboxValue>
-        </ComboboxChips>
+        {(data) => (
+          <>
+            <ComboboxChips ref={comboboxAnchor}>
+              <ComboboxValue>
+                {(values: UserDto[]) => (
+                  <>
+                    {values.map((value) => (
+                      <ComboboxChip key={value.id}>
+                        {value.username}
+                      </ComboboxChip>
+                    ))}
+                    <ComboboxFieldChipsInput placeholder="Select users" />
+                  </>
+                )}
+              </ComboboxValue>
+            </ComboboxChips>
 
-        <ComboboxContent anchor={comboboxAnchor}>
-          <ComboboxList {...listBoxProps}>
-            <ComboboxGroup>
-              <ComboboxLabel>Users</ComboboxLabel>
-              {data?.pages.map((page) => (
-                <ComboboxGroup key={page.meta.currentPage}>
-                  <ComboboxLabel>page {page.meta.currentPage}</ComboboxLabel>
-                  {page.data.map((item) => (
-                    <ComboboxItem key={item.id} value={item}>
-                      {item.username}
-                    </ComboboxItem>
+            <ComboboxContent anchor={comboboxAnchor}>
+              <ComboboxApiList>
+                <ComboboxGroup>
+                  <ComboboxLabel>Users</ComboboxLabel>
+                  {data?.pages.map((page) => (
+                    <ComboboxGroup key={page.meta.currentPage}>
+                      <ComboboxLabel>
+                        page {page.meta.currentPage}
+                      </ComboboxLabel>
+                      {page.data.map((item) => (
+                        <ComboboxItem key={item.id} value={item}>
+                          {item.username}
+                        </ComboboxItem>
+                      ))}
+                    </ComboboxGroup>
                   ))}
                 </ComboboxGroup>
-              ))}
-            </ComboboxGroup>
-
-            <ComboboxItem
-              disabled
-
-              className="justify-center"
-
-              unselectable="on"
-
-              value={crypto.randomUUID()}
-            >
-              {infiniteQuery.isFetching ? (
-                <Spinner className="justify-center" />
-              ) : !infiniteQuery.hasNextPage &&
-                (data?.pages[0].meta.total || 0) > 0 ? (
-                "no more items"
-              ) : (
-                (data?.pages[0].meta.total || 0) === 0 && "no items found"
-              )}
-            </ComboboxItem>
-          </ComboboxList>
-        </ComboboxContent>
+              </ComboboxApiList>
+            </ComboboxContent>
+          </>
+        )}
       </InputPlus>
       <InputPlus
         type="selectApi"
