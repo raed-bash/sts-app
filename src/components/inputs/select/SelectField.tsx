@@ -45,9 +45,9 @@ export function SelectFieldTrigger(props: Parameters<typeof SelectTrigger>[0]) {
 
   return (
     <SelectTrigger
-      {...props}
-      className={cn(ctx.className)}
       aria-invalid={ctx["aria-invalid"]}
+      {...props}
+      className={cn(ctx.className, props.className)}
     />
   );
 }
