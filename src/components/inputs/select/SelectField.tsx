@@ -1,11 +1,17 @@
-import { Select, SelectTrigger } from "@/components/ui/select";
+import * as React from "react";
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Select as SelectPrimitive } from "@base-ui/react/select";
 import {
   SyntheticEvent,
   type SyntheticEventHandler,
 } from "@/components/utils/events";
-import { cn } from "@/components/lib";
-import { SelectContext, useSelectContext } from "./contexts/select-context";
+import { cn } from "@/utils/cn";
+import type { BaseUIEvent } from "@base-ui/react";
 
 export type SelectFieldProps<
   Value,
@@ -14,6 +20,12 @@ export type SelectFieldProps<
   className?: string;
   "aria-invalid"?: boolean;
   onChange?: SyntheticEventHandler<Value>;
+  placeholder?: React.ReactNode;
+  contentRef?: React.Ref<HTMLDivElement> | undefined;
+  onScroll?:
+    | ((event: BaseUIEvent<React.UIEvent<HTMLDivElement, UIEvent>>) => void)
+    | undefined;
+  alignItemWithTrigger?: boolean | undefined;
 };
 
 export default function SelectField<
@@ -22,32 +34,34 @@ export default function SelectField<
 >({
   "aria-invalid": ariaInvalid,
   className,
+  placeholder,
+  contentRef,
+  onScroll,
+  alignItemWithTrigger,
   ...props
 }: SelectFieldProps<Value, Multiple>) {
   return (
-    <SelectContext.Provider value={{ "aria-invalid": ariaInvalid, className }}>
-      <Select<Value, Multiple>
-        {...props}
-        onValueChange={(value, ...args) => {
-          props.onValueChange?.(value, ...args);
-
-          props?.onChange?.(
-            new SyntheticEvent<Value>(props.name, value as Value),
-          );
-        }}
-      />
-    </SelectContext.Provider>
-  );
-}
-
-export function SelectFieldTrigger(props: Parameters<typeof SelectTrigger>[0]) {
-  const ctx = useSelectContext();
-
-  return (
-    <SelectTrigger
-      aria-invalid={ctx["aria-invalid"]}
+    <Select<Value, Multiple>
       {...props}
-      className={cn(ctx.className, props.className)}
-    />
+      onValueChange={(value, ...args) => {
+        props.onValueChange?.(value, ...args);
+
+        props?.onChange?.(
+          new SyntheticEvent<Value>(props.name, value as Value),
+        );
+      }}
+    >
+      <SelectTrigger aria-invalid={ariaInvalid} className={cn(className)}>
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent
+        ref={contentRef}
+        onScroll={onScroll}
+        className={cn("max-h-72")}
+        alignItemWithTrigger={alignItemWithTrigger}
+      >
+        {props.children}
+      </SelectContent>
+    </Select>
   );
 }

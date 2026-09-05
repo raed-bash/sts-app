@@ -23,14 +23,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { NativeSelectOption } from "@/components/ui/native-select";
-import { SelectFieldTrigger } from "@/components/inputs/select/SelectField";
-import {
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectValue,
-} from "@/components/ui/select";
+import { SelectGroup, SelectItem, SelectLabel } from "@/components/ui/select";
 
 export type FilterFilter = Pick<
   FilterInputProps,
@@ -195,25 +188,19 @@ export default function FilterBoard<Row extends RowType>({
                     name="name"
                     onChange={createFilterOperationChangeHandler(i)}
                     value={name}
+                    placeholder="Select column"
                   >
-                    <SelectFieldTrigger>
-                      <SelectValue placeholder="Select column">
-                        {column.headerName}
-                      </SelectValue>
-                    </SelectFieldTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>User</SelectLabel>
-                        {filterColumns.map((column) => (
-                          <SelectItem
-                            key={column.name.toString()}
-                            value={column.name}
-                          >
-                            {column.headerName}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>User</SelectLabel>
+                      {filterColumns.map((column) => (
+                        <SelectItem
+                          key={column.name.toString()}
+                          value={column.name}
+                        >
+                          {column.headerName}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
                   </InputPlus>
 
                   <InputPlus

@@ -24,15 +24,19 @@ export type InputPropsWithType = InputProps & {
   type: OnlyStringLiterals<HTMLInputTypeAttribute>;
 };
 
-export type SelectPropsWithType<TOption extends OptionType> =
-  SelectFieldProps<TOption> & {
-    type: "select";
-  };
+export type SelectPropsWithType<
+  TOption extends OptionType,
+  Multiple extends boolean | undefined = false,
+> = SelectFieldProps<TOption, Multiple> & {
+  type: "select";
+};
 
-export type SelectApiPropsWithType<TOption extends OptionType> =
-  SelectApiProps<TOption> & {
-    type: "selectApi";
-  };
+export type SelectApiPropsWithType<
+  TOption extends OptionType,
+  Multiple extends boolean | undefined = false,
+> = SelectApiProps<TOption, Multiple> & {
+  type: "selectApi";
+};
 export type ComboboxApiPropsWithType<
   TOption,
   Multiple extends boolean | undefined = false,
@@ -72,11 +76,11 @@ export type InputPlusProps<
   | ComboboxApiPropsWithType<TOption, Multiple>
   | ComboboxPropsWithType<TOption, Multiple>
   | InputPropsWithType
-  | SelectPropsWithType<TOption>
+  | SelectPropsWithType<TOption, Multiple>
   | AutocompletePropsWithType<TOption>
   | TextAreaPropsWithType
   | AutocompleteApiPropsWithType<TOption>
-  | SelectApiPropsWithType<TOption>
+  | SelectApiPropsWithType<TOption, Multiple>
   | NativeSelectPropsWithType
 ) & {
   title?: string;

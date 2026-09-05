@@ -4,18 +4,13 @@ import {
   type QueryResponseType,
   type UseSelectApiOptions,
 } from "../../hooks";
-import { SelectContent, SelectItem } from "../../ui/select";
 import SelectField, { type SelectFieldProps } from "./SelectField";
-import { cn } from "../../lib";
 import type {
   InfiniteData,
   UseInfiniteQueryResult,
 } from "@tanstack/react-query";
+import { SelectItem } from "../../ui/select";
 import { Spinner } from "../../ui/spinner";
-import {
-  SelectApiContext,
-  useSelectApiContext,
-} from "./contexts/select-api-context";
 
 export type SelectApiChildren<Value> = (
   data: InfiniteData<QueryResponseType<Value>, unknown> | undefined,
@@ -31,49 +26,24 @@ export type SelectApiProps<
 > = Omit<SelectFieldProps<Value, Multiple>, "children"> & {
   queryProps: UseSelectApiOptions<Value>;
   children: SelectApiChildren<Value>;
+  noMoreItemsTitle?: React.ReactNode;
 };
 
 function SelectApi<Value, Multiple extends boolean | undefined = false>({
+  noMoreItemsTitle = "No more items",
   queryProps,
   ...props
 }: SelectApiProps<Value, Multiple>) {
   const { listBoxProps, data, infiniteQuery } = useSelectApi<Value>(queryProps);
 
   return (
-    <SelectApiContext.Provider
-      value={{
-        listBoxProps: listBoxProps,
-        hasNextPage: infiniteQuery.hasNextPage,
-        isFetching: infiniteQuery.isFetching,
-      }}
-    >
-      <SelectField<Value, Multiple> {...props}>
-        {props.children(data, infiniteQuery)}
-      </SelectField>
-    </SelectApiContext.Provider>
-  );
-}
-
-export default SelectApi;
-
-export type SelectApiContentProps = Parameters<typeof SelectContent>[0] & {
-  noMoreItemsTitle?: React.ReactNode;
-};
-
-export function SelectApiContent({
-  noMoreItemsTitle = "No more items",
-  ...props
-}: SelectApiContentProps) {
-  const { listBoxProps, hasNextPage, isFetching } = useSelectApiContext();
-
-  return (
-    <SelectContent
+    <SelectField<Value, Multiple>
       alignItemWithTrigger={false}
-      {...listBoxProps}
+      onScroll={listBoxProps.onScroll}
+      contentRef={listBoxProps.ref}
       {...props}
-      className={cn("max-h-72", props.className)}
     >
-      {props.children}
+      {props.children(data, infiniteQuery)}
       <SelectItem
         disabled
         itemTextProps={{ className: "justify-center " }}
@@ -81,12 +51,14 @@ export function SelectApiContent({
         unselectable="on"
         value={crypto.randomUUID()}
       >
-        {isFetching ? (
+        {infiniteQuery.isFetching ? (
           <Spinner className="justify-center" />
         ) : (
-          !hasNextPage && noMoreItemsTitle
+          !infiniteQuery.hasNextPage && noMoreItemsTitle
         )}
       </SelectItem>
-    </SelectContent>
+    </SelectField>
   );
 }
+
+export default SelectApi;
