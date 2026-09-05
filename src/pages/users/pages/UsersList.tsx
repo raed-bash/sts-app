@@ -78,6 +78,7 @@ export default function UsersList() {
         value={users}
         multiple
         queryProps={{ queryFn: usersApi.getUsers, queryKey: ["selectUserssa"] }}
+        searchKey={"username" as keyof QueryUserDto}
       >
         {(data) => (
           <>

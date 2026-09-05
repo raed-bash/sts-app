@@ -16,6 +16,7 @@ import {
   ComboboxApiContext,
   useComboboxApiContext,
 } from "./contexts/combobox-api-context";
+import useDebouncedValue from "@/hooks/useDebouncedValue";
 
 export type ComboboxApiChildren<Value> = (
   data: InfiniteData<QueryResponseType<Value>, unknown> | undefined,
@@ -31,13 +32,24 @@ export type ComboboxApiProps<
 > = Omit<ComboboxFieldProps<Value, Multiple>, "children"> & {
   queryProps: UseSelectApiOptions<Value>;
   children: ComboboxApiChildren<Value>;
+  searchKey: string;
 };
 
 function ComboboxApi<Value, Multiple extends boolean | undefined = false>({
   queryProps,
+  searchKey = "search",
   ...props
 }: ComboboxApiProps<Value, Multiple>) {
-  const { listBoxProps, data, infiniteQuery } = useSelectApi<Value>(queryProps);
+  const [search, setSearch] = React.useState("");
+
+  const debouncedSearch = useDebouncedValue(search);
+
+  const { listBoxProps, data, infiniteQuery } = useSelectApi<Value>({
+    ...queryProps,
+    queryKey: [...queryProps.queryKey, debouncedSearch],
+    queryFn: (query, ...args) =>
+      queryProps.queryFn({ ...query, [searchKey]: debouncedSearch }, ...args),
+  });
 
   return (
     <ComboboxApiContext.Provider
@@ -47,7 +59,13 @@ function ComboboxApi<Value, Multiple extends boolean | undefined = false>({
         isFetching: infiniteQuery.isFetching,
       }}
     >
-      <ComboboxField<Value, Multiple> {...props}>
+      <ComboboxField<Value, Multiple>
+        {...props}
+        onInputValueChange={(value) => {
+          setSearch(value);
+        }}
+        inputValue={search}
+      >
         {props.children(data, infiniteQuery)}
       </ComboboxField>
     </ComboboxApiContext.Provider>

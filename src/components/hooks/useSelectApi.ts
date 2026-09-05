@@ -14,7 +14,7 @@ export type QueryFnParams = {
   page: number;
 
   perPage?: number;
-};
+} & Record<string | number, any>;
 
 export type QueryFn<TData> = (
   params: QueryFnParams,
