@@ -53,7 +53,7 @@ export default function useTableFiltersUtils({
 
   const handleResetFilter = useCallback(() => {
     filtersUtils.setFilters(defaultFilters);
-    filtersDebounceUtils.setDebounceFilters(defaultDebounceFilters);
+    filtersDebounceUtils.setFiltersDebounce(defaultDebounceFilters);
   }, [
     filtersDebounceUtils,
     filtersUtils,
