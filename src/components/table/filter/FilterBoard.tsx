@@ -189,6 +189,7 @@ export default function FilterBoard<Row extends RowType>({
                     onChange={createFilterOperationChangeHandler(i)}
                     value={name}
                     placeholder="Select column"
+                    getLabel={column.headerName}
                   >
                     <SelectGroup>
                       <SelectLabel>User</SelectLabel>

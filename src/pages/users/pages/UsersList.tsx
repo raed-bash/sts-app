@@ -69,7 +69,7 @@ export default function UsersList() {
     <div>
       <h1 className="text-3xl font-bold mb-4">Users</h1>
 
-      <InputPlus<UserDto, true>
+      <InputPlus
         type="comboboxApi"
         isItemEqualToValue={(item, value) => item.id === value.id}
         itemToStringLabel={(item) => item.username}
@@ -123,7 +123,7 @@ export default function UsersList() {
         value={user}
         onChange={handleUserChange}
         isItemEqualToValue={(item, value) => item.id === value.id}
-        itemToStringLabel={(item) => item.username}
+        getLabel={(item) => item?.username}
         queryProps={{ queryFn: usersApi.getUsers, queryKey: ["selectedUser2"] }}
         placeholder="users"
       >
