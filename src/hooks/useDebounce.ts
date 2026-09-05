@@ -1,8 +1,13 @@
 import { useRef } from "react";
 
+const VITE_DEBOUNCE_DELAY = import.meta.env.VITE_DEBOUNCE_DELAY;
+const DEBOUNCE_DELAY = !isNaN(VITE_DEBOUNCE_DELAY)
+  ? parseFloat(VITE_DEBOUNCE_DELAY)
+  : 300;
+
 export function useDebounce<T extends (...args: any[]) => void>(
   func: T,
-  delay: number = 300,
+  delay: number = DEBOUNCE_DELAY,
 ) {
   const timerId = useRef<number>(0);
 

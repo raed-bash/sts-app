@@ -3,7 +3,7 @@ import { useDebounce } from "./useDebounce";
 
 export default function useDebouncedValue<T>(
   value: T,
-  delay: number,
+  delay?: number,
   onChange?: (value: T) => void,
 ) {
   const [debouncedValue, setDebouncedValue] = useState(value);

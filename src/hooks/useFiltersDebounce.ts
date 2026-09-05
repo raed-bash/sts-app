@@ -5,16 +5,10 @@ import type { EventTarget } from "src/utils/EventTarget";
 
 const defaultDebounceFiltersDefault: Record<string, any> = {};
 
-const VITE_DEBOUNCE_DELAY = import.meta.env.VITE_DEBOUNCE_DELAY;
-
-const DEBOUNCE_DELAY = !isNaN(VITE_DEBOUNCE_DELAY)
-  ? parseFloat(VITE_DEBOUNCE_DELAY)
-  : 1000;
-
 export default function useFiltersDebounce(
   name: string,
   defaultDebounceFilters = defaultDebounceFiltersDefault,
-  delay = DEBOUNCE_DELAY,
+  delay?: number,
   onChange?: (value: any) => void,
   { cashing = true } = {},
 ) {
