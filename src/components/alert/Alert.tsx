@@ -1,6 +1,6 @@
-import InfoIcon from "src/assets/icons/info.svg?react";
-import SuccessIcon from "src/assets/icons/success.svg?react";
-import WarningIcon from "src/assets/icons/warning.svg?react";
+import InfoIcon from "@/assets/icons/info.svg?react";
+import SuccessIcon from "@/assets/icons/success.svg?react";
+import WarningIcon from "@/assets/icons/warning.svg?react";
 
 export type AlertProps = {
   children?: React.ReactNode;

@@ -1,8 +1,8 @@
 import { pick } from "lodash";
 import type { StudentDto } from "./student.dto";
 import type { TeacherDto } from "./teacher.dto";
-import type { UserRole } from "src/constants/user-role";
-import type { UserStatus } from "src/constants/user-status";
+import type { UserRole } from "@/constants/user-role";
+import type { UserStatus } from "@/constants/user-status";
 
 export class UserDto {
   id!: number;

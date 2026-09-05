@@ -1,5 +1,5 @@
 import type { FilterOperationOptions } from "./types";
-import InputPlus from "src/components/inputs/InputPlus";
+import InputPlus from "@/components/inputs/InputPlus";
 import type { BaseFilterInputProps } from "./FilterInput";
 import type { textFilterOperations } from "./utils/filterConstants";
 

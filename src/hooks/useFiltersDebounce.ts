@@ -1,11 +1,11 @@
 import { useCallback, useState } from "react";
-import useCashingState from "./useCashingState";
-import useDebouncedValue from "./useDebouncedValue";
-import type { EventTarget } from "src/utils/EventTarget";
+import { useCacheState } from "./useCacheState";
+import { useDebouncedValue } from "./useDebouncedValue";
+import type { EventTarget } from "@/utils";
 
 const defaultDebounceFiltersDefault: Record<string, any> = {};
 
-export default function useFiltersDebounce(
+export function useFiltersDebounce(
   name: string,
   defaultDebounceFilters = defaultDebounceFiltersDefault,
   delay?: number,
@@ -14,12 +14,12 @@ export default function useFiltersDebounce(
 ) {
   const state = useState(defaultDebounceFilters);
 
-  const cashingState = useCashingState(
+  const cacheState = useCacheState(
     `${name}DebounceFilters`,
     defaultDebounceFilters,
   );
 
-  const [filtersDebounce, setFiltersDebounce] = cashing ? cashingState : state;
+  const [filtersDebounce, setFiltersDebounce] = cashing ? cacheState : state;
 
   const filterDebounced = useDebouncedValue(filtersDebounce, delay, onChange);
 

@@ -1,8 +1,8 @@
-import type { SortButtonStatus } from "src/components/buttons/SortButton";
+import type { SortButtonStatus } from "@/components/buttons/SortButton";
 import type { RowType, TableColumn, TableRow } from "../Table";
 import type { THeadSortEventHandler } from "../THead";
 import { useEffect, useState } from "react";
-import type { EventTarget } from "src/utils/EventTarget";
+import type { EventTarget } from "@/utils";
 import {
   useFilter,
   type FilterItem,

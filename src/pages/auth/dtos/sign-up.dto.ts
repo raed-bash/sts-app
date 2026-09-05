@@ -1,5 +1,5 @@
 import { pick } from "lodash";
-import type { Gender } from "src/constants/gender";
+import type { Gender } from "@/constants/gender";
 
 export class SignUpDto {
   username!: string;

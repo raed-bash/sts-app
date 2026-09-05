@@ -2,7 +2,7 @@ import * as React from "react";
 import { useDrag } from "./useDrag";
 import { useResizeObserver } from "./useResizeObserver";
 import { clampToViewport, mergeRefs } from "../utils";
-import useDebouncedValue from "@/hooks/useDebouncedValue";
+import { useDebouncedValue } from "@/hooks";
 
 export function useMoveablePopover() {
   const [isReleased, setIsReleased] = React.useState(false);

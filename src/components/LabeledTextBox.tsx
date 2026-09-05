@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 
 export type LabeledTextBoxProps = React.HTMLAttributes<HTMLDivElement> & {
   label: string;

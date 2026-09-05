@@ -2,7 +2,7 @@ import Loading from "../skeleton/Loading";
 import Tr, { type TrProps } from "./Tr";
 import Td, { type TdProps } from "./Td";
 import LinearLoading from "../skeleton/LinearLoading";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 import TOverlay from "./TOverlay";
 import { useTBodyUtils } from "./hooks/useTBodyUtils";
 import type { RowType, TableColumn, TableRow } from "./Table";

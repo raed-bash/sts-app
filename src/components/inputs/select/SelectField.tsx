@@ -6,11 +6,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Select as SelectPrimitive } from "@base-ui/react/select";
-import {
-  SyntheticEvent,
-  type SyntheticEventHandler,
-} from "@/components/utils/events";
-import { cn } from "@/utils/cn";
+import { SyntheticEvent, type SyntheticEventHandler } from "@/components/utils";
+import { cn } from "cn";
 import type { BaseUIEvent } from "@base-ui/react";
 
 export type SelectFieldProps<

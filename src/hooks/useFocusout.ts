@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function useFocusout(
+export function useFocusout(
   elementRef: React.RefObject<HTMLElement | null>,
   onFocusout: () => void,
 ) {

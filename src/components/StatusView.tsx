@@ -1,5 +1,5 @@
-import { STATUS_TITLES, type UserStatus } from "src/constants/user-status";
-import { cn } from "src/utils/cn";
+import { STATUS_TITLES, type UserStatus } from "@/constants/user-status";
+import { cn } from "cn";
 
 export type StatusViewProps = React.HTMLAttributes<HTMLDivElement> & {
   status?: UserStatus;

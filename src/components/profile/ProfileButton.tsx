@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import IconButton from "../buttons/IconButton";
-import ProfileIcon from "src/assets/icons/profile.svg?react";
-import useFocusout from "src/hooks/useFocusout";
+import ProfileIcon from "@/assets/icons/profile.svg?react";
+import { useFocusout } from "@/hooks";
 import ProfileMenu from "./ProfileMenu";
 
 export default function ProfileButton() {

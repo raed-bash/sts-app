@@ -2,7 +2,7 @@ import * as React from "react";
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { Button } from "./button";
 import { GripVerticalIcon } from "lucide-react";
-import { cn } from "../lib";
+import { cn } from "cn";
 import { useMoveablePopover } from "../hooks";
 
 function Popover({ ...props }: PopoverPrimitive.Root.Props) {

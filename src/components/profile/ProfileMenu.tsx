@@ -1,16 +1,16 @@
-import ProfileFilledIcon from "src/assets/icons/profile-filled.svg?react";
-import ProfileIcon from "src/assets/icons/profile.svg?react";
-import SettingsIcon from "src/assets/icons/settings.svg?react";
-import LogoutIcon from "src/assets/icons/logout.svg?react";
+import ProfileFilledIcon from "@/assets/icons/profile-filled.svg?react";
+import ProfileIcon from "@/assets/icons/profile.svg?react";
+import SettingsIcon from "@/assets/icons/settings.svg?react";
+import LogoutIcon from "@/assets/icons/logout.svg?react";
 import { useQuery } from "@tanstack/react-query";
-import { usersApi } from "src/pages/users/users.api";
+import { usersApi } from "@/pages/users/users.api";
 import Loading from "../skeleton/Loading";
 import Button from "../buttons/Button";
-import useLogout from "src/hooks/useLogout";
+import { useLogout } from "@/hooks";
 import Animation from "../Animation";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 import AppLink from "../AppLink";
-import { ROLE_TITLES } from "src/constants/user-role";
+import { ROLE_TITLES } from "@/constants/user-role";
 
 export default function ProfileMenu({ open }: { open: boolean }) {
   const handleLogout = useLogout();

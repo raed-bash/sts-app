@@ -1,6 +1,6 @@
 import type { ComponentPropsWithRef, CSSProperties } from "react";
-import useAnimation from "src/hooks/useAnimation";
-import { cn } from "src/utils/cn";
+import { useAnimation } from "@/hooks";
+import { cn } from "cn";
 
 export type AnimationProps = ComponentPropsWithRef<"div"> & {
   isOpen: boolean;

@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import type { OptionType, UseRawSelectUtilsOptions } from "./useRawSelectUtils";
 import useRawSelectUtils from "./useRawSelectUtils";
-import { EventTarget } from "src/utils/EventTarget";
-import useFocusout from "src/hooks/useFocusout";
+import { EventTarget } from "@/utils";
+import { useFocusout } from "@/hooks";
 
 export type UseRawAutocompleteUtilsOptions<TOption> =
   UseRawSelectUtilsOptions<TOption> & {

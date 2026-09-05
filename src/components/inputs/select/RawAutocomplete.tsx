@@ -1,7 +1,7 @@
 import ArrowDown from "../../../assets/icons/arrow-down.svg?react";
 import Option, { type OptionProps } from "./Option";
 import { type OptionType } from "./hooks/useRawSelectUtils";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 import type { UseRawAutocompleteUtilsOptions } from "./hooks/useRawAutocompleteUtils";
 import useRawAutocompleteUtils from "./hooks/useRawAutocompleteUtils";
 import {

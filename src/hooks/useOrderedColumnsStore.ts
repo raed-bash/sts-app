@@ -1,6 +1,6 @@
-import useLocalStorage from "./useLocalStorage";
+import { useLocalStorage } from "./useLocalStorage";
 
-export default function useOrderedColumnsStore<T extends string>(
+export function useOrderedColumnsStore<T extends string>(
   name: string,
   defaultValue: T[] = [],
 ) {

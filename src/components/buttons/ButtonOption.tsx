@@ -1,5 +1,5 @@
 import Button, { type ButtonProps } from "./Button";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 import type { ButtonColor, ButtonVariant } from "./button-theme";
 
 export type ButtonOptionProps = ButtonProps & {

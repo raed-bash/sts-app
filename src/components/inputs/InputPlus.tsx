@@ -1,13 +1,13 @@
 import Skeleton, { type SkeletonProps } from "../skeleton/Skeleton";
 import Input, { type InputProps } from "./Input";
 import TextArea, { type TextAreaProps } from "./TextArea";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 import type { HTMLInputTypeAttribute, ReactNode } from "react";
 import type { OptionType } from "./select/hooks/useRawSelectUtils";
 import RawAutocomplete, {
   type RawAutocompleteProps,
 } from "./select/RawAutocomplete";
-import type { OnlyStringLiterals } from "src/types/utils";
+import type { OnlyStringLiterals } from "@/types/utils";
 import type { AutocompleteApiProps } from "./AutocompleteApi";
 import AutocompleteApi from "./AutocompleteApi";
 import type { SelectApiProps } from "./select/SelectApi";

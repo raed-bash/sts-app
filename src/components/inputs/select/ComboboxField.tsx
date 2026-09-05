@@ -4,11 +4,8 @@ import {
   ComboboxInput,
 } from "@/components/ui/combobox";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
-import {
-  SyntheticEvent,
-  type SyntheticEventHandler,
-} from "@/components/utils/events";
-import { cn } from "@/components/lib";
+import { SyntheticEvent, type SyntheticEventHandler } from "@/components/utils";
+import { cn } from "cn";
 import {
   ComboboxContext,
   useComboboxContext,

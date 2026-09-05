@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from "react";
-import { ROLE_TITLES, type UserRole } from "src/constants/user-role";
-import { cn } from "src/utils/cn";
+import { ROLE_TITLES, type UserRole } from "@/constants/user-role";
+import { cn } from "cn";
 
 export type RoleViewProps = HTMLAttributes<HTMLDivElement> & {
   role?: UserRole;

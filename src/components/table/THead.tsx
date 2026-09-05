@@ -2,7 +2,7 @@ import Tr, { type TrProps } from "./Tr";
 import Th from "./Th";
 import SortButton, { type SortButtonEventHandler } from "../buttons/SortButton";
 import type { ThProps } from "./Th";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 import type { RowType, TableColumn, TableSortStatuses } from "./Table";
 import type React from "react";
 import Checkbox from "../inputs/Checkbox";

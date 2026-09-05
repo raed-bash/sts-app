@@ -1,6 +1,6 @@
 import Tr, { type TrProps } from "./Tr";
 import Td, { type TdProps } from "./Td";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 
 export type TOverlayProps = React.HTMLAttributes<HTMLDivElement> & {
   TrProps?: TrProps;

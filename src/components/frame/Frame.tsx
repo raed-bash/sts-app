@@ -1,4 +1,4 @@
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 
 export type FrameProps = React.FieldsetHTMLAttributes<HTMLFieldSetElement> & {
   titleProps?: React.HTMLAttributes<HTMLLegendElement>;

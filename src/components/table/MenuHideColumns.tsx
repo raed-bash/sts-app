@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState } from "react";
 import Menu from "../menu/Menu";
 import InputIcon from "../inputs/InputIcon";
 import Button from "../buttons/Button";
-import SearchIcon from "src/assets/icons/search.svg?react";
+import SearchIcon from "@/assets/icons/search.svg?react";
 import type { RowType, TableColumn } from "./Table";
 import Checkbox from "../inputs/Checkbox";
 

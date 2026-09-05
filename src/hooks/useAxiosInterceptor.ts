@@ -1,10 +1,10 @@
 import { useCallback, useLayoutEffect } from "react";
 import toast from "react-hot-toast";
-import useLogout from "./useLogout";
-import { api } from "src/app/axios";
+import { api } from "@/app/axios";
 import type { AxiosResponse } from "axios";
+import { useLogout } from "./useLogout";
 
-export default function useAxiosInterceptor() {
+export function useAxiosInterceptor() {
   const handleLogout = useLogout();
 
   const handleResponse = useCallback(

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { AuthContext } from "./AuthContext";
-import { LocalStorageHelper } from "src/utils/LocalStorageHelper";
-import { LoginResponseDto } from "src/pages/auth/dtos/login-response.dto";
-import { setAuthToken } from "src/app/axios";
+import { LocalStorageHelper } from "@/utils";
+import { LoginResponseDto } from "@/pages/auth/dtos/login-response.dto";
+import { setAuthToken } from "@/app/axios";
 
 export default function AuthProvider({
   children,

@@ -1,5 +1,5 @@
 import Paper, { type PaperProps } from "./paper/Paper";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 
 export type SubHeaderProps = PaperProps & {};
 function SubHeader({ className, ...props }: SubHeaderProps) {

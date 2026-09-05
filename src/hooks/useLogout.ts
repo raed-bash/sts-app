@@ -1,8 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { useAuthContext } from "src/contexts/AuthContext";
+import { useAuthContext } from "@/contexts/AuthContext";
 
-export default function useLogout() {
+export function useLogout() {
   const queryClient = useQueryClient();
   const authContext = useAuthContext();
 

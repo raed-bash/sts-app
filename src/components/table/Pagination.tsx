@@ -1,6 +1,6 @@
-import ArrowLineDownIcon from "src/assets/icons/arrow-line-down.svg?react";
+import ArrowLineDownIcon from "@/assets/icons/arrow-line-down.svg?react";
 import InputPlus from "../inputs/InputPlus";
-import { useDebounce } from "src/hooks/useDebounce";
+import { useDebounce } from "@/hooks";
 import IconButton from "../buttons/IconButton";
 import { useState } from "react";
 import { PER_PAGE } from "@/dtos/pagingated-results-dto";

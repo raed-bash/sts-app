@@ -1,10 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export default function useTimer(
-  execute: () => void,
-  delay = 1000,
-  pause = false,
-) {
+export function useTimer(execute: () => void, delay = 1000, pause = false) {
   const timeIdRef = useRef<number | null>(null);
   const savedCallback = useRef(execute);
 

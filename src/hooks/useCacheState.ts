@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 type Updater<T> = (value: T) => void;
 
-export default function useCachingState<T>(
+export function useCacheState<T>(
   queryKey: string,
   defaultData: T | (() => T),
 ): readonly [T, Updater<T>] {

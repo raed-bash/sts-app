@@ -1,5 +1,5 @@
 import { Link, type LinkProps } from "react-router";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 
 export type AppLinkProps = LinkProps & { disabled?: boolean };
 

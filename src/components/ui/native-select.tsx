@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "src/components/lib/utils";
+import { cn } from "cn";
 import { ChevronDownIcon } from "lucide-react";
 
 export type NativeSelectProps = Omit<React.ComponentProps<"select">, "size"> & {

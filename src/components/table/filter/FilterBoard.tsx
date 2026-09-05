@@ -1,6 +1,6 @@
 import InputPlus from "@/components/inputs/InputPlus";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/utils/cn";
+import { cn } from "cn";
 import { FunnelIcon, FunnelXIcon, Plus, XIcon } from "lucide-react";
 import { getAvailableFilterOps } from "./utils/filterUtils";
 import {
@@ -16,7 +16,7 @@ import type {
   UseFilterPushEventAction,
   UseFilterUpdateEventAction,
 } from "./hooks/useFilter";
-import type { EventTarget } from "@/utils/EventTarget";
+import type { EventTarget } from "@/utils";
 import {
   Tooltip,
   TooltipContent,

@@ -1,6 +1,6 @@
-import useLocalStorage from "./useLocalStorage";
+import { useLocalStorage } from "./useLocalStorage";
 
-export default function useHiddenColumnsLocalStorage(
+export function useHiddenColumnsLocalStorage(
   name: string,
   defaultValue: Set<string> = new Set(),
 ) {

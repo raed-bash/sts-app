@@ -1,5 +1,5 @@
 import { forwardRef, useRef, useState, type ForwardedRef } from "react";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 export type InputIconProps = React.InputHTMLAttributes<HTMLInputElement> & {
   ref?: HTMLInputElement | null;
 

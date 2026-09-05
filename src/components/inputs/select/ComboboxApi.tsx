@@ -6,7 +6,7 @@ import {
 } from "../../hooks";
 import { ComboboxList, ComboboxItem } from "../../ui/combobox";
 import ComboboxField, { type ComboboxFieldProps } from "./ComboboxField";
-import { cn } from "../../lib";
+import { cn } from "cn";
 import type {
   InfiniteData,
   UseInfiniteQueryResult,
@@ -16,7 +16,7 @@ import {
   ComboboxApiContext,
   useComboboxApiContext,
 } from "./contexts/combobox-api-context";
-import useDebouncedValue from "@/hooks/useDebouncedValue";
+import { useDebouncedValue } from "@/hooks";
 
 export type ComboboxApiChildren<Value> = (
   data: InfiniteData<QueryResponseType<Value>, unknown> | undefined,

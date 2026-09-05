@@ -1,15 +1,13 @@
-import Table, { type TableSortStatuses } from "src/components/table/Table";
+import Table, { type TableSortStatuses } from "@/components/table/Table";
 import type { UserDto } from "../dtos/user.dto";
-import { dateFormater } from "src/utils/dateFormater";
-import RoleView from "src/components/RoleView";
-import StatusView from "src/components/StatusView";
+import { dateFormater } from "@/utils";
+import RoleView from "@/components/RoleView";
+import StatusView from "@/components/StatusView";
 import type {
   UseTableUtilsSelectedRows,
   UseTableUtilsSortEventHandler,
-} from "src/components/table/hooks/useTableUtils";
-import useOrderedColumnsStore from "src/hooks/useOrderedColumnsStore";
-import useHiddenColumnsLocalStorage from "src/hooks/useHiddenColumnsLocalStorage";
-import type { EventTarget } from "src/utils/EventTarget";
+} from "@/components/table/hooks/useTableUtils";
+import { useOrderedColumnsStore, useHiddenColumnsLocalStorage } from "@/hooks";
 import { Edit, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +17,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useState } from "react";
 import type { FilterItem } from "@/components/table/filter";
+import type { SyntheticEventHandler } from "@/components/utils";
 
 export type UsersTableProps = {
   handleSortChange: UseTableUtilsSortEventHandler<UserDto>;
@@ -31,7 +30,7 @@ export type UsersTableProps = {
   perPage?: number;
   loading: boolean;
   scLoading: boolean;
-  handleFiltersDebounceChange: (value: EventTarget) => void;
+  handleFiltersDebounceChange: SyntheticEventHandler;
   filtersDebounce: Record<string, any>;
   rows?: UserDto[];
 };

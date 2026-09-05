@@ -1,4 +1,4 @@
-import type { Gender } from "src/constants/gender";
+import type { Gender } from "@/constants/gender";
 import zod from "zod";
 
 export const signUpSchema = zod.object({

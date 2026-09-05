@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
-import { LocalStorageHelper } from "src/utils/LocalStorageHelper";
+import { LocalStorageHelper } from "@/utils";
 
-export default function useLocalStorage<T>(
+export function useLocalStorage<T>(
   name: string,
   defaultValue: T,
   { onStore, onGet } = {

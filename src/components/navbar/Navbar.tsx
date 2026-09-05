@@ -1,7 +1,7 @@
 import IconButton from "../buttons/IconButton";
-import SunIcon from "src/assets/icons/sun.svg?react";
-import CrescentIcon from "src/assets/icons/crescent.svg?react";
-import { useThemeContext } from "src/contexts/ThemeContext";
+import SunIcon from "@/assets/icons/sun.svg?react";
+import CrescentIcon from "@/assets/icons/crescent.svg?react";
+import { useThemeContext } from "@/contexts/ThemeContext";
 import ProfileButton from "../profile/ProfileButton";
 import InputPlus from "../inputs/InputPlus";
 

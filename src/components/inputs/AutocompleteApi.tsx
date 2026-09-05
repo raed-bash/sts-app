@@ -9,13 +9,13 @@ import RawAutocomplete, {
   type RawAutocompleteProps,
 } from "./select/RawAutocomplete";
 import Loading from "../skeleton/Loading";
-import useDebouncedValue from "../../hooks/useDebouncedValue";
 import type {
   MultiSelectProps,
   OptionType,
   SignleSelectProps,
 } from "./select/hooks/useRawSelectUtils";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
+import { useDebouncedValue } from "@/hooks";
 
 export type AutocompleteApiFnParams = QueryFnParams & { search: string };
 

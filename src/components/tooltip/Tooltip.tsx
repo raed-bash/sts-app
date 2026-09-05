@@ -9,7 +9,7 @@ import React, {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 import { type TooltipPlacement } from "./tooltip-placement-style";
 
 const GAP = 8;

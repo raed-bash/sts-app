@@ -1,7 +1,7 @@
-import { api } from "src/app/axios";
-import { ep } from "src/constants/endpoints";
+import { api } from "@/app/axios";
+import { ep } from "@/constants/endpoints";
 import { UserDto } from "./dtos/user.dto";
-import type { PaginatedResultsDto } from "src/dtos/pagingated-results-dto";
+import type { PaginatedResultsDto } from "@/dtos/pagingated-results-dto";
 import type { QueryUserDto } from "./dtos/query-user.dto";
 
 export const usersApi = {

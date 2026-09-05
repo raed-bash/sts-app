@@ -1,7 +1,7 @@
 import { useRef } from "react";
-import useMouseUp from "src/hooks/useMouseUp";
+import { useMouseUp } from "@/hooks";
 import type { RowType, TableColumn, TableRow } from "../Table";
-import { getObjectValue } from "src/utils/getObjectValue";
+import { getObjectValue } from "@/utils";
 import type {
   UseTableUtilsSelectedRows,
   UseTableUtilsSelectRowEventHandler,

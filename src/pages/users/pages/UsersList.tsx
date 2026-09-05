@@ -1,31 +1,37 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { usersApi } from "../users.api";
 import { UserPages } from "../users.pages";
-import useSelectRows from "src/hooks/useSelectRows";
-import { useState } from "react";
-import useSorts from "src/hooks/useSorts";
 import UsersTable from "../components/UsersTable";
 import { QueryUserDto } from "../dtos/query-user.dto";
 import { UserDto } from "../dtos/user.dto";
-import InputPlus from "src/components/inputs/InputPlus";
-import useFilters from "src/hooks/useFilters";
-import useFiltersDebounce from "src/hooks/useFiltersDebounce";
+import InputPlus from "@/components/inputs/InputPlus";
 import { Card, CardContent } from "@/components/ui/card";
-import { SelectGroup, SelectItem, SelectLabel } from "@/components/ui/select";
-import useCachingState from "@/hooks/useCashingState";
-import type { SyntheticEvent } from "@/components/utils/events";
+import type { SyntheticEvent } from "@/components/utils";
 import {
+  Combobox,
   ComboboxChip,
   ComboboxChips,
   ComboboxContent,
+  ComboboxEmpty,
   ComboboxGroup,
+  ComboboxInput,
   ComboboxItem,
   ComboboxLabel,
+  ComboboxList,
   ComboboxValue,
 } from "@/components/ui/combobox";
-import { useComboboxAnchor } from "@/components/hooks/useComboboxAnchor";
+import { SelectGroup, SelectItem, SelectLabel } from "@/components/ui/select";
+import { useComboboxAnchor } from "@/components/hooks";
 import { ComboboxFieldChipsInput } from "@/components/inputs/select/ComboboxField";
 import { ComboboxApiList } from "@/components/inputs/select/ComboboxApi";
+import {
+  useCacheState,
+  useFilters,
+  useFiltersDebounce,
+  useSelectRows,
+  useSorts,
+} from "@/hooks";
 
 export default function UsersList() {
   const { filters } = useFilters("usersFilters", new QueryUserDto({}));
@@ -50,10 +56,7 @@ export default function UsersList() {
       ),
   });
 
-  const [user, setUser] = useCachingState<UserDto | null>(
-    "selectedUsers",
-    null,
-  );
+  const [user, setUser] = useCacheState<UserDto | null>("selectedUsers", null);
 
   const [users, setUsers] = useState<UserDto[]>([]);
 
@@ -68,7 +71,19 @@ export default function UsersList() {
   return (
     <div>
       <h1 className="text-3xl font-bold mb-4">Users</h1>
-
+      <Combobox<UserDto> itemToStringLabel={(item) => item.username}>
+        <ComboboxInput placeholder="Select a user" />
+        <ComboboxContent>
+          <ComboboxList>
+            <ComboboxEmpty>No items found.</ComboboxEmpty>
+            {users.map((item) => (
+              <ComboboxItem key={item.id} value={item}>
+                {item.username}
+              </ComboboxItem>
+            ))}
+          </ComboboxList>
+        </ComboboxContent>
+      </Combobox>
       <InputPlus
         type="comboboxApi"
         isItemEqualToValue={(item, value) => item.id === value.id}

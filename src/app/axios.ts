@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LocalStorageHelper } from "src/utils/LocalStorageHelper";
+import { LocalStorageHelper } from "@/utils";
 
 const API_URL = "http://localhost:3000";
 

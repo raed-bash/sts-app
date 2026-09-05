@@ -1,4 +1,4 @@
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 import Input from "./Input";
 
 export type CheckboxProps = Omit<

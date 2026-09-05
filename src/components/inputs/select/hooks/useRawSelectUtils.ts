@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import useFocusout from "src/hooks/useFocusout";
-import { EventTarget } from "src/utils/EventTarget";
+import { useFocusout } from "@/hooks";
+import { EventTarget } from "@/utils";
 import type { OptionProps } from "../Option";
 
 const OPEN_SELECT_STATUSES = ["enter", "space", "arrowdown", "arrowup"];

@@ -1,5 +1,5 @@
-import type { AppPages } from "src/types/app-page";
-import UsersIcon from "src/assets/icons/users.svg?react";
+import type { AppPages } from "@/types/app-page";
+import UsersIcon from "@/assets/icons/users.svg?react";
 
 export const UserPages = {
   users: {

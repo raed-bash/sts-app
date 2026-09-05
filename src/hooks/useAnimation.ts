@@ -5,7 +5,7 @@ export type UseAnimationOptions = {
   duration?: number;
 };
 
-export default function useAnimation({
+export function useAnimation({
   isOpen = false,
   duration = 300,
 }: UseAnimationOptions) {

@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { LoginResponseDto } from "src/pages/auth/dtos/login-response.dto";
+import type { LoginResponseDto } from "@/pages/auth/dtos/login-response.dto";
 
 export type AuthContextType = {
   loggedIn: boolean;

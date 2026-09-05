@@ -1,5 +1,5 @@
-import TriangleDownIcon from "src/assets/icons/triangle-down.svg?react";
-import { cn } from "src/utils/cn";
+import TriangleDownIcon from "@/assets/icons/triangle-down.svg?react";
+import { cn } from "cn";
 
 export type SortButtonStatus = "asc" | "desc" | null;
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 import Checkbox from "../Checkbox";
 
 export type OptionProps = React.DetailedHTMLProps<

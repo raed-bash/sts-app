@@ -1,9 +1,9 @@
 import { useRef, useState, type ReactNode } from "react";
 // import Tooltip from "../tooltip/Tooltip";
-import MoreIcon from "src/assets/icons/more.svg?react";
-import useFocusout from "src/hooks/useFocusout";
+import MoreIcon from "@/assets/icons/more.svg?react";
+import { useFocusout } from "@/hooks";
 import IconButton, { type IconButtonProps } from "../buttons/IconButton";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 import Animation from "../Animation";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 

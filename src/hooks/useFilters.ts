@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
-import useCashingState from "./useCashingState";
+import { useCacheState } from "./useCacheState";
 
 const defaultObj: Record<string, any> = {};
 
-export default function useFilters(
+export function useFilters(
   name: string,
   defaultFilters: Record<string, any> = defaultObj,
   onChange: ((e: any) => void) | null = null,
@@ -11,9 +11,9 @@ export default function useFilters(
 ) {
   const state = useState(defaultFilters);
 
-  const cashingState = useCashingState(`${name}Filters`, defaultFilters);
+  const cacheState = useCacheState(`${name}Filters`, defaultFilters);
 
-  const [filters, setFilters] = cashing ? cashingState : state;
+  const [filters, setFilters] = cashing ? cacheState : state;
 
   const handleFiltersChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

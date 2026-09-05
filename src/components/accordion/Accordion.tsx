@@ -1,8 +1,8 @@
 import { useState, type ReactNode } from "react";
 import Button from "../buttons/Button";
-import InfoIcon from "src/assets/icons/info.svg?react";
-import ArrowLineDownIcon from "src/assets/icons/arrow-line-down.svg?react";
-import { EventTarget } from "src/utils/EventTarget";
+import InfoIcon from "@/assets/icons/info.svg?react";
+import ArrowLineDownIcon from "@/assets/icons/arrow-line-down.svg?react";
+import { EventTarget } from "@/utils";
 import ExpandContainer from "./ExpandContainer";
 
 type AccordionProps = {

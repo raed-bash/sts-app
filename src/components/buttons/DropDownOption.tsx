@@ -1,5 +1,5 @@
 import type React from "react";
-import { cn } from "src/utils/cn";
+import { cn } from "cn";
 
 export type DropDownOptionProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 

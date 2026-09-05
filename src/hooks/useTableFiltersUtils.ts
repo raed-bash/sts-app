@@ -1,9 +1,9 @@
 import { useCallback } from "react";
-import useFilters from "./useFilters";
-import useFiltersDebounce from "./useFiltersDebounce";
-import useSorts from "./useSorts";
-import useSelectRows from "./useSelectRows";
-import usePagination from "./usePagination";
+import { useFilters } from "./useFilters";
+import { useFiltersDebounce } from "./useFiltersDebounce";
+import { useSorts } from "./useSorts";
+import { useSelectRows } from "./useSelectRows";
+import { usePagination } from "./usePagination";
 
 type UseTableFiltersUtilsOptions = {
   defaultFilters?: Record<string, any>;
@@ -20,7 +20,7 @@ const defaultObj = {};
 
 const defaultSetObj = new Set();
 
-export default function useTableFiltersUtils({
+export function useTableFiltersUtils({
   defaultFilters = defaultObj,
   defaultDebounceFilters = defaultObj,
   name = "",
