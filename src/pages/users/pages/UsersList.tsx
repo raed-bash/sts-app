@@ -40,8 +40,11 @@ import { Card, CardContent } from "@/shared/components/ui/card";
 export default function UsersList() {
   const { filters } = useFilterState("usersFilters", new QueryUserDto({}));
 
-  const { filtersDebounce, filterDebounced, handleFiltersDebounceChange } =
-    useDebouncedFilter("usersFiltersDebounce", new QueryUserDto({}));
+  const {
+    filters: debounceFilters,
+    filterDebounced,
+    handleFiltersChange,
+  } = useDebouncedFilter("usersFiltersDebounce", new QueryUserDto({}));
 
   const { selectedRows, setSelectedRows } = useSelectedRows(
     "any",
@@ -164,7 +167,7 @@ export default function UsersList() {
       <Card className="pb-52">
         <CardContent>
           <UsersTable
-            handleSortChange={handleSortChange}
+            onSortChange={handleSortChange}
             page={page}
             selectedRows={selectedRows}
             setPage={setPage}
@@ -175,8 +178,8 @@ export default function UsersList() {
             rows={usersQuery.data?.data}
             loading={usersQuery.isPending}
             scLoading={usersQuery.isFetching}
-            handleFiltersDebounceChange={handleFiltersDebounceChange}
-            filtersDebounce={filtersDebounce}
+            handleFiltersChange={handleFiltersChange}
+            debounceFilters={debounceFilters}
           />
         </CardContent>
       </Card>

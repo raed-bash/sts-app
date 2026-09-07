@@ -1,7 +1,7 @@
-import { SyntheticEvent } from "../../utils";
 import ButtonOption, { type ButtonOptionProps } from "./ButtonOption";
 import { cn } from "cn";
 import type { ButtonColor, ButtonVariant } from "./button-theme";
+import { SyntheticEvent } from "@/shared/utils";
 
 export type ButtonGroupOption = Omit<ButtonOptionProps, "index"> & {
   name: string;

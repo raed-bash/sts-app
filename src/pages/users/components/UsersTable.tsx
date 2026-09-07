@@ -35,8 +35,8 @@ export type UsersTableProps = {
   perPage?: number;
   loading: boolean;
   scLoading: boolean;
-  handleFiltersDebounceChange: SyntheticEventHandler;
-  filtersDebounce: Record<string, any>;
+  handleFiltersChange: SyntheticEventHandler;
+  debounceFilters: Record<string, any>;
   rows?: UserDto[];
 };
 

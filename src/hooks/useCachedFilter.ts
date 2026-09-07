@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useCachedState } from "./useCachedState";
-import { useDebouncedValue } from "./useDebouncedValue";
-import type { SyntheticEvent } from "@/utils";
+import type { SyntheticEvent } from "@/shared/utils";
+import { useDebouncedValue } from "@/shared/hooks";
 
 const defaultDebounceFiltersDefault: Record<string, any> = {};
 
