@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import IconButton from "../buttons/IconButton";
 import ProfileIcon from "@/assets/icons/profile.svg?react";
-import { useFocusout } from "@/hooks";
+import { useFocusout } from "@/shared/hooks";
 import ProfileMenu from "./ProfileMenu";
+import IconButton from "@/shared/components/custom/buttons/IconButton";
 
 export default function ProfileButton() {
   const [openProfile, setOpenProfile] = useState(false);
@@ -24,7 +24,7 @@ export default function ProfileButton() {
       >
         <ProfileIcon className="fill-(--text)" />
       </IconButton>
-      <ProfileMenu open={openProfile} />
+      <ProfileMenu isOpen={openProfile} />
     </div>
   );
 }

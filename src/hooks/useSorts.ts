@@ -1,11 +1,11 @@
 import { useCallback, useState } from "react";
-import { useCacheState } from "./useCacheState";
+import { useCachedState } from "./useCachedState";
 
 export type UseSortStatus = "asc" | "desc" | null;
 
 export type UseSortOptions = {
   multi?: boolean;
-  cashing?: boolean;
+  caching?: boolean;
 };
 
 const defaultSortsDefault = {};
@@ -15,13 +15,13 @@ export type DefaultSorts<T extends string> = { [P in T]?: UseSortStatus };
 export function useSorts<T extends string>(
   name: string,
   defaultSorts: DefaultSorts<T> = defaultSortsDefault,
-  { multi = false, cashing = true }: UseSortOptions = {},
+  { multi = false, caching = true }: UseSortOptions = {},
 ) {
   const state = useState(defaultSorts);
 
-  const cacheState = useCacheState(`${name}Sort`, defaultSorts);
+  const cacheState = useCachedState(`${name}Sort`, defaultSorts);
 
-  const [sorts, setSorts] = cashing ? cacheState : state;
+  const [sorts, setSorts] = caching ? cacheState : state;
 
   const handleSortChange = useCallback(
     (name: string, sortStatus: UseSortStatus) => {

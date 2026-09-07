@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { useCacheState } from "./useCacheState";
+import { useCachedState } from "./useCachedState";
 
 export function usePagination(
   key: string = "",
   defaultPage: number = 1,
-  { cashing = true } = {},
+  { caching = true } = {},
 ) {
   const state = useState(defaultPage);
 
-  const cacheState = useCacheState(`${key}Page`, defaultPage);
+  const cacheState = useCachedState(`${key}Page`, defaultPage);
 
-  const [page, setPage] = cashing ? cacheState : state;
+  const [page, setPage] = caching ? cacheState : state;
 
   return { page, setPage };
 }

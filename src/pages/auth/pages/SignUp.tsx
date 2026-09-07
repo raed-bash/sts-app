@@ -1,16 +1,16 @@
 import { useState } from "react";
-import Button from "@/components/buttons/Button";
-import InputPlus from "@/components/inputs/InputPlus";
-import Paper from "@/components/paper/Paper";
 import { authApi } from "../auth.api";
-import { useAppFormik } from "@/app/formik";
-import Alert from "@/components/alert/Alert";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { signUpSchema } from "../schemas/sign-up.schema";
 import { SignUpDto } from "../dtos/sign-up.dto";
 import { type Gender } from "@/constants/gender";
 import { capitalize } from "lodash";
-import AppLink from "@/components/AppLink";
+import { useAppFormik } from "@/shared/lib/formik";
+import Paper from "@/shared/components/custom/paper/Paper";
+import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import Button from "@/shared/components/custom/buttons/Button";
+import Alert from "@/shared/components/custom/alert/Alert";
+import AppLink from "@/shared/components/custom/AppLink";
 
 export default function SignUp() {
   const [error, setError] = useState<string | null>(null);

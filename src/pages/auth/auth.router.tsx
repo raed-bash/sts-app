@@ -1,7 +1,7 @@
+import AuthRoute from "@/components/AuthRoute";
+import PageFallback from "@/shared/components/custom/PageFallback";
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
-import AuthRoute from "@/components/AuthRoute";
-import PageFallback from "@/components/PageFallback";
 
 const Login = lazy(() => import("./pages/Login"));
 const SignUp = lazy(() => import("./pages/SignUp"));

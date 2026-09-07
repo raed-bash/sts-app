@@ -1,0 +1,28 @@
+import type { FilterOperationOptions } from "./types";
+import type { BaseFilterInputProps } from "./FilterInput";
+import type { textFilterOperations } from "./constants/constants";
+import InputPlus from "../../inputs/InputPlus";
+
+export type TextFilterOperation = (typeof textFilterOperations)[number];
+export type TextFilterOperationOptions =
+  FilterOperationOptions<TextFilterOperation>;
+
+export type TFilterTextProps = TextFilterOperationOptions &
+  BaseFilterInputProps & {
+    type: "text";
+
+    value?: string;
+
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  };
+
+export default function FilterText(props: TFilterTextProps) {
+  return (
+    <InputPlus
+      type="text"
+      onChange={props.onChange}
+      value={props.value}
+      placeholder={`Filter ${props.name} column`}
+    />
+  );
+}

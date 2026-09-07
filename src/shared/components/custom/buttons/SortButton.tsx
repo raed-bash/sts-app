@@ -1,0 +1,79 @@
+import TriangleDownIcon from "@/shared/assets/icons/triangle-down.svg?react";
+import { cn } from "cn";
+
+export type SortButtonStatus = "asc" | "desc" | null;
+
+export type SortButtonEventHandler = (
+  sortStatus: SortButtonStatus,
+  e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+) => void;
+
+export type SortButtonProps = Omit<
+  React.ComponentProps<"button">,
+  "onClick"
+> & {
+  sortStatus: SortButtonStatus;
+  onClick?: SortButtonEventHandler;
+};
+
+function SortButton({
+  sortStatus,
+  className,
+  onClick,
+  ...props
+}: SortButtonProps) {
+  const handleSortStatusStyle =
+    /**
+     * @param {sortStatus} sortStatus
+     */
+    (sortStatus: SortButtonProps["sortStatus"]) => {
+      switch (sortStatus) {
+        case "desc":
+          return "rotate-0";
+        case "asc":
+          return "rotate-180";
+        default:
+          return "rotate-90";
+      }
+    };
+
+  const handleSortStatus = () => {
+    switch (sortStatus) {
+      case "asc":
+        return "desc";
+      case "desc":
+        return null;
+      default:
+        return "asc";
+    }
+  };
+
+  const handleSortClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    if (onClick) {
+      onClick(handleSortStatus(), e);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleSortClick}
+      className={cn(
+        `mt-1 inline-flex gap-1 items-center cursor-pointer`,
+        className,
+      )}
+      {...props}
+    >
+      {props.children}
+      <TriangleDownIcon
+        className={cn(
+          `w-3 h-3 duration-150 fill-(--text)`,
+          handleSortStatusStyle(sortStatus),
+        )}
+      />
+    </button>
+  );
+}
+
+export default SortButton;

@@ -4,15 +4,15 @@ import SettingsIcon from "@/assets/icons/settings.svg?react";
 import LogoutIcon from "@/assets/icons/logout.svg?react";
 import { useQuery } from "@tanstack/react-query";
 import { usersApi } from "@/pages/users/users.api";
-import Loading from "../skeleton/Loading";
-import Button from "../buttons/Button";
 import { useLogout } from "@/hooks";
-import Animation from "../Animation";
 import { cn } from "cn";
-import AppLink from "../AppLink";
 import { ROLE_TITLES } from "@/constants/user-role";
+import Animation from "@/shared/components/custom/Animation";
+import Loading from "@/shared/components/custom/skeleton/Loading";
+import Button from "@/shared/components/custom/buttons/Button";
+import AppLink from "@/shared/components/custom/AppLink";
 
-export default function ProfileMenu({ open }: { open: boolean }) {
+export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
   const handleLogout = useLogout();
 
   const meQuery = useQuery({ queryKey: ["me"], queryFn: () => usersApi.me() });
@@ -20,7 +20,7 @@ export default function ProfileMenu({ open }: { open: boolean }) {
   const me = meQuery.data;
 
   return (
-    <Animation isOpen={open}>
+    <Animation isOpen={isOpen}>
       <div
         className="absolute flex gap-8 flex-col justify-center items-center top-[160%] right-0  min-w-[218px] min-h-32 bg-(--surface)  shadow-base rounded-lg"
         tabIndex={0}

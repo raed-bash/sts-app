@@ -1,12 +1,13 @@
-import { useLocation } from "react-router";
-import AppLink, { type AppLinkProps } from "../AppLink";
-import HomeIcon from "@/assets/icons/home.svg?react";
-import ArrowLineDownIcon from "@/assets/icons/arrow-line-down.svg?react";
-import IconButton, { type IconButtonProps } from "../buttons/IconButton";
 import { Fragment, useState } from "react";
-import Animation from "../Animation";
+import { useLocation } from "react-router";
+import HomeIcon from "@/shared/assets/icons/home.svg?react";
+import ArrowLineDownIcon from "@/shared/assets/icons/arrow-line-down.svg?react";
 import { UserPages } from "@/pages/users/users.pages";
 import type { AppPageNestedPages, AppPageSidebar } from "@/types/app-page";
+import Animation from "@/shared/components/custom/Animation";
+import type { IconButtonProps } from "@/shared/components/custom/buttons/IconButton";
+import IconButton from "@/shared/components/custom/buttons/IconButton";
+import AppLink, { type AppLinkProps } from "@/shared/components/custom/AppLink";
 
 type Category = {
   title: string;

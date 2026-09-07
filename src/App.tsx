@@ -1,11 +1,10 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import "./App.css";
-import AppRouter from "./app.router";
 import AuthProvider from "./contexts/AuthProvider";
 import ThemeProvider from "./contexts/ThemeProvider";
-import { TooltipProvider } from "./components/ui/tooltip";
-
-const queryClient = new QueryClient();
+import { TooltipProvider } from "./shared/components/ui/tooltip";
+import AppRouter from "./app/app.router";
+import { queryClient } from "./lib/react-query";
 
 function App() {
   return (
@@ -13,7 +12,7 @@ function App() {
       <ThemeProvider>
         <AuthProvider>
           <TooltipProvider>
-            <AppRouter></AppRouter>
+            <AppRouter />
           </TooltipProvider>
         </AuthProvider>
       </ThemeProvider>

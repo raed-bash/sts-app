@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { LocalStorageHelper } from "@/utils";
+import { LocalStorageHelper } from "@/shared/utils";
 
 export function useLocalStorage<T>(
   name: string,

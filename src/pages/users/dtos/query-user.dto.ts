@@ -2,7 +2,7 @@ import {
   OrderedPaginatedQueryDto,
   type OrderDir,
   type OrderedQueryDto,
-} from "@/dtos/order-paginated-query-dto";
+} from "@/shared/dtos/order-paginated-query-dto";
 import type { UserDto } from "./user.dto";
 import type { UserStatus } from "@/constants/user-status";
 import type { UserRole } from "@/constants/user-role";

@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
-import PageFallback from "@/components/PageFallback";
 import { UserPages } from "./users.pages";
+import PageFallback from "@/shared/components/custom/PageFallback";
 
 const UsersList = lazy(() => import("./pages/UsersList"));
 

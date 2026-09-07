@@ -1,14 +1,14 @@
 import { useState } from "react";
-import Button from "@/components/buttons/Button";
-import InputPlus from "@/components/inputs/InputPlus";
-import Paper from "@/components/paper/Paper";
 import { authApi } from "../auth.api";
-import { useAppFormik } from "@/app/formik";
 import { loginSchema } from "../schemas/login.schema";
-import Alert from "@/components/alert/Alert";
 import { useAuthContext } from "@/contexts/AuthContext";
 import toast from "react-hot-toast";
-import AppLink from "@/components/AppLink";
+import Paper from "@/shared/components/custom/paper/Paper";
+import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import Button from "@/shared/components/custom/buttons/Button";
+import Alert from "@/shared/components/custom/alert/Alert";
+import AppLink from "@/shared/components/custom/AppLink";
+import { useAppFormik } from "@/shared/lib/formik";
 
 export default function Login() {
   const [error, setError] = useState<string | null>(null);

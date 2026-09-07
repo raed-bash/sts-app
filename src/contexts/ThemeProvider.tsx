@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ThemeContext } from "./ThemeContext";
-import { LocalStorageHelper } from "@/utils";
+import { LocalStorageHelper } from "@/shared/utils";
 
 export default function ThemeProvider({
   children,

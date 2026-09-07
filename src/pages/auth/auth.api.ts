@@ -1,4 +1,4 @@
-import { api } from "@/app/axios";
+import { api } from "@/app/api";
 import { ep } from "@/constants/endpoints";
 import type { LoginDataDto } from "./dtos/login-data.dto";
 import { LoginResponseDto } from "./dtos/login-response.dto";

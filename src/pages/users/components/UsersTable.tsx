@@ -1,23 +1,28 @@
-import Table, { type TableSortStatuses } from "@/components/table/Table";
+import Table, {
+  type TableSortStatuses,
+} from "@/shared/components/custom/table/Table";
 import type { UserDto } from "../dtos/user.dto";
-import { dateFormater } from "@/utils";
-import RoleView from "@/components/RoleView";
-import StatusView from "@/components/StatusView";
+import { dateFormater } from "@/shared/utils";
+import RoleBadge from "@/components/RoleBadge";
+import StatusBadge from "@/components/StatusBadge";
 import type {
   UseTableUtilsSelectedRows,
   UseTableUtilsSortEventHandler,
-} from "@/components/table/hooks/useTableUtils";
-import { useOrderedColumnsStore, useHiddenColumnsLocalStorage } from "@/hooks";
+} from "@/shared/components/custom/table/hooks/useTable";
+import {
+  useOrderedColumnsLocalStorage,
+  useHiddeneColumnsLocalStorage,
+} from "@/hooks";
 import { Edit, Trash } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/components/ui/tooltip";
 import { useState } from "react";
-import type { FilterItem } from "@/components/table/filter";
-import type { SyntheticEventHandler } from "@/components/utils";
+import type { FilterItem } from "@/shared/components/custom/table/filter";
+import type { SyntheticEventHandler } from "@/shared/utils";
 
 export type UsersTableProps = {
   handleSortChange: UseTableUtilsSortEventHandler<UserDto>;
@@ -36,11 +41,11 @@ export type UsersTableProps = {
 };
 
 export default function UsersTable(props: UsersTableProps) {
-  const { orderedColumns, setOrderedColumns } = useOrderedColumnsStore<
+  const { orderedColumns, setOrderedColumns } = useOrderedColumnsLocalStorage<
     keyof UserDto | (string & {})
   >("usersOrder", []);
 
-  const { hiddenColumns, setHiddenColumns } = useHiddenColumnsLocalStorage(
+  const { hiddenColumns, setHiddenColumns } = useHiddeneColumnsLocalStorage(
     "usersHiddenColumns",
     new Set(),
   );
@@ -90,7 +95,7 @@ export default function UsersTable(props: UsersTableProps) {
         {
           name: "status",
           headerName: "Status",
-          getCell: (status) => <StatusView status={status} />,
+          getCell: (status) => <StatusBadge status={status} />,
           sort: true,
           filterable: true,
           filterProps: {
@@ -100,7 +105,7 @@ export default function UsersTable(props: UsersTableProps) {
         {
           name: "role",
           headerName: "Role",
-          getCell: (role) => <RoleView role={role} />,
+          getCell: (role) => <RoleBadge role={role} />,
           sort: true,
         },
         {

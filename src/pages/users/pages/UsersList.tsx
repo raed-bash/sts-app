@@ -5,9 +5,6 @@ import { UserPages } from "../users.pages";
 import UsersTable from "../components/UsersTable";
 import { QueryUserDto } from "../dtos/query-user.dto";
 import { UserDto } from "../dtos/user.dto";
-import InputPlus from "@/components/inputs/InputPlus";
-import { Card, CardContent } from "@/components/ui/card";
-import type { SyntheticEvent } from "@/components/utils";
 import {
   Combobox,
   ComboboxChip,
@@ -20,26 +17,33 @@ import {
   ComboboxLabel,
   ComboboxList,
   ComboboxValue,
-} from "@/components/ui/combobox";
-import { SelectGroup, SelectItem, SelectLabel } from "@/components/ui/select";
-import { useComboboxAnchor } from "@/components/hooks";
-import { ComboboxFieldChipsInput } from "@/components/inputs/select/ComboboxField";
-import { ComboboxApiList } from "@/components/inputs/select/ComboboxApi";
+} from "@/shared/components/ui/combobox";
 import {
-  useCacheState,
-  useFilters,
-  useFiltersDebounce,
-  useSelectRows,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+} from "@/shared/components/ui/select";
+import { useComboboxAnchor } from "@/shared/hooks";
+import { ComboboxFieldChipsInput } from "@/shared/components/custom/combobox/ComboboxField";
+import { ComboboxApiList } from "@/shared/components/custom/combobox/ComboboxApi";
+import {
+  useCachedState,
+  useFilterState,
+  useDebouncedFilter,
+  useSelectedRows,
   useSorts,
 } from "@/hooks";
+import type { SyntheticEvent } from "@/shared/utils";
+import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import { Card, CardContent } from "@/shared/components/ui/card";
 
 export default function UsersList() {
-  const { filters } = useFilters("usersFilters", new QueryUserDto({}));
+  const { filters } = useFilterState("usersFilters", new QueryUserDto({}));
 
   const { filtersDebounce, filterDebounced, handleFiltersDebounceChange } =
-    useFiltersDebounce("usersFiltersDebounce", new QueryUserDto({}));
+    useDebouncedFilter("usersFiltersDebounce", new QueryUserDto({}));
 
-  const { selectedRows, setSelectedRows } = useSelectRows(
+  const { selectedRows, setSelectedRows } = useSelectedRows(
     "any",
     new Set<number | string>(),
   );
@@ -56,7 +60,7 @@ export default function UsersList() {
       ),
   });
 
-  const [user, setUser] = useCacheState<UserDto | null>("selectedUsers", null);
+  const [user, setUser] = useCachedState<UserDto | null>("selectedUsers", null);
 
   const [users, setUsers] = useState<UserDto[]>([]);
 
