@@ -1,28 +1,27 @@
 import React, { useMemo, useRef, useState } from "react";
-import Menu from "../menu/Menu";
-import InputIcon from "../inputs/InputIcon";
-import Button from "../buttons/Button";
 import SearchIcon from "@/shared/assets/icons/search.svg?react";
-import type { RowType, TableColumn } from "./Table";
-import Checkbox from "../inputs/Checkbox";
+import type { RowType, TableColumn } from "../Table";
+import Menu from "../../menu/Menu";
+import InputIcon from "../../inputs/InputIcon";
+import Checkbox from "../../inputs/Checkbox";
+import Button from "../../buttons/Button";
+import type { UseTableCreateToggleColumnsClickHandler } from "../hooks/useTable";
 
-export type MenuHideColumnsProps<Row extends RowType> = {
+export type TableMenuColumnsProps<Row extends RowType> = {
   columns: TableColumn<Row>[];
   onReset: React.MouseEventHandler<HTMLButtonElement>;
-  handleToggleColumns: (
-    column: TableColumn<Row>,
-  ) => React.MouseEventHandler<HTMLButtonElement>;
+  createToggleColumnsClickHandler: UseTableCreateToggleColumnsClickHandler<Row>;
   hiddenColumns: Set<TableColumn<Row>["name"]>;
   setColumns: React.Dispatch<React.SetStateAction<TableColumn<Row>[]>>;
 };
 
-function MenuHideColumns<Row extends RowType>({
+function TableMenuColumns<Row extends RowType>({
   columns,
   onReset,
-  handleToggleColumns,
+  createToggleColumnsClickHandler,
   hiddenColumns,
   setColumns,
-}: MenuHideColumnsProps<Row>) {
+}: TableMenuColumnsProps<Row>) {
   const [searchMenuCols, setSearchMenuCols] = useState("");
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -190,7 +189,7 @@ function MenuHideColumns<Row extends RowType>({
       return;
     }
 
-    handleToggleColumns(column)(e);
+    createToggleColumnsClickHandler(column)(e);
   };
 
   const handleSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) =>
@@ -269,4 +268,4 @@ function MenuHideColumns<Row extends RowType>({
   );
 }
 
-export default MenuHideColumns;
+export default TableMenuColumns;

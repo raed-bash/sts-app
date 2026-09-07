@@ -4,11 +4,11 @@ import type { RowType, TableColumn, TableRowType } from "../Table";
 import { getObjectValue } from "@/shared/utils";
 import type {
   UseTableSelectedRows,
-  UseTableSelectRowEventHandler,
+  UseTableCreateSelectRowChangeHandler,
 } from "./useTable";
 
 export type UseTableBodyOptions = {
-  onSelectRow: UseTableSelectRowEventHandler;
+  createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler;
 
   selectedRows: UseTableSelectedRows;
 
@@ -16,14 +16,14 @@ export type UseTableBodyOptions = {
 };
 
 export function useTableBody<Row extends RowType>({
-  onSelectRow,
+  createSelectRowChangeHandler,
   selectedRows,
   rows,
 }: UseTableBodyOptions) {
   const rowMouseDownRef = useRef(false);
 
-  const changeLikeCheckBox = (row: TableRowType) => {
-    onSelectRow(row)({
+  const changeLikeCheckbox = (row: TableRowType) => {
+    createSelectRowChangeHandler(row)({
       target: {
         name: "",
         checked: !selectedRows.has(row.id),
@@ -31,19 +31,19 @@ export function useTableBody<Row extends RowType>({
     });
   };
 
-  const handleMouseEnter = (row: TableRowType) => () => {
+  const createRowMouseEnterHandler = (row: TableRowType) => () => {
     if (rowMouseDownRef.current) {
-      changeLikeCheckBox(row);
+      changeLikeCheckbox(row);
     }
   };
 
-  const handleMouseDown = (row: TableRowType) => () => {
-    changeLikeCheckBox(row);
+  const createRowMouseDownHandler = (row: TableRowType) => () => {
+    changeLikeCheckbox(row);
 
     rowMouseDownRef.current = true;
   };
 
-  const handleSelectArea = (i: number) => {
+  const getSelectedAreaStyle = (i: number) => {
     const currentRowId = rows?.[i]?.id;
     const isCurrRowSelected = selectedRows.has(currentRowId);
 
@@ -65,7 +65,7 @@ export function useTableBody<Row extends RowType>({
     );
   };
 
-  const handleCheckBoxChange =
+  const createCheckboxChangeHandler =
     (row: TableRowType) =>
     (
       e: React.ChangeEvent<HTMLInputElement> & {
@@ -79,7 +79,8 @@ export function useTableBody<Row extends RowType>({
         e.nativeEvent.pointerType === "touch"
       )
         return;
-      onSelectRow(row)(e);
+
+      createSelectRowChangeHandler(row)(e);
     };
 
   const getRowValue = (row: TableRowType, name: TableColumn<Row>["name"]) => {
@@ -95,10 +96,10 @@ export function useTableBody<Row extends RowType>({
   const noRows = rows.length === 0;
 
   return {
-    handleMouseEnter,
-    handleMouseDown,
-    handleSelectArea,
-    handleCheckBoxChange,
+    createRowMouseEnterHandler,
+    createRowMouseDownHandler,
+    getSelectedAreaStyle,
+    createCheckboxChangeHandler,
     noRows,
     getRowValue,
   };

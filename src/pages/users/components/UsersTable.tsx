@@ -6,8 +6,8 @@ import { dateFormater } from "@/shared/utils";
 import RoleBadge from "@/components/RoleBadge";
 import StatusBadge from "@/components/StatusBadge";
 import type {
-  UseTableUtilsSelectedRows,
-  UseTableUtilsSortEventHandler,
+  UseTableSelectedRows,
+  UseTableSortChangeEventAction,
 } from "@/shared/components/custom/table/hooks/useTable";
 import {
   useOrderedColumnsLocalStorage,
@@ -25,10 +25,10 @@ import type { FilterItem } from "@/shared/components/custom/table/filter";
 import type { SyntheticEventHandler } from "@/shared/utils";
 
 export type UsersTableProps = {
-  handleSortChange: UseTableUtilsSortEventHandler<UserDto>;
+  onSortChange: UseTableSortChangeEventAction<UserDto>;
   sorts: TableSortStatuses;
   setSelectedRows: (sortsStatuses: Set<string | number>) => void;
-  selectedRows: UseTableUtilsSelectedRows;
+  selectedRows: UseTableSelectedRows;
   setPage: (page: number) => void;
   count: number;
   page: number;
@@ -55,7 +55,7 @@ export default function UsersTable(props: UsersTableProps) {
   return (
     <Table<UserDto>
       sortStatuses={props.sorts}
-      onSortChange={props.handleSortChange}
+      onSortChange={props.onSortChange}
       selectable
       onSelectRows={props.setSelectedRows}
       selectedRows={props.selectedRows}

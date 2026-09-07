@@ -1,11 +1,11 @@
-import type { TFilterTextProps } from "./FilterText";
+import type { FilterTextProps } from "./FilterText";
 import FilterText from "./FilterText";
 
 export type BaseFilterInputProps = {
   name: string;
 };
 
-export type FilterInputProps = TFilterTextProps &
+export type FilterInputProps = FilterTextProps &
   // | FilterNumberProps
   // | FilterSelectProps
   // | FilterSelectApiProps

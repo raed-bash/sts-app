@@ -7,7 +7,7 @@ export type TextFilterOperation = (typeof textFilterOperations)[number];
 export type TextFilterOperationOptions =
   FilterOperationOptions<TextFilterOperation>;
 
-export type TFilterTextProps = TextFilterOperationOptions &
+export type FilterTextProps = TextFilterOperationOptions &
   BaseFilterInputProps & {
     type: "text";
 
@@ -16,7 +16,7 @@ export type TFilterTextProps = TextFilterOperationOptions &
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
   };
 
-export default function FilterText(props: TFilterTextProps) {
+export default function FilterText(props: FilterTextProps) {
   return (
     <InputPlus
       type="text"

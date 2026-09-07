@@ -1,16 +1,19 @@
-import type { UseTableSelectedRows } from "./hooks/useTable";
-import MenuHideColumns, { type MenuHideColumnsProps } from "./MenuHideColumns";
-import type { RowType, TableColumn } from "./Table";
-import { FilterBoard, useFilter } from "./filter";
+import { FilterBoard, type useFilter } from "../filter";
+import type {
+  UseTableCreateToggleColumnsClickHandler,
+  UseTableSelectedRows,
+} from "../hooks/useTable";
+import type { RowType, TableColumn } from "../Table";
+import TableMenuColumns from "./TableMenuColumns";
 
 export type TableHeaderNoHiddenColumns = {
   hideableColumns: false;
 
   hiddenColumns?: never;
 
-  handleResetHiddenColumns?: never;
+  onReset?: never;
 
-  handleToggleColumns?: never;
+  createToggleColumnsClickHandler?: never;
 };
 
 export type TableHeaderHiddenColumns<Row extends RowType> = {
@@ -18,9 +21,9 @@ export type TableHeaderHiddenColumns<Row extends RowType> = {
 
   hiddenColumns: Set<TableColumn<Row>["name"]>;
 
-  handleResetHiddenColumns: () => void;
+  onReset: () => void;
 
-  handleToggleColumns: MenuHideColumnsProps<Row>["handleToggleColumns"];
+  createToggleColumnsClickHandler: UseTableCreateToggleColumnsClickHandler<Row>;
 };
 
 export type TableHeaderProps<Row extends RowType> = (
@@ -36,8 +39,8 @@ export default function TableHeader<Row extends RowType>({
   hideableColumns,
   hiddenColumns,
   columns,
-  handleResetHiddenColumns,
-  handleToggleColumns,
+  onReset,
+  createToggleColumnsClickHandler,
   selectedRows,
   setColumns,
   filterUtils,
@@ -61,9 +64,9 @@ export default function TableHeader<Row extends RowType>({
       )}
       {hideableColumns && (
         <div>
-          <MenuHideColumns
-            onReset={handleResetHiddenColumns}
-            handleToggleColumns={handleToggleColumns}
+          <TableMenuColumns
+            onReset={onReset}
+            createToggleColumnsClickHandler={createToggleColumnsClickHandler}
             hiddenColumns={hiddenColumns}
             columns={columns}
             setColumns={setColumns}

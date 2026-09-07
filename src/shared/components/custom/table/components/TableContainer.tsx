@@ -1,9 +1,9 @@
 import type React from "react";
 import { cn } from "cn";
 
-export type TContainerProps = React.ComponentProps<"div">;
+export type TableContainerProps = React.ComponentProps<"div">;
 
-function TableContainer(props: TContainerProps) {
+function TableContainer(props: TableContainerProps) {
   return (
     <div
       {...props}

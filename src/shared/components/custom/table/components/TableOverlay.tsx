@@ -3,24 +3,24 @@ import TableCell, { type TableCellProps } from "./TableCell";
 import { cn } from "cn";
 
 export type TableOverlayProps = React.ComponentProps<"div"> & {
-  TableRowProps?: TableRowProps;
-  TableCellProps?: TableCellProps;
+  tableRowProps?: TableRowProps;
+  tableCellProps?: TableCellProps;
 };
 
 function TableOverlay({
-  TableRowProps = {},
-  TableCellProps = {},
+  tableRowProps = {},
+  tableCellProps = {},
   children,
   ...props
 }: TableOverlayProps) {
   return (
     <TableRow
-      {...TableRowProps}
-      className={cn("hover:bg-none", TableRowProps.className)}
+      {...tableRowProps}
+      className={cn("hover:bg-none", tableRowProps.className)}
     >
       <TableCell
-        {...TableCellProps}
-        className={cn("h-14", TableCellProps.className)}
+        {...tableCellProps}
+        className={cn("h-14", tableCellProps.className)}
       >
         <div
           {...props}

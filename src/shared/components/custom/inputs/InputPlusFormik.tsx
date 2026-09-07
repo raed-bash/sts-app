@@ -1,22 +1,23 @@
 import InputPlus, { type InputPlusProps } from "./InputPlus";
-import type { OptionType } from "./select/hooks/useRawSelectUtils";
 
-export type InputPlusFormikProps<TOption extends OptionType> =
-  InputPlusProps<TOption> & {
-    name: string;
+export type InputPlusFormikProps<
+  Value,
+  Multiple extends boolean | undefined = false,
+> = InputPlusProps<Value, Multiple> & {
+  name: string;
 
-    values?: Record<any, any>;
+  values?: Record<any, any>;
 
-    errors?: Record<any, any>;
-  };
+  errors?: Record<any, any>;
+};
 
-function InputPlusFormik<TOption extends OptionType>({
+function InputPlusFormik<Value, Multiple extends boolean | undefined = false>({
   values = {},
   errors = {},
   ...props
-}: InputPlusFormikProps<TOption>) {
+}: InputPlusFormikProps<Value, Multiple>) {
   return (
-    <InputPlus
+    <InputPlus<Value, Multiple>
       {...props}
       error
       helperText={errors[props.name]}

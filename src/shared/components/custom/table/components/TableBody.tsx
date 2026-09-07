@@ -1,16 +1,16 @@
-import Loading from "../skeleton/Loading";
 import TableRow, { type TableRowProps } from "./TableRow";
 import TableCell, { type TableCellProps } from "./TableCell";
-import LinearLoading from "../skeleton/LinearLoading";
 import { cn } from "cn";
 import TableOverlay from "./TableOverlay";
-import { useTableBody } from "./hooks/useTableBody";
-import type { RowType, TableColumn, TableRowType } from "./Table";
-import Checkbox from "../inputs/Checkbox";
+import type { RowType, TableColumn, TableRowType } from "../Table";
 import type {
   UseTableSelectedRows,
-  UseTableSelectRowEventHandler,
-} from "./hooks/useTable";
+  UseTableCreateSelectRowChangeHandler,
+} from "../hooks/useTable";
+import { useTableBody } from "../hooks/useTableBody";
+import LinearLoading from "../../skeleton/LinearLoading";
+import Loading from "../../skeleton/Loading";
+import Checkbox from "../../inputs/Checkbox";
 
 export type TableBodyProps<Row extends RowType> =
   React.ComponentProps<"tbody"> & {
@@ -20,7 +20,7 @@ export type TableBodyProps<Row extends RowType> =
 
     selectedRows: UseTableSelectedRows;
 
-    onSelectRow: UseTableSelectRowEventHandler;
+    createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler;
     /**
      * A table body row props; <tr></tr> element
      */
@@ -46,7 +46,7 @@ function TableBody<Row extends RowType>({
   rows,
   columns,
   tbrProps = {},
-  onSelectRow,
+  createSelectRowChangeHandler,
   selectedRows,
   selectable,
   scLoading,
@@ -56,13 +56,17 @@ function TableBody<Row extends RowType>({
   ...props
 }: TableBodyProps<Row>) {
   const {
-    handleCheckBoxChange,
-    handleMouseDown,
-    handleMouseEnter,
-    handleSelectArea,
+    createCheckboxChangeHandler,
+    createRowMouseDownHandler,
+    createRowMouseEnterHandler,
+    getSelectedAreaStyle,
     noRows,
     getRowValue,
-  } = useTableBody({ onSelectRow, rows, selectedRows });
+  } = useTableBody({
+    createSelectRowChangeHandler,
+    rows,
+    selectedRows,
+  });
 
   return (
     <tbody
@@ -101,7 +105,7 @@ function TableBody<Row extends RowType>({
             className={cn(
               "hover:bg-gray-100/30 dark:hover:bg-gray-700",
               tbrProps.className,
-              handleSelectArea(i),
+              getSelectedAreaStyle(i),
             )}
             aria-rowindex={i}
             aria-selected={selectedRows ? selectedRows.has(row?.id) : false}
@@ -110,8 +114,8 @@ function TableBody<Row extends RowType>({
               <TableCell
                 {...tbdsProps}
                 {...tdCheckboxProps}
-                onMouseEnter={handleMouseEnter(row)}
-                onMouseDown={handleMouseDown(row)}
+                onMouseEnter={createRowMouseEnterHandler(row)}
+                onMouseDown={createRowMouseDownHandler(row)}
                 className={cn(
                   tbdsProps.className,
                   tdCheckboxProps.className,
@@ -120,7 +124,7 @@ function TableBody<Row extends RowType>({
               >
                 <Checkbox
                   checked={selectedRows.has(row.id)}
-                  onChange={handleCheckBoxChange(row)}
+                  onChange={createCheckboxChangeHandler(row)}
                 />
               </TableCell>
             )}

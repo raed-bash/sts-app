@@ -1,5 +1,4 @@
-import type { RowType, TableColumn, TableRow } from "../Table";
-import type { TableHeadSortEventHandler } from "../TableHead";
+import type { RowType, TableColumn, TableRowType } from "../Table";
 import { useEffect, useState } from "react";
 import {
   useFilter,
@@ -7,8 +6,19 @@ import {
   type UseFilterSetStateFiltersAction,
 } from "../filter/hooks/useFilter";
 import { getAvailableFilterOps } from "../filter";
-import type { SortButtonStatus } from "../../buttons/SortButton";
+import type {
+  SortButtonEventHandler,
+  SortButtonStatus,
+} from "../../buttons/SortButton";
 import type { SyntheticEvent } from "@/shared/utils";
+
+export type UseTableCreateToggleColumnsClickHandler<Row extends RowType> = (
+  column: TableColumn<Row>,
+) => React.MouseEventHandler<HTMLButtonElement>;
+
+export type UseTableCreateSortClickHandler<Row extends RowType> = (
+  column: TableColumn<Row>,
+) => SortButtonEventHandler;
 
 export type UseTableCreateColumnFilterClickHandler<Row extends RowType> = (
   column: TableColumn<Row>,
@@ -16,27 +26,27 @@ export type UseTableCreateColumnFilterClickHandler<Row extends RowType> = (
 
 export type UseTableSelectedRows = Set<string | number>;
 
-export type UseTableSortEventHandler<Row extends RowType> = (
+export type UseTableSortChangeEventAction<Row extends RowType> = (
   name: TableColumn<Row>["name"],
   sortStatus: SortButtonStatus,
 ) => void;
 
-export type UseTableSelectRowsEventHandler = (
+export type UseTableSelectRowsSelectEventAction = (
   selectedRows: UseTableSelectedRows,
 ) => void;
 
-export type UseTableSelectRowEventHandler = (
-  row?: TableRow,
+export type UseTableCreateSelectRowChangeHandler = (
+  row?: TableRowType,
 ) => (e: SyntheticEvent) => void;
 
 export type UseTableOptions<Row extends RowType> = {
   originalColumns: TableColumn<Row>[];
 
-  rows: TableRow[];
+  rows: TableRowType[];
 
-  onSortChange: UseTableSortEventHandler<Row>;
+  onSortChange: UseTableSortChangeEventAction<Row>;
 
-  onSelectRows: UseTableSelectRowsEventHandler;
+  onSelectRows: UseTableSelectRowsSelectEventAction;
 
   selectedRows: UseTableSelectedRows;
 
@@ -88,43 +98,44 @@ export function useTable<Row extends RowType>({
     );
   }
 
-  const handleSortClick: TableHeadSortEventHandler<Row> =
+  const createSortClickHandler: UseTableCreateSortClickHandler<Row> =
     (column) => (sortStatus) => {
       onSortChange(column.name, sortStatus);
     };
 
-  const handleSelectRow: UseTableSelectRowEventHandler = (row) => (e) => {
-    const name = e.target.name;
-    const checked = e.target.checked;
+  const createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler =
+    (row) => (e) => {
+      const name = e.target.name;
+      const checked = e.target.checked;
 
-    if (name === "selectAll") {
-      if (checked) {
-        const newSelectedRows = new Set<number>();
+      if (name === "selectAll") {
+        if (checked) {
+          const newSelectedRows = new Set<number>();
 
-        rows.forEach((row) => {
-          newSelectedRows.add(row.id);
-        });
+          rows.forEach((row) => {
+            newSelectedRows.add(row.id);
+          });
 
-        onSelectRows(newSelectedRows);
-      } else {
-        onSelectRows(new Set());
+          onSelectRows(newSelectedRows);
+        } else {
+          onSelectRows(new Set());
+        }
+
+        return;
       }
 
-      return;
-    }
+      if (!row) return;
 
-    if (!row) return;
+      const newSelectedRows = new Set(selectedRows);
 
-    const newSelectedRows = new Set(selectedRows);
+      if (checked) {
+        newSelectedRows.add(row.id);
+      } else {
+        newSelectedRows.delete(row.id);
+      }
 
-    if (checked) {
-      newSelectedRows.add(row.id);
-    } else {
-      newSelectedRows.delete(row.id);
-    }
-
-    onSelectRows(newSelectedRows);
-  };
+      onSelectRows(newSelectedRows);
+    };
 
   const defaultHiddenCols = new Set(
     columns.filter((column) => column.hidden).map((column) => column.name),
@@ -134,7 +145,7 @@ export function useTable<Row extends RowType>({
     hiddenColumnsExt || defaultHiddenCols,
   );
 
-  const handleResetHiddenColumns = () => {
+  const resetHiddenColumns = () => {
     setHiddenColumns(defaultHiddenCols);
     setHiddenColumnsExt(defaultHiddenCols);
   };
@@ -143,7 +154,9 @@ export function useTable<Row extends RowType>({
     .filter((column) => !hiddenColumns.has(column.name))
     .map((column) => column);
 
-  const handleToggleColumns = (column: TableColumn<Row>) => () => {
+  const createToggleColumnsClickHandler: UseTableCreateToggleColumnsClickHandler<
+    Row
+  > = (column: TableColumn<Row>) => () => {
     const newHiddenColumns = new Set(hiddenColumns);
 
     if (hiddenColumns.has(column.name)) {
@@ -182,12 +195,12 @@ export function useTable<Row extends RowType>({
   };
 
   return {
-    handleSortClick,
-    handleSelectRow,
+    createSortClickHandler,
+    createSelectRowChangeHandler,
     selectAll,
-    handleResetHiddenColumns,
+    resetHiddenColumns,
+    createToggleColumnsClickHandler,
     displayedColumns,
-    handleToggleColumns,
     columns,
     setColumns,
     filterUtils,

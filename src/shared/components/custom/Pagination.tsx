@@ -1,9 +1,9 @@
 import { useState } from "react";
 import ArrowLineDownIcon from "@/shared/assets/icons/arrow-line-down.svg?react";
-import InputPlus from "../inputs/InputPlus";
-import IconButton from "../buttons/IconButton";
 import { useDebounce } from "@/shared/hooks";
 import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
+import IconButton from "./buttons/IconButton";
+import InputPlus from "./inputs/InputPlus";
 
 const getVisiblePages = (
   currentPage: number,

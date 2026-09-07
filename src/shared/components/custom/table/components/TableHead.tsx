@@ -1,32 +1,29 @@
 import TableRow, { type TableRowProps } from "./TableRow";
 import TableHeadCell from "./TableHeadCell";
-import SortButton, { type SortButtonEventHandler } from "../buttons/SortButton";
 import type { TableHeadCellProps } from "./TableHeadCell";
 import { cn } from "cn";
-import type { RowType, TableColumn, TableSortStatuses } from "./Table";
 import type React from "react";
-import Checkbox from "../inputs/Checkbox";
+import { EllipsisVerticalIcon } from "lucide-react";
+import type { RowType, TableColumn, TableSortStatuses } from "../Table";
 import type {
   UseTableCreateColumnFilterClickHandler,
   UseTableSelectedRows,
-  UseTableSelectRowEventHandler,
-} from "./hooks/useTable";
-import { EllipsisVerticalIcon } from "lucide-react";
-import { Button } from "../../ui/button";
-
-export type TableHeadSortEventHandler<Row extends RowType> = (
-  column: TableColumn<Row>,
-) => SortButtonEventHandler;
+  UseTableCreateSelectRowChangeHandler,
+  UseTableCreateSortClickHandler,
+} from "../hooks/useTable";
+import Checkbox from "../../inputs/Checkbox";
+import SortButton from "../../buttons/SortButton";
+import { Button } from "@/shared/components/ui/button";
 
 export type TableHeadProps<Row extends RowType> =
   React.ComponentProps<"thead"> & {
     columns: TableColumn<Row>[];
 
-    onSortClick: TableHeadSortEventHandler<Row>;
+    createSortClickHandler: UseTableCreateSortClickHandler<Row>;
 
     sortStatuses: TableSortStatuses;
 
-    onSelectRow: UseTableSelectRowEventHandler;
+    createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler;
 
     selectAll: boolean;
 
@@ -48,9 +45,9 @@ export type TableHeadProps<Row extends RowType> =
   };
 
 function TableHead<Row extends RowType>({
-  onSortClick,
+  createSortClickHandler,
   sortStatuses,
-  onSelectRow,
+  createSelectRowChangeHandler,
   selectAll,
   columns,
   selectable,
@@ -78,7 +75,7 @@ function TableHead<Row extends RowType>({
             )}
           >
             <Checkbox
-              onChange={onSelectRow()}
+              onChange={createSelectRowChangeHandler()}
               name="selectAll"
               checked={Boolean(selectAll)}
               secondaryStatus={!selectAll && selectedRows.size > 0}
@@ -100,7 +97,7 @@ function TableHead<Row extends RowType>({
               {column.sort && (
                 <SortButton
                   className="mt-0 align-middle ms-1 py-1 uppercase"
-                  onClick={onSortClick(column)}
+                  onClick={createSortClickHandler(column)}
                   sortStatus={sortStatuses[column.name.toString()]}
                 >
                   {column.headerName}

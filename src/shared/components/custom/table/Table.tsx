@@ -1,22 +1,24 @@
 import React, { type ReactNode } from "react";
-import { type PaginationProps } from "./Pagination";
-import TableContainer, { type TContainerProps } from "./TableContainer";
-import TableBody, { type TableBodyProps } from "./TableBody";
-import type { TableHeadCellProps } from "./TableHeadCell";
-import type { TableCellProps } from "./TableCell";
+import { type PaginationProps } from "../Pagination";
+import TableContainer, {
+  type TableContainerProps,
+} from "./components/TableContainer";
+import TableBody, { type TableBodyProps } from "./components/TableBody";
+import type { TableHeadCellProps } from "./components/TableHeadCell";
+import type { TableCellProps } from "./components/TableCell";
 import type { SortButtonStatus } from "../buttons/SortButton";
-import type { TableRowProps } from "./TableRow";
+import type { TableRowProps } from "./components/TableRow";
 import type {
   UseTableSelectedRows,
-  UseTableSortEventHandler,
+  UseTableSortChangeEventAction,
 } from "./hooks/useTable";
 import { useTable } from "./hooks/useTable";
-import TableFooter from "./TableFooter";
+import TableFooter from "./components/TableFooter";
 import TableHeader, {
   type TableHeaderHiddenColumns,
   type TableHeaderNoHiddenColumns,
-} from "./TableHeader";
-import TableHead from "./TableHead";
+} from "./components/TableHeader";
+import TableHead from "./components/TableHead";
 import type { FilterFilter } from "./filter/FilterBoard";
 import {
   type FilterItem,
@@ -131,7 +133,7 @@ export type TableProps<Row extends RowType> = (
 
     maxVisibleNeighbors?: PaginationProps["maxVisibleNeighbors"];
 
-    containerProps?: TContainerProps;
+    containerProps?: TableContainerProps;
 
     theadProps?: React.ComponentProps<"thead">;
 
@@ -143,7 +145,7 @@ export type TableProps<Row extends RowType> = (
 
     sortStatuses?: TableSortStatuses;
 
-    onSortChange?: UseTableSortEventHandler<Row>;
+    onSortChange?: UseTableSortChangeEventAction<Row>;
 
     /**
      * A table head row props; <tr></tr> element
@@ -209,10 +211,10 @@ function Table<Row extends RowType>({
 }: TableProps<Row>) {
   const {
     displayedColumns,
-    handleResetHiddenColumns,
-    handleSelectRow,
-    handleSortClick,
-    handleToggleColumns,
+    resetHiddenColumns,
+    createSelectRowChangeHandler,
+    createSortClickHandler,
+    createToggleColumnsClickHandler,
     selectAll,
     columns,
     setColumns,
@@ -237,8 +239,8 @@ function Table<Row extends RowType>({
 
     ...(hideableColumns && {
       hiddenColumns: hiddenColumns,
-      handleResetHiddenColumns: handleResetHiddenColumns,
-      handleToggleColumns: handleToggleColumns,
+      handleResetHiddenColumns: resetHiddenColumns,
+      createToggleColumnsClickHandler: createToggleColumnsClickHandler,
     }),
   } as TableHeaderNoHiddenColumns | TableHeaderHiddenColumns<Row>;
 
@@ -249,6 +251,7 @@ function Table<Row extends RowType>({
         setColumns={setColumns}
         selectedRows={selectedRows}
         filterUtils={filterUtils}
+
         {...theaderProps}
       />
 
@@ -256,8 +259,8 @@ function Table<Row extends RowType>({
         <table className="w-full min-w-max table-auto border-collapse relative">
           <TableHead
             columns={displayedColumns}
-            onSelectRow={handleSelectRow}
-            onSortClick={handleSortClick}
+            createSelectRowChangeHandler={createSelectRowChangeHandler}
+            createSortClickHandler={createSortClickHandler}
             selectAll={selectAll}
             sortStatuses={sortStatuses}
             selectable={selectable}
@@ -272,7 +275,7 @@ function Table<Row extends RowType>({
             scLoading={scLoading}
             columns={displayedColumns}
             tbrProps={tbrProps}
-            onSelectRow={handleSelectRow}
+            createSelectRowChangeHandler={createSelectRowChangeHandler}
             loading={loading}
             rows={rows}
             selectedRows={selectedRows}
