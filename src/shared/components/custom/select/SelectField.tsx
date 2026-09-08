@@ -23,7 +23,11 @@ export type SelectFieldProps<
     | ((event: BaseUIEvent<React.UIEvent<HTMLDivElement, UIEvent>>) => void)
     | undefined;
   alignItemWithTrigger?: boolean | undefined;
-  getLabel?: React.ReactNode | ((value: Value | undefined) => React.ReactNode);
+  getLabel?:
+    | React.ReactNode
+    | ((
+        value: Multiple extends true ? Value[] : Value | undefined,
+      ) => React.ReactNode);
 };
 
 export default function SelectField<
