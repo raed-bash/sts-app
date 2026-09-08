@@ -2,19 +2,22 @@ import {
   Combobox as ComboboxPrimitive,
   type ComboboxListProps,
 } from "@base-ui/react/combobox";
-import type { ReactNode } from "react";
+import * as React from "react";
 import { cn } from "cn";
 import { SyntheticEvent, type SyntheticEventHandler } from "@/shared/utils";
 import {
   Combobox,
+  ComboboxChips,
   ComboboxChipsInput,
   ComboboxContent,
   ComboboxEmpty,
   ComboboxInput,
   ComboboxList,
+  ComboboxValue,
 } from "../../ui/combobox";
 import * as _ from "lodash";
 import type { BaseUIEvent } from "@base-ui/react";
+import { useComboboxAnchor } from "./useComboboxAnchor";
 
 export type ComboboxFieldProps<
   Value,
@@ -25,12 +28,13 @@ export type ComboboxFieldProps<
   onChange?: SyntheticEventHandler<Value | Value[]>;
   placeholder?: string;
   children?: ComboboxListProps["children"];
-  empty?: ReactNode;
+  empty?: React.ReactNode;
   onScroll?:
     | ((event: BaseUIEvent<React.UIEvent<HTMLDivElement, UIEvent>>) => void)
     | undefined;
   contentRef?: React.Ref<HTMLDivElement> | undefined;
   listProps?: Omit<React.ComponentProps<typeof ComboboxList>, "children">;
+  getInputLabel?: ComboboxFieldChipsProps<Value, Multiple>["getInputLabel"];
 };
 
 export default function ComboboxField<
@@ -47,8 +51,11 @@ export default function ComboboxField<
   onScroll,
   contentRef,
   listProps,
+  getInputLabel,
   ...props
 }: ComboboxFieldProps<Value, Multiple>) {
+  const anchor = useComboboxAnchor();
+
   const renderEmpty = !_.isNil(empty) ? (
     _.overSome(_.isString, _.isNumber)(empty) ? (
       <ComboboxEmpty>{empty}</ComboboxEmpty>
@@ -81,13 +88,22 @@ export default function ComboboxField<
         );
       }}
     >
-      <ComboboxInput
-        aria-invalid={ariaInvalid}
-        placeholder={placeholder}
-        className={cn(className)}
-      />
+      {multiple ? (
+        <ComboboxFieldChips<Value, Multiple>
+          getInputLabel={getInputLabel}
+          aria-invalid={ariaInvalid}
+          className={className}
+          ref={anchor}
+        />
+      ) : (
+        <ComboboxInput
+          aria-invalid={ariaInvalid}
+          placeholder={placeholder}
+          className={cn(className)}
+        />
+      )}
 
-      <ComboboxContent>
+      <ComboboxContent anchor={anchor}>
         {isChildrenCallback ? empty : null}
         <ComboboxList ref={contentRef} onScroll={onScroll} {...listProps}>
           {renderListChildren}
@@ -97,16 +113,45 @@ export default function ComboboxField<
   );
 }
 
-export function ComboboxFieldChipsInput(
-  props: Parameters<typeof ComboboxChipsInput>[0],
-) {
-  // const ctx = useComboboxContext();
+type ValueType<Value, Multiple> = Multiple extends true
+  ? Value[]
+  : Value | undefined;
 
+export type ComboboxFieldChipsProps<
+  Value,
+  Multiple extends boolean | undefined = false,
+> = Parameters<typeof ComboboxChips>[0] & {
+  getInputLabel:
+    | React.ReactNode
+    | ((selectedValue: ValueType<Value, Multiple>) => React.ReactNode);
+
+  placeholder?: string;
+};
+
+export function ComboboxFieldChips<
+  Value,
+  Multiple extends boolean | undefined = false,
+>({
+  getInputLabel,
+  "aria-invalid": ariaInvalid,
+  placeholder,
+  ...props
+}: ComboboxFieldChipsProps<Value, Multiple>) {
   return (
-    <ComboboxChipsInput
-      // aria-invalid={ctx["aria-invalid"]}
-      {...props}
-      // className={cn(ctx.className, props.className)}
-    />
+    <ComboboxChips {...props}>
+      <ComboboxValue>
+        {(values: ValueType<Value, Multiple>) => (
+          <>
+            {_.isFunction(getInputLabel)
+              ? getInputLabel(values)
+              : getInputLabel}
+            <ComboboxChipsInput
+              aria-invalid={ariaInvalid}
+              placeholder={placeholder}
+            />
+          </>
+        )}
+      </ComboboxValue>
+    </ComboboxChips>
   );
 }

@@ -23,7 +23,7 @@ export type SelectFieldProps<
     | ((event: BaseUIEvent<React.UIEvent<HTMLDivElement, UIEvent>>) => void)
     | undefined;
   alignItemWithTrigger?: boolean | undefined;
-  getLabel?:
+  getInputLabel?:
     | React.ReactNode
     | ((
         value: Multiple extends true ? Value[] : Value | undefined,
@@ -40,7 +40,7 @@ export default function SelectField<
   contentRef,
   onScroll,
   alignItemWithTrigger,
-  getLabel,
+  getInputLabel,
   name = "",
   ...props
 }: SelectFieldProps<Value, Multiple>) {
@@ -55,7 +55,7 @@ export default function SelectField<
       name={name}
     >
       <SelectTrigger aria-invalid={ariaInvalid} className={cn(className)}>
-        <SelectValue placeholder={placeholder}>{getLabel}</SelectValue>
+        <SelectValue placeholder={placeholder}>{getInputLabel}</SelectValue>
       </SelectTrigger>
       <SelectContent
         ref={contentRef}
