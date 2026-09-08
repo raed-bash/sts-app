@@ -15,7 +15,7 @@ function Frame({
   return (
     <fieldset
       className={cn(
-        `border-2 border-solid border-primary-main flex pb-8 px-4 gap-x-2 `,
+        `border-2 border-solid border-primary-main flex p-8 px-4 gap-x-2 rounded-(--radius)`,
         className,
       )}
       {...props}
