@@ -23,7 +23,6 @@ import {
   SelectItem,
   SelectLabel,
 } from "@/shared/components/ui/select";
-import { useComboboxAnchor } from "@/shared/hooks";
 import { ComboboxFieldChipsInput } from "@/shared/components/custom/combobox/ComboboxField";
 import { ComboboxApiList } from "@/shared/components/custom/combobox/ComboboxApi";
 import {
@@ -36,6 +35,7 @@ import {
 import type { SyntheticEvent } from "@/shared/utils";
 import InputPlus from "@/shared/components/custom/inputs/InputPlus";
 import { Card, CardContent } from "@/shared/components/ui/card";
+import { useComboboxAnchor } from "@/shared/components/custom/combobox/useComboboxAnchor";
 
 export default function UsersList() {
   const { filters } = useFilterState("usersFilters", new QueryUserDto({}));
@@ -75,22 +75,34 @@ export default function UsersList() {
   const handleComboboxChange = (e: SyntheticEvent) => {
     setUsers(e.target.value);
   };
+
+  console.log("usersQuery.data.data", usersQuery.data?.data);
   return (
-    <div>
+    <div className="flex flex-col gap-5">
       <h1 className="text-3xl font-bold mb-4">Users</h1>
-      <Combobox<UserDto> itemToStringLabel={(item) => item.username}>
-        <ComboboxInput placeholder="Select a user" />
+      <Combobox<UserDto>
+        items={usersQuery.data?.data || []}
+        // filter={(item, query, itemToString) => {
+        //   // console.log(itemToString ? itemToString(item) : false);
+        //   return itemToString ? !itemToString(item).includes(query) : true;
+        // }}
+        // value={user}
+        isItemEqualToValue={(item, value) => item.id === value.id}
+        itemToStringValue={(item) => item.username}
+        itemToStringLabel={(item) => item.username}
+      >
+        <ComboboxInput placeholder="Native Combobox" />
         <ComboboxContent>
           <ComboboxList>
-            <ComboboxEmpty>No items found.</ComboboxEmpty>
-            {users.map((item) => (
+            {(item) => (
               <ComboboxItem key={item.id} value={item}>
                 {item.username}
               </ComboboxItem>
-            ))}
+            )}
           </ComboboxList>
         </ComboboxContent>
       </Combobox>
+
       <InputPlus
         type="comboboxApi"
         isItemEqualToValue={(item, value) => item.id === value.id}
@@ -101,6 +113,7 @@ export default function UsersList() {
         multiple
         queryProps={{ queryFn: usersApi.getUsers, queryKey: ["selectUserssa"] }}
         searchKey={"username" as keyof QueryUserDto}
+        placeholder="API Combobox"
       >
         {(data) => (
           <>
@@ -142,13 +155,28 @@ export default function UsersList() {
         )}
       </InputPlus>
       <InputPlus
+        type="select"
+        value={user}
+        onChange={handleUserChange}
+        getLabel={(item) => item?.username || "Select Field"}
+      >
+        <SelectGroup>
+          <SelectLabel>User</SelectLabel>
+          <SelectItem value={null}>Select Field</SelectItem>
+          {usersQuery.data?.data?.map((item) => (
+            <SelectItem key={item.id} value={item}>
+              {item.username}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </InputPlus>
+      <InputPlus
         type="selectApi"
         value={user}
         onChange={handleUserChange}
         isItemEqualToValue={(item, value) => item.id === value.id}
-        getLabel={(item) => item?.username}
+        getLabel={(item) => item?.username || "API Select"}
         queryProps={{ queryFn: usersApi.getUsers, queryKey: ["selectedUser2"] }}
-        placeholder="users"
       >
         {(data) => (
           <SelectGroup>

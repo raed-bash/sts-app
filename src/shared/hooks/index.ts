@@ -1,7 +1,6 @@
 export * from "./useDrag";
 export * from "./useResizeObserver";
 export * from "./useMoveablePopover";
-export * from "./useComboboxAnchor";
 export * from "./useDebounce";
 export * from "./useDebouncedValue";
 export * from "./useAnimation";

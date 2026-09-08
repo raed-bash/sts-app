@@ -1,15 +1,13 @@
 import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { cn } from "cn";
-import {
-  ComboboxContext,
-  useComboboxContext,
-} from "./contexts/combobox-context";
 import { SyntheticEvent, type SyntheticEventHandler } from "@/shared/utils";
 import {
   Combobox,
   ComboboxChipsInput,
+  ComboboxContent,
   ComboboxInput,
-} from "@/shared/components/ui/combobox";
+  ComboboxList,
+} from "../../ui/combobox";
 
 export type ComboboxFieldProps<
   Value,
@@ -18,6 +16,7 @@ export type ComboboxFieldProps<
   className?: string;
   "aria-invalid"?: boolean;
   onChange?: SyntheticEventHandler<Value>;
+  placeholder?: string;
 };
 
 export default function ComboboxField<
@@ -26,48 +25,44 @@ export default function ComboboxField<
 >({
   "aria-invalid": ariaInvalid,
   className,
+  placeholder,
+  multiple,
   name = "",
   ...props
 }: ComboboxFieldProps<Value, Multiple>) {
   return (
-    <ComboboxContext.Provider
-      value={{ "aria-invalid": ariaInvalid, className }}
-    >
-      <Combobox<Value, Multiple>
-        {...props}
-        onValueChange={(value, ...args) => {
-          props.onValueChange?.(value, ...args);
-
-          props?.onChange?.(new SyntheticEvent<Value>(name, value as Value));
-        }}
-        name={name}
-      />
-    </ComboboxContext.Provider>
-  );
-}
-
-export function ComboboxFieldInput(props: Parameters<typeof ComboboxInput>[0]) {
-  const ctx = useComboboxContext();
-
-  return (
-    <ComboboxInput
-      aria-invalid={ctx["aria-invalid"]}
+    <Combobox<Value, Multiple>
       {...props}
-      className={cn(ctx.className, props.className)}
-    />
+      multiple={multiple}
+      name={name}
+      onValueChange={(value, ...args) => {
+        props.onValueChange?.(value, ...args);
+
+        props?.onChange?.(new SyntheticEvent<Value>(name, value as Value));
+      }}
+    >
+      <ComboboxInput
+        aria-invalid={ariaInvalid}
+        placeholder={placeholder}
+        className={cn(className)}
+      />
+      <ComboboxContent>
+        <ComboboxList>{props.children}</ComboboxList>
+      </ComboboxContent>
+    </Combobox>
   );
 }
 
 export function ComboboxFieldChipsInput(
   props: Parameters<typeof ComboboxChipsInput>[0],
 ) {
-  const ctx = useComboboxContext();
+  // const ctx = useComboboxContext();
 
   return (
     <ComboboxChipsInput
-      aria-invalid={ctx["aria-invalid"]}
+      // aria-invalid={ctx["aria-invalid"]}
       {...props}
-      className={cn(ctx.className, props.className)}
+      // className={cn(ctx.className, props.className)}
     />
   );
 }
