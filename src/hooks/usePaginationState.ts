@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useCachedState } from "./useCachedState";
 
-export function usePagination(
+export function usePaginationState(
   key: string = "",
   defaultPage: number = 1,
   { caching = true } = {},

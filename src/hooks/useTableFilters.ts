@@ -2,7 +2,7 @@ import { useFilterState } from "./useFilterState";
 import { useDebouncedFilter } from "./useDebouncedFilter";
 import { useSorts } from "./useSorts";
 import { useSelectedRows } from "./useSelectedRows";
-import { usePagination } from "./usePagination";
+import { usePaginationState } from "./usePaginationState";
 
 type UseTableFiltersOptions = {
   defaultFilters?: Record<string, any>;
@@ -30,7 +30,7 @@ export function useTableFilters({
   defaultPage = 1,
   caching = true,
 }: UseTableFiltersOptions) {
-  const paginationUtils = usePagination(name, defaultPage, { caching });
+  const paginationUtils = usePaginationState(name, defaultPage, { caching });
 
   const resetPage = () => {
     paginationUtils.setPage(1);

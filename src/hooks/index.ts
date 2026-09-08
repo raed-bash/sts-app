@@ -6,7 +6,7 @@ export * from "./useHiddenColumnsLocalStorage";
 export * from "./useLocalStorage";
 export * from "./useLogout";
 export * from "./useOrderedColumnsLocalStorage";
-export * from "./usePagination";
+export * from "./usePaginationState";
 export * from "./useSelectedRows";
 export * from "./useSorts";
 export * from "./useTableFilters";
