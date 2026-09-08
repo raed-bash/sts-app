@@ -77,7 +77,7 @@ function ComboboxApi<Value, Multiple extends boolean | undefined = false>({
       {props.children(data, infiniteQuery)}
       <ComboboxItem
         disabled
-        className="justify-center"
+        className="justify-center pr-0"
         unselectable="on"
         value={crypto.randomUUID()}
       >
