@@ -1,6 +1,6 @@
-const VITE_PER_PAGE = import.meta.env.VITE_PER_PAGE;
+import { env } from "@/config/env";
 
-export const PER_PAGE = !isNaN(VITE_PER_PAGE) ? parseInt(VITE_PER_PAGE) : 10;
+export const PER_PAGE = env.PER_PAGE;
 
 export class PaginatedMetadata {
   total!: number;

@@ -1,7 +1,8 @@
 import axios from "axios";
 import { LocalStorageHelper } from "@/shared/utils";
+import { env } from "@/config/env";
 
-const API_URL = "http://localhost:3000";
+const API_URL = env.API_URL;
 
 export const api = axios.create({
   baseURL: API_URL,
