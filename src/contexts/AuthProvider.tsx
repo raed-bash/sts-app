@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { LocalStorageHelper } from "@/shared/utils";
 import { LoginResponseDto } from "@/pages/auth/dtos/login-response.dto";
-import { setAuthToken } from "@/app/api";
+import { setAuthToken } from "@/lib/api";
 
 export default function AuthProvider({
   children,

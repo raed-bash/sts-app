@@ -1,4 +1,4 @@
-import { api } from "@/app/api";
+import { api } from "@/lib/api";
 import { ep } from "@/constants/endpoints";
 import { UserDto } from "./dtos/user.dto";
 import type { PaginatedResultsDto } from "@/shared/dtos/pagingated-results-dto";
