@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import Layout from "../components/layout/Layout";
-import { authRouter } from "../pages/auth/auth.router";
-import { usersRouter } from "../pages/users/users.router";
+import { authRouter } from "../features/auth/auth.router";
+import { usersRouter } from "../features/users/users.router";
 import Container from "@/components/layout/Container";
 import PrivateRoute from "@/components/PrivateRoute";
 

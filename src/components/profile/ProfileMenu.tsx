@@ -3,7 +3,7 @@ import ProfileIcon from "@/assets/icons/profile.svg?react";
 import SettingsIcon from "@/assets/icons/settings.svg?react";
 import LogoutIcon from "@/assets/icons/logout.svg?react";
 import { useQuery } from "@tanstack/react-query";
-import { usersApi } from "@/pages/users/users.api";
+import { usersApi } from "@/features/users/users.api";
 import { useLogout } from "@/hooks";
 import { cn } from "cn";
 import { ROLE_TITLES } from "@/constants/user-role";

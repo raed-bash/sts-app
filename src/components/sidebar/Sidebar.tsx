@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 import { useLocation } from "react-router";
 import HomeIcon from "@/shared/assets/icons/home.svg?react";
 import ArrowLineDownIcon from "@/shared/assets/icons/arrow-line-down.svg?react";
-import { UserPages } from "@/pages/users/users.pages";
+import { UserPages } from "@/features/users/users.pages";
 import type { AppPageNestedPages, AppPageSidebar } from "@/types/app-page";
 import Animation from "@/shared/components/custom/Animation";
 import type { IconButtonProps } from "@/shared/components/custom/buttons/IconButton";

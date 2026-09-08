@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { LocalStorageHelper } from "@/shared/utils";
-import { LoginResponseDto } from "@/pages/auth/dtos/login-response.dto";
+import { LoginResponseDto } from "@/features/auth/dtos/login-response.dto";
 import { setAuthToken } from "@/lib/api";
 
 export default function AuthProvider({
