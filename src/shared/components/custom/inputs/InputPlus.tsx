@@ -111,7 +111,7 @@ function InputPlus<Value, Multiple extends boolean | undefined = false>({
     <div
       {...inputPlusContainerProps}
       className={cn(
-        "flex flex-col",
+        "flex flex-col w-full",
         oneline
           ? props.type === "checkbox"
             ? "items-center justify-end  flex-row-reverse "
