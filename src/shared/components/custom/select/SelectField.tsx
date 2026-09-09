@@ -30,6 +30,54 @@ export type SelectFieldProps<
       ) => React.ReactNode);
 };
 
+/**
+ * @example
+ * ```tsx
+ *
+ *  <InputPlus
+ *    type="select"
+ *    title="Select Field"
+ *    value={itemValue}
+ *    onChange={handleChange}
+ *    getInputLabel={(item) => item?.name || "Select Field"}
+ *  >
+ *    <SelectGroup>
+ *      <SelectLabel>Item</SelectLabel>
+ *      <SelectItem value={null}>Select Field</SelectItem>
+ *      {items.map((item) => (
+ *        <SelectItem key={item.id} value={item}>
+ *          {item.name}
+ *        </SelectItem>
+ *      ))}
+ *    </SelectGroup>
+ *  </InputPlus>  
+ *
+ * // multiple
+ *
+ *  <InputPlus
+ *    type="select"
+ *    title="Multiple Select Field"
+ *    multiple
+ *    value={itemsValues}
+ *    onChange={handleChange}
+ *    getInputLabel={(items) =>
+ *      items?.length
+ *        ? items.map((item) => item.name).join(", ")
+ *        : "Multiple Select Field"
+ *    }
+ *    isItemEqualToValue={(item, value) => item.id === value.id}
+ *  >
+ *    <SelectGroup>
+ *      <SelectLabel>Item</SelectLabel>
+ *      {items.map((item) => (
+ *        <SelectItem key={item.id} value={item}>
+ *          {item.name}
+ *        </SelectItem>
+ *      ))}
+ *    </SelectGroup>
+ *  </InputPlus>
+ * ```
+ */
 export default function SelectField<
   Value,
   Multiple extends boolean | undefined = false,

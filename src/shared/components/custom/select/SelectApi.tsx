@@ -29,6 +29,39 @@ export type SelectApiProps<
   noMoreItemsTitle?: React.ReactNode;
 };
 
+/**
+ *
+ * @example
+ * ```tsx
+ *
+ *  <InputPlus
+ *    type="selectApi"
+ *    title="API Select"
+ *    value={itemValue}
+ *    onChange={handleChange}
+ *    isItemEqualToValue={(item, value) => item.id === value.id}
+ *    getInputLabel={(item) => item?.name || "API Select"}
+ *    queryProps={{
+ *      queryFn: itemsApi.getItems,
+ *      queryKey: ["selectItems"],
+ *    }}
+ *  >
+ *    {(data) => (
+ *      <SelectGroup>
+ *        <SelectLabel>Item</SelectLabel>
+ *        {data.data.map((item) => (
+ *            <SelectItem key={item.id} value={item}>
+ *              {item.name}
+ *            </SelectItem>
+ *          ))
+ *        }
+ *      </SelectGroup>
+ *    )}
+ *  </InputPlus>
+
+ *
+ * ```
+ */
 function SelectApi<Value, Multiple extends boolean | undefined = false>({
   noMoreItemsTitle = "No more items",
   queryProps,
