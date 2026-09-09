@@ -114,7 +114,7 @@ export default function UsersList() {
             type="comboboxApi"
             isItemEqualToValue={(item, value) => item.id === value.id}
             itemToStringLabel={(item) => item.username}
-            onChange={handleUsersChange}
+            onChange={handleUserChange}
             value={user}
             queryProps={{
               queryFn: usersApi.getUsers,
