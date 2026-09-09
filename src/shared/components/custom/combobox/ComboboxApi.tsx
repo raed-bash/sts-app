@@ -30,7 +30,8 @@ export type ComboboxApiProps<
   queryProps: UseSelectApiOptions<Value>;
   children: ComboboxApiChildren<Value>;
   searchKey: string;
-  noMoreItemsTitle?: React.ReactNode;
+  noMoreItemsLabel?: React.ReactNode;
+  noItemsFoundLabel?: React.ReactNode;
 };
 
 /**
@@ -64,7 +65,8 @@ export type ComboboxApiProps<
 function ComboboxApi<Value, Multiple extends boolean | undefined = false>({
   queryProps,
   searchKey = "search",
-  noMoreItemsTitle = "No more items",
+  noMoreItemsLabel = "No more items",
+  noItemsFoundLabel = "No items found",
   ...props
 }: ComboboxApiProps<Value, Multiple>) {
   const [search, setSearch] = React.useState("");
@@ -77,6 +79,10 @@ function ComboboxApi<Value, Multiple extends boolean | undefined = false>({
     queryFn: (query, ...args) =>
       queryProps.queryFn({ ...query, [searchKey]: debouncedSearch }, ...args),
   });
+
+  const total = data?.pages[0].meta.total || 0;
+
+  const hasData = total > 0;
 
   return (
     <ComboboxField<Value, Multiple>
@@ -109,9 +115,11 @@ function ComboboxApi<Value, Multiple extends boolean | undefined = false>({
       >
         {infiniteQuery.isFetching ? (
           <Spinner className="justify-center" />
-        ) : (
-          !infiniteQuery.hasNextPage && noMoreItemsTitle
-        )}
+        ) : !infiniteQuery.hasNextPage && hasData ? (
+          noMoreItemsLabel
+        ) : !hasData ? (
+          noItemsFoundLabel
+        ) : null}
       </ComboboxItem>
     </ComboboxField>
   );
