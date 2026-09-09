@@ -49,7 +49,7 @@ export type ComboboxFieldProps<
  *    placeholder="Combobox Field"
  *    title="Combobox Field"
  *    onChange={handleChange}
- *    value={item}
+ *    value={itemValue}
  *    items={items}
  *    >
  *      {(item) => (
@@ -65,8 +65,8 @@ export type ComboboxFieldProps<
  *    title="Multiple Combobox Field"
  *    placeholder="Multiple Combobox Field"
  *    multiple
- *    value={items}
- *    onChange={handleUsersChange}
+ *    value={itemValues}
+ *    onChange={handleChange}
  *    items={items}
  *    autoHighlight
  *    getInputLabel={(items) =>

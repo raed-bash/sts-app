@@ -40,8 +40,8 @@ export type ComboboxApiProps<
  *    type="comboboxApi"
  *    isItemEqualToValue={(item, value) => item.id === value.id}
  *    itemToStringLabel={(item) => item.name}
- *    onChange={handleItemsChange}
- *    value={item}
+ *    onChange={handleChange}
+ *    value={itemValue}
  *    queryProps={{
  *      queryFn: itemsApi.getItems,
  *      queryKey: ["comboboxItems"],
