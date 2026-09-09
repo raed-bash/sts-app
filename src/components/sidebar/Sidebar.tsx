@@ -2,16 +2,20 @@ import { Fragment, useState } from "react";
 import { useLocation } from "react-router";
 import HomeIcon from "@/shared/assets/icons/home.svg?react";
 import ArrowLineDownIcon from "@/shared/assets/icons/arrow-line-down.svg?react";
-import { UserPages } from "@/features/users/users.pages";
-import type { AppPageNestedPages, AppPageSidebar } from "@/types/app-page";
+import { userRoutesMeta } from "@/features/users/users.routes-meta";
+import type {
+  AppRoutesMetaNestedRoutes,
+  AppRoutesMetaSidebar,
+} from "@/types/app.routes-meta";
 import Animation from "@/shared/components/custom/Animation";
 import type { IconButtonProps } from "@/shared/components/custom/buttons/IconButton";
 import IconButton from "@/shared/components/custom/buttons/IconButton";
 import AppLink, { type AppLinkProps } from "@/shared/components/custom/AppLink";
+import { UserIcon } from "lucide-react";
 
 type Category = {
   title: string;
-  links: AppPageSidebar[];
+  links: AppRoutesMetaSidebar[];
 };
 
 const categories: Category[] = [
@@ -19,13 +23,21 @@ const categories: Category[] = [
     title: "Menu",
     links: [
       {
-        key: "home",
         to: "home",
         label: "Home",
-        Icon: <HomeIcon />,
+        Icon: HomeIcon,
         sidebar: true,
       },
-      UserPages.users,
+
+      userRoutesMeta.users,
+
+      {
+        Icon: HomeIcon,
+        label: "Parent",
+        key: "parent",
+        sidebar: true,
+        pages: [{ sidebar: true, Icon: UserIcon, label: "Child", to: "child" }],
+      },
     ],
   },
 ];
@@ -56,7 +68,9 @@ export default function Sidebar() {
   );
 }
 
-export type SidebarNestedLinksProps = { links: AppPageNestedPages["pages"] };
+export type SidebarNestedLinksProps = {
+  links: AppRoutesMetaNestedRoutes["pages"];
+};
 
 function SidebarNestedLinks({ links }: SidebarNestedLinksProps) {
   const location = useLocation();
@@ -84,7 +98,7 @@ function SidebarNestedLinks({ links }: SidebarNestedLinksProps) {
 export type SidebarLinksProps = {
   setExpanded: React.Dispatch<React.SetStateAction<Set<string>>>;
   expanded: Set<string>;
-  links: AppPageSidebar[];
+  links: AppRoutesMetaSidebar[];
 };
 
 function SidebarLinks({ setExpanded, expanded, links }: SidebarLinksProps) {
@@ -106,7 +120,7 @@ function SidebarLinks({ setExpanded, expanded, links }: SidebarLinksProps) {
 
   return (
     <div className="flex flex-col text-(--text-muted) ">
-      {links.map((link) => {
+      {links.map(({ Icon, ...link }) => {
         if (link.to) {
           return (
             <SidebarLink
@@ -114,7 +128,7 @@ function SidebarLinks({ setExpanded, expanded, links }: SidebarLinksProps) {
               to={link.to}
               aria-selected={location.pathname.startsWith(`/${link.to}`)}
             >
-              {link.Icon && <span className="me-2">{link.Icon}</span>}
+              {Icon && <span className="me-2">{<Icon />}</span>}
 
               {link.label}
             </SidebarLink>
@@ -135,7 +149,7 @@ function SidebarLinks({ setExpanded, expanded, links }: SidebarLinksProps) {
                 onClick={() => handleExpand(link.key)}
               >
                 <span className="flex gap-2 items-center">
-                  {link.Icon}
+                  {<Icon />}
                   {link.label}
                 </span>
                 <ArrowLineDownIcon className="justify-self-end -rotate-90 " />

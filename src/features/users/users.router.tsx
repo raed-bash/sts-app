@@ -1,13 +1,13 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
-import { UserPages } from "./users.pages";
+import { userRoutesMeta } from "./users.routes-meta";
 import PageFallback from "@/shared/components/custom/PageFallback";
 
 const UsersList = lazy(() => import("./pages/UsersList"));
 
 export const usersRouter: RouteObject[] = [
   {
-    path: UserPages.users.to,
+    path: userRoutesMeta.users.to,
     element: (
       <PageFallback>
         <UsersList />

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { usersApi } from "../users.api";
-import { UserPages } from "../users.pages";
 import UsersTable from "../components/UsersTable";
 import { QueryUserDto } from "../dtos/query-user.dto";
 import { UserDto } from "../dtos/user.dto";
@@ -48,7 +47,7 @@ export default function UsersList() {
   const { handleSortChange, sorts } = useSorts<keyof UserDto>("users");
 
   const usersQuery = useQuery({
-    queryKey: [UserPages.users.key, page, sorts, filters, filterDebounced],
+    queryKey: ["users", page, sorts, filters, filterDebounced],
     queryFn: () =>
       usersApi.getUsers(
         new QueryUserDto({ ...filters, ...filterDebounced, sorts }),
@@ -164,11 +163,18 @@ export default function UsersList() {
             {(data) => (
               <>
                 {data?.pages.map(({ data }) =>
-                  data.map((item) => (
-                    <ComboboxItem key={item.id} value={item}>
-                      {item.username}
-                    </ComboboxItem>
-                  )),
+                  data
+                    .filter(
+                      (user) =>
+                        !users.some(
+                          (selectedUser) => user.id === selectedUser.id,
+                        ),
+                    )
+                    .map((item) => (
+                      <ComboboxItem key={item.id} value={item}>
+                        {item.username}
+                      </ComboboxItem>
+                    )),
                 )}
               </>
             )}
