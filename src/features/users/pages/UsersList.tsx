@@ -6,17 +6,11 @@ import UsersTable from "../components/UsersTable";
 import { QueryUserDto } from "../dtos/query-user.dto";
 import { UserDto } from "../dtos/user.dto";
 import {
-  Combobox,
   ComboboxChip,
-  ComboboxChips,
-  ComboboxChipsInput,
-  ComboboxContent,
   ComboboxEmpty,
   ComboboxGroup,
   ComboboxItem,
   ComboboxLabel,
-  ComboboxList,
-  ComboboxValue,
 } from "@/shared/components/ui/combobox";
 import {
   SelectGroup,
@@ -34,7 +28,6 @@ import type { SyntheticEvent } from "@/shared/utils";
 import InputPlus from "@/shared/components/custom/inputs/InputPlus";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import Frame from "@/shared/components/custom/frame/Frame";
-import { useComboboxAnchor } from "@/shared/components/custom/combobox/useComboboxAnchor";
 
 export default function UsersList() {
   const { filters } = useFilterState("usersFilters", new QueryUserDto({}));
@@ -73,7 +66,6 @@ export default function UsersList() {
   const handleUsersChange = (e: SyntheticEvent) => {
     setUsers(e.target.value);
   };
-  const comboboxAnchor = useComboboxAnchor();
 
   return (
     <div className="flex flex-col gap-5">
@@ -82,12 +74,14 @@ export default function UsersList() {
         <Frame title="Combobox Field" className="grid grid-cols-2 gap-5 w-full">
           <InputPlus<UserDto>
             type="combobox"
-            items={usersQuery.data?.data}
             isItemEqualToValue={(item, value) => item.id === value.id}
             itemToStringLabel={(item) => item.username}
             empty={<ComboboxEmpty>No users</ComboboxEmpty>}
             placeholder="Combobox Field"
             title="Combobox Field"
+            onChange={handleUserChange}
+            value={user}
+            items={usersQuery.data?.data}
           >
             {(item) => (
               <ComboboxItem key={item.id} value={item}>
@@ -103,23 +97,18 @@ export default function UsersList() {
             value={users}
             onChange={handleUsersChange}
             items={usersQuery.data?.data}
-            isItemEqualToValue={(item, value) => item.id === value.id}
-            itemToStringLabel={(item) => item.username}
+            autoHighlight
             getInputLabel={(items) =>
               items.map((item) => (
                 <ComboboxChip key={item.id}>{item.username}</ComboboxChip>
               ))
             }
           >
-            <ComboboxGroup>
-              <ComboboxLabel>Users</ComboboxLabel>
-
-              {usersQuery.data?.data?.map((user) => (
-                <ComboboxItem key={user.id} value={user}>
-                  {user.username}
-                </ComboboxItem>
-              ))}
-            </ComboboxGroup>
+            {(user) => (
+              <ComboboxItem key={user.id} value={user}>
+                {user.username}
+              </ComboboxItem>
+            )}
           </InputPlus>
 
           <InputPlus
@@ -137,70 +126,53 @@ export default function UsersList() {
             title="API Combobox"
           >
             {(data) => (
-              <>
-                <ComboboxEmpty>No users</ComboboxEmpty>
-                <ComboboxGroup>
-                  <ComboboxLabel>Users</ComboboxLabel>
-                  {data?.pages.map((page) => (
-                    <ComboboxGroup key={page.meta.currentPage}>
-                      <ComboboxLabel>
-                        page {page.meta.currentPage}
-                      </ComboboxLabel>
-                      {page.data.map((item) => (
-                        <ComboboxItem key={item.id} value={item}>
-                          {item.username}
-                        </ComboboxItem>
-                      ))}
-                    </ComboboxGroup>
-                  ))}
-                </ComboboxGroup>
-              </>
+              <ComboboxGroup>
+                <ComboboxLabel>Users</ComboboxLabel>
+                {data?.pages.map((page) => (
+                  <ComboboxGroup key={page.meta.currentPage}>
+                    <ComboboxLabel>page {page.meta.currentPage}</ComboboxLabel>
+                    {page.data.map((item) => (
+                      <ComboboxItem key={item.id} value={item}>
+                        {item.username}
+                      </ComboboxItem>
+                    ))}
+                  </ComboboxGroup>
+                ))}
+              </ComboboxGroup>
             )}
           </InputPlus>
 
-          <Combobox
-            isItemEqualToValue={(item, value) => item.id === value.id}
-            itemToStringLabel={(item) => item.username}
-            value={users}
+          <InputPlus
+            type="comboboxApi"
             multiple
-
-            onValueChange={(values) =>
-              handleUsersChange({ target: { name: "", value: values } })
+            queryProps={{
+              queryFn: usersApi.getUsers,
+              queryKey: ["comboboxUsers"],
+            }}
+            searchKey="username"
+            placeholder="Multiple API Combobox"
+            title="Multiple API Combobox"
+            onChange={handleUsersChange}
+            value={users}
+            getInputLabel={(users) =>
+              users.map((user) => (
+                <ComboboxChip key={user.id}>{user.username}</ComboboxChip>
+              ))
             }
+            isItemEqualToValue={(item, value) => item.id === value.id}
           >
-            <ComboboxChips ref={comboboxAnchor}>
-              <ComboboxValue>
-                {(values: UserDto[]) => (
-                  <>
-                    {values.map((value) => (
-                      <ComboboxChip key={value.id}>
-                        {value.username}
-                      </ComboboxChip>
-                    ))}
-                    <ComboboxChipsInput placeholder="Select users" />
-                  </>
-                )}
-              </ComboboxValue>
-            </ComboboxChips>
-
-            <ComboboxContent anchor={comboboxAnchor}>
-              <ComboboxList>
-                <ComboboxGroup>
-                  <ComboboxLabel>Users</ComboboxLabel>
-                  {/* {data?.pages.map((page) => (
-                  <ComboboxGroup key={page.meta.currentPage}>
-                    <ComboboxLabel>page {page.meta.currentPage}</ComboboxLabel> */}
-                  {usersQuery.data?.data.map((item) => (
+            {(data) => (
+              <>
+                {data?.pages.map(({ data }) =>
+                  data.map((item) => (
                     <ComboboxItem key={item.id} value={item}>
                       {item.username}
                     </ComboboxItem>
-                  ))}
-                  {/* </ComboboxGroup>
-                ))} */}
-                </ComboboxGroup>
-              </ComboboxList>
-            </ComboboxContent>
-          </Combobox>
+                  )),
+                )}
+              </>
+            )}
+          </InputPlus>
         </Frame>
         <Frame title="Select Field" className="grid grid-cols-2 gap-5 w-full">
           <InputPlus
