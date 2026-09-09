@@ -1,5 +1,5 @@
 import Skeleton, { type SkeletonProps } from "../skeleton/Skeleton";
-import Input, { type InputProps } from "./Input";
+import Input from "./Input";
 import TextArea, { type TextAreaProps } from "./TextArea";
 import { cn } from "cn";
 import type { HTMLInputTypeAttribute, ReactNode } from "react";
@@ -16,7 +16,7 @@ import ComboboxField from "../combobox/ComboboxField";
 import SelectField from "../select/SelectField";
 import SelectApi from "../select/SelectApi";
 
-export type InputPropsWithType = InputProps & {
+export type InputPropsWithType = React.ComponentProps<"input"> & {
   type: OnlyStringLiterals<HTMLInputTypeAttribute>;
 };
 
