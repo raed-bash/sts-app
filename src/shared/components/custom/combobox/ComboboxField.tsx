@@ -9,10 +9,12 @@ import {
   Combobox,
   ComboboxChips,
   ComboboxChipsInput,
+  ComboboxClear,
   ComboboxContent,
   ComboboxEmpty,
   ComboboxInput,
   ComboboxList,
+  ComboboxTrigger,
   ComboboxValue,
 } from "../../ui/combobox";
 import * as _ from "lodash";
@@ -35,6 +37,8 @@ export type ComboboxFieldProps<
   contentRef?: React.Ref<HTMLDivElement> | undefined;
   listProps?: Omit<React.ComponentProps<typeof ComboboxList>, "children">;
   getInputLabel?: ComboboxFieldChipsProps<Value, Multiple>["getInputLabel"];
+  showTrigger?: boolean;
+  showClear?: boolean;
 };
 
 /**
@@ -99,6 +103,8 @@ export default function ComboboxField<
   contentRef,
   listProps,
   getInputLabel,
+  showClear,
+  showTrigger,
   ...props
 }: ComboboxFieldProps<Value, Multiple>) {
   const anchor = useComboboxAnchor();
@@ -142,9 +148,12 @@ export default function ComboboxField<
           className={className}
           ref={anchor}
           placeholder={placeholder}
+          showClear={showClear}
+          showTrigger={showTrigger}
         />
       ) : (
         <ComboboxInput
+          showClear={showClear}
           aria-invalid={ariaInvalid}
           placeholder={placeholder}
           className={cn(className)}
@@ -174,6 +183,10 @@ export type ComboboxFieldChipsProps<
     | ((selectedValue: ValueType<Value, Multiple>) => React.ReactNode);
 
   placeholder?: string;
+
+  showTrigger?: boolean;
+
+  showClear?: boolean;
 };
 
 export function ComboboxFieldChips<
@@ -183,6 +196,8 @@ export function ComboboxFieldChips<
   getInputLabel,
   "aria-invalid": ariaInvalid,
   placeholder,
+  showClear = true,
+  showTrigger = true,
   ...props
 }: ComboboxFieldChipsProps<Value, Multiple>) {
   return (
@@ -197,6 +212,8 @@ export function ComboboxFieldChips<
               aria-invalid={ariaInvalid}
               placeholder={placeholder}
             />
+            {showClear && <ComboboxClear />}
+            {showTrigger && <ComboboxTrigger />}
           </>
         )}
       </ComboboxValue>
