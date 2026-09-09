@@ -80,8 +80,6 @@ function ComboboxApi<Value, Multiple extends boolean | undefined = false>({
 
   return (
     <ComboboxField<Value, Multiple>
-      inputValue={search}
-
       {...props}
       listProps={{
         ...listBoxProps,
