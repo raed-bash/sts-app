@@ -33,6 +33,34 @@ export type ComboboxApiProps<
   noMoreItemsTitle?: React.ReactNode;
 };
 
+/**
+ * @example
+ * ```tsx
+ *  <InputPlus
+ *    type="comboboxApi"
+ *    isItemEqualToValue={(item, value) => item.id === value.id}
+ *    itemToStringLabel={(item) => item.name}
+ *    onChange={handleItemsChange}
+ *    value={item}
+ *    queryProps={{
+ *      queryFn: itemsApi.getItems,
+ *      queryKey: ["comboboxItems"],
+ *    }}
+ *    searchKey={"name"}
+ *    placeholder="API Combobox"
+ *    title="API Combobox"
+ *  >
+ *    {(data) => (
+ *      data.data.map((item) => (
+ *         <ComboboxItem key={item.id} value={item}>
+ *           {item.name}
+ *         </ComboboxItem>
+ *      ))
+ *    )}
+ *  </InputPlus>
+ *
+ * ```
+ */
 function ComboboxApi<Value, Multiple extends boolean | undefined = false>({
   queryProps,
   searchKey = "search",

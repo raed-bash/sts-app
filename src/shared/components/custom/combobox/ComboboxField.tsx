@@ -37,6 +37,53 @@ export type ComboboxFieldProps<
   getInputLabel?: ComboboxFieldChipsProps<Value, Multiple>["getInputLabel"];
 };
 
+/**
+ * @example
+ * ```tsx
+ *
+ *  <InputPlus<ItemDto>
+ *    type="combobox"
+ *    isItemEqualToValue={(item, value) => item.id === value.id}
+ *    itemToStringLabel={(item) => item.name}
+ *    empty={<ComboboxEmpty>No items</ComboboxEmpty>}
+ *    placeholder="Combobox Field"
+ *    title="Combobox Field"
+ *    onChange={handleChange}
+ *    value={item}
+ *    items={items}
+ *    >
+ *      {(item) => (
+ *        <ComboboxItem key={item.id} value={item}>
+ *          {item.name}
+ *        </ComboboxItem>
+ *      )}
+ *    </InputPlus>
+ *
+ * // multiple selection
+ *  <InputPlus
+ *    type="combobox"
+ *    title="Multiple Combobox Field"
+ *    placeholder="Multiple Combobox Field"
+ *    multiple
+ *    value={items}
+ *    onChange={handleUsersChange}
+ *    items={items}
+ *    autoHighlight
+ *    getInputLabel={(items) =>
+ *      items.map((item) => (
+ *        <ComboboxChip key={item.id}>{item.name}</ComboboxChip>
+ *      ))
+ *    }
+ *>
+ *    {(item) => (
+ *      <ComboboxItem key={item.id} value={item}>
+ *        {item.name}
+ *      </ComboboxItem>
+ *    )}
+ *  </InputPlus>
+ *
+ * ```
+ */
 export default function ComboboxField<
   Value,
   Multiple extends boolean | undefined = false,
