@@ -94,6 +94,7 @@ export default function ComboboxField<
           aria-invalid={ariaInvalid}
           className={className}
           ref={anchor}
+          placeholder={placeholder}
         />
       ) : (
         <ComboboxInput
