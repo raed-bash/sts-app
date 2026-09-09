@@ -1,6 +1,5 @@
 import type React from "react";
 import { cn } from "cn";
-import Input from "./Input";
 
 export type CheckboxProps = Omit<React.ComponentProps<"input">, "type"> & {
   secondaryStatus?: boolean;
@@ -12,7 +11,7 @@ function Checkbox({
   ...props
 }: CheckboxProps) {
   return (
-    <Input
+    <input
       type="checkbox"
       className={cn(
         "appearance-none w-4 h-4 relative duration-150 before:duration-150 after:duration-150 inline-flex justify-center items-center bg-(--secondary)/10 rounded border border-(--secondary)/50 hover:border-(--primary)",
