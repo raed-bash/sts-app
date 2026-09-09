@@ -103,8 +103,8 @@ export default function ComboboxField<
   contentRef,
   listProps,
   getInputLabel,
-  showClear,
-  showTrigger,
+  showClear = true,
+  showTrigger = true,
   ...props
 }: ComboboxFieldProps<Value, Multiple>) {
   const anchor = useComboboxAnchor();
