@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Input, { type InputProps } from "./Input";
+import Input from "./Input";
 import EyeIcon from "@/shared/assets/icons/eye.svg?react";
 import EyeSlashIcon from "@/shared/assets/icons/eye-slash.svg?react";
 import IconButton from "../buttons/IconButton";
@@ -7,7 +7,9 @@ import IconButton from "../buttons/IconButton";
 const iconStyle =
   "fill-(--text) group-hover:fill-(--primary) duration-75 aria-invalid:fill-(--danger)";
 
-export default function InputPassword(props: Omit<InputProps, "type">) {
+export default function InputPassword(
+  props: Omit<Parameters<typeof Input>[0], "type">,
+) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
