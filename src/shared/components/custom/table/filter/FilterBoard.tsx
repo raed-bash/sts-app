@@ -2,7 +2,6 @@ import { cn } from "cn";
 import { FunnelIcon, FunnelXIcon, Plus, XIcon } from "lucide-react";
 import { getAvailableFilterOps } from "./utils/utils";
 import type { RowType, TableColumn } from "../Table";
-import { type FilterInputProps } from "./FilterInput";
 import type {
   FilterItem,
   UseFilterDeleteEventAction,
@@ -26,13 +25,19 @@ import {
   SelectItem,
   SelectLabel,
 } from "@/shared/components/ui/select";
-import InputPlus from "../../inputs/InputPlus";
+import InputPlus, { type InputPlusProps } from "../../inputs/InputPlus";
 import { NativeSelectOption } from "@/shared/components/ui/native-select";
+import { filterOperations } from "./constants/constants";
+import type {
+  FilterSelectOperationsWithTypes,
+  FilterTextOperationsWithTypes,
+} from "./types";
 
-export type FilterFilter = Pick<
-  FilterInputProps,
-  "type" | "selectOps" | "omitOps"
->;
+export type FilterFilter<
+  Option,
+  Multiple extends boolean | undefined = false,
+> = InputPlusProps<Option, Multiple> &
+  (FilterTextOperationsWithTypes | FilterSelectOperationsWithTypes);
 
 export type FilterBoardProps<Row extends RowType> = {
   columns: TableColumn<Row>[];
@@ -104,9 +109,8 @@ export default function FilterBoard<Row extends RowType>({
 
   const createFilterOperationChangeHandler =
     (i: number) => (e: SyntheticEvent<any>) => {
-      const name = e.target.name?.toString();
+      const name = e.target.name;
       const value = e.target.value;
-      if (!name) return;
 
       onUpdateFilter(
         {
@@ -116,6 +120,17 @@ export default function FilterBoard<Row extends RowType>({
       );
     };
 
+  const createFilterColumnChangeHandler =
+    (i: number) => (e: SyntheticEvent<any>) => {
+      const value = e.target.value;
+
+      const column = columns.find((col) => col.name === value);
+
+      const op = getAvailableFilterOps(column?.filterProps?.type || "text");
+
+      onUpdateFilter({ name: value, operation: op[0], value: "" }, i);
+    };
+
   return (
     <Popover open={isFilterOpen} onOpenChange={handleOpenChangeBoard}>
       <Tooltip>
@@ -123,7 +138,7 @@ export default function FilterBoard<Row extends RowType>({
           render={
             <TooltipTrigger
               render={
-                <Button variant="outline" size="icon-lg">
+                <Button variant="ghost" size="icon-lg">
                   {filters.length > 0 ? <FunnelXIcon /> : <FunnelIcon />}
                 </Button>
               }
@@ -190,7 +205,7 @@ export default function FilterBoard<Row extends RowType>({
                   <InputPlus
                     type="select"
                     name="name"
-                    onChange={createFilterOperationChangeHandler(i)}
+                    onChange={createFilterColumnChangeHandler(i)}
                     value={name}
                     placeholder="Select column"
                     getInputLabel={column.headerName}
@@ -217,16 +232,16 @@ export default function FilterBoard<Row extends RowType>({
                   >
                     {filterOps.map((op) => (
                       <NativeSelectOption key={op} value={op}>
-                        {op}
+                        {filterOperations[op]}
                       </NativeSelectOption>
                     ))}
                   </InputPlus>
                   <InputPlus
                     name="value"
-                    type={filterProps?.type || "text"}
-                    value={filter.value || ""}
                     onChange={createFilterOperationChangeHandler(i)}
-                    placeholder={`${column?.headerName}`}
+                    value={filters[i].value}
+                    {...{ placeholder: `${column?.headerName}` }}
+                    {...filterProps}
                   />
                 </div>
               </div>

@@ -1,23 +1,30 @@
-import type { filterOperations } from "./constants/constants";
+import type {
+  filterOperations,
+  selectFilterOperations,
+  textFilterOperations,
+} from "./constants/constants";
 
 export type FilterOperation = keyof typeof filterOperations;
 
-export type FilterOmitOperations<T extends FilterOperation> = {
-  omitOps?: T[];
-
-  selectOps?: never;
-};
-
-export type FilterSelectOperations<T extends FilterOperation> = {
+export type FilterOperationOptions<T extends FilterOperation> = {
   selectOps?: T[];
 
-  omitOps?: never;
+  omitOps?: T[];
 };
 
-export type FilterOperationOptions<T extends FilterOperation> =
-  FilterOmitOperations<T> | FilterSelectOperations<T>;
+export type FilterTextOperationsWithTypes = FilterOperationOptions<
+  (typeof textFilterOperations)[number]
+> & {
+  type: "text";
+};
 
-export type FilterNumberProps = FilterOperationOptions<
+export type FilterSelectOperationsWithTypes = FilterOperationOptions<
+  (typeof selectFilterOperations)[number]
+> & {
+  type: "select" | "nativeSelect" | "selectApi" | "combobox" | "comboboxApi";
+};
+
+export type FilterNumberOperationsWithTypes = FilterOperationOptions<
   | "equals"
   | "notEquals"
   | "gt"
@@ -32,21 +39,7 @@ export type FilterNumberProps = FilterOperationOptions<
   type: "number";
 };
 
-export type FilterSelectProps = FilterOperationOptions<
-  "in" | "notIn" | "isNull" | "isNotNull"
-> & {
-  type: "select";
-
-  options: { value: string | number | boolean; label: string }[];
-};
-
-export type FilterSelectApiProps = FilterOperationOptions<
-  "in" | "notIn" | "isNull" | "isNotNull"
-> & {
-  type: "selectApi";
-};
-
-export type FilterDateProps = FilterOperationOptions<
+export type FilterDateOperationsWithTypes = FilterOperationOptions<
   "equals" | "notEquals" | "gt" | "lt" | "gte" | "lte" | "isNull" | "isNotNull"
 > & {
   type: "date";

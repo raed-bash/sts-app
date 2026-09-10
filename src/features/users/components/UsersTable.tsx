@@ -1,3 +1,4 @@
+import * as React from "react";
 import Table, {
   type TableSortStatuses,
 } from "@/shared/components/custom/table/Table";
@@ -20,9 +21,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip";
-import { useState } from "react";
 import type { FilterItem } from "@/shared/components/custom/table/filter";
 import type { SyntheticEventHandler } from "@/shared/utils";
+import { STATUS_TITLES } from "@/constants/user-status";
+import { ROLE_TITLES } from "@/constants/user-role";
+import { SelectItem } from "@/shared/components/ui/select";
 
 export type UsersTableProps = {
   onSortChange: UseTableSortChangeEventAction<UserDto>;
@@ -38,6 +41,8 @@ export type UsersTableProps = {
   handleFiltersChange: SyntheticEventHandler;
   debounceFilters: Record<string, any>;
   rows?: UserDto[];
+  setFilters: React.Dispatch<React.SetStateAction<FilterItem[]>>;
+  filters: FilterItem[];
 };
 
 export default function UsersTable(props: UsersTableProps) {
@@ -49,8 +54,6 @@ export default function UsersTable(props: UsersTableProps) {
     "usersHiddenColumns",
     new Set(),
   );
-
-  const [filters, setFilters] = useState<FilterItem[]>([]);
 
   return (
     <Table<UserDto>
@@ -65,8 +68,8 @@ export default function UsersTable(props: UsersTableProps) {
       onPageChange={props.setPage}
       orderedColumns={orderedColumns}
       setOrderedColumns={setOrderedColumns}
-      filters={filters}
-      setFilters={setFilters}
+      filters={props.filters}
+      setFilters={props.setFilters}
       columns={[
         {
           name: "id",
@@ -87,10 +90,6 @@ export default function UsersTable(props: UsersTableProps) {
           headerName: "Full Name",
           strict: false,
           getCell: (_, row) => row.student?.fullName || row.teacher?.fullName,
-          filterable: true,
-          filterProps: {
-            type: "text",
-          },
         },
         {
           name: "status",
@@ -99,7 +98,15 @@ export default function UsersTable(props: UsersTableProps) {
           sort: true,
           filterable: true,
           filterProps: {
-            type: "text",
+            type: "select",
+            getInputLabel(value: keyof typeof STATUS_TITLES) {
+              return STATUS_TITLES[value];
+            },
+            children: Object.entries(STATUS_TITLES).map(([value, label]) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            )),
           },
         },
         {
@@ -107,6 +114,17 @@ export default function UsersTable(props: UsersTableProps) {
           headerName: "Role",
           getCell: (role) => <RoleBadge role={role} />,
           sort: true,
+          filterable: true,
+          filterProps: {
+            type: "select",
+            getInputLabel: (value: keyof typeof ROLE_TITLES) =>
+              ROLE_TITLES[value],
+            children: Object.entries(ROLE_TITLES).map(([value, label]) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            )),
+          },
         },
         {
           name: "createdAt",

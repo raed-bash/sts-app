@@ -1,17 +1,25 @@
-import type { FilterInputProps } from "../FilterInput";
 import type { FilterOperation } from "../types";
-import { textFilterOperations } from "../constants/constants";
+import {
+  selectFilterOperations,
+  textFilterOperations,
+} from "../constants/constants";
+import type { FilterFilter } from "../FilterBoard";
 
 export const FILTER_OPERATIONS_BY_TYPE: Partial<
-  Record<FilterInputProps["type"], FilterOperation[]>
+  Record<FilterFilter<any>["type"], FilterOperation[]>
 > = {
   text: textFilterOperations,
+  nativeSelect: selectFilterOperations,
+  select: selectFilterOperations,
+  selectApi: selectFilterOperations,
+  combobox: selectFilterOperations,
+  comboboxApi: selectFilterOperations,
 };
 
 export const getAvailableFilterOps = <
   T extends FilterOperation = FilterOperation,
 >(
-  type: FilterInputProps["type"],
+  type: FilterFilter<any>["type"],
   options: { selectedOps?: T[]; omittedOps?: T[] } = {},
 ): T[] => {
   const baseOps = (FILTER_OPERATIONS_BY_TYPE[type] ?? []) as T[];

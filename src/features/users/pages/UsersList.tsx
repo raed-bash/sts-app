@@ -1,4 +1,4 @@
-import { useState } from "react";
+import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { usersApi } from "../users.api";
 import UsersTable from "../components/UsersTable";
@@ -18,7 +18,6 @@ import {
 } from "@/shared/components/ui/select";
 import {
   useCachedState,
-  useFilterState,
   useDebouncedFilter,
   useSelectedRows,
   useSorts,
@@ -27,36 +26,43 @@ import type { SyntheticEvent } from "@/shared/utils";
 import InputPlus from "@/shared/components/custom/inputs/InputPlus";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import Frame from "@/shared/components/custom/frame/Frame";
+import type { FilterItem } from "@/shared/components/custom/table/filter";
 
 export default function UsersList() {
-  const { filters } = useFilterState("usersFilters", new QueryUserDto({}));
-
-  const {
-    filters: debounceFilters,
-    filterDebounced,
-    handleFiltersChange,
-  } = useDebouncedFilter("usersFiltersDebounce", new QueryUserDto({}));
+  const [tableFilters, setTableFilters] = useCachedState<FilterItem[]>(
+    "userTableFilters",
+    [],
+  );
+  const { filters: debounceFilters, handleFiltersChange } = useDebouncedFilter(
+    "usersFiltersDebounce",
+    new QueryUserDto({}),
+  );
 
   const { selectedRows, setSelectedRows } = useSelectedRows(
     "any",
     new Set<number | string>(),
   );
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = React.useState(1);
 
   const { handleSortChange, sorts } = useSorts<keyof UserDto>("users");
 
   const usersQuery = useQuery({
-    queryKey: ["users", page, sorts, filters, filterDebounced],
+    queryKey: ["users", page, sorts, tableFilters],
     queryFn: () =>
       usersApi.getUsers(
-        new QueryUserDto({ ...filters, ...filterDebounced, sorts }),
+        new QueryUserDto({
+          ...Object.fromEntries(
+            tableFilters.map((item) => [item.name, item.value]),
+          ),
+          sorts,
+        }),
       ),
   });
 
   const [user, setUser] = useCachedState<UserDto | null>("selectedUsers", null);
 
-  const [users, setUsers] = useState<UserDto[]>([]);
+  const [users, setUsers] = React.useState<UserDto[]>([]);
 
   const handleUserChange = (e: SyntheticEvent) => {
     setUser(e.target.value);
@@ -294,6 +300,14 @@ export default function UsersList() {
             scLoading={usersQuery.isFetching}
             handleFiltersChange={handleFiltersChange}
             debounceFilters={debounceFilters}
+            filters={tableFilters}
+            setFilters={(newFilters) => {
+              if (typeof newFilters === "object") {
+                setTableFilters(newFilters);
+              } else {
+                return setTableFilters(newFilters(tableFilters));
+              }
+            }}
           />
         </CardContent>
       </Card>

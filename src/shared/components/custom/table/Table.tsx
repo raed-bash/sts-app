@@ -76,7 +76,7 @@ export type TableColumn<Row extends RowType> = (
 
   filterable?: boolean;
 
-  filterProps?: FilterFilter;
+  filterProps?: FilterFilter<any>;
 };
 
 export type TableRowType<Row = any | { id: number }> = Row;
