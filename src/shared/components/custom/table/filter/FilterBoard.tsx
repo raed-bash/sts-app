@@ -4,6 +4,8 @@ import { getAvailableFilterOps } from "./utils/utils";
 import type { RowType, TableColumn } from "../Table";
 import type {
   FilterItem,
+  LogicalOperator,
+  UseFilterChangeLogicalOperatorAction,
   UseFilterDeleteEventAction,
   UseFilterPushEventAction,
   UseFilterUpdateEventAction,
@@ -48,6 +50,8 @@ export type FilterBoardProps<Row extends RowType> = {
   onUpdateFilter: UseFilterUpdateEventAction;
   onDeleteFilter: UseFilterDeleteEventAction;
   filters: FilterItem[];
+  onChangeLogicalOperator: UseFilterChangeLogicalOperatorAction;
+  logicalOperator: LogicalOperator;
 };
 
 export default function FilterBoard<Row extends RowType>({
@@ -59,6 +63,8 @@ export default function FilterBoard<Row extends RowType>({
   onUpdateFilter,
   onDeleteFilter,
   filters,
+  onChangeLogicalOperator,
+  logicalOperator,
 }: FilterBoardProps<Row>) {
   const filterColumns = columns.filter((column) => column.filterable);
 
@@ -131,6 +137,12 @@ export default function FilterBoard<Row extends RowType>({
       onUpdateFilter({ name: value, operation: op[0], value: "" }, i);
     };
 
+  const handleChangeLogicalOperator = (e: SyntheticEvent<any>) => {
+    const value = e.target.value;
+
+    onChangeLogicalOperator(value);
+  };
+
   return (
     <Popover open={isFilterOpen} onOpenChange={handleOpenChangeBoard}>
       <Tooltip>
@@ -169,10 +181,7 @@ export default function FilterBoard<Row extends RowType>({
             });
 
             return (
-              <div
-                className={cn("flex gap-4 items-center ", "grid-cols-3")}
-                key={i}
-              >
+              <div className={cn("flex gap-4 items-center ")} key={i}>
                 <div
                   className={cn(
                     "flex",
@@ -192,8 +201,8 @@ export default function FilterBoard<Row extends RowType>({
                     i > 0 && (
                       <InputPlus
                         type="nativeSelect"
-                        onChange={() => {}}
-                        value="AND"
+                        onChange={handleChangeLogicalOperator}
+                        value={logicalOperator}
                       >
                         <NativeSelectOption value="AND">AND</NativeSelectOption>
                         <NativeSelectOption value="OR">OR</NativeSelectOption>
@@ -201,7 +210,7 @@ export default function FilterBoard<Row extends RowType>({
                     )
                   )}
                 </div>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-4 w-full">
                   <InputPlus
                     type="select"
                     name="name"

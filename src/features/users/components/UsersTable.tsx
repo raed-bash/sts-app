@@ -1,4 +1,3 @@
-import * as React from "react";
 import Table, {
   type TableSortStatuses,
 } from "@/shared/components/custom/table/Table";
@@ -21,7 +20,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip";
-import type { FilterItem } from "@/shared/components/custom/table/filter";
+import type {
+  FilterItem,
+  LogicalOperator,
+  UseFilterSetStateFiltersAction,
+  UseFilterSetStateLogicalOperatorAction,
+} from "@/shared/components/custom/table/filter";
 import type { SyntheticEventHandler } from "@/shared/utils";
 import { STATUS_TITLES } from "@/constants/user-status";
 import { ROLE_TITLES } from "@/constants/user-role";
@@ -41,8 +45,10 @@ export type UsersTableProps = {
   handleFiltersChange: SyntheticEventHandler;
   debounceFilters: Record<string, any>;
   rows?: UserDto[];
-  setFilters: React.Dispatch<React.SetStateAction<FilterItem[]>>;
+  setFilters: UseFilterSetStateFiltersAction;
   filters: FilterItem[];
+  setLogicalOperator: UseFilterSetStateLogicalOperatorAction;
+  logicalOperator: LogicalOperator;
 };
 
 export default function UsersTable(props: UsersTableProps) {
@@ -70,6 +76,8 @@ export default function UsersTable(props: UsersTableProps) {
       setOrderedColumns={setOrderedColumns}
       filters={props.filters}
       setFilters={props.setFilters}
+      logicalOperator={props.logicalOperator}
+      setLogicalOperator={props.setLogicalOperator}
       columns={[
         {
           name: "id",

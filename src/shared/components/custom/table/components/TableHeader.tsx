@@ -56,6 +56,8 @@ export default function TableHeader<Row extends RowType>({
         onDeleteFilter={filterUtils.deleteFilter}
         onPushFilter={filterUtils.pushFilter}
         onUpdateFilter={filterUtils.updateFilter}
+        logicalOperator={filterUtils.logicalOperator}
+        onChangeLogicalOperator={filterUtils.changeLogicalOperator}
       />
       {selectedRows.size ? (
         <p className="text-sm">Selected rows: {selectedRows.size}</p>

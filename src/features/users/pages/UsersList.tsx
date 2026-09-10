@@ -26,7 +26,10 @@ import type { SyntheticEvent } from "@/shared/utils";
 import InputPlus from "@/shared/components/custom/inputs/InputPlus";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import Frame from "@/shared/components/custom/frame/Frame";
-import type { FilterItem } from "@/shared/components/custom/table/filter";
+import {
+  type LogicalOperator,
+  type FilterItem,
+} from "@/shared/components/custom/table/filter";
 
 export default function UsersList() {
   const [tableFilters, setTableFilters] = useCachedState<FilterItem[]>(
@@ -37,6 +40,9 @@ export default function UsersList() {
     "usersFiltersDebounce",
     new QueryUserDto({}),
   );
+
+  const [logicalOperator, setLogicalOperator] =
+    React.useState<LogicalOperator>("AND");
 
   const { selectedRows, setSelectedRows } = useSelectedRows(
     "any",
@@ -287,6 +293,8 @@ export default function UsersList() {
       <Card className="pb-52">
         <CardContent>
           <UsersTable
+            logicalOperator={logicalOperator}
+            setLogicalOperator={setLogicalOperator}
             onSortChange={handleSortChange}
             page={page}
             selectedRows={selectedRows}

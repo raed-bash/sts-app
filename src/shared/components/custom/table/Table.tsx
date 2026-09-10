@@ -24,7 +24,11 @@ import {
   type FilterItem,
   type UseFilterSetStateFiltersAction,
 } from "./filter/hooks/useFilter";
-import type { FilterOperation } from "./filter";
+import type {
+  FilterOperation,
+  LogicalOperator,
+  UseFilterSetStateLogicalOperatorAction,
+} from "./filter";
 import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
 
 export type RowType = Record<string, any>;
@@ -175,6 +179,10 @@ export type TableProps<Row extends RowType> = (
     filters: FilterItem[];
 
     setFilters?: UseFilterSetStateFiltersAction;
+
+    logicalOperator: LogicalOperator;
+
+    setLogicalOperator: UseFilterSetStateLogicalOperatorAction;
   };
 
 function Table<Row extends RowType>({
@@ -208,6 +216,8 @@ function Table<Row extends RowType>({
   setOrderedColumns,
   filters,
   setFilters,
+  logicalOperator,
+  setLogicalOperator,
 }: TableProps<Row>) {
   const {
     displayedColumns,
@@ -232,6 +242,8 @@ function Table<Row extends RowType>({
     setOrderedColumns,
     filters,
     setFilters,
+    logicalOperator,
+    setLogicalOperator,
   });
 
   const theaderProps = {

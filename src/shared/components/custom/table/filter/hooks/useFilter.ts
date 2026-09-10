@@ -13,15 +13,34 @@ export type UseFilterSetStateFiltersAction = React.Dispatch<
   React.SetStateAction<FilterItem[]>
 >;
 
+export type LogicalOperator = "AND" | "OR";
+
+export type UseFilterSetStateLogicalOperatorAction = React.Dispatch<
+  React.SetStateAction<LogicalOperator>
+>;
+
 export type FilterItem = { name: string; operation?: string; value: any };
+
+export type UseFilterChangeLogicalOperatorAction = (
+  operator: LogicalOperator,
+) => void;
 
 export type UseFilterOptions = {
   filters: FilterItem[];
 
   setFilters?: UseFilterSetStateFiltersAction;
+
+  logicalOperator: LogicalOperator;
+
+  setLogicalOperator: UseFilterSetStateLogicalOperatorAction;
 };
 
-export function useFilter({ filters, setFilters }: UseFilterOptions) {
+export function useFilter({
+  filters,
+  setFilters,
+  logicalOperator,
+  setLogicalOperator,
+}: UseFilterOptions) {
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
   const closeFilter = () => setIsFilterOpen(false);
@@ -48,6 +67,12 @@ export function useFilter({ filters, setFilters }: UseFilterOptions) {
     );
   };
 
+  const changeLogicalOperator: UseFilterChangeLogicalOperatorAction = (
+    operator: LogicalOperator,
+  ) => {
+    setLogicalOperator(operator);
+  };
+
   return {
     pushFilter,
     updateFilter,
@@ -56,5 +81,7 @@ export function useFilter({ filters, setFilters }: UseFilterOptions) {
     closeFilter,
     isFilterOpen,
     filters,
+    logicalOperator,
+    changeLogicalOperator,
   };
 }

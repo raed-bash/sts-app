@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import {
   useFilter,
   type FilterItem,
+  type LogicalOperator,
   type UseFilterSetStateFiltersAction,
+  type UseFilterSetStateLogicalOperatorAction,
 } from "../filter/hooks/useFilter";
 import { getAvailableFilterOps } from "../filter";
 import type {
@@ -61,6 +63,10 @@ export type UseTableOptions<Row extends RowType> = {
   filters: FilterItem[];
 
   setFilters?: UseFilterSetStateFiltersAction;
+
+  logicalOperator: LogicalOperator;
+
+  setLogicalOperator: UseFilterSetStateLogicalOperatorAction;
 };
 
 export function useTable<Row extends RowType>({
@@ -75,6 +81,8 @@ export function useTable<Row extends RowType>({
   orderedColumns,
   filters,
   setFilters,
+  logicalOperator,
+  setLogicalOperator,
 }: UseTableOptions<Row>) {
   const [prevOriginalColumns, setPrevOriginalColumns] =
     useState(originalColumns);
@@ -176,7 +184,12 @@ export function useTable<Row extends RowType>({
     setOrderedColumns(columns.map((column) => column.name));
   }, [columns, setOrderedColumns]);
 
-  const filterUtils = useFilter({ filters, setFilters });
+  const filterUtils = useFilter({
+    filters,
+    setFilters,
+    logicalOperator,
+    setLogicalOperator,
+  });
 
   const createColumnFilterClickHandler: UseTableCreateColumnFilterClickHandler<
     Row
