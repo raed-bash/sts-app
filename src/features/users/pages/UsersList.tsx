@@ -68,14 +68,14 @@ export default function UsersList() {
 
   const [user, setUser] = useCachedState<UserDto | null>("selectedUsers", null);
 
-  const [users, setUsers] = React.useState<UserDto[]>([]);
+  const [selectedUsers, setSelectedUsers] = React.useState<UserDto[]>([]);
 
   const handleUserChange = (e: SyntheticEvent) => {
     setUser(e.target.value);
   };
 
   const handleUsersChange = (e: SyntheticEvent) => {
-    setUsers(e.target.value);
+    setSelectedUsers(e.target.value);
   };
 
   return (
@@ -105,7 +105,7 @@ export default function UsersList() {
             title="Multiple Combobox Field"
             placeholder="Multiple Combobox Field"
             multiple
-            value={users}
+            value={selectedUsers}
             onChange={handleUsersChange}
             items={usersQuery.data?.data}
             autoHighlight
@@ -164,7 +164,7 @@ export default function UsersList() {
             placeholder="Multiple API Combobox"
             title="Multiple API Combobox"
             onChange={handleUsersChange}
-            value={users}
+            value={selectedUsers}
             getInputLabel={(users) =>
               users.map((user) => (
                 <ComboboxChip key={user.id}>{user.username}</ComboboxChip>
@@ -178,7 +178,7 @@ export default function UsersList() {
                   data
                     .filter(
                       (user) =>
-                        !users.some(
+                        !selectedUsers.some(
                           (selectedUser) => user.id === selectedUser.id,
                         ),
                     )
@@ -214,7 +214,7 @@ export default function UsersList() {
             type="select"
             title="Multiple Select Field"
             multiple
-            value={users}
+            value={selectedUsers}
             onChange={handleUsersChange}
             getInputLabel={(items) =>
               items?.length
@@ -261,7 +261,7 @@ export default function UsersList() {
             type="selectApi"
             title="Multiple API Select"
             multiple
-            value={users}
+            value={selectedUsers}
             onChange={handleUsersChange}
             isItemEqualToValue={(item, value) => item.id === value.id}
             getInputLabel={(items) =>
