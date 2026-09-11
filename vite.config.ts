@@ -4,6 +4,7 @@ import checker from "vite-plugin-checker";
 import tailwindcss from "@tailwindcss/vite";
 import svgrPlugin from "vite-plugin-svgr";
 import path from "path";
+import { visualizer } from "rollup-plugin-visualizer";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -19,6 +20,12 @@ export default defineConfig({
     }),
     tailwindcss(),
     svgrPlugin(),
+    visualizer({
+      open: true,
+      filename: "stats.html",
+      gzipSize: true,
+      brotliSize: true,
+    }),
   ],
   resolve: { alias: { src: "/src", "@": path.resolve(__dirname, "./src") } },
 });
