@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { authApi } from "../auth.api";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { signUpSchema } from "../schemas/sign-up.schema";
 import { SignUpDto } from "../dtos/sign-up.dto";
@@ -12,13 +10,12 @@ import Button from "@/shared/components/custom/buttons/Button";
 import Alert from "@/shared/components/custom/alert/Alert";
 import AppLink from "@/shared/components/custom/AppLink";
 import { SelectItem } from "@/shared/components/ui/select";
-
-
-
+import { useSignUp } from "../api/sign-up.api";
 
 export default function SignUp() {
-  const [error, setError] = useState<string | null>(null);
   const authContext = useAuthContext();
+
+  const signUpMutation = useSignUp();
 
   const formik = useAppFormik<
     Omit<SignUpDto, "gender"> & {
@@ -33,23 +30,12 @@ export default function SignUp() {
       isNameViewed: true,
     },
     validationZodSchema: signUpSchema,
-    onSubmit: (values, { setSubmitting }) => {
-      setSubmitting(true);
-      setError(null);
-
-      authApi
-        .signUp(new SignUpDto(values as SignUpDto))
-        .then((data) => {
-          setError(null);
-
+    onSubmit: (values) => {
+      signUpMutation.mutate(new SignUpDto(values as SignUpDto), {
+        onSuccess: (data) => {
           authContext.login(data);
-        })
-        .catch((error) => {
-          setError(error?.response?.data?.message || "Something went wrong");
-        })
-        .finally(() => {
-          setSubmitting(false);
-        });
+        },
+      });
     },
   });
 
@@ -63,7 +49,7 @@ export default function SignUp() {
 
       <Paper
         className="max-w-md w-full mt-5 aria-invalid:border-(--danger) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger)/30 "
-        aria-invalid={Boolean(error)}
+        aria-invalid={signUpMutation.isError}
       >
         <form className="flex flex-col gap-2 " onSubmit={formik.handleSubmit}>
           <InputPlus
@@ -122,10 +108,16 @@ export default function SignUp() {
             inputPlusContainerProps={{ className: " gap-3" }}
             oneline
           />
-          <Button type="submit" disabled={formik.isSubmitting} className="mt-2">
-            {formik.isSubmitting ? "Signing up..." : "Sign up"}
+          <Button
+            type="submit"
+            disabled={signUpMutation.isPending}
+            className="mt-2"
+          >
+            {signUpMutation.isPending ? "Signing up..." : "Sign up"}
           </Button>
-          {error && <Alert color="danger">{error}</Alert>}
+          {signUpMutation.isError && (
+            <Alert color="danger">{signUpMutation.error.message}</Alert>
+          )}
           <div className="flex items-center mt-2">
             <div className="border-b w-full border-gray-300 "></div>
             <div className="mx-3 text-md min-w-max text-gray-400">OR</div>

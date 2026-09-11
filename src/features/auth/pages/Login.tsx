@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { authApi } from "../auth.api";
 import { loginSchema } from "../schemas/login.schema";
 import { useAuthContext } from "@/contexts/AuthContext";
 import toast from "react-hot-toast";
@@ -9,36 +7,27 @@ import Button from "@/shared/components/custom/buttons/Button";
 import Alert from "@/shared/components/custom/alert/Alert";
 import AppLink from "@/shared/components/custom/AppLink";
 import { useAppFormik } from "@/shared/lib/formik";
+import { useLogin } from "../api/login.api";
+import { LoginDto } from "../dtos/login.dto";
 
 export default function Login() {
-  const [error, setError] = useState<string | null>(null);
   const authContext = useAuthContext();
 
-  const formik = useAppFormik({
+  const loginMutation = useLogin();
+  const formik = useAppFormik<LoginDto>({
     initialValues: {
       username: "",
       password: "",
     },
     validationZodSchema: loginSchema,
-    onSubmit: (values, { setSubmitting }) => {
-      setSubmitting(true);
-      setError(null);
-
-      authApi
-        .login(values)
-        .then((data) => {
-          setError(null);
-
+    onSubmit: (values) => {
+      loginMutation.mutate(values, {
+        onSuccess: (data) => {
           authContext.login(data);
 
           toast.success(data.message);
-        })
-        .catch((error) => {
-          setError(error?.response?.data?.message || "Something went wrong");
-        })
-        .finally(() => {
-          setSubmitting(false);
-        });
+        },
+      });
     },
   });
 
@@ -48,7 +37,7 @@ export default function Login() {
       <p className="text-(--text-muted) text-sm">Please Login to continue</p>
       <Paper
         className="max-w-md w-full mt-5 aria-invalid:border-(--danger) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger)/30 "
-        aria-invalid={Boolean(error)}
+        aria-invalid={Boolean(loginMutation.isError)}
       >
         <form className="flex flex-col gap-2 " onSubmit={formik.handleSubmit}>
           <InputPlus
@@ -71,11 +60,17 @@ export default function Login() {
             onBlur={formik.handleBlur}
             error
           />
-          <Button type="submit" disabled={formik.isSubmitting} className="mt-2">
-            {formik.isSubmitting ? "Logging in..." : "Login"}
+          <Button
+            type="submit"
+            disabled={loginMutation.isPending}
+            className="mt-2"
+          >
+            {loginMutation.isPending ? "Logging in..." : "Login"}
           </Button>
 
-          {error && <Alert color="danger">{error}</Alert>}
+          {loginMutation.isError && (
+            <Alert color="danger">{loginMutation.error.message}</Alert>
+          )}
 
           <div className="flex items-center mt-2">
             <div className="border-b w-full border-gray-300 "></div>

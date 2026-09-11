@@ -2,8 +2,6 @@ import ProfileFilledIcon from "@/assets/icons/profile-filled.svg?react";
 import ProfileIcon from "@/assets/icons/profile.svg?react";
 import SettingsIcon from "@/assets/icons/settings.svg?react";
 import LogoutIcon from "@/assets/icons/logout.svg?react";
-import { useQuery } from "@tanstack/react-query";
-import { usersApi } from "@/features/users/users.api";
 import { useLogout } from "@/hooks";
 import { cn } from "cn";
 import { ROLE_TITLES } from "@/constants/user-role";
@@ -11,11 +9,12 @@ import Animation from "@/shared/components/custom/Animation";
 import Loading from "@/shared/components/custom/skeleton/Loading";
 import Button from "@/shared/components/custom/buttons/Button";
 import AppLink from "@/shared/components/custom/AppLink";
+import { useMe } from "@/features/users/api/get-me.api";
 
 export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
   const handleLogout = useLogout();
 
-  const meQuery = useQuery({ queryKey: ["me"], queryFn: () => usersApi.me() });
+  const meQuery = useMe();
 
   const me = meQuery.data;
 

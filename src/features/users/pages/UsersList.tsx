@@ -30,6 +30,10 @@ import {
   type LogicalOperator,
   type FilterItem,
 } from "@/shared/components/custom/table/filter";
+import { getUsers, getUsersQueryOptions, useUsers } from "../api/get-users.api";
+import { usersQueryKeys } from "../users.api-keys";
+import { useDebouncedValue } from "@/shared/hooks";
+import type { QueryClient } from "@tanstack/react-query";
 
 export default function UsersList() {
   const [tableFilters, setTableFilters] = useCachedState<FilterItem[]>(
@@ -53,17 +57,16 @@ export default function UsersList() {
 
   const { handleSortChange, sorts } = useSorts<keyof UserDto>("users");
 
-  const usersQuery = useQuery({
-    queryKey: ["users", page, sorts, tableFilters],
-    queryFn: () =>
-      usersApi.getUsers(
-        new QueryUserDto({
-          ...Object.fromEntries(
-            tableFilters.map((item) => [item.name, item.value]),
-          ),
-          sorts,
-        }),
+  const debounceTableFilters = useDebouncedValue(tableFilters);
+
+  const usersQuery = useUsers({
+    query: new QueryUserDto({
+      ...Object.fromEntries(
+        debounceTableFilters.map((item) => [item.name, item.value]),
       ),
+      sorts,
+      page,
+    }),
   });
 
   const [user, setUser] = useCachedState<UserDto | null>("selectedUsers", null);
@@ -77,6 +80,8 @@ export default function UsersList() {
   const handleUsersChange = (e: SyntheticEvent) => {
     setSelectedUsers(e.target.value);
   };
+
+  const [users, meta] = [usersQuery.data?.data, usersQuery.data?.meta];
 
   return (
     <div className="flex flex-col gap-5">
@@ -129,8 +134,8 @@ export default function UsersList() {
             onChange={handleUserChange}
             value={user}
             queryProps={{
-              queryFn: usersApi.getUsers,
-              queryKey: ["selectUserssa"],
+              queryFn: getUsers,
+              queryKey: usersQueryKeys.infiniteList(),
             }}
             searchKey={"username" as keyof QueryUserDto}
             placeholder="API Combobox"
@@ -157,8 +162,8 @@ export default function UsersList() {
             type="comboboxApi"
             multiple
             queryProps={{
-              queryFn: usersApi.getUsers,
-              queryKey: ["comboboxUsers"],
+              queryFn: getUsers,
+              queryKey: usersQueryKeys.infiniteList(),
             }}
             searchKey="username"
             placeholder="Multiple API Combobox"
@@ -240,8 +245,8 @@ export default function UsersList() {
             isItemEqualToValue={(item, value) => item.id === value.id}
             getInputLabel={(item) => item?.username || "API Select"}
             queryProps={{
-              queryFn: usersApi.getUsers,
-              queryKey: ["selectedUser2"],
+              queryFn: getUsers,
+              queryKey: usersQueryKeys.infiniteList(),
             }}
           >
             {(data) => (
@@ -270,8 +275,8 @@ export default function UsersList() {
                 : "Multiple API Select"
             }
             queryProps={{
-              queryFn: usersApi.getUsers,
-              queryKey: ["selectedUser2"],
+              queryFn: getUsers,
+              queryKey: usersQueryKeys.infiniteList(),
             }}
           >
             {(data) => (
@@ -301,9 +306,9 @@ export default function UsersList() {
             setPage={setPage}
             setSelectedRows={setSelectedRows}
             sorts={sorts}
-            count={usersQuery.data?.meta.total || 0}
-            perPage={usersQuery.data?.meta.perPage}
-            rows={usersQuery.data?.data}
+            count={meta?.total || 0}
+            perPage={meta?.perPage}
+            rows={users}
             loading={usersQuery.isPending}
             scLoading={usersQuery.isFetching}
             handleFiltersChange={handleFiltersChange}

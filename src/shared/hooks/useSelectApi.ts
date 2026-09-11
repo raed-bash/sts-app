@@ -18,6 +18,7 @@ export type QueryFnParams = {
 
 export type QueryFn<TData> = (
   params: QueryFnParams,
+  signal: AbortSignal,
 ) => Promise<QueryResponseType<TData>>;
 
 export type UseSelectApiOptions<TData> = {
@@ -44,7 +45,7 @@ export function useSelectApi<TData>({
 }: UseSelectApiOptions<TData>) {
   const infiniteQuery = useInfiniteQuery({
     queryFn: async (params) =>
-      await queryFn({ page: params.pageParam, perPage }),
+      queryFn({ page: params.pageParam, perPage }, params.signal),
     queryKey: queryKey,
     getNextPageParam,
     initialPageParam,
