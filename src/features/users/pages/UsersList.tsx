@@ -1,6 +1,4 @@
 import * as React from "react";
-import { useQuery } from "@tanstack/react-query";
-import { usersApi } from "../users.api";
 import UsersTable from "../components/UsersTable";
 import { QueryUserDto } from "../dtos/query-user.dto";
 import { UserDto } from "../dtos/user.dto";
@@ -34,6 +32,15 @@ import { getUsers, getUsersQueryOptions, useUsers } from "../api/get-users.api";
 import { usersQueryKeys } from "../users.api-keys";
 import { useDebouncedValue } from "@/shared/hooks";
 import type { QueryClient } from "@tanstack/react-query";
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const clientLoader = (queryClient: QueryClient) => async () => {
+  const query = getUsersQueryOptions(new QueryUserDto({}));
+
+  return (
+    queryClient.getQueryData(query.queryKey) ?? (await queryClient.query(query))
+  );
+};
 
 export default function UsersList() {
   const [tableFilters, setTableFilters] = useCachedState<FilterItem[]>(

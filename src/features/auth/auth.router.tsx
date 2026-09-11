@@ -1,30 +1,26 @@
+import { convert } from "@/app/app.router";
 import AuthRoute from "@/components/AuthRoute";
-import PageFallback from "@/shared/components/custom/PageFallback";
-import { lazy } from "react";
-import type { RouteObject } from "react-router";
+import type { QueryClient } from "@tanstack/react-query";
+import { Outlet, type RouteObject } from "react-router";
 
-const Login = lazy(() => import("./pages/Login"));
-const SignUp = lazy(() => import("./pages/SignUp"));
-
-export const authRouter: RouteObject[] = [
+export const authRouter = (queryClient: QueryClient): RouteObject[] => [
   {
-    path: "login",
+    path: "",
     element: (
       <AuthRoute>
-        <PageFallback>
-          <Login />
-        </PageFallback>
+        <Outlet />
       </AuthRoute>
     ),
-  },
-  {
-    path: "sign-up",
-    element: (
-      <AuthRoute>
-        <PageFallback>
-          <SignUp />
-        </PageFallback>
-      </AuthRoute>
-    ),
+    children: [
+      {
+        path: "login",
+        index: true,
+        lazy: () => import("./pages/Login").then(convert(queryClient)),
+      },
+      {
+        path: "sign-up",
+        lazy: () => import("./pages/SignUp").then(convert(queryClient)),
+      },
+    ],
   },
 ];

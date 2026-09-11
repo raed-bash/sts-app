@@ -1,17 +1,11 @@
-import { lazy } from "react";
 import type { RouteObject } from "react-router";
 import { userRoutesMeta } from "./users.routes-meta";
-import PageFallback from "@/shared/components/custom/PageFallback";
+import { convert } from "@/app/app.router";
+import type { QueryClient } from "@tanstack/react-query";
 
-const UsersList = lazy(() => import("./pages/UsersList"));
-
-export const usersRouter: RouteObject[] = [
+export const usersRouter = (queryClient: QueryClient): RouteObject[] => [
   {
     path: userRoutesMeta.users.to,
-    element: (
-      <PageFallback>
-        <UsersList />
-      </PageFallback>
-    ),
+    lazy: () => import("./pages/UsersList").then(convert(queryClient)),
   },
 ];

@@ -4,8 +4,18 @@ import { authRouter } from "../features/auth/auth.router";
 import { usersRouter } from "../features/users/users.router";
 import Container from "@/components/layout/Container";
 import PrivateRoute from "@/components/PrivateRoute";
+import { useQueryClient, type QueryClient } from "@tanstack/react-query";
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const convert = (queryClient: QueryClient) => (m: any) => {
+  const { clientLoader, default: Component, ...rest } = m;
+
+  return { ...rest, loader: clientLoader?.(queryClient), Component };
+};
 
 export default function AppRouter() {
+  const queryClient = useQueryClient();
+
   const routers = createBrowserRouter([
     {
       path: "/",
@@ -27,14 +37,14 @@ export default function AppRouter() {
                 </div>
               ),
             },
-            ...usersRouter,
+            ...usersRouter(queryClient),
             {
               path: "settings",
               element: <h1>Settings</h1>,
             },
           ],
         },
-        ...authRouter,
+        ...authRouter(queryClient),
       ],
     },
   ]);
