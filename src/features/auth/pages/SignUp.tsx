@@ -3,7 +3,7 @@ import { authApi } from "../auth.api";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { signUpSchema } from "../schemas/sign-up.schema";
 import { SignUpDto } from "../dtos/sign-up.dto";
-import { type Gender } from "@/constants/gender";
+import { GENDERS, type Gender } from "@/constants/gender";
 import { capitalize } from "lodash";
 import { useAppFormik } from "@/shared/lib/formik";
 import Paper from "@/shared/components/custom/paper/Paper";
@@ -11,6 +11,10 @@ import InputPlus from "@/shared/components/custom/inputs/InputPlus";
 import Button from "@/shared/components/custom/buttons/Button";
 import Alert from "@/shared/components/custom/alert/Alert";
 import AppLink from "@/shared/components/custom/AppLink";
+import { SelectItem } from "@/shared/components/ui/select";
+
+
+
 
 export default function SignUp() {
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +22,7 @@ export default function SignUp() {
 
   const formik = useAppFormik<
     Omit<SignUpDto, "gender"> & {
-      gender: Gender | string;
+      gender: Gender | "";
     }
   >({
     initialValues: {
@@ -100,12 +104,14 @@ export default function SignUp() {
             helperText={formik.touchedErrors.gender}
             onChange={formik.handleChange}
             error
-            options={["MALE", "FEMALE"] as Gender[]}
             getInputLabel={(gender) => capitalize(gender)}
-            getOptionLabel={(gender) => capitalize(gender)}
-            getUniqueValue={(gender) => gender}
-            multiple={false}
-          />
+          >
+            {GENDERS.map((gender) => (
+              <SelectItem key={gender} value={gender}>
+                {capitalize(gender)}
+              </SelectItem>
+            ))}
+          </InputPlus>
           <InputPlus
             type="checkbox"
             title="View name publicly"
