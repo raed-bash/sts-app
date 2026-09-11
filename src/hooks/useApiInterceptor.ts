@@ -50,9 +50,13 @@ export function useApiInterceptor() {
 
         return res;
       },
-      (err: any) => {
+      (err) => {
         if (err.response) {
           handleResponse(err.response);
+
+          const apiMessage = err.response.data.message;
+
+          err.message = apiMessage;
         }
 
         if (err.code === "ERR_NETWORK") {
