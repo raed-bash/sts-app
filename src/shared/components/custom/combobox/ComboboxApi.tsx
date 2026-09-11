@@ -75,7 +75,10 @@ function ComboboxApi<Value, Multiple extends boolean | undefined = false>({
 
   const { listBoxProps, data, infiniteQuery } = useSelectApi<Value>({
     ...queryProps,
-    queryKey: [...queryProps.queryKey, debouncedSearch],
+    queryKey: [
+      ...queryProps.queryKey,
+      ...(debouncedSearch && [debouncedSearch]),
+    ],
     queryFn: (query, ...args) =>
       queryProps.queryFn({ ...query, [searchKey]: debouncedSearch }, ...args),
   });
