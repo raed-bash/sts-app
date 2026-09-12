@@ -31,6 +31,8 @@ import InputPlus, { type InputPlusProps } from "../../inputs/InputPlus";
 import { NativeSelectOption } from "@/shared/components/ui/native-select";
 import { filterOperations } from "./constants/constants";
 import type {
+  FilterDateOperationsWithTypes,
+  FilterNumberOperationsWithTypes,
   FilterSelectOperationsWithTypes,
   FilterTextOperationsWithTypes,
 } from "./types";
@@ -39,7 +41,12 @@ export type FilterFilter<
   Option,
   Multiple extends boolean | undefined = false,
 > = InputPlusProps<Option, Multiple> &
-  (FilterTextOperationsWithTypes | FilterSelectOperationsWithTypes);
+  (
+    | FilterTextOperationsWithTypes
+    | FilterSelectOperationsWithTypes
+    | FilterNumberOperationsWithTypes
+    | FilterDateOperationsWithTypes
+  );
 
 export type FilterBoardProps<Row extends RowType> = {
   columns: TableColumn<Row>[];

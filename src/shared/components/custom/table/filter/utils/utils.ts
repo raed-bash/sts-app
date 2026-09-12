@@ -1,20 +1,6 @@
 import type { FilterOperation } from "../types";
-import {
-  selectFilterOperations,
-  textFilterOperations,
-} from "../constants/constants";
 import type { FilterFilter } from "../FilterBoard";
-
-export const FILTER_OPERATIONS_BY_TYPE: Partial<
-  Record<FilterFilter<any>["type"], FilterOperation[]>
-> = {
-  text: textFilterOperations,
-  nativeSelect: selectFilterOperations,
-  select: selectFilterOperations,
-  selectApi: selectFilterOperations,
-  combobox: selectFilterOperations,
-  comboboxApi: selectFilterOperations,
-};
+import { FILTER_OPERATIONS_BY_TYPE } from "../constants/constants";
 
 export const getAvailableFilterOps = <
   T extends FilterOperation = FilterOperation,
