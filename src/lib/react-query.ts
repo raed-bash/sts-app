@@ -1,4 +1,8 @@
-import { QueryClient, type UseMutationOptions } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  QueryClient,
+  type UseMutationOptions,
+} from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
 export const queryClient = new QueryClient({
@@ -7,6 +11,7 @@ export const queryClient = new QueryClient({
       retry: false,
       refetchOnWindowFocus: false,
       staleTime: 1000 * 60,
+      placeholderData: keepPreviousData,
     },
   },
 });
