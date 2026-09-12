@@ -10,22 +10,15 @@ export function useApiInterceptor() {
   const handleResponse = useCallback(
     (res: AxiosResponse) => {
       const status = res.status;
-      const data = res.data;
 
-      let message = null;
-
-      if (status > 199 && status < 300) {
-        if (message) {
-          toast.success(message);
-        }
-      } else if (status > 399) {
-        message = data.message;
+      if (status > 399) {
+        const message = res.data?.message;
 
         if (status === 401) {
           handleLogout();
         }
 
-        if (!res.config.hideToasterMessage) {
+        if (!res.config.hideToasterMessage && message) {
           toast.error(message, {
             id: message,
           });
