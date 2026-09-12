@@ -1,11 +1,21 @@
 import React, { useMemo, useRef, useState } from "react";
 import SearchIcon from "@/shared/assets/icons/search.svg?react";
 import type { RowType, TableColumn } from "../Table";
-import Menu from "../../menu/Menu";
 import InputIcon from "../../inputs/InputIcon";
 import Checkbox from "../../inputs/Checkbox";
-import Button from "../../buttons/Button";
 import type { UseTableCreateToggleColumnsClickHandler } from "../hooks/useTable";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/components/ui/popover";
+import { Button } from "@/shared/components/ui/button";
+import { EllipsisVerticalIcon } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/shared/components/ui/tooltip";
 
 export type TableMenuColumnsProps<Row extends RowType> = {
   columns: TableColumn<Row>[];
@@ -196,75 +206,85 @@ function TableMenuColumns<Row extends RowType>({
     setSearchMenuCols(e.target.value);
 
   return (
-    <Menu tooltipTitle="show/hide columns">
-      <InputIcon
-        placeholder="Search..."
-        EndIcon={(props) => (
-          <SearchIcon
-            {...props}
-            className={`dark:stroke-(--text) ${props.className}`}
-          />
-        )}
-        inputFrameProps={{ className: "rounded-md h-8" }}
-        className="w-30 text-[14px]"
-        containerProps={{ className: "pt-2" }}
-        onChange={handleSearchChange}
-      />
-
-      {/* Floating ghost — follows the cursor, rendered outside the list */}
-      <div
-        ref={ghostRef}
-        className="fixed z-9999 items-center gap-2 rounded text-[13px] px-2 bg-(--primary) text-(--primary-foreground) opacity-90 pointer-events-none select-none"
-        style={{ display: "none" }}
-      />
-
-      <div ref={containerRef} className="flex flex-col gap-1">
-        {filteredColumns.length ? (
-          filteredColumns.map(({ column, originalIndex }, filteredIndex) => (
-            <button
-              key={String(column.name)}
-              ref={(el) => {
-                const key = String(column.name);
-                if (el) buttonRefs.current.set(key, el);
-                else buttonRefs.current.delete(key);
-              }}
-              className={[
-                "flex items-center gap-3 rounded text-[13px] px-2 py-1 select-none touch-none cursor-pointer",
-                "hover:bg-(--primary) hover:text-(--primary-foreground)",
-                "data-[dragging=true]:opacity-30 data-[dragging=true]:border data-[dragging=true]:cursor-grabbing data-[dragging=true]:border-dashed data-[dragging=true]:border-(--primary)",
-                "data-[drag-over=true]:bg-(--primary) data-[drag-over=true]:text-(--primary-foreground)",
-              ].join(" ")}
-              onClick={(e) => handleClick(e, column)}
-              onPointerDown={(e) =>
-                handlePointerDown(e, originalIndex, filteredIndex)
+    <Popover>
+      <Tooltip>
+        <PopoverTrigger
+          render={
+            <TooltipTrigger
+              render={
+                <Button variant={"ghost"} size={"icon-lg"}>
+                  <EllipsisVerticalIcon size={1000} />
+                </Button>
               }
-              onPointerMove={handlePointerMove}
-              onPointerUp={handlePointerUp}
-              onPointerCancel={handlePointerUp}
-            >
-              <Checkbox
-                className="w-4 h-4 cursor-pointer"
-                readOnly
-                checked={!hiddenColumns.has(column.name)}
-                tabIndex={-1}
-              />
-              {column.headerName}
-            </button>
-          ))
-        ) : (
-          <p className="text-gray-400">no columns...</p>
-        )}
-      </div>
+            />
+          }
+        />
+        <TooltipContent>show/hide columns</TooltipContent>
+      </Tooltip>
+      <PopoverContent>
+        <InputIcon
+          placeholder="Search..."
+          EndIcon={(props) => (
+            <SearchIcon
+              {...props}
+              className={`dark:stroke-(--text) ${props.className}`}
+            />
+          )}
+          inputFrameProps={{ className: "rounded-md h-8" }}
+          className="w-30 text-[14px]"
+          containerProps={{ className: "pt-2" }}
+          onChange={handleSearchChange}
+        />
 
-      <Button
-        color="primary"
-        variant="outlined"
-        className="py-2 px-1 text-[13px] border-none shadow-none"
-        onClick={onReset}
-      >
-        Reset
-      </Button>
-    </Menu>
+        <div
+          ref={ghostRef}
+          className="fixed z-200 items-center gap-2 rounded text-[13px] px-2 bg-(--primary) text-(--primary-foreground) opacity-90 pointer-events-none select-none"
+          style={{ display: "none" }}
+        />
+
+        <div ref={containerRef} className="flex flex-col gap-1">
+          {filteredColumns.length ? (
+            filteredColumns.map(({ column, originalIndex }, filteredIndex) => (
+              <button
+                key={String(column.name)}
+                ref={(el) => {
+                  const key = String(column.name);
+                  if (el) buttonRefs.current.set(key, el);
+                  else buttonRefs.current.delete(key);
+                }}
+                className={[
+                  "flex items-center gap-3 rounded text-[13px] px-2 py-1 select-none touch-none cursor-pointer",
+                  "hover:bg-(--primary) hover:text-(--primary-foreground)",
+                  "data-[dragging=true]:opacity-30 data-[dragging=true]:border data-[dragging=true]:cursor-grabbing data-[dragging=true]:border-dashed data-[dragging=true]:border-(--primary)",
+                  "data-[drag-over=true]:bg-(--primary) data-[drag-over=true]:text-(--primary-foreground)",
+                ].join(" ")}
+                onClick={(e) => handleClick(e, column)}
+                onPointerDown={(e) =>
+                  handlePointerDown(e, originalIndex, filteredIndex)
+                }
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                onPointerCancel={handlePointerUp}
+              >
+                <Checkbox
+                  className="w-4 h-4 cursor-pointer"
+                  readOnly
+                  checked={!hiddenColumns.has(column.name)}
+                  tabIndex={-1}
+                />
+                {column.headerName}
+              </button>
+            ))
+          ) : (
+            <p className="text-gray-400">no columns...</p>
+          )}
+        </div>
+
+        <Button variant="outline" onClick={onReset}>
+          Reset
+        </Button>
+      </PopoverContent>
+    </Popover>
   );
 }
 
