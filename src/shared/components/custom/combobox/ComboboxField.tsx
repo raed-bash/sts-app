@@ -17,7 +17,7 @@ import {
   ComboboxTrigger,
   ComboboxValue,
 } from "../../ui/combobox";
-import * as _ from "lodash";
+import { isFunction, isNil, isNumber, isString, overSome } from "lodash";
 import type { BaseUIEvent } from "@base-ui/react";
 import { useComboboxAnchor } from "./useComboboxAnchor";
 
@@ -109,15 +109,15 @@ export default function ComboboxField<
 }: ComboboxFieldProps<Value, Multiple>) {
   const anchor = useComboboxAnchor();
 
-  const renderEmpty = !_.isNil(empty) ? (
-    _.overSome(_.isString, _.isNumber)(empty) ? (
+  const renderEmpty = !isNil(empty) ? (
+    overSome(isString, isNumber)(empty) ? (
       <ComboboxEmpty>{empty}</ComboboxEmpty>
     ) : (
       empty
     )
   ) : null;
 
-  const isChildrenCallback = _.isFunction(children);
+  const isChildrenCallback = isFunction(children);
 
   const renderListChildren = isChildrenCallback ? (
     children
@@ -205,7 +205,7 @@ export function ComboboxFieldChips<
       <ComboboxValue>
         {(values: ValueType<Value, Multiple>) => (
           <>
-            {_.isFunction(getInputLabel)
+            {isFunction(getInputLabel)
               ? getInputLabel(values)
               : getInputLabel}
             <ComboboxChipsInput
