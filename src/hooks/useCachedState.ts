@@ -1,17 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-type Updater<T> = (value: T) => void;
+type SetData<T> = (value: T) => void;
 
 export function useCachedState<T>(
-  queryKey: string,
+  name: string,
   defaultData: T | (() => T),
-): readonly [T, Updater<T>] {
+): readonly [T, SetData<T>] {
   const queryClient = useQueryClient();
 
   const { data } = useQuery<T>({
-    queryKey: [queryKey],
+    queryKey: [name],
     queryFn: (c) => {
-      const data = c.client.getQueryData<T>([queryKey]);
+      const data = c.client.getQueryData<T>([name]);
 
       if (data) {
         return data;
@@ -27,12 +27,12 @@ export function useCachedState<T>(
         : defaultData,
   });
 
-  const { mutate } = useMutation<T, Error, T>({
+  const { mutate: setData } = useMutation<T, Error, T>({
     mutationFn: async (newValue: T) => newValue,
     onSuccess: (newValue) => {
-      queryClient.setQueryData<T>([queryKey], newValue);
+      queryClient.setQueryData<T>([name], newValue);
     },
   });
 
-  return [data as T, mutate] as const;
+  return [data as T, setData] as const;
 }

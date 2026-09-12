@@ -1,11 +1,11 @@
 import { useLocalStorage } from "./useLocalStorage";
 
-export function useHiddenColumnsLocalStorage(
+export function useHiddenColumns(
   name: string,
   defaultValue: Set<string> = new Set(),
 ) {
   const [hiddenColumns, setHiddenColumns] = useLocalStorage(
-    name,
+    `${name}HiddenColumns`,
     defaultValue,
     {
       onGet: (value) => {

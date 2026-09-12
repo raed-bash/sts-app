@@ -16,7 +16,7 @@ export function useDebouncedValue<T>(
     setDebouncedValue(value);
   };
 
-  const setDebouncedValueDebounce = useDebounce(
+  const debouncedSetValue = useDebounce(
     handleDebounceValueChange,
     delay,
   );
@@ -24,9 +24,9 @@ export function useDebouncedValue<T>(
   useEffect(() => {
     if (debouncedValue === value) return;
 
-    setDebouncedValueDebounce(value);
+    debouncedSetValue(value);
     // eslint-disable-next-line
-  }, [value, setDebouncedValueDebounce]);
+  }, [value, debouncedSetValue]);
 
   return debouncedValue;
 }

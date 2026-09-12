@@ -1,16 +1,22 @@
 import { useState } from "react";
 import { useCachedState } from "./useCachedState";
 
-const defaultSelectedRowsDefault = new Set<string | number>();
+export type UseSelectedRowsOptions = {
+  caching?: boolean;
+};
+
+const DEFAULT_SELECTED_ROWS: Set<string | number> = new Set<
+  string | number
+>();
 
 export function useSelectedRows(
   name: string,
-  defaultSelectRows = defaultSelectedRowsDefault,
-  { caching = true } = {},
+  defaultSelectedRows: Set<string | number> = DEFAULT_SELECTED_ROWS,
+  { caching = true }: UseSelectedRowsOptions = {},
 ) {
-  const state = useState(defaultSelectRows);
+  const state = useState(defaultSelectedRows);
 
-  const cacheState = useCachedState(`${name}SelectedRows`, defaultSelectRows);
+  const cacheState = useCachedState(`${name}SelectedRows`, defaultSelectedRows);
 
   const [selectedRows, setSelectedRows] = caching ? cacheState : state;
 

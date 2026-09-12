@@ -6,7 +6,7 @@ import {
 import type { UserDto } from "./user.dto";
 import type { UserStatus } from "@/constants/user-status";
 import type { UserRole } from "@/constants/user-role";
-import type { DefaultSorts } from "@/hooks";
+import type { DefaultSortStatuses } from "@/hooks";
 
 export const userOrderAttributes: (keyof UserDto)[] = [
   "id",
@@ -32,7 +32,7 @@ export interface QueryUserInput {
   isDeleted?: boolean | string;
   fromDeletedAt?: Date | string;
   toDeletedAt?: Date | string;
-  sorts?: DefaultSorts<UserOrderAttributes>;
+  sorts?: DefaultSortStatuses<UserOrderAttributes>;
 }
 
 export class QueryUserDto
