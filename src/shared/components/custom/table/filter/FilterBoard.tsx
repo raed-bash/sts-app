@@ -1,14 +1,14 @@
 import { cn } from "cn";
 import { FunnelIcon, FunnelXIcon, Plus, XIcon } from "lucide-react";
 import { getAvailableFilterOps } from "./utils/utils";
-import type { RowType, TableColumn } from "../Table";
+import type { TableRowRecord, TableColumn } from "../Table";
 import type {
-  FilterItem,
-  LogicalOperator,
-  UseFilterChangeLogicalOperatorAction,
-  UseFilterDeleteEventAction,
-  UseFilterPushEventAction,
-  UseFilterUpdateEventAction,
+  FilterCondition,
+  FilterLogicalOperator,
+  UseFilterLogicalOperatorChangeHandler,
+  UseFilterDeleteHandler,
+  UseFilterAddHandler,
+  UseFilterUpdateHandler,
 } from "./hooks/useFilter";
 import type { SyntheticEvent } from "@/shared/utils";
 import {
@@ -37,7 +37,7 @@ import type {
   FilterTextOperationsWithTypes,
 } from "./types";
 
-export type FilterFilter<
+export type FilterFieldProps<
   Option,
   Multiple extends boolean | undefined = false,
 > = InputPlusProps<Option, Multiple> &
@@ -48,58 +48,79 @@ export type FilterFilter<
     | FilterDateOperationsWithTypes
   );
 
-export type FilterBoardProps<Row extends RowType> = {
-  columns: TableColumn<Row>[];
-  isFilterOpen?: boolean;
-  onOpenFilter?: () => void;
-  onCloseFilter?: () => void;
-  onPushFilter: UseFilterPushEventAction;
-  onUpdateFilter: UseFilterUpdateEventAction;
-  onDeleteFilter: UseFilterDeleteEventAction;
-  filters: FilterItem[];
-  onChangeLogicalOperator: UseFilterChangeLogicalOperatorAction;
-  logicalOperator: LogicalOperator;
+export type FilterBoardProps<Row extends TableRowRecord> = {
+  data: {
+    columns: TableColumn<Row>[];
+  };
+
+  filtering: {
+    filters: FilterCondition[];
+
+    onAddFilter: UseFilterAddHandler;
+
+    onUpdateFilter: UseFilterUpdateHandler;
+
+    onDeleteFilter: UseFilterDeleteHandler;
+
+    logicalOperator: FilterLogicalOperator;
+
+    onLogicalOperatorChange: UseFilterLogicalOperatorChangeHandler;
+  };
+
+  popup?: {
+    isOpen?: boolean;
+
+    onOpen?: () => void;
+
+    onClose?: () => void;
+  };
 };
 
-export default function FilterBoard<Row extends RowType>({
-  columns,
-  onCloseFilter,
-  onOpenFilter,
-  isFilterOpen,
-  onPushFilter,
-  onUpdateFilter,
-  onDeleteFilter,
-  filters,
-  onChangeLogicalOperator,
-  logicalOperator,
+export default function FilterBoard<Row extends TableRowRecord>({
+  data,
+  filtering,
+  popup = {},
 }: FilterBoardProps<Row>) {
+  const { columns } = data;
+
+  const {
+    filters,
+    onAddFilter,
+    onUpdateFilter,
+    onDeleteFilter,
+    onLogicalOperatorChange,
+    logicalOperator,
+  } = filtering;
+
+  const { isOpen, onOpen, onClose } = popup;
+
   const filterColumns = columns.filter((column) => column.filterable);
 
   const createFilterDeleteHandler = (i: number) => () => {
     onDeleteFilter(i);
 
     if (filters.length === 1) {
-      onCloseFilter?.();
+      onClose?.();
     }
   };
 
   const handleOpenChangeBoard = (open: boolean) => {
     if (!open) {
-      onCloseFilter?.();
+      onClose?.();
       return;
     }
 
     if (filters.length > 0) {
-      onOpenFilter?.();
+      onOpen?.();
       return;
     }
 
-    pushFilter();
+    addFilter();
 
-    onOpenFilter?.();
+    onOpen?.();
   };
 
-  const pushFilter = () => {
+  const addFilter = () => {
     const filterColumn = filterColumns[0];
 
     const filterProps = filterColumn.filterProps;
@@ -109,7 +130,7 @@ export default function FilterBoard<Row extends RowType>({
       selectedOps: filterProps?.selectOps,
     });
 
-    onPushFilter({
+    onAddFilter({
       name: filterColumn.name.toString(),
       operation: filterOps[0],
       value: "",
@@ -117,7 +138,7 @@ export default function FilterBoard<Row extends RowType>({
   };
 
   const handleAddFilter = () => {
-    pushFilter();
+    addFilter();
   };
 
   const createFilterOperationChangeHandler =
@@ -147,11 +168,11 @@ export default function FilterBoard<Row extends RowType>({
   const handleChangeLogicalOperator = (e: SyntheticEvent<any>) => {
     const value = e.target.value;
 
-    onChangeLogicalOperator(value);
+    onLogicalOperatorChange(value);
   };
 
   return (
-    <Popover open={isFilterOpen} onOpenChange={handleOpenChangeBoard}>
+    <Popover open={isOpen} onOpenChange={handleOpenChangeBoard}>
       <Tooltip>
         <PopoverTrigger
           render={

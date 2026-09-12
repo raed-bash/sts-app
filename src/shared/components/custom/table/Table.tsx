@@ -3,63 +3,40 @@ import { type PaginationProps } from "../Pagination";
 import TableContainer, {
   type TableContainerProps,
 } from "./components/TableContainer";
-import TableBody, { type TableBodyProps } from "./components/TableBody";
+import TableBody from "./components/TableBody";
 import type { TableHeadCellProps } from "./components/TableHeadCell";
 import type { TableCellProps } from "./components/TableCell";
 import type { SortButtonStatus } from "../buttons/SortButton";
 import type { TableRowProps } from "./components/TableRow";
 import type {
+  UseTableSelectRowsHandler,
   UseTableSelectedRows,
-  UseTableSortChangeEventAction,
+  UseTableSortChangeHandler,
 } from "./hooks/useTable";
 import { useTable } from "./hooks/useTable";
 import TableFooter from "./components/TableFooter";
 import TableHeader, {
-  type TableHeaderHiddenColumns,
-  type TableHeaderNoHiddenColumns,
+  type TableHeaderHideableColumns,
+  type TableHeaderNonHideableColumns,
 } from "./components/TableHeader";
 import TableHead from "./components/TableHead";
-import type { FilterFilter } from "./filter/FilterBoard";
-import {
-  type FilterItem,
-  type UseFilterSetStateFiltersAction,
-} from "./filter/hooks/useFilter";
-import type {
-  FilterOperation,
-  LogicalOperator,
-  UseFilterSetStateLogicalOperatorAction,
-} from "./filter";
+import type { FilterFieldProps } from "./filter/FilterBoard";
+import { type FilterCondition } from "./filter/hooks/useFilter";
+import type { FilterLogicalOperator } from "./filter";
 import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
 
-export type RowType = Record<string, any>;
+export type TableRowRecord = Record<string, any>;
 
-export type FilterProps = {
-  type:
-    | "text"
-    | "number"
-    | "select"
-    | "selectApi"
-    | "autocompleteApi"
-    | "checkbox"
-    | "date";
+type TableColumnKey<Row extends TableRowRecord> = keyof Row | (string & {});
 
-  selectOps?: FilterOperation[];
-
-  omitOps?: FilterOperation[];
-
-  options?: { value: string | number | boolean; label: string }[];
-};
-
-type LooseKey<Row extends RowType> = keyof Row | (string & {});
-
-export type TableColumn<Row extends RowType> = (
+export type TableColumn<Row extends TableRowRecord> = (
   | {
       strict?: true;
       name: keyof Row;
     }
   | {
       strict: false;
-      name: LooseKey<Row>;
+      name: TableColumnKey<Row>;
     }
 ) & {
   headerName: string;
@@ -72,46 +49,86 @@ export type TableColumn<Row extends RowType> = (
 
   sort?: boolean;
 
-  thhProps?: TableHeadCellProps;
+  /** Props for this column's head cell; <th> element */
+  headCellProps?: TableHeadCellProps;
 
-  tbdProps?: TableCellProps;
+  /** Props for this column's body cells; <td> elements */
+  bodyCellProps?: TableCellProps;
 
   hidden?: boolean;
 
   filterable?: boolean;
 
-  filterProps?: FilterFilter<any>;
+  filterProps?: FilterFieldProps<any>;
 };
 
-export type TableRowType<Row = any | { id: number }> = Row;
+export type TableRowItem<Row = any | { id: number }> = Row;
 
 export type TableSortStatuses = Record<string, SortButtonStatus>;
 
-export type TableHiddenColumns<Row extends RowType> = {
-  hideableColumns: true;
+export type TableLoadingProps = {
+  /** Shows a full-loading overlay until the initial data is ready */
+  loading?: boolean;
 
-  setHiddenColumns: (hiddenColumns: Set<TableColumn<Row>["name"]>) => void;
-
-  hiddenColumns: Set<TableColumn<Row>["name"]>;
+  /** Shows a slim linear progress bar on top of the table */
+  scLoading?: boolean;
 };
 
-export type TableNoHiddenColumns = {
-  hideableColumns?: false;
+export type TablePaginationProps = {
+  currentPage: PaginationProps["currentPage"];
 
-  setHiddenColumns?: never;
+  count: PaginationProps["count"];
 
-  hiddenColumns?: never;
+  perPage?: PaginationProps["perPage"];
+
+  onPageChange: PaginationProps["onChange"];
+
+  maxVisibleNeighbors?: PaginationProps["maxVisibleNeighbors"];
 };
 
-export type TableSelectRows = {
-  selectable: true;
-
-  onSelectRows: (selectedRows: UseTableSelectedRows) => void;
+export type TableSelectionProps = {
+  onSelectRows: UseTableSelectRowsHandler;
 
   selectedRows: UseTableSelectedRows;
 };
 
-export type TableNoSelectRows = {
+export type TableFilteringProps = {
+  filters: FilterCondition[];
+
+  onFiltersChange?: (filters: FilterCondition[]) => void;
+
+  logicalOperator: FilterLogicalOperator;
+
+  onLogicalOperatorChange: (operator: FilterLogicalOperator) => void;
+};
+
+export type TableOrderingProps<Row extends TableRowRecord> = {
+  orderedColumns: TableColumn<Row>["name"][];
+
+  onOrderedColumnsChange: (orderedColumns: TableColumn<Row>["name"][]) => void;
+};
+
+export type TableHideableColumns<Row extends TableRowRecord> = {
+  hideableColumns: true;
+
+  onHiddenColumnsChange: (hiddenColumns: Set<TableColumn<Row>["name"]>) => void;
+
+  hiddenColumns: Set<TableColumn<Row>["name"]>;
+};
+
+export type TableNonHideableColumns = {
+  hideableColumns?: false;
+
+  onHiddenColumnsChange?: never;
+
+  hiddenColumns?: never;
+};
+
+export type TableSelectable = TableSelectionProps & {
+  selectable: true;
+};
+
+export type TableNonSelectable = {
   selectable?: false;
 
   onSelectRows?: never;
@@ -119,106 +136,144 @@ export type TableNoSelectRows = {
   selectedRows?: never;
 };
 
-export type TableProps<Row extends RowType> = (
-  TableHiddenColumns<Row> | TableNoHiddenColumns
-) &
-  (TableSelectRows | TableNoSelectRows) & {
-    rows: TableRowType<Row>[];
+export type TableProps<Row extends TableRowRecord> = {
+  /**
+   * The table data
+   */
+  data?: {
+    rows?: TableRowItem<Row>[];
 
-    columns: TableColumn<Row>[];
-
-    currentPage?: number;
-
-    perPage?: number;
-
-    count?: number;
-
-    onPageChange?: PaginationProps["onChange"];
-
-    maxVisibleNeighbors?: PaginationProps["maxVisibleNeighbors"];
-
-    containerProps?: TableContainerProps;
-
-    theadProps?: React.ComponentProps<"thead">;
-
-    tbodyProps?: React.ComponentProps<"tbody">;
-
-    loading?: boolean;
-
-    scLoading?: boolean;
-
-    sortStatuses?: TableSortStatuses;
-
-    onSortChange?: UseTableSortChangeEventAction<Row>;
-
-    /**
-     * A table head row props; <tr></tr> element
-     */
-    thrProps?: TableRowProps;
-    /**
-     * A table head props; <th></th> element
-     */
-    thhsProps?: TableHeadCellProps;
-
-    thCheckboxProps?: TableHeadCellProps;
-    /**
-     * A table body row props; <tr></tr> element
-     */
-    tbrProps?: TableBodyProps<Row>["tbrProps"];
-    /**
-     * A table body data props; <td></td> element
-     */
-    tbdsProps?: TableCellProps;
-
-    tdCheckboxProps?: TableCellProps;
-
-    orderedColumns: TableColumn<Row>["name"][];
-
-    setOrderedColumns: (orderedColumns: TableColumn<Row>["name"][]) => void;
-
-    filters: FilterItem[];
-
-    setFilters?: UseFilterSetStateFiltersAction;
-
-    logicalOperator: LogicalOperator;
-
-    setLogicalOperator: UseFilterSetStateLogicalOperatorAction;
+    columns?: TableColumn<Row>[];
   };
 
-function Table<Row extends RowType>({
-  columns: originalColumns = [],
-  rows = [],
-  currentPage = 1,
-  onPageChange = () => {},
-  perPage = PER_PAGE,
-  count = rows.length,
-  containerProps = {},
-  tbodyProps = {},
-  theadProps = {},
-  loading,
-  scLoading,
-  sortStatuses = {},
-  onSortChange = () => {},
-  onSelectRows = () => {},
-  selectedRows = new Set(),
-  selectable = false,
-  maxVisibleNeighbors = 2,
-  tbrProps,
-  thrProps,
-  thhsProps,
-  tbdsProps,
-  thCheckboxProps,
-  tdCheckboxProps,
-  hiddenColumns = new Set(),
-  setHiddenColumns = () => {},
-  hideableColumns,
-  orderedColumns,
-  setOrderedColumns,
-  filters,
-  setFilters,
-  logicalOperator,
-  setLogicalOperator,
+  /**
+   * Loading states
+   */
+  loading?: TableLoadingProps;
+
+  /**
+   * Pagination state and controls
+   */
+  pagination?: Partial<TablePaginationProps>;
+
+  /**
+   * Column sorting
+   */
+  sorting?: {
+    sortStatuses?: TableSortStatuses;
+
+    onSortChange?: UseTableSortChangeHandler<Row>;
+  };
+
+  /**
+   * Row selection
+   */
+  selection?: TableSelectable | TableNonSelectable;
+
+  /**
+   * Column visibility toggling
+   */
+  hiding?: TableHideableColumns<Row> | TableNonHideableColumns;
+
+  /**
+   * Column ordering
+   */
+  ordering: TableOrderingProps<Row>;
+
+  /**
+   * Column filtering
+   */
+  filtering: TableFilteringProps;
+
+  /**
+   * Props forwarded to the underlying DOM elements
+   */
+  elements?: {
+    /** Root table container; <div> element */
+    containerProps?: TableContainerProps;
+
+    /** Table head; <thead> element */
+    theadProps?: React.ComponentProps<"thead">;
+
+    /** Table body; <tbody> element */
+    tbodyProps?: React.ComponentProps<"tbody">;
+
+    /** Head row; <tr> element */
+    headRowProps?: TableRowProps;
+
+    /** Head cells; <th> elements */
+    headCellProps?: TableHeadCellProps;
+
+    /** Head selection checkbox cell; <th> element */
+    headCheckboxCellProps?: TableHeadCellProps;
+
+    /** Body rows; <tr> elements */
+    bodyRowProps?: TableRowProps;
+
+    /** Body data cells; <td> elements */
+    bodyCellProps?: TableCellProps;
+
+    /** Body selection checkbox cell; <td> element */
+    bodyCheckboxCellProps?: TableCellProps;
+  };
+};
+
+function Table<Row extends TableRowRecord>({
+  data = {},
+  loading = {},
+  pagination = {},
+  sorting = {},
+  selection = {},
+  hiding = {},
+  ordering,
+  filtering,
+  elements = {},
 }: TableProps<Row>) {
+  const { rows = [], columns: originalColumns = [] } = data;
+
+  const { loading: isLoading, scLoading } = loading;
+
+  const {
+    currentPage = 1,
+    perPage = PER_PAGE,
+    count = rows.length,
+    onPageChange = () => {},
+    maxVisibleNeighbors = 2,
+  } = pagination;
+
+  const { sortStatuses = {}, onSortChange = () => {} } = sorting;
+
+  const {
+    onSelectRows = () => {},
+    selectedRows = new Set(),
+    selectable = false,
+  } = selection;
+
+  const {
+    hideableColumns,
+    hiddenColumns = new Set(),
+    onHiddenColumnsChange = () => {},
+  } = hiding;
+
+  const {
+    orderedColumns = [],
+    onOrderedColumnsChange = () => {},
+  } = ordering;
+
+  const { filters, onFiltersChange, logicalOperator, onLogicalOperatorChange } =
+    filtering;
+
+  const {
+    containerProps = {},
+    theadProps = {},
+    tbodyProps = {},
+    headRowProps,
+    headCellProps,
+    headCheckboxCellProps,
+    bodyRowProps,
+    bodyCellProps,
+    bodyCheckboxCellProps,
+  } = elements;
   const {
     displayedColumns,
     resetHiddenColumns,
@@ -231,19 +286,12 @@ function Table<Row extends RowType>({
     filterUtils,
     createColumnFilterClickHandler,
   } = useTable<Row>({
-    hiddenColumns,
-    onSelectRows,
-    onSortChange,
-    rows,
-    selectedRows,
-    setHiddenColumns,
-    originalColumns,
-    orderedColumns,
-    setOrderedColumns,
-    filters,
-    setFilters,
-    logicalOperator,
-    setLogicalOperator,
+    data: { rows, originalColumns },
+    sorting: { onSortChange },
+    selection: { onSelectRows, selectedRows },
+    hiding: { hiddenColumns, onHiddenColumnsChange },
+    ordering: { orderedColumns, onOrderedColumnsChange },
+    filtering: { filters, onFiltersChange, logicalOperator, onLogicalOperatorChange },
   });
 
   const theaderProps = {
@@ -251,18 +299,17 @@ function Table<Row extends RowType>({
 
     ...(hideableColumns && {
       hiddenColumns: hiddenColumns,
-      handleResetHiddenColumns: resetHiddenColumns,
+      onReset: resetHiddenColumns,
       createToggleColumnsClickHandler: createToggleColumnsClickHandler,
     }),
-  } as TableHeaderNoHiddenColumns | TableHeaderHiddenColumns<Row>;
+  } as TableHeaderNonHideableColumns | TableHeaderHideableColumns<Row>;
 
   return (
     <TableContainer {...containerProps}>
       <TableHeader<Row>
-        columns={columns}
-        setColumns={setColumns}
-        selectedRows={selectedRows}
-        filterUtils={filterUtils}
+        data={{ columns, setColumns }}
+        selection={{ selectedRows }}
+        filtering={{ filterUtils }}
 
         {...theaderProps}
       />
@@ -270,40 +317,43 @@ function Table<Row extends RowType>({
       <div className="overflow-x-auto w-full max-w-full rounded-lg pb-[5px]">
         <table className="w-full min-w-max table-auto border-collapse relative">
           <TableHead
-            columns={displayedColumns}
-            createSelectRowChangeHandler={createSelectRowChangeHandler}
-            createSortClickHandler={createSortClickHandler}
-            selectAll={selectAll}
-            sortStatuses={sortStatuses}
-            selectable={selectable}
-            thrProps={thrProps}
-            thhsProps={thhsProps}
-            thCheckboxProps={thCheckboxProps}
-            selectedRows={selectedRows}
-            createColumnFilterClickHandler={createColumnFilterClickHandler}
-            {...tbodyProps}
+            data={{ columns: displayedColumns }}
+            sorting={{ sortStatuses, createSortClickHandler }}
+            selection={{
+              selectable,
+              selectedRows,
+              selectAll,
+              createSelectRowChangeHandler,
+            }}
+            filtering={{ createColumnFilterClickHandler }}
+            elements={{
+              rowProps: headRowProps,
+              cellProps: headCellProps,
+              checkboxCellProps: headCheckboxCellProps,
+            }}
+            {...theadProps}
           />
           <TableBody
-            scLoading={scLoading}
-            columns={displayedColumns}
-            tbrProps={tbrProps}
-            createSelectRowChangeHandler={createSelectRowChangeHandler}
-            loading={loading}
-            rows={rows}
-            selectedRows={selectedRows}
-            selectable={selectable}
-            tbdsProps={tbdsProps}
-            tdCheckboxProps={tdCheckboxProps}
-            {...theadProps}
+            data={{ rows, columns: displayedColumns }}
+            selection={{ selectable, selectedRows, createSelectRowChangeHandler }}
+            loading={{ loading: isLoading, scLoading }}
+            elements={{
+              rowProps: bodyRowProps,
+              cellProps: bodyCellProps,
+              checkboxCellProps: bodyCheckboxCellProps,
+            }}
+            {...tbodyProps}
           />
         </table>
       </div>
       <TableFooter
-        count={count}
-        currentPage={currentPage}
-        onPageChange={onPageChange}
-        maxVisibleNeighbors={maxVisibleNeighbors}
-        perPage={perPage}
+        pagination={{
+          count,
+          currentPage,
+          onPageChange,
+          maxVisibleNeighbors,
+          perPage,
+        }}
       />
     </TableContainer>
   );

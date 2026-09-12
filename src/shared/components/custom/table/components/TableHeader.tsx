@@ -3,10 +3,10 @@ import type {
   UseTableCreateToggleColumnsClickHandler,
   UseTableSelectedRows,
 } from "../hooks/useTable";
-import type { RowType, TableColumn } from "../Table";
+import type { TableRowRecord, TableColumn } from "../Table";
 import TableMenuColumns from "./TableMenuColumns";
 
-export type TableHeaderNoHiddenColumns = {
+export type TableHeaderNonHideableColumns = {
   hideableColumns: false;
 
   hiddenColumns?: never;
@@ -16,7 +16,7 @@ export type TableHeaderNoHiddenColumns = {
   createToggleColumnsClickHandler?: never;
 };
 
-export type TableHeaderHiddenColumns<Row extends RowType> = {
+export type TableHeaderHideableColumns<Row extends TableRowRecord> = {
   hideableColumns: true;
 
   hiddenColumns: Set<TableColumn<Row>["name"]>;
@@ -26,38 +26,56 @@ export type TableHeaderHiddenColumns<Row extends RowType> = {
   createToggleColumnsClickHandler: UseTableCreateToggleColumnsClickHandler<Row>;
 };
 
-export type TableHeaderProps<Row extends RowType> = (
-  TableHeaderNoHiddenColumns | TableHeaderHiddenColumns<Row>
+export type TableHeaderProps<Row extends TableRowRecord> = (
+  TableHeaderNonHideableColumns | TableHeaderHideableColumns<Row>
 ) & {
-  selectedRows: UseTableSelectedRows;
-  columns: TableColumn<Row>[];
-  setColumns: React.Dispatch<React.SetStateAction<TableColumn<Row>[]>>;
-  filterUtils: ReturnType<typeof useFilter>;
+  data: {
+    columns: TableColumn<Row>[];
+
+    setColumns: React.Dispatch<React.SetStateAction<TableColumn<Row>[]>>;
+  };
+
+  selection: {
+    selectedRows: UseTableSelectedRows;
+  };
+
+  filtering: {
+    filterUtils: ReturnType<typeof useFilter>;
+  };
 };
 
-export default function TableHeader<Row extends RowType>({
+export default function TableHeader<Row extends TableRowRecord>({
   hideableColumns,
   hiddenColumns,
-  columns,
   onReset,
   createToggleColumnsClickHandler,
-  selectedRows,
-  setColumns,
-  filterUtils,
+  data,
+  selection,
+  filtering,
 }: TableHeaderProps<Row>) {
+  const { columns, setColumns } = data;
+
+  const { selectedRows } = selection;
+
+  const { filterUtils } = filtering;
+
   return (
     <div className="bg-primary-light flex justify-between items-center py-2 px-4">
       <FilterBoard<Row>
-        columns={columns}
-        onCloseFilter={filterUtils.closeFilter}
-        onOpenFilter={filterUtils.openFilter}
-        isFilterOpen={filterUtils.isFilterOpen}
-        filters={filterUtils.filters}
-        onDeleteFilter={filterUtils.deleteFilter}
-        onPushFilter={filterUtils.pushFilter}
-        onUpdateFilter={filterUtils.updateFilter}
-        logicalOperator={filterUtils.logicalOperator}
-        onChangeLogicalOperator={filterUtils.changeLogicalOperator}
+        data={{ columns }}
+        filtering={{
+          filters: filterUtils.filters,
+          onAddFilter: filterUtils.addFilter,
+          onUpdateFilter: filterUtils.updateFilter,
+          onDeleteFilter: filterUtils.deleteFilter,
+          logicalOperator: filterUtils.logicalOperator,
+          onLogicalOperatorChange: filterUtils.changeLogicalOperator,
+        }}
+        popup={{
+          isOpen: filterUtils.isFilterOpen,
+          onOpen: filterUtils.openFilter,
+          onClose: filterUtils.closeFilter,
+        }}
       />
       {selectedRows.size ? (
         <p className="text-sm">Selected rows: {selectedRows.size}</p>
@@ -67,11 +85,12 @@ export default function TableHeader<Row extends RowType>({
       {hideableColumns && (
         <div>
           <TableMenuColumns
-            onReset={onReset}
-            createToggleColumnsClickHandler={createToggleColumnsClickHandler}
-            hiddenColumns={hiddenColumns}
-            columns={columns}
-            setColumns={setColumns}
+            data={{ columns, setColumns }}
+            hiding={{
+              onReset,
+              createToggleColumnsClickHandler: createToggleColumnsClickHandler,
+              hiddenColumns,
+            }}
           />
         </div>
       )}

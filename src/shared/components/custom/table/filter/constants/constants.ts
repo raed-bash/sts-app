@@ -1,4 +1,4 @@
-import type { FilterFilter } from "../FilterBoard";
+import type { FilterFieldProps } from "../FilterBoard";
 import type { FilterOperation } from "../types";
 
 export const filterOperations = {
@@ -61,7 +61,7 @@ export const dateFilterOperations = [
 ] satisfies FilterOperation[];
 
 export const FILTER_OPERATIONS_BY_TYPE: Partial<
-  Record<FilterFilter<any>["type"], FilterOperation[]>
+  Record<FilterFieldProps<any>["type"], FilterOperation[]>
 > = {
   text: textFilterOperations,
   nativeSelect: selectFilterOperations,

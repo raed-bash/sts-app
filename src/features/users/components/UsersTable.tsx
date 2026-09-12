@@ -7,11 +7,11 @@ import RoleBadge from "@/components/RoleBadge";
 import StatusBadge from "@/components/StatusBadge";
 import type {
   UseTableSelectedRows,
-  UseTableSortChangeEventAction,
+  UseTableSortChangeHandler,
 } from "@/shared/components/custom/table/hooks/useTable";
 import {
   useOrderedColumnsLocalStorage,
-  useHiddeneColumnsLocalStorage,
+  useHiddenColumnsLocalStorage,
 } from "@/hooks";
 import { Edit, Trash } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
@@ -21,10 +21,8 @@ import {
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip";
 import type {
-  FilterItem,
-  LogicalOperator,
-  UseFilterSetStateFiltersAction,
-  UseFilterSetStateLogicalOperatorAction,
+  FilterCondition,
+  FilterLogicalOperator,
 } from "@/shared/components/custom/table/filter";
 import type { SyntheticEventHandler } from "@/shared/utils";
 import { STATUS_TITLES } from "@/constants/user-status";
@@ -32,11 +30,11 @@ import { ROLE_TITLES } from "@/constants/user-role";
 import { SelectItem } from "@/shared/components/ui/select";
 
 export type UsersTableProps = {
-  onSortChange: UseTableSortChangeEventAction<UserDto>;
+  onSortChange: UseTableSortChangeHandler<UserDto>;
   sorts: TableSortStatuses;
-  setSelectedRows: (sortsStatuses: Set<string | number>) => void;
+  onSelectRows: (selectedRows: Set<string | number>) => void;
   selectedRows: UseTableSelectedRows;
-  setPage: (page: number) => void;
+  onPageChange: (page: number) => void;
   count: number;
   page: number;
   perPage?: number;
@@ -45,10 +43,10 @@ export type UsersTableProps = {
   handleFiltersChange: SyntheticEventHandler;
   debounceFilters: Record<string, any>;
   rows?: UserDto[];
-  setFilters: UseFilterSetStateFiltersAction;
-  filters: FilterItem[];
-  setLogicalOperator: UseFilterSetStateLogicalOperatorAction;
-  logicalOperator: LogicalOperator;
+  onFiltersChange: (filters: FilterCondition[]) => void;
+  filters: FilterCondition[];
+  onLogicalOperatorChange: (operator: FilterLogicalOperator) => void;
+  logicalOperator: FilterLogicalOperator;
 };
 
 export default function UsersTable(props: UsersTableProps) {
@@ -56,143 +54,159 @@ export default function UsersTable(props: UsersTableProps) {
     keyof UserDto | (string & {})
   >("usersOrder", []);
 
-  const { hiddenColumns, setHiddenColumns } = useHiddeneColumnsLocalStorage(
+  const { hiddenColumns, setHiddenColumns } = useHiddenColumnsLocalStorage(
     "usersHiddenColumns",
     new Set(),
   );
 
   return (
     <Table<UserDto>
-      sortStatuses={props.sorts}
-      onSortChange={props.onSortChange}
-      selectable
-      onSelectRows={props.setSelectedRows}
-      selectedRows={props.selectedRows}
-      hideableColumns
-      hiddenColumns={hiddenColumns}
-      setHiddenColumns={setHiddenColumns}
-      onPageChange={props.setPage}
-      orderedColumns={orderedColumns}
-      setOrderedColumns={setOrderedColumns}
-      filters={props.filters}
-      setFilters={props.setFilters}
-      logicalOperator={props.logicalOperator}
-      setLogicalOperator={props.setLogicalOperator}
-      columns={[
-        {
-          name: "id",
-          headerName: "#",
-          sort: true,
-        },
-        {
-          name: "username",
-          headerName: "Username",
-          sort: true,
-          filterable: true,
-          filterProps: {
-            type: "text",
+      data={{
+        columns: [
+          {
+            name: "id",
+            headerName: "#",
+            sort: true,
           },
-        },
-        {
-          name: "fullName",
-          headerName: "Full Name",
-          strict: false,
-          getCell: (_, row) => row.student?.fullName || row.teacher?.fullName,
-        },
-        {
-          name: "status",
-          headerName: "Status",
-          getCell: (status) => <StatusBadge status={status} />,
-          sort: true,
-          filterable: true,
-          filterProps: {
-            type: "select",
-            getInputLabel(value: keyof typeof STATUS_TITLES) {
-              return STATUS_TITLES[value];
+          {
+            name: "username",
+            headerName: "Username",
+            sort: true,
+            filterable: true,
+            filterProps: {
+              type: "text",
             },
-            children: Object.entries(STATUS_TITLES).map(([value, label]) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            )),
           },
-        },
-        {
-          name: "role",
-          headerName: "Role",
-          getCell: (role) => <RoleBadge role={role} />,
-          sort: true,
-          filterable: true,
-          filterProps: {
-            type: "select",
-            getInputLabel: (value: keyof typeof ROLE_TITLES) =>
-              ROLE_TITLES[value],
-            children: Object.entries(ROLE_TITLES).map(([value, label]) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            )),
+          {
+            name: "fullName",
+            headerName: "Full Name",
+            strict: false,
+            getCell: (_, row) => row.student?.fullName || row.teacher?.fullName,
           },
-        },
-        {
-          name: "createdAt",
-          headerName: "Created at",
-          getCell: (createdAt) => dateFormater(createdAt),
-          sort: true,
-        },
-        {
-          name: "updatedAt",
-          headerName: "Updated at",
-          getCell: (updatedAt) => dateFormater(updatedAt),
-          sort: true,
-          strict: false,
-        },
-        {
-          name: "deletedAt",
-          headerName: "Deleted at",
-          getCell: (deletedAt) => dateFormater(deletedAt),
-          sort: true,
-          strict: false,
-        },
-        {
-          name: "actions",
-          headerName: "Actions",
-          strict: false,
-          getCell() {
-            return (
-              <div className="flex gap-3 justify-start  ">
-                <Tooltip>
-                  <TooltipTrigger
-                    render={
-                      <Button variant="outline">
-                        <Edit />
-                      </Button>
-                    }
-                  />
-                  <TooltipContent>Edit</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger
-                    render={
-                      <Button variant="destructive">
-                        <Trash />
-                      </Button>
-                    }
-                  />
+          {
+            name: "status",
+            headerName: "Status",
+            getCell: (status) => <StatusBadge status={status} />,
+            sort: true,
+            filterable: true,
+            filterProps: {
+              type: "select",
+              getInputLabel(value: keyof typeof STATUS_TITLES) {
+                return STATUS_TITLES[value];
+              },
+              children: Object.entries(STATUS_TITLES).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              )),
+            },
+          },
+          {
+            name: "role",
+            headerName: "Role",
+            getCell: (role) => <RoleBadge role={role} />,
+            sort: true,
+            filterable: true,
+            filterProps: {
+              type: "select",
+              getInputLabel: (value: keyof typeof ROLE_TITLES) =>
+                ROLE_TITLES[value],
+              children: Object.entries(ROLE_TITLES).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              )),
+            },
+          },
+          {
+            name: "createdAt",
+            headerName: "Created at",
+            getCell: (createdAt) => dateFormater(createdAt),
+            sort: true,
+          },
+          {
+            name: "updatedAt",
+            headerName: "Updated at",
+            getCell: (updatedAt) => dateFormater(updatedAt),
+            sort: true,
+            strict: false,
+          },
+          {
+            name: "deletedAt",
+            headerName: "Deleted at",
+            getCell: (deletedAt) => dateFormater(deletedAt),
+            sort: true,
+            strict: false,
+          },
+          {
+            name: "actions",
+            headerName: "Actions",
+            strict: false,
+            getCell() {
+              return (
+                <div className="flex gap-3 justify-start  ">
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={
+                        <Button variant="outline">
+                          <Edit />
+                        </Button>
+                      }
+                    />
+                    <TooltipContent>Edit</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={
+                        <Button variant="destructive">
+                          <Trash />
+                        </Button>
+                      }
+                    />
 
-                  <TooltipContent>Remove</TooltipContent>
-                </Tooltip>
-              </div>
-            );
+                    <TooltipContent>Remove</TooltipContent>
+                  </Tooltip>
+                </div>
+              );
+            },
           },
-        },
-      ]}
-      rows={props.rows || []}
-      count={props.count}
-      currentPage={props.page}
-      perPage={props.perPage}
-      loading={props.loading}
-      scLoading={props.scLoading}
+        ],
+        rows: props.rows || [],
+      }}
+      sorting={{
+        sortStatuses: props.sorts,
+        onSortChange: props.onSortChange,
+      }}
+      selection={{
+        selectable: true,
+        onSelectRows: props.onSelectRows,
+        selectedRows: props.selectedRows,
+      }}
+      hiding={{
+        hideableColumns: true,
+        hiddenColumns,
+        onHiddenColumnsChange: setHiddenColumns,
+      }}
+      pagination={{
+        currentPage: props.page,
+        perPage: props.perPage,
+        count: props.count,
+        onPageChange: props.onPageChange,
+      }}
+      ordering={{
+        orderedColumns,
+        onOrderedColumnsChange: setOrderedColumns,
+      }}
+      filtering={{
+        filters: props.filters,
+        onFiltersChange: props.onFiltersChange,
+        logicalOperator: props.logicalOperator,
+        onLogicalOperatorChange: props.onLogicalOperatorChange,
+      }}
+      loading={{
+        loading: props.loading,
+        scLoading: props.scLoading,
+      }}
     />
   );
 }

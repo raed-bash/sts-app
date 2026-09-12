@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from "react";
 import SearchIcon from "@/shared/assets/icons/search.svg?react";
-import type { RowType, TableColumn } from "../Table";
+import type { TableRowRecord, TableColumn } from "../Table";
 import InputIcon from "../../inputs/InputIcon";
 import Checkbox from "../../inputs/Checkbox";
 import type { UseTableCreateToggleColumnsClickHandler } from "../hooks/useTable";
@@ -17,21 +17,32 @@ import {
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip";
 
-export type TableMenuColumnsProps<Row extends RowType> = {
-  columns: TableColumn<Row>[];
-  onReset: React.MouseEventHandler<HTMLButtonElement>;
-  createToggleColumnsClickHandler: UseTableCreateToggleColumnsClickHandler<Row>;
-  hiddenColumns: Set<TableColumn<Row>["name"]>;
-  setColumns: React.Dispatch<React.SetStateAction<TableColumn<Row>[]>>;
+export type TableMenuColumnsProps<Row extends TableRowRecord> = {
+  data: {
+    columns: TableColumn<Row>[];
+
+    setColumns: React.Dispatch<React.SetStateAction<TableColumn<Row>[]>>;
+  };
+
+  hiding: {
+    hiddenColumns: Set<TableColumn<Row>["name"]>;
+
+    createToggleColumnsClickHandler: UseTableCreateToggleColumnsClickHandler<
+      Row
+    >;
+
+    onReset: React.MouseEventHandler<HTMLButtonElement>;
+  };
 };
 
-function TableMenuColumns<Row extends RowType>({
-  columns,
-  onReset,
-  createToggleColumnsClickHandler,
-  hiddenColumns,
-  setColumns,
+function TableMenuColumns<Row extends TableRowRecord>({
+  data,
+  hiding,
 }: TableMenuColumnsProps<Row>) {
+  const { columns, setColumns } = data;
+
+  const { hiddenColumns, createToggleColumnsClickHandler, onReset } = hiding;
+
   const [searchMenuCols, setSearchMenuCols] = useState("");
 
   const containerRef = useRef<HTMLDivElement>(null);

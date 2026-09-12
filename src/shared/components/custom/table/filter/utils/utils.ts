@@ -1,11 +1,11 @@
 import type { FilterOperation } from "../types";
-import type { FilterFilter } from "../FilterBoard";
+import type { FilterFieldProps } from "../FilterBoard";
 import { FILTER_OPERATIONS_BY_TYPE } from "../constants/constants";
 
 export const getAvailableFilterOps = <
   T extends FilterOperation = FilterOperation,
 >(
-  type: FilterFilter<any>["type"],
+  type: FilterFieldProps<any>["type"],
   options: { selectedOps?: T[]; omittedOps?: T[] } = {},
 ): T[] => {
   const baseOps = (FILTER_OPERATIONS_BY_TYPE[type] ?? []) as T[];

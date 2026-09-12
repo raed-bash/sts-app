@@ -1,38 +1,31 @@
-import Pagination, { type PaginationProps } from "../../Pagination";
+import Pagination from "../../Pagination";
+import type { TablePaginationProps } from "../Table";
 
 export type TableFooterProps = {
-  maxVisibleNeighbors?: PaginationProps["maxVisibleNeighbors"];
-
-  onPageChange: PaginationProps["onChange"];
-
-  count: PaginationProps["count"];
-
-  currentPage: PaginationProps["currentPage"];
-
-  perPage?: PaginationProps["perPage"];
+  pagination: TablePaginationProps;
 };
 
-export default function TableFooter(props: TableFooterProps) {
+export default function TableFooter({ pagination }: TableFooterProps) {
   return (
     <div className="flex justify-between items-center px-4">
       <div className="flex gap-5 text-(--text)">
         <div className="flex items-center gap-1 font-medium text-sm">
           <p>Total: </p>
-          <span>{props.count}</span>
+          <span>{pagination.count}</span>
         </div>
 
         <div className="flex items-center gap-1 font-medium text-sm">
           <p>PerPage: </p>
-          <span>{props.perPage}</span>
+          <span>{pagination.perPage}</span>
         </div>
       </div>
 
       <Pagination
-        currentPage={props.currentPage}
-        onChange={props.onPageChange}
-        maxVisibleNeighbors={props.maxVisibleNeighbors}
-        count={props.count}
-        perPage={props.perPage}
+        currentPage={pagination.currentPage}
+        onChange={pagination.onPageChange}
+        maxVisibleNeighbors={pagination.maxVisibleNeighbors}
+        count={pagination.count}
+        perPage={pagination.perPage}
       />
     </div>
   );

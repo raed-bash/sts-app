@@ -25,8 +25,8 @@ import InputPlus from "@/shared/components/custom/inputs/InputPlus";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import Frame from "@/shared/components/custom/frame/Frame";
 import {
-  type LogicalOperator,
-  type FilterItem,
+  type FilterLogicalOperator,
+  type FilterCondition,
 } from "@/shared/components/custom/table/filter";
 import { getUsers, getUsersQueryOptions, useUsers } from "../api/get-users.api";
 import { usersQueryKeys } from "../users.api-keys";
@@ -43,7 +43,7 @@ export const clientLoader = (queryClient: QueryClient) => async () => {
 };
 
 export default function UsersList() {
-  const [tableFilters, setTableFilters] = useCachedState<FilterItem[]>(
+  const [tableFilters, setTableFilters] = useCachedState<FilterCondition[]>(
     "userTableFilters",
     [],
   );
@@ -53,7 +53,7 @@ export default function UsersList() {
   );
 
   const [logicalOperator, setLogicalOperator] =
-    React.useState<LogicalOperator>("AND");
+    React.useState<FilterLogicalOperator>("AND");
 
   const { selectedRows, setSelectedRows } = useSelectedRows(
     "any",
@@ -306,12 +306,12 @@ export default function UsersList() {
         <CardContent>
           <UsersTable
             logicalOperator={logicalOperator}
-            setLogicalOperator={setLogicalOperator}
+            onLogicalOperatorChange={(operator) => setLogicalOperator(operator)}
             onSortChange={handleSortChange}
             page={page}
             selectedRows={selectedRows}
-            setPage={setPage}
-            setSelectedRows={setSelectedRows}
+            onPageChange={setPage}
+            onSelectRows={setSelectedRows}
             sorts={sorts}
             count={meta?.total || 0}
             perPage={meta?.perPage}
@@ -321,13 +321,7 @@ export default function UsersList() {
             handleFiltersChange={handleFiltersChange}
             debounceFilters={debounceFilters}
             filters={tableFilters}
-            setFilters={(newFilters) => {
-              if (typeof newFilters === "object") {
-                setTableFilters(newFilters);
-              } else {
-                return setTableFilters(newFilters(tableFilters));
-              }
-            }}
+            onFiltersChange={setTableFilters}
           />
         </CardContent>
       </Card>

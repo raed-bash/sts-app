@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useMouseUp } from "@/shared/hooks";
-import type { RowType, TableColumn, TableRowType } from "../Table";
+import type { TableRowRecord, TableColumn, TableRowItem } from "../Table";
 import { getObjectValue } from "@/shared/utils";
 import type {
   UseTableSelectedRows,
@@ -8,21 +8,27 @@ import type {
 } from "./useTable";
 
 export type UseTableBodyOptions = {
-  createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler;
+  data: {
+    rows: TableRowItem[];
+  };
 
-  selectedRows: UseTableSelectedRows;
+  selection: {
+    createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler;
 
-  rows: TableRowType[];
+    selectedRows: UseTableSelectedRows;
+  };
 };
 
-export function useTableBody<Row extends RowType>({
-  createSelectRowChangeHandler,
-  selectedRows,
-  rows,
+export function useTableBody<Row extends TableRowRecord>({
+  data,
+  selection,
 }: UseTableBodyOptions) {
+  const { rows } = data;
+
+  const { createSelectRowChangeHandler, selectedRows } = selection;
   const rowMouseDownRef = useRef(false);
 
-  const changeLikeCheckbox = (row: TableRowType) => {
+  const changeLikeCheckbox = (row: TableRowItem) => {
     createSelectRowChangeHandler(row)({
       target: {
         name: "",
@@ -31,13 +37,13 @@ export function useTableBody<Row extends RowType>({
     });
   };
 
-  const createRowMouseEnterHandler = (row: TableRowType) => () => {
+  const createRowMouseEnterHandler = (row: TableRowItem) => () => {
     if (rowMouseDownRef.current) {
       changeLikeCheckbox(row);
     }
   };
 
-  const createRowMouseDownHandler = (row: TableRowType) => () => {
+  const createRowMouseDownHandler = (row: TableRowItem) => () => {
     changeLikeCheckbox(row);
 
     rowMouseDownRef.current = true;
@@ -66,7 +72,7 @@ export function useTableBody<Row extends RowType>({
   };
 
   const createCheckboxChangeHandler =
-    (row: TableRowType) =>
+    (row: TableRowItem) =>
     (
       e: React.ChangeEvent<HTMLInputElement> & {
         nativeEvent: {
@@ -83,7 +89,7 @@ export function useTableBody<Row extends RowType>({
       createSelectRowChangeHandler(row)(e);
     };
 
-  const getRowValue = (row: TableRowType, name: TableColumn<Row>["name"]) => {
+  const getRowValue = (row: TableRowItem, name: TableColumn<Row>["name"]) => {
     if (Object.prototype.toString.call(row) === "[object Object]") {
       return getObjectValue(row, String(name));
     }

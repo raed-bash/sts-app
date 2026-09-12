@@ -1,45 +1,30 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import type { TableFilteringProps } from "../../Table";
 
-export type UseFilterPushEventAction = (filter: FilterItem) => void;
+export type UseFilterAddHandler = (filter: FilterCondition) => void;
 
-export type UseFilterUpdateEventAction = (
-  filter: Partial<FilterItem>,
+export type UseFilterUpdateHandler = (
+  filter: Partial<FilterCondition>,
   index: number,
 ) => void;
 
-export type UseFilterDeleteEventAction = (index: number) => void;
+export type UseFilterDeleteHandler = (index: number) => void;
 
-export type UseFilterSetStateFiltersAction = React.Dispatch<
-  React.SetStateAction<FilterItem[]>
->;
+export type FilterLogicalOperator = "AND" | "OR";
 
-export type LogicalOperator = "AND" | "OR";
+export type FilterCondition = { name: string; operation?: string; value: any };
 
-export type UseFilterSetStateLogicalOperatorAction = React.Dispatch<
-  React.SetStateAction<LogicalOperator>
->;
-
-export type FilterItem = { name: string; operation?: string; value: any };
-
-export type UseFilterChangeLogicalOperatorAction = (
-  operator: LogicalOperator,
+export type UseFilterLogicalOperatorChangeHandler = (
+  operator: FilterLogicalOperator,
 ) => void;
 
-export type UseFilterOptions = {
-  filters: FilterItem[];
-
-  setFilters?: UseFilterSetStateFiltersAction;
-
-  logicalOperator: LogicalOperator;
-
-  setLogicalOperator: UseFilterSetStateLogicalOperatorAction;
-};
+export type UseFilterOptions = TableFilteringProps;
 
 export function useFilter({
   filters,
-  setFilters,
+  onFiltersChange,
   logicalOperator,
-  setLogicalOperator,
+  onLogicalOperatorChange,
 }: UseFilterOptions) {
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
@@ -47,34 +32,30 @@ export function useFilter({
 
   const openFilter = () => setIsFilterOpen(true);
 
-  const pushFilter: UseFilterPushEventAction = (newFilter) => {
-    setFilters?.((prevFilters) => [...prevFilters, newFilter]);
+  const addFilter: UseFilterAddHandler = (newFilter) => {
+    onFiltersChange?.([...filters, newFilter]);
   };
 
-  const updateFilter: UseFilterUpdateEventAction = (filter, targetIndex) => {
-    setFilters?.((prevFilters) => {
-      const newFilter = [...prevFilters];
-
-      newFilter[targetIndex] = { ...newFilter[targetIndex], ...filter };
-
-      return newFilter;
-    });
-  };
-
-  const deleteFilter: UseFilterDeleteEventAction = (targetIndex: number) => {
-    setFilters?.((prevFilters) =>
-      prevFilters.filter((_, i) => i !== targetIndex),
+  const updateFilter: UseFilterUpdateHandler = (filter, targetIndex) => {
+    onFiltersChange?.(
+      filters.map((prevFilter, i) =>
+        i === targetIndex ? { ...prevFilter, ...filter } : prevFilter,
+      ),
     );
   };
 
-  const changeLogicalOperator: UseFilterChangeLogicalOperatorAction = (
-    operator: LogicalOperator,
+  const deleteFilter: UseFilterDeleteHandler = (targetIndex: number) => {
+    onFiltersChange?.(filters.filter((_, i) => i !== targetIndex));
+  };
+
+  const changeLogicalOperator: UseFilterLogicalOperatorChangeHandler = (
+    operator: FilterLogicalOperator,
   ) => {
-    setLogicalOperator(operator);
+    onLogicalOperatorChange(operator);
   };
 
   return {
-    pushFilter,
+    addFilter,
     updateFilter,
     deleteFilter,
     openFilter,

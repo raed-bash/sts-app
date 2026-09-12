@@ -4,7 +4,7 @@ import type { TableHeadCellProps } from "./TableHeadCell";
 import { cn } from "cn";
 import type React from "react";
 import { EllipsisVerticalIcon } from "lucide-react";
-import type { RowType, TableColumn, TableSortStatuses } from "../Table";
+import type { TableRowRecord, TableColumn, TableSortStatuses } from "../Table";
 import type {
   UseTableCreateColumnFilterClickHandler,
   UseTableSelectedRows,
@@ -15,63 +15,87 @@ import Checkbox from "../../inputs/Checkbox";
 import SortButton from "../../buttons/SortButton";
 import { Button } from "@/shared/components/ui/button";
 
-export type TableHeadProps<Row extends RowType> =
+export type TableHeadProps<Row extends TableRowRecord> =
   React.ComponentProps<"thead"> & {
-    columns: TableColumn<Row>[];
+    data: {
+      columns: TableColumn<Row>[];
+    };
 
-    createSortClickHandler: UseTableCreateSortClickHandler<Row>;
+    sorting: {
+      createSortClickHandler: UseTableCreateSortClickHandler<Row>;
 
-    sortStatuses: TableSortStatuses;
+      sortStatuses: TableSortStatuses;
+    };
 
-    createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler;
+    selection: {
+      createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler;
 
-    selectAll: boolean;
+      selectAll: boolean;
 
-    selectedRows: UseTableSelectedRows;
+      selectedRows: UseTableSelectedRows;
 
-    selectable: boolean;
-    /**
-     * A table head row props; <tr></tr> element
-     */
-    thrProps?: TableRowProps;
-    /**
-     * A table head props; <th></th> element
-     */
-    thhsProps?: TableHeadCellProps;
+      selectable: boolean;
+    };
 
-    thCheckboxProps?: TableHeadCellProps;
+    filtering: {
+      createColumnFilterClickHandler: UseTableCreateColumnFilterClickHandler<
+        Row
+      >;
+    };
 
-    createColumnFilterClickHandler: UseTableCreateColumnFilterClickHandler<Row>;
+    elements?: {
+      /** Head row; <tr> element */
+      rowProps?: TableRowProps;
+
+      /** Head cells; <th> elements */
+      cellProps?: TableHeadCellProps;
+
+      /** Head selection checkbox cell; <th> element */
+      checkboxCellProps?: TableHeadCellProps;
+    };
   };
 
-function TableHead<Row extends RowType>({
-  createSortClickHandler,
-  sortStatuses,
-  createSelectRowChangeHandler,
-  selectAll,
-  columns,
-  selectable,
-  thrProps = {},
-  thhsProps = {},
-  thCheckboxProps = {},
-  selectedRows,
-  createColumnFilterClickHandler,
+function TableHead<Row extends TableRowRecord>({
+  data,
+  sorting,
+  selection,
+  filtering,
+  elements = {},
   ...props
 }: TableHeadProps<Row>) {
+  const { columns } = data;
+
+  const { createSortClickHandler, sortStatuses } = sorting;
+
+  const {
+    createSelectRowChangeHandler,
+    selectAll,
+    selectedRows,
+    selectable,
+  } = selection;
+
+  const { createColumnFilterClickHandler } = filtering;
+
+  const {
+    rowProps = {},
+    cellProps = {},
+    checkboxCellProps = {},
+  } = elements;
+
   return (
     <thead {...props}>
       <TableRow
-        {...thrProps}
-        className={cn("bg-gray-100 dark:bg-gray-700 ", thrProps.className)}
+        {...rowProps}
+        className={cn("bg-gray-100 dark:bg-gray-700 ", rowProps.className)}
       >
         {selectable && (
           <TableHeadCell
-            {...thhsProps}
-            {...thCheckboxProps}
+            {...cellProps}
+            {...checkboxCellProps}
             className={cn(
               `w-20`,
-              thhsProps.className,
-              thCheckboxProps.className,
+              cellProps.className,
+              checkboxCellProps.className,
             )}
           >
             <Checkbox
@@ -82,15 +106,19 @@ function TableHead<Row extends RowType>({
             />
           </TableHeadCell>
         )}
-        {columns.map(({ thhProps = {}, className, ...column }) => (
+        {columns.map(({ headCellProps = {}, className, ...column }) => (
           <TableHeadCell
             key={column.name.toString()}
             title={
               typeof column.headerName === "string" ? column.headerName : ""
             }
-            {...thhsProps}
-            {...thhProps}
-            className={cn(className, thhsProps.className, thhProps.className)}
+            {...cellProps}
+            {...headCellProps}
+            className={cn(
+              className,
+              cellProps.className,
+              headCellProps.className,
+            )}
           >
             <div className="flex items-center gap-2">
               {!column.sort && column.headerName}

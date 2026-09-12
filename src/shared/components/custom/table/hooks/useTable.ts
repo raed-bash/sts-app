@@ -1,12 +1,13 @@
-import type { RowType, TableColumn, TableRowType } from "../Table";
+import type {
+  TableRowRecord,
+  TableColumn,
+  TableFilteringProps,
+  TableOrderingProps,
+  TableRowItem,
+  TableSelectionProps,
+} from "../Table";
 import { useEffect, useState } from "react";
-import {
-  useFilter,
-  type FilterItem,
-  type LogicalOperator,
-  type UseFilterSetStateFiltersAction,
-  type UseFilterSetStateLogicalOperatorAction,
-} from "../filter/hooks/useFilter";
+import { useFilter } from "../filter/hooks/useFilter";
 import { getAvailableFilterOps } from "../filter";
 import type {
   SortButtonEventHandler,
@@ -14,76 +15,80 @@ import type {
 } from "../../buttons/SortButton";
 import type { SyntheticEvent } from "@/shared/utils";
 
-export type UseTableCreateToggleColumnsClickHandler<Row extends RowType> = (
+export type UseTableCreateToggleColumnsClickHandler<Row extends TableRowRecord> = (
   column: TableColumn<Row>,
 ) => React.MouseEventHandler<HTMLButtonElement>;
 
-export type UseTableCreateSortClickHandler<Row extends RowType> = (
+export type UseTableCreateSortClickHandler<Row extends TableRowRecord> = (
   column: TableColumn<Row>,
 ) => SortButtonEventHandler;
 
-export type UseTableCreateColumnFilterClickHandler<Row extends RowType> = (
+export type UseTableCreateColumnFilterClickHandler<Row extends TableRowRecord> = (
   column: TableColumn<Row>,
 ) => () => void;
 
 export type UseTableSelectedRows = Set<string | number>;
 
-export type UseTableSortChangeEventAction<Row extends RowType> = (
+export type UseTableSortChangeHandler<Row extends TableRowRecord> = (
   name: TableColumn<Row>["name"],
   sortStatus: SortButtonStatus,
 ) => void;
 
-export type UseTableSelectRowsSelectEventAction = (
+export type UseTableSelectRowsHandler = (
   selectedRows: UseTableSelectedRows,
 ) => void;
 
 export type UseTableCreateSelectRowChangeHandler = (
-  row?: TableRowType,
+  row?: TableRowItem,
 ) => (e: SyntheticEvent) => void;
 
-export type UseTableOptions<Row extends RowType> = {
-  originalColumns: TableColumn<Row>[];
+export type UseTableOptions<Row extends TableRowRecord> = {
+  data: {
+    rows: TableRowItem[];
 
-  rows: TableRowType[];
+    originalColumns: TableColumn<Row>[];
+  };
 
-  onSortChange: UseTableSortChangeEventAction<Row>;
+  sorting: {
+    onSortChange: UseTableSortChangeHandler<Row>;
+  };
 
-  onSelectRows: UseTableSelectRowsSelectEventAction;
+  selection: TableSelectionProps;
 
-  selectedRows: UseTableSelectedRows;
+  hiding: {
+    hiddenColumns?: Set<TableColumn<Row>["name"]>;
 
-  setHiddenColumns: (hiddenColumns: Set<TableColumn<Row>["name"]>) => void;
+    onHiddenColumnsChange: (hiddenColumns: Set<TableColumn<Row>["name"]>) => void;
+  };
 
-  hiddenColumns?: Set<TableColumn<Row>["name"]>;
+  ordering: TableOrderingProps<Row>;
 
-  orderedColumns: TableColumn<Row>["name"][];
-
-  setOrderedColumns: (orderedColumns: TableColumn<Row>["name"][]) => void;
-
-  filters: FilterItem[];
-
-  setFilters?: UseFilterSetStateFiltersAction;
-
-  logicalOperator: LogicalOperator;
-
-  setLogicalOperator: UseFilterSetStateLogicalOperatorAction;
+  filtering: TableFilteringProps;
 };
 
-export function useTable<Row extends RowType>({
-  originalColumns,
-  rows,
-  onSortChange,
-  onSelectRows,
-  selectedRows,
-  hiddenColumns: hiddenColumnsExt,
-  setHiddenColumns: setHiddenColumnsExt,
-  setOrderedColumns,
-  orderedColumns,
-  filters,
-  setFilters,
-  logicalOperator,
-  setLogicalOperator,
+export function useTable<Row extends TableRowRecord>({
+  data,
+  sorting,
+  selection,
+  hiding,
+  ordering,
+  filtering,
 }: UseTableOptions<Row>) {
+  const { rows, originalColumns } = data;
+
+  const { onSortChange } = sorting;
+
+  const { onSelectRows, selectedRows } = selection;
+
+  const {
+    hiddenColumns: hiddenColumnsExt,
+    onHiddenColumnsChange: onHiddenColumnsChangeExt,
+  } = hiding;
+
+  const { onOrderedColumnsChange, orderedColumns } = ordering;
+
+  const { filters, onFiltersChange, logicalOperator, onLogicalOperatorChange } =
+    filtering;
   const [prevOriginalColumns, setPrevOriginalColumns] =
     useState(originalColumns);
   const [columns, setColumns] = useState(() => {
@@ -155,7 +160,7 @@ export function useTable<Row extends RowType>({
 
   const resetHiddenColumns = () => {
     setHiddenColumns(defaultHiddenCols);
-    setHiddenColumnsExt(defaultHiddenCols);
+    onHiddenColumnsChangeExt(defaultHiddenCols);
   };
 
   const displayedColumns = columns
@@ -175,20 +180,20 @@ export function useTable<Row extends RowType>({
 
     setHiddenColumns(newHiddenColumns);
 
-    setHiddenColumnsExt(newHiddenColumns);
+    onHiddenColumnsChangeExt(newHiddenColumns);
   };
 
   const selectAll = rows.length ? selectedRows.size === rows.length : false;
 
   useEffect(() => {
-    setOrderedColumns(columns.map((column) => column.name));
-  }, [columns, setOrderedColumns]);
+    onOrderedColumnsChange(columns.map((column) => column.name));
+  }, [columns, onOrderedColumnsChange]);
 
   const filterUtils = useFilter({
     filters,
-    setFilters,
+    onFiltersChange,
     logicalOperator,
-    setLogicalOperator,
+    onLogicalOperatorChange,
   });
 
   const createColumnFilterClickHandler: UseTableCreateColumnFilterClickHandler<
@@ -198,7 +203,7 @@ export function useTable<Row extends RowType>({
 
     const ops = getAvailableFilterOps(filterProps?.type || "text");
 
-    filterUtils.pushFilter({
+    filterUtils.addFilter({
       name: column.name.toString(),
       operation: ops[0],
       value: undefined,

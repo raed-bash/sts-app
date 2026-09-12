@@ -2,7 +2,12 @@ import TableRow, { type TableRowProps } from "./TableRow";
 import TableCell, { type TableCellProps } from "./TableCell";
 import { cn } from "cn";
 import TableOverlay from "./TableOverlay";
-import type { RowType, TableColumn, TableRowType } from "../Table";
+import type {
+  TableRowRecord,
+  TableColumn,
+  TableLoadingProps,
+  TableRowItem,
+} from "../Table";
 import type {
   UseTableSelectedRows,
   UseTableCreateSelectRowChangeHandler,
@@ -12,49 +17,56 @@ import LinearLoading from "../../skeleton/LinearLoading";
 import Loading from "../../skeleton/Loading";
 import Checkbox from "../../inputs/Checkbox";
 
-export type TableBodyProps<Row extends RowType> =
+export type TableBodyProps<Row extends TableRowRecord> =
   React.ComponentProps<"tbody"> & {
-    rows: TableRowType[];
+    data: {
+      rows: TableRowItem[];
 
-    columns: TableColumn<Row>[];
+      columns: TableColumn<Row>[];
+    };
 
-    selectedRows: UseTableSelectedRows;
+    selection: {
+      createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler;
 
-    createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler;
-    /**
-     * A table body row props; <tr></tr> element
-     */
-    tbrProps?: TableRowProps;
-    /**
-     * A table body data props; <td></td> element
-     */
-    tbdsProps?: TableCellProps;
+      selectedRows: UseTableSelectedRows;
 
-    loading?: boolean;
+      selectable: boolean;
+    };
 
-    scLoading?: boolean;
+    loading?: TableLoadingProps;
 
-    selectable?: boolean;
+    elements?: {
+      /** Body rows; <tr> elements */
+      rowProps?: TableRowProps;
 
-    tdCheckboxProps?: TableCellProps;
+      /** Body data cells; <td> elements */
+      cellProps?: TableCellProps;
 
-    className?: string;
+      /** Body selection checkbox cell; <td> element */
+      checkboxCellProps?: TableCellProps;
+    };
   };
 
-function TableBody<Row extends RowType>({
-  loading,
-  rows,
-  columns,
-  tbrProps = {},
-  createSelectRowChangeHandler,
-  selectedRows,
-  selectable,
-  scLoading,
+function TableBody<Row extends TableRowRecord>({
+  data,
+  selection,
+  loading = {},
+  elements = {},
   className,
-  tbdsProps = {},
-  tdCheckboxProps = {},
   ...props
 }: TableBodyProps<Row>) {
+  const { rows, columns } = data;
+
+  const { createSelectRowChangeHandler, selectedRows, selectable } = selection;
+
+  const { loading: isLoading, scLoading } = loading;
+
+  const {
+    rowProps = {},
+    cellProps = {},
+    checkboxCellProps = {},
+  } = elements;
+
   const {
     createCheckboxChangeHandler,
     createRowMouseDownHandler,
@@ -63,9 +75,8 @@ function TableBody<Row extends RowType>({
     noRows,
     getRowValue,
   } = useTableBody({
-    createSelectRowChangeHandler,
-    rows,
-    selectedRows,
+    data: { rows },
+    selection: { createSelectRowChangeHandler, selectedRows },
   });
 
   return (
@@ -76,7 +87,7 @@ function TableBody<Row extends RowType>({
         className,
       )}
     >
-      {!loading && scLoading ? (
+      {!isLoading && scLoading ? (
         <tr>
           <td>
             <LinearLoading className="absolute w-full h-[3px]" />
@@ -89,9 +100,9 @@ function TableBody<Row extends RowType>({
           </td>
         </tr>
       )}
-      {loading || noRows ? (
+      {isLoading || noRows ? (
         <TableOverlay>
-          {loading ? (
+          {isLoading ? (
             <Loading />
           ) : (
             <p className="min-w-max text-lg">No data...</p>
@@ -100,11 +111,11 @@ function TableBody<Row extends RowType>({
       ) : (
         rows.map((row, i) => (
           <TableRow
-            {...tbrProps}
+            {...rowProps}
             key={row.id}
             className={cn(
               "hover:bg-gray-100/30 dark:hover:bg-gray-700",
-              tbrProps.className,
+              rowProps.className,
               getSelectedAreaStyle(i),
             )}
             aria-rowindex={i}
@@ -112,13 +123,13 @@ function TableBody<Row extends RowType>({
           >
             {selectable && (
               <TableCell
-                {...tbdsProps}
-                {...tdCheckboxProps}
+                {...cellProps}
+                {...checkboxCellProps}
                 onMouseEnter={createRowMouseEnterHandler(row)}
                 onMouseDown={createRowMouseDownHandler(row)}
                 className={cn(
-                  tbdsProps.className,
-                  tdCheckboxProps.className,
+                  cellProps.className,
+                  checkboxCellProps.className,
                   `select-none`,
                 )}
               >
@@ -128,15 +139,15 @@ function TableBody<Row extends RowType>({
                 />
               </TableCell>
             )}
-            {columns.map(({ tbdProps = {}, className, ...column }) => (
+            {columns.map(({ bodyCellProps = {}, className, ...column }) => (
               <TableCell
                 key={String(column.name)}
-                {...tbdsProps}
-                {...tbdProps}
+                {...cellProps}
+                {...bodyCellProps}
                 className={cn(
                   className,
-                  tbdsProps.className,
-                  tbdProps.className,
+                  cellProps.className,
+                  bodyCellProps.className,
                 )}
               >
                 {column.getCell
