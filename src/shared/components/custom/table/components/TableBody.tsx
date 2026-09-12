@@ -16,6 +16,9 @@ import { useTableBody } from "../hooks/useTableBody";
 import LinearLoading from "../../skeleton/LinearLoading";
 import Loading from "../../skeleton/Loading";
 import Checkbox from "../../inputs/Checkbox";
+import TableActionsCell, {
+  type TableAction,
+} from "./TableActionsCell";
 
 export type TableBodyProps<Row extends TableRowRecord> =
   React.ComponentProps<"tbody"> & {
@@ -24,6 +27,8 @@ export type TableBodyProps<Row extends TableRowRecord> =
 
       columns: TableColumn<Row>[];
     };
+
+    actions?: TableAction<Row>[];
 
     selection: {
       createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler;
@@ -49,6 +54,7 @@ export type TableBodyProps<Row extends TableRowRecord> =
 
 function TableBody<Row extends TableRowRecord>({
   data,
+  actions = [],
   selection,
   loading = {},
   elements = {},
@@ -150,9 +156,13 @@ function TableBody<Row extends TableRowRecord>({
                   bodyCellProps.className,
                 )}
               >
-                {column.getCell
-                  ? column.getCell(getRowValue(row, String(column.name)), row)
-                  : getRowValue(row, String(column.name))}
+                {column.type === "actions" ? (
+                  <TableActionsCell row={row} actions={actions} />
+                ) : column.getCell ? (
+                  column.getCell(getRowValue(row, String(column.name)), row)
+                ) : (
+                  getRowValue(row, String(column.name))
+                )}
               </TableCell>
             ))}
           </TableRow>

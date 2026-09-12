@@ -23,6 +23,7 @@ import TableHead from "./components/TableHead";
 import type { FilterFieldProps } from "./filter/FilterBoard";
 import { type FilterCondition } from "./filter/hooks/useFilter";
 import type { FilterLogicalOperator } from "./filter";
+import type { TableAction } from "./components/TableActionsCell";
 import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
 
 export type TableRowRecord = Record<string, any>;
@@ -171,6 +172,11 @@ export type TableProps<Row extends TableRowRecord> = {
   selection?: TableSelectable | TableNonSelectable;
 
   /**
+   * Row action buttons rendered in columns marked with `type: "actions"`
+   */
+  actions?: TableAction<Row>[];
+
+  /**
    * Column visibility toggling
    */
   hiding?: TableHideableColumns<Row> | TableNonHideableColumns;
@@ -224,6 +230,7 @@ function Table<Row extends TableRowRecord>({
   pagination = {},
   sorting = {},
   selection = {},
+  actions = [],
   hiding = {},
   ordering,
   filtering,
@@ -335,6 +342,7 @@ function Table<Row extends TableRowRecord>({
           />
           <TableBody
             data={{ rows, columns: displayedColumns }}
+            actions={actions}
             selection={{ selectable, selectedRows, createSelectRowChangeHandler }}
             loading={{ loading: isLoading, scLoading }}
             elements={{
