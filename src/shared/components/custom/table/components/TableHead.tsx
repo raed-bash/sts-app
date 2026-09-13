@@ -7,7 +7,6 @@ import { EllipsisVerticalIcon } from "lucide-react";
 import type { TableRowRecord, TableColumn, TableSortStatuses } from "../Table";
 import type {
   UseTableCreateColumnFilterClickHandler,
-  UseTableSelectedRows,
   UseTableCreateSelectRowChangeHandler,
   UseTableCreateSortClickHandler,
 } from "../hooks/useTable";
@@ -32,15 +31,13 @@ export type TableHeadProps<Row extends TableRowRecord> =
 
       selectAll: boolean;
 
-      selectedRows: UseTableSelectedRows;
+      someSelected: boolean;
 
       selectable: boolean;
     };
 
     filtering: {
-      createColumnFilterClickHandler: UseTableCreateColumnFilterClickHandler<
-        Row
-      >;
+      createColumnFilterClickHandler: UseTableCreateColumnFilterClickHandler<Row>;
     };
 
     elements?: {
@@ -67,20 +64,12 @@ function TableHead<Row extends TableRowRecord>({
 
   const { createSortClickHandler, sortStatuses } = sorting;
 
-  const {
-    createSelectRowChangeHandler,
-    selectAll,
-    selectedRows,
-    selectable,
-  } = selection;
+  const { createSelectRowChangeHandler, selectAll, someSelected, selectable } =
+    selection;
 
   const { createColumnFilterClickHandler } = filtering;
 
-  const {
-    rowProps = {},
-    cellProps = {},
-    checkboxCellProps = {},
-  } = elements;
+  const { rowProps = {}, cellProps = {}, checkboxCellProps = {} } = elements;
 
   return (
     <thead {...props}>
@@ -102,7 +91,7 @@ function TableHead<Row extends TableRowRecord>({
               onChange={createSelectRowChangeHandler()}
               name="selectAll"
               checked={Boolean(selectAll)}
-              secondaryStatus={!selectAll && selectedRows.size > 0}
+              secondaryStatus={!selectAll && someSelected}
             />
           </TableHeadCell>
         )}

@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { useCachedState } from "./useCachedState";
+import type { TableRowItem } from "@/shared/components/custom/table/Table";
 
 export type UseSelectedRowsOptions = {
   caching?: boolean;
 };
 
-const DEFAULT_SELECTED_ROWS: Set<string | number> = new Set<
-  string | number
+const DEFAULT_SELECTED_ROWS: Map<string | number, TableRowItem> = new Map<
+  string | number,
+  TableRowItem
 >();
 
 export function useSelectedRows(
   name: string,
-  defaultSelectedRows: Set<string | number> = DEFAULT_SELECTED_ROWS,
+  defaultSelectedRows: Map<
+    string | number,
+    TableRowItem
+  > = DEFAULT_SELECTED_ROWS,
   { caching = true }: UseSelectedRowsOptions = {},
 ) {
   const state = useState(defaultSelectedRows);

@@ -87,10 +87,12 @@ export type TablePaginationProps = {
   maxVisibleNeighbors?: PaginationProps["maxVisibleNeighbors"];
 };
 
-export type TableSelectionProps = {
+export type TableSelectionProps<Row extends TableRowRecord = TableRowRecord> = {
   onSelectRows: UseTableSelectRowsHandler;
 
   selectedRows: UseTableSelectedRows;
+
+  getSelectionLabel?: (row: Row) => ReactNode;
 };
 
 export type TableFilteringProps = {
@@ -125,9 +127,10 @@ export type TableNonHideableColumns = {
   hiddenColumns?: never;
 };
 
-export type TableSelectable = TableSelectionProps & {
-  selectable: true;
-};
+export type TableSelectable<Row extends TableRowRecord> =
+  TableSelectionProps<Row> & {
+    selectable: true;
+  };
 
 export type TableNonSelectable = {
   selectable?: false;
@@ -169,7 +172,7 @@ export type TableProps<Row extends TableRowRecord> = {
   /**
    * Row selection
    */
-  selection?: TableSelectable | TableNonSelectable;
+  selection?: TableSelectable<Row> | TableNonSelectable;
 
   /**
    * Row action buttons rendered in columns marked with `type: "actions"`
@@ -252,9 +255,12 @@ function Table<Row extends TableRowRecord>({
 
   const {
     onSelectRows = () => {},
-    selectedRows = new Set(),
+    selectedRows = new Map(),
     selectable = false,
   } = selection;
+
+  const getSelectionLabel =
+    selection.selectable === true ? selection.getSelectionLabel : undefined;
 
   const {
     hideableColumns,
@@ -262,10 +268,7 @@ function Table<Row extends TableRowRecord>({
     onHiddenColumnsChange = () => {},
   } = hiding;
 
-  const {
-    orderedColumns = [],
-    onOrderedColumnsChange = () => {},
-  } = ordering;
+  const { orderedColumns = [], onOrderedColumnsChange = () => {} } = ordering;
 
   const { filters, onFiltersChange, logicalOperator, onLogicalOperatorChange } =
     filtering;
@@ -288,6 +291,7 @@ function Table<Row extends TableRowRecord>({
     createSortClickHandler,
     createToggleColumnsClickHandler,
     selectAll,
+    someSelected,
     columns,
     setColumns,
     filterUtils,
@@ -298,7 +302,12 @@ function Table<Row extends TableRowRecord>({
     selection: { onSelectRows, selectedRows },
     hiding: { hiddenColumns, onHiddenColumnsChange },
     ordering: { orderedColumns, onOrderedColumnsChange },
-    filtering: { filters, onFiltersChange, logicalOperator, onLogicalOperatorChange },
+    filtering: {
+      filters,
+      onFiltersChange,
+      logicalOperator,
+      onLogicalOperatorChange,
+    },
   });
 
   const theaderProps = {
@@ -315,7 +324,7 @@ function Table<Row extends TableRowRecord>({
     <TableContainer {...containerProps}>
       <TableHeader<Row>
         data={{ columns, setColumns }}
-        selection={{ selectedRows }}
+        selection={{ selectedRows, onSelectRows, getSelectionLabel }}
         filtering={{ filterUtils }}
 
         {...theaderProps}
@@ -328,8 +337,8 @@ function Table<Row extends TableRowRecord>({
             sorting={{ sortStatuses, createSortClickHandler }}
             selection={{
               selectable,
-              selectedRows,
               selectAll,
+              someSelected,
               createSelectRowChangeHandler,
             }}
             filtering={{ createColumnFilterClickHandler }}
@@ -343,7 +352,12 @@ function Table<Row extends TableRowRecord>({
           <TableBody
             data={{ rows, columns: displayedColumns }}
             actions={actions}
-            selection={{ selectable, selectedRows, createSelectRowChangeHandler }}
+            selection={{
+              selectable,
+              selectedRows,
+              createSelectRowChangeHandler,
+              onSelectRows,
+            }}
             loading={{ loading: isLoading, scLoading }}
             elements={{
               rowProps: bodyRowProps,

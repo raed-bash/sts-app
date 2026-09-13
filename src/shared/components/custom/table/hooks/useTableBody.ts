@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useMouseUp } from "@/shared/hooks";
-import type { TableRowRecord, TableColumn, TableRowItem } from "../Table";
+import type { TableColumn, TableRowItem, TableRowRecord } from "../Table";
 import { getObjectValue } from "@/shared/utils";
 import type {
   UseTableSelectedRows,
@@ -16,6 +16,8 @@ export type UseTableBodyOptions = {
     createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler;
 
     selectedRows: UseTableSelectedRows;
+
+    onSelectRows: (selectedRows: UseTableSelectedRows) => void;
   };
 };
 
@@ -25,29 +27,145 @@ export function useTableBody<Row extends TableRowRecord>({
 }: UseTableBodyOptions) {
   const { rows } = data;
 
-  const { createSelectRowChangeHandler, selectedRows } = selection;
-  const rowMouseDownRef = useRef(false);
+  const { createSelectRowChangeHandler, selectedRows, onSelectRows } =
+    selection;
 
-  const changeLikeCheckbox = (row: TableRowItem) => {
-    createSelectRowChangeHandler(row)({
-      target: {
-        name: "",
-        checked: !selectedRows.has(row.id),
-      },
-    });
+  const anchorIndexRef = useRef<number | null>(null);
+
+  const bandingRef = useRef(false);
+
+  const getRowIndex = (row: TableRowItem) =>
+    rows.findIndex((item) => item.id === row.id);
+
+  const selectRange = (fromIndex: number, toIndex: number) => {
+    const [start, end] =
+      fromIndex <= toIndex ? [fromIndex, toIndex] : [toIndex, fromIndex];
+
+    const currentPageIds = new Set<TableRowItem["id"]>(
+      rows.map((item) => item.id),
+    );
+
+    const nextSelectedRows = new Map(
+      [...selectedRows].filter(([id]) => !currentPageIds.has(id)),
+    );
+
+    rows
+      .slice(start, end + 1)
+      .forEach((item) => nextSelectedRows.set(item.id, item));
+
+    onSelectRows(nextSelectedRows);
   };
+
+  const toggleRow = (row: TableRowItem) => {
+    const nextSelectedRows = new Map(selectedRows);
+
+    if (nextSelectedRows.has(row.id)) {
+      nextSelectedRows.delete(row.id);
+    } else {
+      nextSelectedRows.set(row.id, row);
+    }
+
+    onSelectRows(nextSelectedRows);
+  };
+
+  const createRowMouseDownHandler =
+    (row: TableRowItem) => (e: React.MouseEvent<HTMLTableCellElement>) => {
+      const currentIndex = getRowIndex(row);
+
+      if (currentIndex === -1) return;
+
+      if (e.shiftKey) {
+        const anchorIndex = anchorIndexRef.current ?? currentIndex;
+
+        selectRange(anchorIndex, currentIndex);
+
+        bandingRef.current = false;
+
+        e.preventDefault();
+
+        return;
+      }
+
+      if (e.ctrlKey || e.metaKey) {
+        toggleRow(row);
+
+        bandingRef.current = false;
+
+        e.preventDefault();
+
+        return;
+      }
+
+      anchorIndexRef.current = currentIndex;
+
+      bandingRef.current = !selectedRows.has(row.id);
+
+      if (bandingRef.current) {
+        const currentPageIds = new Set<TableRowItem["id"]>(
+          rows.map((item) => item.id),
+        );
+
+        const nextSelectedRows = new Map(
+          [...selectedRows].filter(([id]) => !currentPageIds.has(id)),
+        );
+
+        nextSelectedRows.set(row.id, row);
+
+        onSelectRows(nextSelectedRows);
+      }
+
+      e.preventDefault();
+    };
 
   const createRowMouseEnterHandler = (row: TableRowItem) => () => {
-    if (rowMouseDownRef.current) {
-      changeLikeCheckbox(row);
-    }
+    if (!bandingRef.current) return;
+
+    const anchorIndex = anchorIndexRef.current;
+
+    if (anchorIndex === null) return;
+
+    const currentIndex = getRowIndex(row);
+
+    if (currentIndex === -1 || currentIndex === anchorIndex) return;
+
+    selectRange(anchorIndex, currentIndex);
   };
 
-  const createRowMouseDownHandler = (row: TableRowItem) => () => {
-    changeLikeCheckbox(row);
+  const createCheckboxMouseDownHandler =
+    (row: TableRowItem) => (e: React.MouseEvent<HTMLInputElement>) => {
+      const currentIndex = getRowIndex(row);
 
-    rowMouseDownRef.current = true;
-  };
+      if (currentIndex === -1) return;
+
+      e.stopPropagation();
+      e.preventDefault();
+
+      if (e.shiftKey) {
+        const anchorIndex = anchorIndexRef.current ?? currentIndex;
+
+        selectRange(anchorIndex, currentIndex);
+
+        bandingRef.current = false;
+
+        return;
+      }
+
+      if (e.ctrlKey || e.metaKey) {
+        toggleRow(row);
+
+        bandingRef.current = false;
+
+        return;
+      }
+
+      const selectsRow = !selectedRows.has(row.id);
+
+      anchorIndexRef.current = currentIndex;
+
+      toggleRow(row);
+
+      bandingRef.current = selectsRow;
+    };
 
   const getSelectedAreaStyle = (i: number) => {
     const currentRowId = rows?.[i]?.id;
@@ -97,13 +215,20 @@ export function useTableBody<Row extends TableRowRecord>({
     return row;
   };
 
-  useMouseUp(() => (rowMouseDownRef.current = false));
+  useMouseUp(() => (bandingRef.current = false));
+
+  useEffect(() => {
+    anchorIndexRef.current = null;
+
+    bandingRef.current = false;
+  }, [rows]);
 
   const noRows = rows.length === 0;
 
   return {
     createRowMouseEnterHandler,
     createRowMouseDownHandler,
+    createCheckboxMouseDownHandler,
     getSelectedAreaStyle,
     createCheckboxChangeHandler,
     noRows,

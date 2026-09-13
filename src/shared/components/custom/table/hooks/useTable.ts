@@ -15,19 +15,18 @@ import type {
 } from "../../buttons/SortButton";
 import type { SyntheticEvent } from "@/shared/utils";
 
-export type UseTableCreateToggleColumnsClickHandler<Row extends TableRowRecord> = (
-  column: TableColumn<Row>,
-) => React.MouseEventHandler<HTMLButtonElement>;
+export type UseTableCreateToggleColumnsClickHandler<
+  Row extends TableRowRecord,
+> = (column: TableColumn<Row>) => React.MouseEventHandler<HTMLButtonElement>;
 
 export type UseTableCreateSortClickHandler<Row extends TableRowRecord> = (
   column: TableColumn<Row>,
 ) => SortButtonEventHandler;
 
-export type UseTableCreateColumnFilterClickHandler<Row extends TableRowRecord> = (
-  column: TableColumn<Row>,
-) => () => void;
+export type UseTableCreateColumnFilterClickHandler<Row extends TableRowRecord> =
+  (column: TableColumn<Row>) => () => void;
 
-export type UseTableSelectedRows = Set<string | number>;
+export type UseTableSelectedRows = Map<string | number, TableRowItem>;
 
 export type UseTableSortChangeHandler<Row extends TableRowRecord> = (
   name: TableColumn<Row>["name"],
@@ -58,7 +57,9 @@ export type UseTableOptions<Row extends TableRowRecord> = {
   hiding: {
     hiddenColumns?: Set<TableColumn<Row>["name"]>;
 
-    onHiddenColumnsChange: (hiddenColumns: Set<TableColumn<Row>["name"]>) => void;
+    onHiddenColumnsChange: (
+      hiddenColumns: Set<TableColumn<Row>["name"]>,
+    ) => void;
   };
 
   ordering: TableOrderingProps<Row>;
@@ -122,27 +123,31 @@ export function useTable<Row extends TableRowRecord>({
       const checked = e.target.checked;
 
       if (name === "selectAll") {
+        const nextSelectedRows = new Map(selectedRows);
+
         if (checked) {
-          const newSelectedRows = new Set<number>();
+          rows.forEach((row) => nextSelectedRows.set(row.id, row));
+        } else {
+          const currentPageIds = new Set<string | number>(
+            rows.map((row) => row.id),
+          );
 
           rows.forEach((row) => {
-            newSelectedRows.add(row.id);
+            if (currentPageIds.has(row.id)) nextSelectedRows.delete(row.id);
           });
-
-          onSelectRows(newSelectedRows);
-        } else {
-          onSelectRows(new Set());
         }
+
+        onSelectRows(nextSelectedRows);
 
         return;
       }
 
       if (!row) return;
 
-      const newSelectedRows = new Set(selectedRows);
+      const newSelectedRows = new Map(selectedRows);
 
       if (checked) {
-        newSelectedRows.add(row.id);
+        newSelectedRows.set(row.id, row);
       } else {
         newSelectedRows.delete(row.id);
       }
@@ -183,7 +188,11 @@ export function useTable<Row extends TableRowRecord>({
     onHiddenColumnsChangeExt(newHiddenColumns);
   };
 
-  const selectAll = rows.length ? selectedRows.size === rows.length : false;
+  const selectAll = rows.length
+    ? rows.every((row) => selectedRows.has(row.id))
+    : false;
+
+  const someSelected = rows.some((row) => selectedRows.has(row.id));
 
   useEffect(() => {
     onOrderedColumnsChange(columns.map((column) => column.name));
@@ -216,6 +225,7 @@ export function useTable<Row extends TableRowRecord>({
     createSortClickHandler,
     createSelectRowChangeHandler,
     selectAll,
+    someSelected,
     resetHiddenColumns,
     createToggleColumnsClickHandler,
     displayedColumns,

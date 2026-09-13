@@ -111,12 +111,22 @@ export default function UsersTable({
   loading,
   actions,
 }: UsersTableProps) {
+  const defaultSelectionLabel = (row: UserDto) =>
+    row.student?.fullName ||
+    row.teacher?.fullName ||
+    row.username ||
+    `#${row.id}`;
+
   return (
     <Table<UserDto>
       data={{ columns, ...data }}
       actions={actions}
       sorting={sorting}
-      selection={{ selectable: true, ...selection }}
+      selection={{
+        selectable: true,
+        ...selection,
+        getSelectionLabel: selection.getSelectionLabel ?? defaultSelectionLabel,
+      }}
       hiding={{ hideableColumns: true, ...hiding }}
       pagination={pagination}
       ordering={ordering}

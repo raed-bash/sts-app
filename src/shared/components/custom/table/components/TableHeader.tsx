@@ -1,10 +1,12 @@
 import { FilterBoard, type useFilter } from "../filter";
 import type {
   UseTableCreateToggleColumnsClickHandler,
+  UseTableSelectRowsHandler,
   UseTableSelectedRows,
 } from "../hooks/useTable";
 import type { TableRowRecord, TableColumn } from "../Table";
 import TableMenuColumns from "./TableMenuColumns";
+import TableSelectedRows from "./TableSelectedRows";
 
 export type TableHeaderNonHideableColumns = {
   hideableColumns: false;
@@ -37,6 +39,10 @@ export type TableHeaderProps<Row extends TableRowRecord> = (
 
   selection: {
     selectedRows: UseTableSelectedRows;
+
+    onSelectRows: UseTableSelectRowsHandler;
+
+    getSelectionLabel?: (row: Row) => React.ReactNode;
   };
 
   filtering: {
@@ -54,8 +60,7 @@ export default function TableHeader<Row extends TableRowRecord>({
   filtering,
 }: TableHeaderProps<Row>) {
   const { columns, setColumns } = data;
-
-  const { selectedRows } = selection;
+  const { selectedRows, onSelectRows, getSelectionLabel } = selection;
 
   const { filterUtils } = filtering;
 
@@ -78,10 +83,13 @@ export default function TableHeader<Row extends TableRowRecord>({
         }}
       />
       {selectedRows.size ? (
-        <p className="text-sm">Selected rows: {selectedRows.size}</p>
+        <TableSelectedRows<Row>
+          selection={{ selectedRows, onSelectRows, getSelectionLabel }}
+        />
       ) : (
         <div></div>
       )}
+
       {hideableColumns && (
         <div>
           <TableMenuColumns

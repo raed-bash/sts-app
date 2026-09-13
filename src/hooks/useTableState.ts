@@ -10,6 +10,7 @@ import type {
   FilterCondition,
   FilterLogicalOperator,
 } from "@/shared/components/custom/table/filter";
+import type { TableRowItem } from "@/shared/components/custom/table/Table";
 
 export type UseTableStateOptions<SortKey extends string> = {
   /** Base key used for caching/local storage (e.g. "users") */
@@ -29,8 +30,8 @@ export type UseTableStateReturn<SortKey extends string> = {
     onSortChange: (name: string, sortStatus: SortButtonStatus) => void;
   };
   selection: {
-    selectedRows: Set<string | number>;
-    onSelectRows: (selectedRows: Set<string | number>) => void;
+    selectedRows: Map<string | number, TableRowItem>;
+    onSelectRows: (selectedRows: Map<string | number, TableRowItem>) => void;
   };
   hiding: {
     hiddenColumns: Set<string>;

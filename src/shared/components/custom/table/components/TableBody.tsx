@@ -16,9 +16,7 @@ import { useTableBody } from "../hooks/useTableBody";
 import LinearLoading from "../../skeleton/LinearLoading";
 import Loading from "../../skeleton/Loading";
 import Checkbox from "../../inputs/Checkbox";
-import TableActionsCell, {
-  type TableAction,
-} from "./TableActionsCell";
+import TableActionsCell, { type TableAction } from "./TableActionsCell";
 
 export type TableBodyProps<Row extends TableRowRecord> =
   React.ComponentProps<"tbody"> & {
@@ -34,6 +32,8 @@ export type TableBodyProps<Row extends TableRowRecord> =
       createSelectRowChangeHandler: UseTableCreateSelectRowChangeHandler;
 
       selectedRows: UseTableSelectedRows;
+
+      onSelectRows: (selectedRows: UseTableSelectedRows) => void;
 
       selectable: boolean;
     };
@@ -63,18 +63,20 @@ function TableBody<Row extends TableRowRecord>({
 }: TableBodyProps<Row>) {
   const { rows, columns } = data;
 
-  const { createSelectRowChangeHandler, selectedRows, selectable } = selection;
+  const {
+    createSelectRowChangeHandler,
+    selectedRows,
+    selectable,
+    onSelectRows,
+  } = selection;
 
   const { loading: isLoading, scLoading } = loading;
 
-  const {
-    rowProps = {},
-    cellProps = {},
-    checkboxCellProps = {},
-  } = elements;
+  const { rowProps = {}, cellProps = {}, checkboxCellProps = {} } = elements;
 
   const {
     createCheckboxChangeHandler,
+    createCheckboxMouseDownHandler,
     createRowMouseDownHandler,
     createRowMouseEnterHandler,
     getSelectedAreaStyle,
@@ -82,7 +84,11 @@ function TableBody<Row extends TableRowRecord>({
     getRowValue,
   } = useTableBody({
     data: { rows },
-    selection: { createSelectRowChangeHandler, selectedRows },
+    selection: {
+      createSelectRowChangeHandler,
+      selectedRows,
+      onSelectRows,
+    },
   });
 
   return (
@@ -142,6 +148,7 @@ function TableBody<Row extends TableRowRecord>({
                 <Checkbox
                   checked={selectedRows.has(row.id)}
                   onChange={createCheckboxChangeHandler(row)}
+                  onMouseDown={createCheckboxMouseDownHandler(row)}
                 />
               </TableCell>
             )}
