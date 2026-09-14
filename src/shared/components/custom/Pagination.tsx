@@ -1,45 +1,47 @@
 import { useState } from "react";
-import ArrowLineDownIcon from "@/shared/assets/icons/arrow-line-down.svg?react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useDebounce } from "@/shared/hooks";
+import { cn } from "cn";
 import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
-import IconButton from "./buttons/IconButton";
 import InputPlus from "./inputs/InputPlus";
+import { Button } from "@/shared/components/ui/button";
+
+type PageItem = number | "ellipsis";
 
 const getVisiblePages = (
-  currentPage: number,
   totalPages: number,
-  maxVisibleNeighbors = 2, // Number of neighbors to show on each side of the current page
-) => {
-  const pages = [];
+  currentPage: number,
+  maxVisibleNeighbors: number,
+): PageItem[] => {
+  const pages = new Set<number>();
 
   // Always show the first page
-  if (currentPage > 3 + maxVisibleNeighbors) {
-    pages.push(1, 2, "...");
-  } else {
-    for (let i = 1; i < Math.min(3, totalPages + 1); i++) {
-      pages.push(i);
-    }
-  }
+  pages.add(1);
 
-  // Add neighbors and the current page
+  // Neighbors around the current page
   for (
-    let i = Math.max(1, currentPage - maxVisibleNeighbors);
-    i <= Math.min(totalPages, currentPage + maxVisibleNeighbors);
-    i++
+    let page = Math.max(2, currentPage - maxVisibleNeighbors);
+    page <= Math.min(totalPages - 1, currentPage + maxVisibleNeighbors);
+    page++
   ) {
-    if (!pages.includes(i)) pages.push(i);
+    pages.add(page);
   }
 
-  // Always show the last pages
-  if (currentPage < totalPages - 4) {
-    pages.push("...", totalPages - 1, totalPages);
-  } else {
-    for (let i = Math.max(totalPages - 3, 1); i <= totalPages; i++) {
-      if (!pages.includes(i) && i > currentPage) pages.push(i);
-    }
+  // Always show the last page
+  if (totalPages > 1) pages.add(totalPages);
+
+  const items: PageItem[] = [];
+  let previous = 0;
+
+  for (const page of [...pages].sort((a, b) => a - b)) {
+    if (page - previous > 1) items.push("ellipsis");
+
+    items.push(page);
+
+    previous = page;
   }
 
-  return pages;
+  return items;
 };
 
 export type PaginationProps = {
@@ -54,6 +56,10 @@ export type PaginationProps = {
    * @default 10
    */
   perPage?: number;
+  /**
+   * Disables all pagination controls (used when load-more takes over)
+   */
+  disabled?: boolean;
 };
 
 function Pagination({
@@ -62,85 +68,112 @@ function Pagination({
   onChange,
   maxVisibleNeighbors = 2,
   perPage = PER_PAGE,
+  disabled = false,
 }: PaginationProps) {
   const totalPages = Math.ceil(count / perPage);
 
-  const [pageTableRowacker, setPageTableRowacker] = useState(currentPage);
+  const [prevCurrentPage, setPrevCurrentPage] = useState(currentPage);
+  const [jumpValue, setJumpValue] = useState<string | number>(currentPage);
 
-  const pages = getVisiblePages(currentPage, totalPages, maxVisibleNeighbors);
+  const pages = getVisiblePages(totalPages, currentPage, maxVisibleNeighbors);
 
-  const handleChange = (newPage: number) => {
-    onChange(newPage);
+  // Keep the jump input in sync with external page changes
+  if (prevCurrentPage !== currentPage) {
+    setPrevCurrentPage(currentPage);
 
-    setPageTableRowacker(newPage);
+    setJumpValue(currentPage);
+  }
+
+  const handleChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+
+    onChange(page);
+
+    setJumpValue(page);
   };
 
-  const handleDebounceChange = useDebounce(handleChange, 500);
+  const handleJumpChange = useDebounce(handleChange, 500);
+
+  if (totalPages === 0) return null;
 
   return (
-    <div className="flex gap-2">
-      <div className="flex items-center justify-center gap-x-2 py-4">
-        {/* Previous Button */}
-        <IconButton
-          className="px-2 py-[9.5px] rotate-90 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-          disabled={currentPage === 1}
-          onClick={() => {
-            handleChange(currentPage - 1);
-          }}
+    <nav
+      aria-label="Pagination"
+      className={cn(
+        "flex items-center gap-3",
+        disabled && "opacity-50 pointer-events-none select-none",
+      )}
+    >
+      <div className="flex items-center justify-center gap-1 py-4 min-w-64">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Previous page"
+          disabled={disabled || currentPage === 1}
+          onClick={() => handleChange(currentPage - 1)}
         >
-          <ArrowLineDownIcon className="stroke-(--text)" />
-        </IconButton>
+          <ChevronLeftIcon />
+        </Button>
 
-        {/* Dynamic Page Numbers */}
         {pages.map((page, idx) =>
-          page === "..." ? (
-            <span key={idx} className="px-3 py-1 text-gray-500">
-              ...
+          page === "ellipsis" ? (
+            <span
+              key={`ellipsis-${idx}`}
+              className="px-1 text-(--text)/50 select-none"
+            >
+              …
             </span>
           ) : (
-            <IconButton
-              key={idx}
-              className="px-3 py-1 text-[14px] rounded 
-             aria-selected:bg-(--primary) aria-selected:text-white"
+            <Button
+              key={page}
+              variant="ghost"
+              size="sm"
+              aria-label={`Page ${page}`}
+              aria-current={page === currentPage ? "page" : undefined}
+              className={cn(
+                "h-8 min-w-8 px-2 rounded-md aria-selected:bg-(--primary) aria-selected:text-white aria-selected:font-medium",
+                page === currentPage && "aria-selected:pointer-events-none",
+              )}
               aria-selected={page === currentPage}
-              onClick={() => {
-                if (typeof page === "number") handleChange(page);
-              }}
+              disabled={disabled}
+              onClick={() => handleChange(page)}
             >
               {page}
-            </IconButton>
+            </Button>
           ),
         )}
 
-        {/* Next Button */}
-        <IconButton
-          className="px-2 py-[9.5px] -rotate-90 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 "
-          disabled={currentPage === totalPages}
-          onClick={() => {
-            onChange(currentPage + 1);
-          }}
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Next page"
+          disabled={disabled || currentPage === totalPages}
+          onClick={() => handleChange(currentPage + 1)}
         >
-          <ArrowLineDownIcon className="stroke-(--text)" />
-        </IconButton>
+          <ChevronRightIcon />
+        </Button>
       </div>
+
       <InputPlus
         oneline
         title="Go:"
         type="number"
+        disabled={disabled}
         inputPlusContainerProps={{ className: "w-30" }}
         onChange={(e) => {
           const newPage = +e.target.value;
 
-          if (newPage > 0 && newPage <= totalPages) {
-            handleDebounceChange(newPage);
-            setPageTableRowacker(newPage);
+          setJumpValue(e.target.value);
+
+          if (e.target.value !== "" && newPage > 0 && newPage <= totalPages) {
+            handleJumpChange(newPage);
           }
         }}
         min={1}
         max={totalPages}
-        value={pageTableRowacker}
+        value={jumpValue}
       />
-    </div>
+    </nav>
   );
 }
 

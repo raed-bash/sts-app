@@ -26,6 +26,10 @@ export type UseTableStateReturn<SortKey extends string> = {
     currentPage: number;
     onPageChange: (page: number) => void;
   };
+  loadMore: {
+    enabled: boolean;
+    onEnableLoadMore: () => void;
+  };
   sorting: {
     sortStatuses: DefaultSortStatuses<SortKey>;
     onSortChange: (name: string, sortStatus: SortButtonStatus) => void;
@@ -65,6 +69,8 @@ export function useTableState<SortKey extends string>({
 }: UseTableStateOptions<SortKey>): UseTableStateReturn<SortKey> {
   const [page, setPage] = useState(1);
 
+  const [isLoadMore, setIsLoadMore] = useState(false);
+
   const { sortStatuses, handleSortChange } = useSortStatuses<SortKey>(
     name,
     defaultSortStatuses,
@@ -96,6 +102,10 @@ export function useTableState<SortKey extends string>({
 
   return {
     pagination: { currentPage: page, onPageChange: setPage },
+    loadMore: {
+      enabled: isLoadMore,
+      onEnableLoadMore: () => setIsLoadMore(true),
+    },
     sorting: { sortStatuses, onSortChange: handleSortChange },
     selection: { selectedRows, onSelectRows: setSelectedRows },
     hiding: { hiddenColumns, onHiddenColumnsChange: setHiddenColumns },

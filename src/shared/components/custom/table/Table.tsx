@@ -77,6 +77,18 @@ export type TableLoadingProps = {
   scLoading?: boolean;
 };
 
+export type TableLoadMoreProps = {
+  enabled: boolean;
+
+  onLoadMore: () => void;
+
+  hasMore: boolean;
+
+  isFetching: boolean;
+
+  loadedCount: number;
+};
+
 export type TablePaginationProps = {
   currentPage: PaginationProps["currentPage"];
 
@@ -87,6 +99,8 @@ export type TablePaginationProps = {
   onPageChange: PaginationProps["onChange"];
 
   maxVisibleNeighbors?: PaginationProps["maxVisibleNeighbors"];
+
+  loadMore?: TableLoadMoreProps;
 };
 
 export type TableSelectionProps<Row extends TableRowRecord = TableRowRecord> = {
@@ -285,6 +299,7 @@ function Table<Row extends TableRowRecord>({
     count = rows.length,
     onPageChange = () => {},
     maxVisibleNeighbors = 2,
+    loadMore,
   } = pagination;
 
   const { sortStatuses = {}, onSortChange = () => {} } = sorting;
@@ -444,6 +459,7 @@ function Table<Row extends TableRowRecord>({
           onPageChange,
           maxVisibleNeighbors,
           perPage,
+          loadMore,
         }}
       />
     </TableContainer>
