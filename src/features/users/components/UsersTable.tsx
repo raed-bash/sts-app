@@ -93,6 +93,44 @@ const columns: TableColumn<UserDto>[] = [
     strict: false,
   },
   {
+    name: "fakePhone",
+    headerName: "Phone",
+    strict: false,
+    getCell: (_, row) =>
+      `+20 1${(row.id % 1000).toString().padStart(3, "0")} ${(row.id * 7)
+        .toString()
+        .padStart(4, "0")}`,
+  },
+  {
+    name: "fakeEmail",
+    headerName: "Email",
+    strict: false,
+    getCell: (_, row) =>
+      `${(row.student?.fullName || row.teacher?.fullName || row.username)
+        .toLowerCase()
+        .replace(/\s+/g, ".")}@example.com`,
+  },
+  {
+    name: "fakeAddress",
+    headerName: "Address",
+    strict: false,
+    getCell: (_, row) =>
+      `${(row.id * 13) % 500} Main Street, District ${(row.id * 3) % 12}, Cairo, Egypt - floor ${(row.id * 5) % 7}`,
+  },
+  {
+    name: "fakeCompany",
+    headerName: "Company",
+    strict: false,
+    getCell: (_, row) =>
+      `Tech Solutions #${(row.id % 15) + 1} - Department ${(row.id % 6) + 1}`,
+  },
+  {
+    name: "fakeScore",
+    headerName: "Score",
+    strict: false,
+    getCell: (_, row) => `${(row.id * 37) % 100} pts`,
+  },
+  {
     name: "actions",
     headerName: "Actions",
     strict: false,
@@ -106,6 +144,7 @@ export default function UsersTable({
   sorting,
   selection,
   hiding,
+  pinning,
   ordering,
   filtering,
   loading,
@@ -128,6 +167,7 @@ export default function UsersTable({
         getSelectionLabel: selection.getSelectionLabel ?? defaultSelectionLabel,
       }}
       hiding={{ hideableColumns: true, ...hiding }}
+      pinning={{ pinnableColumns: true, ...pinning }}
       pagination={pagination}
       ordering={ordering}
       filtering={filtering}

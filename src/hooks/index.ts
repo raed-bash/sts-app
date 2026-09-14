@@ -4,6 +4,7 @@ export * from "./useHiddenColumns";
 export * from "./useLocalStorage";
 export * from "./useLogout";
 export * from "./useOrderedColumns";
+export * from "./usePinnedColumns";
 export * from "./useSelectedRows";
 export * from "./useSortStatuses";
 export * from "./useTableState";

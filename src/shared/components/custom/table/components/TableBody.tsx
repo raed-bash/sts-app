@@ -7,6 +7,7 @@ import type {
   TableColumn,
   TableLoadingProps,
   TableRowItem,
+  TablePinningProps,
 } from "../Table";
 import type {
   UseTableSelectedRows,
@@ -40,6 +41,8 @@ export type TableBodyProps<Row extends TableRowRecord> =
 
     loading?: TableLoadingProps;
 
+    pinning?: TablePinningProps<Row>;
+
     elements?: {
       /** Body rows; <tr> elements */
       rowProps?: TableRowProps;
@@ -57,6 +60,7 @@ function TableBody<Row extends TableRowRecord>({
   actions = [],
   selection,
   loading = {},
+  pinning,
   elements = {},
   className,
   ...props
@@ -152,26 +156,43 @@ function TableBody<Row extends TableRowRecord>({
                 />
               </TableCell>
             )}
-            {columns.map(({ bodyCellProps = {}, className, ...column }) => (
-              <TableCell
-                key={String(column.name)}
-                {...cellProps}
-                {...bodyCellProps}
-                className={cn(
-                  className,
-                  cellProps.className,
-                  bodyCellProps.className,
-                )}
-              >
-                {column.type === "actions" ? (
-                  <TableActionsCell row={row} actions={actions} />
-                ) : column.getCell ? (
-                  column.getCell(getRowValue(row, String(column.name)), row)
-                ) : (
-                  getRowValue(row, String(column.name))
-                )}
-              </TableCell>
-            ))}
+            {columns.map(({ bodyCellProps = {}, className, ...column }) => {
+              const isPinned = pinning
+                ? pinning.pinnedColumns.has(column.name)
+                : false;
+
+              const right = isPinned
+                ? pinning?.getRightOffset(column.name)
+                : undefined;
+
+              return (
+                <TableCell
+                  key={String(column.name)}
+                  style={right !== undefined ? { right } : undefined}
+                  {...cellProps}
+                  {...bodyCellProps}
+                  className={cn(
+                    isPinned &&
+                      cn(
+                        "sticky z-[1] bg-card hover:bg-gray-100/30 dark:hover:bg-gray-700",
+                        pinning?.isFirstPinned(column.name) &&
+                          "border-l-2 border-(--primary)",
+                      ),
+                    className,
+                    cellProps.className,
+                    bodyCellProps.className,
+                  )}
+                >
+                  {column.type === "actions" ? (
+                    <TableActionsCell row={row} actions={actions} />
+                  ) : column.getCell ? (
+                    column.getCell(getRowValue(row, String(column.name)), row)
+                  ) : (
+                    getRowValue(row, String(column.name))
+                  )}
+                </TableCell>
+              );
+            })}
           </TableRow>
         ))
       )}

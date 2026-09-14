@@ -3,6 +3,7 @@ import { useCachedState } from "./useCachedState";
 import { useDebouncedValue } from "@/shared/hooks";
 import { useHiddenColumns } from "./useHiddenColumns";
 import { useOrderedColumns } from "./useOrderedColumns";
+import { usePinnedColumns } from "./usePinnedColumns";
 import { useSelectedRows } from "./useSelectedRows";
 import { useSortStatuses, type DefaultSortStatuses } from "./useSortStatuses";
 import type { SortButtonStatus } from "@/shared/components/custom/buttons/SortButton";
@@ -36,6 +37,10 @@ export type UseTableStateReturn<SortKey extends string> = {
   hiding: {
     hiddenColumns: Set<string>;
     onHiddenColumnsChange: (hiddenColumns: Set<string>) => void;
+  };
+  pinning: {
+    pinnedColumns: Set<string>;
+    onPinnedColumnsChange: (pinnedColumns: Set<string>) => void;
   };
   ordering: {
     orderedColumns: string[];
@@ -85,6 +90,8 @@ export function useTableState<SortKey extends string>({
 
   const { hiddenColumns, setHiddenColumns } = useHiddenColumns(name);
 
+  const { pinnedColumns, setPinnedColumns } = usePinnedColumns(name);
+
   const debouncedFilters = useDebouncedValue(filters);
 
   return {
@@ -92,6 +99,7 @@ export function useTableState<SortKey extends string>({
     sorting: { sortStatuses, onSortChange: handleSortChange },
     selection: { selectedRows, onSelectRows: setSelectedRows },
     hiding: { hiddenColumns, onHiddenColumnsChange: setHiddenColumns },
+    pinning: { pinnedColumns, onPinnedColumnsChange: setPinnedColumns },
     ordering: {
       orderedColumns,
       onOrderedColumnsChange: setOrderedColumns,

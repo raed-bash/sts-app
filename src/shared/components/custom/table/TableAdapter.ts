@@ -22,6 +22,10 @@ export type TableAdapterProps<Row extends TableRowRecord> = {
     hiddenColumns: Set<string>;
     onHiddenColumnsChange: (hiddenColumns: Set<string>) => void;
   };
+  pinning: {
+    pinnedColumns: Set<string>;
+    onPinnedColumnsChange: (pinnedColumns: Set<string>) => void;
+  };
   ordering: {
     orderedColumns: string[];
     onOrderedColumnsChange: (orderedColumns: string[]) => void;
@@ -59,6 +63,7 @@ export class TableAdapter<Row extends TableRowRecord, SortKey extends string> {
       },
       selection: this.state.selection,
       hiding: this.state.hiding,
+      pinning: this.state.pinning,
       ordering: this.state.ordering,
       filtering: this.state.filtering,
       loading: {

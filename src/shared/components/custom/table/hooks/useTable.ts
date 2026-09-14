@@ -19,6 +19,10 @@ export type UseTableCreateToggleColumnsClickHandler<
   Row extends TableRowRecord,
 > = (column: TableColumn<Row>) => React.MouseEventHandler<HTMLButtonElement>;
 
+export type UseTableCreateTogglePinColumnHandler<Row extends TableRowRecord> = (
+  column: TableColumn<Row>,
+) => () => void;
+
 export type UseTableCreateSortClickHandler<Row extends TableRowRecord> = (
   column: TableColumn<Row>,
 ) => SortButtonEventHandler;
@@ -62,6 +66,14 @@ export type UseTableOptions<Row extends TableRowRecord> = {
     ) => void;
   };
 
+  pinning?: {
+    pinnedColumns?: Set<TableColumn<Row>["name"]>;
+
+    onPinnedColumnsChange: (
+      pinnedColumns: Set<TableColumn<Row>["name"]>,
+    ) => void;
+  };
+
   ordering: TableOrderingProps<Row>;
 
   filtering: TableFilteringProps;
@@ -72,6 +84,7 @@ export function useTable<Row extends TableRowRecord>({
   sorting,
   selection,
   hiding,
+  pinning,
   ordering,
   filtering,
 }: UseTableOptions<Row>) {
@@ -85,6 +98,11 @@ export function useTable<Row extends TableRowRecord>({
     hiddenColumns: hiddenColumnsExt,
     onHiddenColumnsChange: onHiddenColumnsChangeExt,
   } = hiding;
+
+  const {
+    pinnedColumns = new Set<TableColumn<Row>["name"]>(),
+    onPinnedColumnsChange = () => {},
+  } = pinning ?? {};
 
   const { onOrderedColumnsChange, orderedColumns } = ordering;
 
@@ -168,9 +186,14 @@ export function useTable<Row extends TableRowRecord>({
     onHiddenColumnsChangeExt(defaultHiddenCols);
   };
 
-  const displayedColumns = columns
-    .filter((column) => !hiddenColumns.has(column.name))
-    .map((column) => column);
+  const visibleColumns = columns.filter(
+    (column) => !hiddenColumns.has(column.name),
+  );
+
+  const displayedColumns = [
+    ...visibleColumns.filter((column) => !pinnedColumns.has(column.name)),
+    ...visibleColumns.filter((column) => pinnedColumns.has(column.name)),
+  ];
 
   const createToggleColumnsClickHandler: UseTableCreateToggleColumnsClickHandler<
     Row
@@ -186,6 +209,20 @@ export function useTable<Row extends TableRowRecord>({
     setHiddenColumns(newHiddenColumns);
 
     onHiddenColumnsChangeExt(newHiddenColumns);
+  };
+
+  const createTogglePinColumnHandler: UseTableCreateTogglePinColumnHandler<
+    Row
+  > = (column) => () => {
+    const newPinnedColumns = new Set(pinnedColumns);
+
+    if (pinnedColumns.has(column.name)) {
+      newPinnedColumns.delete(column.name);
+    } else {
+      newPinnedColumns.add(column.name);
+    }
+
+    onPinnedColumnsChange(newPinnedColumns);
   };
 
   const selectAll = rows.length
@@ -228,6 +265,7 @@ export function useTable<Row extends TableRowRecord>({
     someSelected,
     resetHiddenColumns,
     createToggleColumnsClickHandler,
+    createTogglePinColumnHandler,
     displayedColumns,
     columns,
     setColumns,

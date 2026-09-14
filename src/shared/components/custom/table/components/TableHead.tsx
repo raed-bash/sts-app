@@ -1,10 +1,12 @@
+import { useState } from "react";
 import TableRow, { type TableRowProps } from "./TableRow";
 import TableHeadCell from "./TableHeadCell";
 import type { TableHeadCellProps } from "./TableHeadCell";
 import { cn } from "cn";
 import type React from "react";
-import { EllipsisVerticalIcon } from "lucide-react";
+import { EllipsisVerticalIcon, Filter, Pin, PinOff } from "lucide-react";
 import type { TableRowRecord, TableColumn, TableSortStatuses } from "../Table";
+import type { TablePinningProps } from "../Table";
 import type {
   UseTableCreateColumnFilterClickHandler,
   UseTableCreateSelectRowChangeHandler,
@@ -13,6 +15,11 @@ import type {
 import Checkbox from "../../inputs/Checkbox";
 import SortButton from "../../buttons/SortButton";
 import { Button } from "@/shared/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/components/ui/popover";
 
 export type TableHeadProps<Row extends TableRowRecord> =
   React.ComponentProps<"thead"> & {
@@ -40,6 +47,8 @@ export type TableHeadProps<Row extends TableRowRecord> =
       createColumnFilterClickHandler: UseTableCreateColumnFilterClickHandler<Row>;
     };
 
+    pinning?: TablePinningProps<Row>;
+
     elements?: {
       /** Head row; <tr> element */
       rowProps?: TableRowProps;
@@ -57,6 +66,7 @@ function TableHead<Row extends TableRowRecord>({
   sorting,
   selection,
   filtering,
+  pinning,
   elements = {},
   ...props
 }: TableHeadProps<Row>) {
@@ -70,6 +80,8 @@ function TableHead<Row extends TableRowRecord>({
   const { createColumnFilterClickHandler } = filtering;
 
   const { rowProps = {}, cellProps = {}, checkboxCellProps = {} } = elements;
+
+  const [openMenuFor, setOpenMenuFor] = useState<string | null>(null);
 
   return (
     <thead {...props}>
@@ -95,45 +107,108 @@ function TableHead<Row extends TableRowRecord>({
             />
           </TableHeadCell>
         )}
-        {columns.map(({ headCellProps = {}, className, ...column }) => (
-          <TableHeadCell
-            key={column.name.toString()}
-            title={
-              typeof column.headerName === "string" ? column.headerName : ""
-            }
-            {...cellProps}
-            {...headCellProps}
-            className={cn(
-              className,
-              cellProps.className,
-              headCellProps.className,
-            )}
-          >
-            <div className="flex items-center gap-2">
-              {!column.sort && column.headerName}
-              {column.sort && (
-                <SortButton
-                  className="mt-0 align-middle ms-1 py-1 uppercase"
-                  onClick={createSortClickHandler(column)}
-                  sortStatus={sortStatuses[column.name.toString()]}
-                >
-                  {column.headerName}
-                </SortButton>
+        {columns.map(({ headCellProps = {}, className, ...column }) => {
+          const name = String(column.name);
+
+          const isPinned = pinning
+            ? pinning.pinnedColumns.has(column.name)
+            : false;
+
+          const right = isPinned
+            ? pinning?.getRightOffset(column.name)
+            : undefined;
+
+          const showActions = Boolean(
+            column.filterable || pinning?.pinnableColumns,
+          );
+
+          return (
+            <TableHeadCell
+              key={name}
+              title={
+                typeof column.headerName === "string" ? column.headerName : ""
+              }
+              data-pinned={isPinned ? name : undefined}
+              style={right !== undefined ? { right } : undefined}
+              {...cellProps}
+              {...headCellProps}
+              className={cn(
+                isPinned &&
+                  cn(
+                    "sticky z-[2] bg-gray-100 dark:bg-gray-700",
+                    pinning?.isFirstPinned(column.name) &&
+                      "border-l-2 border-(--primary)",
+                  ),
+                className,
+                cellProps.className,
+                headCellProps.className,
               )}
-              {column.filterable && (
-                <div className="inline-block">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={createColumnFilterClickHandler(column)}
+            >
+              <div className="flex items-center gap-2">
+                {!column.sort && column.headerName}
+                {column.sort && (
+                  <SortButton
+                    className="mt-0 align-middle ms-1 py-1 uppercase"
+                    onClick={createSortClickHandler(column)}
+                    sortStatus={sortStatuses[column.name.toString()]}
                   >
-                    <EllipsisVerticalIcon />
-                  </Button>
-                </div>
-              )}
-            </div>
-          </TableHeadCell>
-        ))}
+                    {column.headerName}
+                  </SortButton>
+                )}
+                {showActions && (
+                  <div className="inline-block">
+                    <Popover
+                      open={openMenuFor === name}
+                      onOpenChange={(open) =>
+                        setOpenMenuFor(open ? name : null)
+                      }
+                    >
+                      <PopoverTrigger
+                        render={
+                          <Button variant="outline" size="icon">
+                            <EllipsisVerticalIcon />
+                          </Button>
+                        }
+                      />
+                      <PopoverContent align="end" className="w-44 p-1">
+                        {column.filterable && (
+                          <button
+                            type="button"
+                            className="flex items-center gap-2 rounded px-2 py-1 text-[13px] hover:bg-(--primary) hover:text-(--primary-foreground)"
+                            onClick={() => {
+                              setOpenMenuFor(null);
+                              createColumnFilterClickHandler(column)();
+                            }}
+                          >
+                            <Filter className="h-4 w-4" />
+                            Filter
+                          </button>
+                        )}
+                        {pinning?.pinnableColumns && (
+                          <button
+                            type="button"
+                            className="flex items-center gap-2 rounded px-2 py-1 text-[13px] hover:bg-(--primary) hover:text-(--primary-foreground)"
+                            onClick={() => {
+                              pinning.createTogglePinColumnHandler?.(column)();
+                              setOpenMenuFor(null);
+                            }}
+                          >
+                            {isPinned ? (
+                              <PinOff className="h-4 w-4" />
+                            ) : (
+                              <Pin className="h-4 w-4" />
+                            )}
+                            {isPinned ? "Unpin" : "Pin"}
+                          </button>
+                        )}
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                )}
+              </div>
+            </TableHeadCell>
+          );
+        })}
       </TableRow>
     </thead>
   );

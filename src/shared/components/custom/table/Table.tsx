@@ -9,6 +9,7 @@ import type { TableCellProps } from "./components/TableCell";
 import type { SortButtonStatus } from "../buttons/SortButton";
 import type { TableRowProps } from "./components/TableRow";
 import type {
+  UseTableCreateTogglePinColumnHandler,
   UseTableSelectRowsHandler,
   UseTableSelectedRows,
   UseTableSortChangeHandler,
@@ -25,6 +26,7 @@ import { type FilterCondition } from "./filter/hooks/useFilter";
 import type { FilterLogicalOperator } from "./filter";
 import type { TableAction } from "./components/TableActionsCell";
 import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
+import { useTablePinnedColumns } from "./hooks/useTablePinnedColumns";
 
 export type TableRowRecord = Record<string, any>;
 
@@ -127,6 +129,34 @@ export type TableNonHideableColumns = {
   hiddenColumns?: never;
 };
 
+export type TablePinnableColumns<Row extends TableRowRecord> = {
+  pinnableColumns: true;
+
+  pinnedColumns: Set<TableColumn<Row>["name"]>;
+
+  onPinnedColumnsChange: (pinnedColumns: Set<TableColumn<Row>["name"]>) => void;
+};
+
+export type TableNonPinnableColumns = {
+  pinnableColumns?: false;
+
+  pinnedColumns?: never;
+
+  onPinnedColumnsChange?: never;
+};
+
+export type TablePinningProps<Row extends TableRowRecord> = {
+  pinnedColumns: Set<TableColumn<Row>["name"]>;
+
+  getRightOffset: (name: TableColumn<Row>["name"]) => number | undefined;
+
+  isFirstPinned: (name: TableColumn<Row>["name"]) => boolean;
+
+  pinnableColumns?: boolean;
+
+  createTogglePinColumnHandler?: UseTableCreateTogglePinColumnHandler<Row>;
+};
+
 export type TableSelectable<Row extends TableRowRecord> =
   TableSelectionProps<Row> & {
     selectable: true;
@@ -185,6 +215,11 @@ export type TableProps<Row extends TableRowRecord> = {
   hiding?: TableHideableColumns<Row> | TableNonHideableColumns;
 
   /**
+   * Pinned columns (floating on the right)
+   */
+  pinning?: TablePinnableColumns<Row> | TableNonPinnableColumns;
+
+  /**
    * Column ordering
    */
   ordering: TableOrderingProps<Row>;
@@ -235,6 +270,7 @@ function Table<Row extends TableRowRecord>({
   selection = {},
   actions = [],
   hiding = {},
+  pinning = {},
   ordering,
   filtering,
   elements = {},
@@ -268,6 +304,12 @@ function Table<Row extends TableRowRecord>({
     onHiddenColumnsChange = () => {},
   } = hiding;
 
+  const {
+    pinnableColumns = false,
+    pinnedColumns = new Set(),
+    onPinnedColumnsChange = () => {},
+  } = pinning;
+
   const { orderedColumns = [], onOrderedColumnsChange = () => {} } = ordering;
 
   const { filters, onFiltersChange, logicalOperator, onLogicalOperatorChange } =
@@ -290,6 +332,7 @@ function Table<Row extends TableRowRecord>({
     createSelectRowChangeHandler,
     createSortClickHandler,
     createToggleColumnsClickHandler,
+    createTogglePinColumnHandler,
     selectAll,
     someSelected,
     columns,
@@ -301,6 +344,7 @@ function Table<Row extends TableRowRecord>({
     sorting: { onSortChange },
     selection: { onSelectRows, selectedRows },
     hiding: { hiddenColumns, onHiddenColumnsChange },
+    pinning: { pinnedColumns, onPinnedColumnsChange },
     ordering: { orderedColumns, onOrderedColumnsChange },
     filtering: {
       filters,
@@ -309,6 +353,27 @@ function Table<Row extends TableRowRecord>({
       onLogicalOperatorChange,
     },
   });
+
+  const { ref: tableScrollRef, getRightOffset } = useTablePinnedColumns({
+    columns: displayedColumns,
+    pinnedColumns,
+  });
+
+  const firstPinnedColumnName = displayedColumns.find((column) =>
+    pinnedColumns.has(column.name),
+  );
+
+  const isFirstPinned = (name: TableColumn<Row>["name"]) =>
+    firstPinnedColumnName !== undefined &&
+    String(firstPinnedColumnName.name) === String(name);
+
+  const pinningColumns: TablePinningProps<Row> = {
+    pinnableColumns,
+    pinnedColumns,
+    createTogglePinColumnHandler,
+    getRightOffset,
+    isFirstPinned,
+  };
 
   const theaderProps = {
     hideableColumns: hideableColumns,
@@ -326,12 +391,14 @@ function Table<Row extends TableRowRecord>({
         data={{ columns, setColumns }}
         selection={{ selectedRows, onSelectRows, getSelectionLabel }}
         filtering={{ filterUtils }}
-
         {...theaderProps}
       />
 
       <div className="overflow-x-auto w-full max-w-full rounded-lg pb-[5px]">
-        <table className="w-full min-w-max table-auto border-collapse relative">
+        <table
+          ref={tableScrollRef}
+          className="w-full min-w-max table-auto border-separate border-spacing-0 relative"
+        >
           <TableHead
             data={{ columns: displayedColumns }}
             sorting={{ sortStatuses, createSortClickHandler }}
@@ -342,6 +409,7 @@ function Table<Row extends TableRowRecord>({
               createSelectRowChangeHandler,
             }}
             filtering={{ createColumnFilterClickHandler }}
+            pinning={pinningColumns}
             elements={{
               rowProps: headRowProps,
               cellProps: headCellProps,
@@ -359,6 +427,7 @@ function Table<Row extends TableRowRecord>({
               onSelectRows,
             }}
             loading={{ loading: isLoading, scLoading }}
+            pinning={pinningColumns}
             elements={{
               rowProps: bodyRowProps,
               cellProps: bodyCellProps,
