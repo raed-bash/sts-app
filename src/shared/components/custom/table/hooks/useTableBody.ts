@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useMouseUp } from "@/shared/hooks";
+import { cn } from "cn";
 import type { TableColumn, TableRowItem, TableRowRecord } from "../Table";
 import { getObjectValue } from "@/shared/utils";
 import type {
@@ -167,25 +168,23 @@ export function useTableBody<Row extends TableRowRecord>({
       bandingRef.current = selectsRow;
     };
 
-  const getSelectedAreaStyle = (i: number) => {
-    const currentRowId = rows?.[i]?.id;
-    const isCurrRowSelected = selectedRows.has(currentRowId);
+  const getSelectedAreaBorders = (
+    i: number,
+    position: "first" | "last" | "middle",
+  ) => {
+    const isCurrRowSelected = selectedRows.has(rows?.[i]?.id);
 
     if (!isCurrRowSelected) return "";
 
-    const prevRowId = rows?.[i - 1]?.id;
-    const isPrevRowSelected = selectedRows.has(prevRowId);
+    const isPrevRowSelected = selectedRows.has(rows?.[i - 1]?.id);
+    const isNextRowSelected = selectedRows.has(rows?.[i + 1]?.id);
 
-    const nextRowId = rows?.[i + 1]?.id;
-    const isNextRowSelected = selectedRows.has(nextRowId);
-
-    const style = `border-r-[2px] border-l-[2px] border-solid border-blue-500 `;
-
-    return (
-      style +
-      `${!isPrevRowSelected ? "border-t-[2px]" : ""} ${
-        !isNextRowSelected ? "border-b-[2px]" : ""
-      } `
+    return cn(
+      "border-solid border-blue-500",
+      position === "first" && "border-l-[2px]",
+      position === "last" && "border-r-[2px]",
+      !isPrevRowSelected && "border-t-[2px]",
+      !isNextRowSelected && "border-b-[2px]",
     );
   };
 
@@ -229,7 +228,7 @@ export function useTableBody<Row extends TableRowRecord>({
     createRowMouseEnterHandler,
     createRowMouseDownHandler,
     createCheckboxMouseDownHandler,
-    getSelectedAreaStyle,
+    getSelectedAreaBorders,
     createCheckboxChangeHandler,
     noRows,
     getRowValue,

@@ -83,7 +83,7 @@ function TableBody<Row extends TableRowRecord>({
     createCheckboxMouseDownHandler,
     createRowMouseDownHandler,
     createRowMouseEnterHandler,
-    getSelectedAreaStyle,
+    getSelectedAreaBorders,
     noRows,
     getRowValue,
   } = useTableBody({
@@ -132,7 +132,6 @@ function TableBody<Row extends TableRowRecord>({
             className={cn(
               "hover:bg-gray-100/30 dark:hover:bg-gray-700",
               rowProps.className,
-              getSelectedAreaStyle(i),
             )}
             aria-rowindex={i}
             aria-selected={selectedRows ? selectedRows.has(row?.id) : false}
@@ -146,7 +145,8 @@ function TableBody<Row extends TableRowRecord>({
                 className={cn(
                   cellProps.className,
                   checkboxCellProps.className,
-                  `select-none`,
+                  "select-none",
+                  getSelectedAreaBorders(i, "first"),
                 )}
               >
                 <Checkbox
@@ -156,7 +156,7 @@ function TableBody<Row extends TableRowRecord>({
                 />
               </TableCell>
             )}
-            {columns.map(({ bodyCellProps = {}, className, ...column }) => {
+            {columns.map(({ bodyCellProps = {}, className, ...column }, ci) => {
               const isPinned = pinning
                 ? pinning.pinnedColumns.has(column.name)
                 : false;
@@ -176,8 +176,16 @@ function TableBody<Row extends TableRowRecord>({
                       cn(
                         "sticky z-[1] bg-card hover:bg-gray-100/30 dark:hover:bg-gray-700",
                         pinning?.isFirstPinned(column.name) &&
-                          "border-l-2 border-(--primary)",
+                          "border-l-2! border-(--primary)!",
                       ),
+                    getSelectedAreaBorders(
+                      i,
+                      ci === columns.length - 1
+                        ? "last"
+                        : ci === 0 && !selectable
+                          ? "first"
+                          : "middle",
+                    ),
                     className,
                     cellProps.className,
                     bodyCellProps.className,
