@@ -19,7 +19,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/shared/components/ui/popover";
+} from "@/shared/components/custom/popover/Popover";
 
 export type TableHeadProps<Row extends TableRowRecord> =
   React.ComponentProps<"thead"> & {
@@ -170,7 +170,11 @@ function TableHead<Row extends TableRowRecord>({
                           </Button>
                         }
                       />
-                      <PopoverContent align="end" className="w-44 p-1">
+                      <PopoverContent
+                        moveable={false}
+                        align="end"
+                        className="w-44 p-1"
+                      >
                         {column.filterable && (
                           <button
                             type="button"

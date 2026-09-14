@@ -8,7 +8,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/shared/components/ui/popover";
+} from "@/shared/components/custom/popover/Popover";
 import { Button } from "@/shared/components/ui/button";
 import { EllipsisVerticalIcon } from "lucide-react";
 import {
@@ -27,9 +27,7 @@ export type TableMenuColumnsProps<Row extends TableRowRecord> = {
   hiding: {
     hiddenColumns: Set<TableColumn<Row>["name"]>;
 
-    createToggleColumnsClickHandler: UseTableCreateToggleColumnsClickHandler<
-      Row
-    >;
+    createToggleColumnsClickHandler: UseTableCreateToggleColumnsClickHandler<Row>;
 
     onReset: React.MouseEventHandler<HTMLButtonElement>;
   };

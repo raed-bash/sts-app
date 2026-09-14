@@ -4,7 +4,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/shared/components/ui/popover";
+} from "@/shared/components/custom/popover/Popover";
 import { Button } from "@/shared/components/ui/button";
 import {
   Tooltip,
