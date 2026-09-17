@@ -1,7 +1,6 @@
 import { useState, type ReactNode } from "react";
-import Button from "../buttons/Button";
-import InfoIcon from "@/shared/assets/icons/info.svg?react";
-import ArrowLineDownIcon from "@/shared/assets/icons/arrow-line-down.svg?react";
+import { Button } from "@/shared/components/ui/button";
+import { ChevronDown, Info } from "lucide-react";
 import ExpandContainer from "./ExpandContainer";
 import { SyntheticEvent } from "@/shared/utils";
 
@@ -38,15 +37,15 @@ function Accordion({
   return (
     <div className={` duration-150 ${_expand ? "pt-4" : ""}`}>
       <Button
-        className="flex items-center justify-between gap-3 "
+        className="flex items-center justify-between gap-3 w-full"
         onClick={handleToggle}
       >
         <div className="flex gap-3">
-          <InfoIcon className="stroke-white" />
+          <Info className="stroke-white" />
           <p className="text-lg">{title}</p>
         </div>
         <span className="bg-white rounded-full px-2.5 py-3">
-          <ArrowLineDownIcon
+          <ChevronDown
             className={` stroke-primary-main  duration-150 ${
               _expand ? "rotate-0" : "rotate-90"
             }`}

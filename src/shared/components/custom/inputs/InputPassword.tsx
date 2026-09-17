@@ -1,11 +1,10 @@
 import { useState } from "react";
 import Input from "./Input";
-import EyeIcon from "@/shared/assets/icons/eye.svg?react";
-import EyeSlashIcon from "@/shared/assets/icons/eye-slash.svg?react";
+import { Eye, EyeOff } from "lucide-react";
 import IconButton from "../buttons/IconButton";
 
 const iconStyle =
-  "fill-(--text) group-hover:fill-(--primary) duration-75 aria-invalid:fill-(--danger)";
+  "stroke-(--text) group-hover:stroke-(--primary) duration-75 aria-invalid:stroke-(--danger)";
 
 export default function InputPassword(
   props: Omit<Parameters<typeof Input>[0], "type">,
@@ -21,12 +20,12 @@ export default function InputPassword(
         className="absolute top-1/2 right-2 -translate-y-1/2 p-1 group"
       >
         {showPassword ? (
-          <EyeSlashIcon
+          <EyeOff
             className={iconStyle}
             aria-invalid={props["aria-invalid"]}
           />
         ) : (
-          <EyeIcon className={iconStyle} aria-invalid={props["aria-invalid"]} />
+          <Eye className={iconStyle} aria-invalid={props["aria-invalid"]} />
         )}
       </IconButton>
     </div>

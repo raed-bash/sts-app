@@ -1,6 +1,4 @@
-import InfoIcon from "@/shared/assets/icons/info.svg?react";
-import SuccessIcon from "@/shared/assets/icons/success.svg?react";
-import WarningIcon from "@/shared/assets/icons/warning.svg?react";
+import { CircleCheck, Info, TriangleAlert } from "lucide-react";
 
 export type AlertProps = {
   children?: React.ReactNode;
@@ -16,13 +14,13 @@ export default function Alert({ children, color }: AlertProps) {
   };
 
   const icons = {
-    danger: <InfoIcon className="inline-block me-1 w-6 stroke-(--danger)" />,
+    danger: <Info className="inline-block me-1 w-6 stroke-(--danger)" />,
     warning: (
-      <WarningIcon className="inline-block me-1 w-6 stroke-(--warning) fill-(--warning)" />
+      <TriangleAlert className="inline-block me-1 w-6 stroke-(--warning)" />
     ),
-    info: <InfoIcon className="inline-block me-1 w-6 stroke-(--info)" />,
+    info: <Info className="inline-block me-1 w-6 stroke-(--info)" />,
     success: (
-      <SuccessIcon className="inline-block me-1 w-6 stroke-(--success) fill-(--success)" />
+      <CircleCheck className="inline-block me-1 w-6 stroke-(--success)" />
     ),
   };
 

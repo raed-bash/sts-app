@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import ProfileIcon from "@/assets/icons/profile.svg?react";
+import { UserRound } from "lucide-react";
 import { useFocusout } from "@/shared/hooks";
 import ProfileMenu from "./ProfileMenu";
 import IconButton from "@/shared/components/custom/buttons/IconButton";
@@ -22,7 +22,7 @@ export default function ProfileButton() {
         className="aria-expanded:bg-[#DFDFDF]/40"
         aria-expanded={openProfile}
       >
-        <ProfileIcon className="fill-(--text)" />
+        <UserRound className="stroke-(--text)" />
       </IconButton>
       <ProfileMenu isOpen={openProfile} />
     </div>

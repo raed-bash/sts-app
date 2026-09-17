@@ -1,5 +1,4 @@
 import React, { useMemo, useRef, useState } from "react";
-import SearchIcon from "@/shared/assets/icons/search.svg?react";
 import type { TableRowRecord, TableColumn } from "../Table";
 import InputIcon from "../../inputs/InputIcon";
 import Checkbox from "../../inputs/Checkbox";
@@ -10,7 +9,7 @@ import {
   PopoverTrigger,
 } from "@/shared/components/custom/popover/Popover";
 import { Button } from "@/shared/components/ui/button";
-import { EllipsisVerticalIcon } from "lucide-react";
+import { EllipsisVerticalIcon, Search } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -234,7 +233,7 @@ function TableMenuColumns<Row extends TableRowRecord>({
         <InputIcon
           placeholder="Search..."
           EndIcon={(props) => (
-            <SearchIcon
+            <Search
               {...props}
               className={`dark:stroke-(--text) ${props.className}`}
             />

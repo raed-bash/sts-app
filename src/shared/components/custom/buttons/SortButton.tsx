@@ -1,4 +1,4 @@
-import TriangleDownIcon from "@/shared/assets/icons/triangle-down.svg?react";
+import { ChevronDown } from "lucide-react";
 import { cn } from "cn";
 
 export type SortButtonStatus = "asc" | "desc" | null;
@@ -66,9 +66,9 @@ function SortButton({
       {...props}
     >
       {props.children}
-      <TriangleDownIcon
+      <ChevronDown
         className={cn(
-          `w-3 h-3 duration-150 fill-(--text)`,
+          `w-3 h-3 duration-150 stroke-(--text)`,
           handleSortStatusStyle(sortStatus),
         )}
       />

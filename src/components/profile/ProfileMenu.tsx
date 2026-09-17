@@ -1,15 +1,13 @@
-import ProfileFilledIcon from "@/assets/icons/profile-filled.svg?react";
-import ProfileIcon from "@/assets/icons/profile.svg?react";
-import SettingsIcon from "@/assets/icons/settings.svg?react";
-import LogoutIcon from "@/assets/icons/logout.svg?react";
+import { CircleUserRound, LogOut, Settings, UserRound } from "lucide-react";
 import { useLogout } from "@/hooks";
 import { cn } from "cn";
 import { ROLE_TITLES } from "@/constants/user-role";
 import Animation from "@/shared/components/custom/Animation";
 import Loading from "@/shared/components/custom/skeleton/Loading";
-import Button from "@/shared/components/custom/buttons/Button";
+import { Button } from "@/shared/components/ui/button";
 import AppLink from "@/shared/components/custom/AppLink";
 import { useMe } from "@/features/users/api/get-me.api";
+import { settingsPaths } from "@/features/settings/settings.paths";
 
 export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
   const handleLogout = useLogout();
@@ -30,7 +28,7 @@ export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
           <div className="w-full flex flex-col gap-5">
             <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-300">
               <div className="w-[45px] h-[45px]">
-                <ProfileIcon className="fill-(--text) w-full h-full" />
+                <UserRound className="stroke-(--text) w-full h-full" />
               </div>
               <div className="flex justify-center items-start flex-col">
                 <p className="text-sm">{me?.username}</p>
@@ -52,7 +50,7 @@ export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
                       opt.bgColorClassName,
                     )}
                   >
-                    <opt.Icon className="fill-white " />
+                    <opt.Icon className="stroke-white " />
                   </span>
                   <span className="block text-sm group-hover:text-(--primary-hover) capitalize text-(--text-muted) ">
                     {opt.label}
@@ -62,12 +60,10 @@ export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
             </div>
             <div className="px-4 py-3 border-t border-gray-300">
               <Button
-                variant="contained"
-                color="primary"
                 className="flex gap-2 items-center justify-center w-full h-10 text-sm"
                 onClick={handleLogout}
               >
-                <LogoutIcon className="fill-white  w-5 h-5" />
+                <LogOut className="w-5 h-5" />
                 Logout
               </Button>
             </div>
@@ -88,16 +84,16 @@ type ProfileOption = {
 const profileOptions: ProfileOption[] = [
   {
     Icon: (props: React.SVGProps<SVGSVGElement>) => (
-      <ProfileFilledIcon {...props} />
+      <CircleUserRound {...props} />
     ),
     bgColorClassName: "bg-green-500",
     label: "Profile",
     to: "profile",
   },
   {
-    Icon: (props: React.SVGProps<SVGSVGElement>) => <SettingsIcon {...props} />,
+    Icon: (props: React.SVGProps<SVGSVGElement>) => <Settings {...props} />,
     bgColorClassName: "bg-yellow-500",
     label: "Settings",
-    to: "settings",
+    to: settingsPaths.settings,
   },
 ];

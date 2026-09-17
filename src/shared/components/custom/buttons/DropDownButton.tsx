@@ -2,7 +2,7 @@ import { useMemo, useRef, useState, type ReactNode } from "react";
 import { useFocusout } from "@/shared/hooks";
 import { SyntheticEvent } from "@/shared/utils";
 import DropDownOption, { type DropDownOptionProps } from "./DropDownOption";
-import ArrowDownLine from "@/shared/assets/icons/arrow-line-down.svg?react";
+import { ChevronDown } from "lucide-react";
 import { cn } from "cn";
 
 export type DropDownButtonOption = DropDownOptionProps & {
@@ -68,7 +68,7 @@ function DropDownButton({
       >
         <span>{selectedOption.label}</span>
         <span>
-          <ArrowDownLine
+          <ChevronDown
             className={cn(
               `duration-150 stroke-white`,
               isOpen ? "rotate-180" : "",

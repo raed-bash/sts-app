@@ -1,5 +1,5 @@
 import { useRef, useState, type ReactNode } from "react";
-import MoreIcon from "@/shared/assets/icons/more.svg?react";
+import { Ellipsis } from "lucide-react";
 import { useFocusout } from "@/shared/hooks";
 import IconButton, { type IconButtonProps } from "../buttons/IconButton";
 import { cn } from "cn";
@@ -44,7 +44,7 @@ function Menu({ tooltipTitle, children, iconButtonProps }: MenuProps) {
                 iconButtonProps?.onClick?.(e);
               }}
             >
-              <MoreIcon className="rotate-90 fill-(--primary) dark:fill-(--text) w-5 h-5 " />
+              <Ellipsis className="rotate-90 stroke-(--primary) dark:stroke-(--text) w-5 h-5 " />
             </IconButton>
           }
         />
