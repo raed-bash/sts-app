@@ -16,8 +16,10 @@ export const getMeQueryOptions = () => {
   });
 };
 
-type UseMeOptions = QueryConfig<typeof getMeQueryOptions>;
+type UseMeOptions = {
+  queryConfig?: QueryConfig<typeof getMeQueryOptions>;
+};
 
-export const useMe = (queryConfig?: UseMeOptions) => {
+export const useMe = ({ queryConfig }: UseMeOptions = {}) => {
   return useQuery({ ...getMeQueryOptions(), ...queryConfig });
 };

@@ -6,9 +6,10 @@ import { capitalize } from "lodash";
 import { useAppFormik } from "@/shared/lib/formik";
 import Paper from "@/shared/components/custom/paper/Paper";
 import InputPlus from "@/shared/components/custom/inputs/InputPlus";
-import Button from "@/shared/components/custom/buttons/Button";
+import { Button } from "@/shared/components/ui/button";
 import Alert from "@/shared/components/custom/alert/Alert";
 import AppLink from "@/shared/components/custom/AppLink";
+import { authPaths } from "../auth.paths";
 import { SelectItem } from "@/shared/components/ui/select";
 import { useSignUp } from "../api/sign-up.api";
 
@@ -111,7 +112,7 @@ export default function SignUp() {
           <Button
             type="submit"
             disabled={signUpMutation.isPending}
-            className="mt-2"
+            className="mt-2 w-full"
           >
             {signUpMutation.isPending ? "Signing up..." : "Sign up"}
           </Button>
@@ -128,7 +129,7 @@ export default function SignUp() {
               Have an account?
             </p>
             <AppLink
-              to="/login"
+              to={`/${authPaths.login}`}
               className="text-(--accent) hover:text-(--primary) mt-1 duration-150 underline text-shadow-2xs w-fit"
             >
               Login

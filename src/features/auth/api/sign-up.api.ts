@@ -14,13 +14,8 @@ type UseSignUpOptions = {
 };
 
 export const useSignUp = ({ mutationConfig }: UseSignUpOptions = {}) => {
-  const { onSuccess, ...restConfig } = mutationConfig || {};
-
   return useMutation({
-    onSuccess: (...args) => {
-      onSuccess?.(...args);
-    },
-    ...restConfig,
+    ...mutationConfig,
     mutationFn: signUp,
   });
 };

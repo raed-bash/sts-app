@@ -3,9 +3,10 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import toast from "react-hot-toast";
 import Paper from "@/shared/components/custom/paper/Paper";
 import InputPlus from "@/shared/components/custom/inputs/InputPlus";
-import Button from "@/shared/components/custom/buttons/Button";
+import { Button } from "@/shared/components/ui/button";
 import Alert from "@/shared/components/custom/alert/Alert";
 import AppLink from "@/shared/components/custom/AppLink";
+import { authPaths } from "../auth.paths";
 import { useAppFormik } from "@/shared/lib/formik";
 import { useLogin } from "../api/login.api";
 import { LoginDto } from "../dtos/login.dto";
@@ -63,7 +64,7 @@ export default function Login() {
           <Button
             type="submit"
             disabled={loginMutation.isPending}
-            className="mt-2"
+            className="mt-2 w-full"
           >
             {loginMutation.isPending ? "Logging in..." : "Login"}
           </Button>
@@ -82,7 +83,7 @@ export default function Login() {
               Don't have an account?
             </p>
             <AppLink
-              to="/sign-up"
+              to={`/${authPaths.signUp}`}
               className="text-(--accent) hover:text-(--primary) mt-1 duration-150 underline text-shadow-2xs w-fit"
             >
               Sign Up
