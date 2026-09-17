@@ -1,7 +1,15 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import Layout from "../components/layout/Layout";
 import { authRouter } from "../features/auth/auth.router";
+import { homeRouter } from "../features/home/home.router";
 import { usersRouter } from "../features/users/users.router";
+import { subjectsRouter } from "../features/subjects/subjects.router";
+import { testsRouter } from "../features/tests/tests.router";
+import { questionsRouter } from "../features/questions/questions.router";
+import { answersRouter } from "../features/answers/answers.router";
+import { testSessionsRouter } from "../features/test-sessions/test-sessions.router";
+import { settingsRouter } from "../features/settings/settings.router";
+import { homePaths } from "../features/home/home.paths";
 import Container from "@/components/layout/Container";
 import PrivateRoute from "@/components/PrivateRoute";
 import { useQueryClient, type QueryClient } from "@tanstack/react-query";
@@ -28,20 +36,15 @@ export default function AppRouter() {
             </PrivateRoute>
           ),
           children: [
-            { index: true, element: <Navigate to="home" replace /> },
-            {
-              path: "home",
-              element: (
-                <div className="h-[200vh]">
-                  <h1>Home</h1>
-                </div>
-              ),
-            },
+            { index: true, element: <Navigate to={homePaths.home} replace /> },
+            ...homeRouter(queryClient),
             ...usersRouter(queryClient),
-            {
-              path: "settings",
-              element: <h1>Settings</h1>,
-            },
+            ...subjectsRouter(queryClient),
+            ...testsRouter(queryClient),
+            ...questionsRouter(queryClient),
+            ...answersRouter(queryClient),
+            ...testSessionsRouter(queryClient),
+            ...settingsRouter(queryClient),
           ],
         },
         ...authRouter(queryClient),
