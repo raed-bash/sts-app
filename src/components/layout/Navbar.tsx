@@ -1,33 +1,26 @@
-import SunIcon from "@/assets/icons/sun.svg?react";
-import CrescentIcon from "@/assets/icons/crescent.svg?react";
+import { Moon, Sun } from "lucide-react";
 import { useThemeContext } from "@/contexts/ThemeContext";
 import ProfileButton from "../profile/ProfileButton";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import GlobalSearch from "../search/GlobalSearch";
 import IconButton from "@/shared/components/custom/buttons/IconButton";
+import { SidebarTrigger } from "@/shared/components/ui/sidebar";
 
 export default function Navbar() {
   const { darkMode, toggleDarkMode } = useThemeContext();
 
   return (
-    <header className="ms-[280px] mb-5 sticky top-0 pt-5 transition-all duration-300 z-99 after:content-[''] after:w-full after:backdrop-blur-md after:absolute after:left-0 after:top-0 after:h-full after:-z-10">
+    <header className="mb-5 sticky top-0 pt-5 transition-all duration-300 z-99 after:content-[''] after:w-full after:backdrop-blur-md after:absolute after:left-0 after:top-0 after:h-full after:-z-10">
       <nav className="px-6 py-3 mx-6 flex items-center justify-between bg-(--surface) shadow-base z-100 rounded-md">
-        <InputPlus
-          type="text"
-          title=""
-          oneline
-          className=" placeholder:text-xs "
-          placeholder="Search..."
-        />
+        <div className="flex items-center gap-3">
+          <SidebarTrigger className="-ms-2" />
+          <GlobalSearch />
+        </div>
         <div className="flex items-center gap-4">
           <IconButton onClick={toggleDarkMode}>
             {darkMode ? (
-              <SunIcon
-                width={22}
-                height={22}
-                className="fill-white stroke-white"
-              />
+              <Sun size={22} className="stroke-white" />
             ) : (
-              <CrescentIcon width={22} height={22} />
+              <Moon size={22} />
             )}
           </IconButton>
           <ProfileButton />

@@ -1,209 +1,216 @@
-import { Fragment, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
-import HomeIcon from "@/shared/assets/icons/home.svg?react";
-import ArrowLineDownIcon from "@/shared/assets/icons/arrow-line-down.svg?react";
-import { userRoutesMeta } from "@/features/users/users.routes-meta";
-import type {
-  AppRoutesMetaNestedRoutes,
-  AppRoutesMetaSidebar,
-} from "@/types/app.routes-meta";
-import Animation from "@/shared/components/custom/Animation";
-import type { IconButtonProps } from "@/shared/components/custom/buttons/IconButton";
-import IconButton from "@/shared/components/custom/buttons/IconButton";
-import AppLink, { type AppLinkProps } from "@/shared/components/custom/AppLink";
-import { UserIcon } from "lucide-react";
+import { ChevronDown, GraduationCap } from "lucide-react";
+import {
+  sidebarBrand,
+  sidebarCategories,
+  type SidebarLink as SidebarLinkMeta,
+  type SidebarSection,
+} from "@/app/navigation";
+import { useRole } from "@/hooks/useRole";
+import { useAuthContext } from "@/contexts/AuthContext";
+import {
+  Sidebar as SidebarPrimitive,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarSeparator,
+  useSidebar,
+} from "@/shared/components/ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/shared/components/ui/collapsible";
+import AppLink from "@/shared/components/custom/AppLink";
 
-type Category = {
-  title: string;
-  links: AppRoutesMetaSidebar[];
-};
+function useIsActive() {
+  const { pathname } = useLocation();
 
-const categories: Category[] = [
-  {
-    title: "Menu",
-    links: [
-      {
-        to: "home",
-        label: "Home",
-        Icon: HomeIcon,
-        sidebar: true,
-      },
+  return (to: string) => {
+    const path = `/${to}`;
 
-      userRoutesMeta.users,
-
-      {
-        Icon: HomeIcon,
-        label: "Parent",
-        key: "parent",
-        sidebar: true,
-        pages: [{ sidebar: true, Icon: UserIcon, label: "Child", to: "child" }],
-      },
-    ],
-  },
-];
+    return pathname === path || pathname.startsWith(`${path}/`);
+  };
+}
 
 export default function Sidebar() {
-  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const role = useRole();
+
+  const categories = sidebarCategories
+    .map((category) => ({
+      ...category,
+      links: category.links.filter(
+        (link) => !link.roles || (role && link.roles.includes(role)),
+      ),
+    }))
+    .filter((category) => category.links.length > 0);
 
   return (
-    <div className="w-[280px] bg-(--surface) top-0 text-(--text) h-full fixed z-100 shadow-base">
-      <div className="flex justify-between items-center py-6 px-4">
-        <h1 className="text-xl font-semibold text-(--text)">
-          Student Testing System
-        </h1>
-      </div>
-      {categories.map((category) => (
-        <div key={category.title}>
-          <div className="ps-8 my-4 text-xs uppercase text-(--text-muted) font-medium">
-            {category.title}
-          </div>
-          <SidebarLinks
-            expanded={expanded}
-            setExpanded={setExpanded}
-            links={category.links}
-          />
-        </div>
-      ))}
-    </div>
+    <SidebarPrimitive
+      collapsible="icon"
+      className="z-40 border-r border-sidebar-border"
+    >
+      <SidebarHeader className="border-b border-sidebar-border">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              size="lg"
+              tooltip={sidebarBrand.name}
+              render={<AppLink to={sidebarBrand.to} className="no-underline" />}
+            >
+              <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <GraduationCap className="size-4" />
+              </div>
+              <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
+                <span className="truncate font-semibold">
+                  {sidebarBrand.name}
+                </span>
+                <span className="truncate text-xs text-sidebar-foreground/70">
+                  {sidebarBrand.tagline}
+                </span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+
+      <SidebarContent>
+        {categories.map((category) => (
+          <SidebarGroup key={category.title}>
+            <SidebarGroupLabel>{category.title}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {category.links.map((link) =>
+                  "to" in link ? (
+                    <SidebarLink key={link.label} link={link} />
+                  ) : (
+                    <SidebarSectionItem key={link.key} section={link} />
+                  ),
+                )}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+
+      <SidebarFooter>
+        <SidebarSeparator className="mx-0" />
+        <SidebarUser />
+      </SidebarFooter>
+    </SidebarPrimitive>
   );
 }
 
-export type SidebarNestedLinksProps = {
-  links: AppRoutesMetaNestedRoutes["pages"];
-};
+function SidebarLink({ link }: { link: SidebarLinkMeta }) {
+  const isActive = useIsActive();
 
-function SidebarNestedLinks({ links }: SidebarNestedLinksProps) {
-  const location = useLocation();
   return (
-    <div className="flex flex-col text-(--text-muted) ">
-      {links.map((link) =>
-        link.to ? (
-          <SidebarNestedLink
-            key={link.label}
-            to={link.to}
-            aria-selected={location.pathname.startsWith(`/${link.to}`)}
-            className=" not-last:border-b border-(--primary)/20"
-          >
-            <span className="rounded-full bg-(--text-muted) w-[7px] h-[7px] me-2"></span>
-            {link.label}
-          </SidebarNestedLink>
-        ) : (
-          <></>
-        ),
-      )}
-    </div>
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        tooltip={link.label}
+        isActive={isActive(link.to)}
+        render={<AppLink to={link.to} className="no-underline" />}
+      >
+        <link.Icon />
+        <span>{link.label}</span>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
   );
 }
 
-export type SidebarLinksProps = {
-  setExpanded: React.Dispatch<React.SetStateAction<Set<string>>>;
-  expanded: Set<string>;
-  links: AppRoutesMetaSidebar[];
-};
+function SidebarSectionItem({ section }: { section: SidebarSection }) {
+  const isActive = useIsActive();
+  const { state, setOpen } = useSidebar();
 
-function SidebarLinks({ setExpanded, expanded, links }: SidebarLinksProps) {
-  const location = useLocation();
+  const sectionActive = section.pages.some((page) => isActive(page.to));
 
-  const handleExpand = (name: string) => {
-    setExpanded((oldExpanded) => {
-      const newExpanded = new Set(oldExpanded);
+  const [open, setSectionOpen] = useState(sectionActive);
 
-      if (newExpanded.has(name)) {
-        newExpanded.delete(name);
-      } else {
-        newExpanded.add(name);
-      }
+  useEffect(() => {
+    if (sectionActive) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSectionOpen(true);
+    }
+  }, [sectionActive]);
 
-      return newExpanded;
-    });
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (state === "collapsed") {
+      setOpen(true);
+      setSectionOpen(true);
+      return;
+    }
+
+    setSectionOpen(nextOpen);
   };
 
   return (
-    <div className="flex flex-col text-(--text-muted) ">
-      {links.map(({ Icon, ...link }) => {
-        if (link.to) {
-          return (
-            <SidebarLink
-              key={link.label}
-              to={link.to}
-              aria-selected={location.pathname.startsWith(`/${link.to}`)}
-            >
-              {Icon && <span className="me-2">{<Icon />}</span>}
-
-              {link.label}
-            </SidebarLink>
-          );
+    <Collapsible
+      open={open}
+      onOpenChange={handleOpenChange}
+      render={<SidebarMenuItem />}
+    >
+      <CollapsibleTrigger
+        render={
+          <SidebarMenuButton tooltip={section.label} isActive={sectionActive} />
         }
-
-        if (link.to === undefined) {
-          return (
-            <Fragment key={link.key}>
-              <SidebarButton
-                key={link.label}
-                aria-expanded={
-                  expanded.has(link.key) ||
-                  link.pages.some((link) =>
-                    location.pathname.startsWith(`/${link.to}`),
-                  )
-                }
-                onClick={() => handleExpand(link.key)}
+      >
+        <section.Icon />
+        <span>{section.label}</span>
+        <ChevronDown
+          className={`ms-auto transition-transform duration-200 group-data-[collapsible=icon]:hidden ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <SidebarMenuSub>
+          {section.pages.map((page) => (
+            <SidebarMenuSubItem key={page.to}>
+              <SidebarMenuSubButton
+                isActive={isActive(page.to)}
+                render={<AppLink to={page.to} className="no-underline" />}
               >
-                <span className="flex gap-2 items-center">
-                  {<Icon />}
-                  {link.label}
-                </span>
-                <ArrowLineDownIcon className="justify-self-end -rotate-90 " />
-              </SidebarButton>
-              <Animation
-                isOpen={expanded.has(link.key)}
-                duration={300}
-                notOpenClassName="h-0"
-                className="overflow-hidden "
-                openStyle={{ height: `${link.pages.length * 50}px` }}
-              >
-                <SidebarNestedLinks links={link.pages} />
-              </Animation>
-            </Fragment>
-          );
-        }
-      })}
-    </div>
+                <page.Icon />
+                <span>{page.label}</span>
+              </SidebarMenuSubButton>
+            </SidebarMenuSubItem>
+          ))}
+        </SidebarMenuSub>
+      </CollapsibleContent>
+    </Collapsible>
   );
 }
 
-const SidebarButton = (props: IconButtonProps) => (
-  <IconButton
-    {...props}
-    className={`
-              hover:bg-(--secondary)/20 duration-150 ease-in-out cursor-pointer p-2 flex items-center
-              w-full relative justify-between rounded-none py-3 px-6 fill-(--text) [&>svg]:stroke-(--text) text-sm 
-              aria-expanded:bg-(--secondary)/30 aria-expanded:fill-(--text) aria-expanded:text-(--text)  
-              after:content-[''] after:absolute after:top-0 after:left-0 aria-expanded:after:h-full after:w-1 after:bg-(--accent) after:h-0 after:duration-200 
-              aria-expanded:[&>svg]:rotate-0 [&>svg]:duration-150 has-[aria-selected=true]:bg-red-500
-               ${props.className}`}
-  />
-);
+function SidebarUser() {
+  const { user } = useAuthContext();
 
-const SidebarLink = (props: AppLinkProps) => (
-  <AppLink
-    {...props}
-    className={`no-underline  
-              hover:bg-(--secondary)/20 duration-150 ease-in-out cursor-pointer p-2 flex items-center
-              w-full relative justify-start rounded-none py-3 px-6 fill-(--text-muted) text-sm 
-              aria-selected:bg-(--secondary)/30 aria-selected:fill-(--text) aria-selected:text-(--text)  
-              after:content-[''] after:absolute after:top-0 after:left-0 aria-selected:after:h-full after:w-1 after:bg-(--accent) after:h-0 after:duration-200 
-               ${props.className}`}
-  />
-);
+  const initials = user?.username?.slice(0, 2).toUpperCase() ?? "?";
 
-const SidebarNestedLink = (props: AppLinkProps) => (
-  <AppLink
-    {...props}
-    className={`no-underline bg-(--secondary)/15
-              ease-in-out cursor-pointer p-2 flex items-center
-               w-full relative justify-start rounded-none py-3 px-6 fill-(--text-muted) text-sm 
-               hover:ps-9 duration-300 aria-selected:ps-9 
-              aria-selected:fill-(--text) aria-selected:bg-(--accent)/25 aria-selected:[&>span]:bg-(--accent) 
-               ${props.className}`}
-  />
-);
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton size="lg" tooltip={user?.username}>
+          <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-full bg-sidebar-accent text-xs font-semibold text-sidebar-accent-foreground uppercase">
+            {initials}
+          </div>
+          <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
+            <span className="truncate font-medium">{user?.username}</span>
+            <span className="truncate text-xs text-sidebar-foreground/70">
+              {user?.role}
+            </span>
+          </div>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  );
+}
