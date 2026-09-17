@@ -1,11 +1,12 @@
 import {
   Dialog,
-  Transition,
-  TransitionChild,
-  DialogPanel,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
   DialogTitle,
-} from "@headlessui/react";
-import { Fragment, memo, useCallback, useState } from "react";
+} from "@/shared/components/ui/dialog";
+import { useCallback, useState, type ReactNode } from "react";
+import { cn } from "cn";
 
 type PopupProps = {
   isOpen?: boolean;
@@ -14,86 +15,76 @@ type PopupProps = {
 
   title?: string;
 
+  description?: string;
+
+  className?: string;
+
   children:
-    | React.ReactNode
-    | ((
-        props: {
-          isOpen: boolean;
-          setIsOpen: (isOpen: boolean) => void;
-          inPopup: boolean;
-          handleClose: () => void;
-          handleOpen: () => void;
-        },
-        triggerProps?: { onClick: () => void },
-      ) => React.ReactNode);
+    | ReactNode
+    | ((props: {
+        isOpen: boolean;
+        setIsOpen: (open: boolean) => void;
+        inPopup: boolean;
+        handleClose: () => void;
+        handleOpen: () => void;
+      }) => ReactNode);
 };
+
 function Popup({
-  isOpen: controlledOpen,
+  isOpen: controlledIsOpen,
   onClose,
   title,
+  description,
+  className,
   children,
 }: PopupProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const isControlled = controlledIsOpen !== undefined;
 
-  const show = typeof controlledOpen === "boolean" ? controlledOpen : isOpen;
+  const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(false);
 
-  const handleOpen = useCallback(() => {
-    setIsOpen(true);
-  }, []);
+  const isOpen = isControlled ? controlledIsOpen : uncontrolledIsOpen;
 
-  const handleClose = useCallback(() => {
-    setIsOpen(false);
-  }, []);
+  const setIsOpen = useCallback(
+    (open: boolean) => {
+      if (!isControlled) setUncontrolledIsOpen(open);
+      if (!open) onClose?.();
+    },
+    [isControlled, onClose],
+  );
+
+  const handleOpen = useCallback(() => setIsOpen(true), [setIsOpen]);
+  const handleClose = useCallback(() => setIsOpen(false), [setIsOpen]);
 
   return (
     <>
-      {typeof children === "function" ? (
-        children(
-          { isOpen, setIsOpen, inPopup: false, handleClose, handleOpen },
-          { onClick: handleOpen },
-        )
-      ) : (
-        <></>
-      )}
-      <Transition appear show={show} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-100000"
-          onClose={onClose || handleClose}
+      {typeof children === "function"
+        ? children({ isOpen, setIsOpen, inPopup: false, handleClose, handleOpen })
+        : null}
+      <Dialog
+        open={isOpen}
+        onOpenChange={(open) => (open ? handleOpen() : handleClose())}
+      >
+        <DialogContent
+          showCloseButton
+          className={cn("sm:max-w-lg", className)}
         >
-          <div className="fixed inset-0 bg-black opacity-30" />
-          <div className="fixed inset-0 flex items-center justify-center p-4">
-            <TransitionChild
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <DialogPanel className=" bg-(--surface) rounded-lg p-6 shadow-lg font-[Calibri]">
-                <DialogTitle className="text-center text-lg font-medium text-(--text)">
-                  {title}
-                </DialogTitle>
-                <div className="mt-4 flex justify-center gap-4">
-                  {typeof children === "function"
-                    ? children({
-                        isOpen,
-                        setIsOpen,
-                        inPopup: true,
-                        handleClose,
-                        handleOpen,
-                      })
-                    : children}
-                </div>
-              </DialogPanel>
-            </TransitionChild>
+          {(title || description) && (
+            <DialogHeader>
+              {title && <DialogTitle>{title}</DialogTitle>}
+              {description && (
+                <DialogDescription>{description}</DialogDescription>
+              )}
+            </DialogHeader>
+          )}
+          <div className="mt-2 flex flex-col gap-3">
+            {typeof children === "function"
+              ? children({ isOpen, setIsOpen, inPopup: true, handleClose, handleOpen })
+              : children}
           </div>
-        </Dialog>
-      </Transition>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
 
-export default memo(Popup);
+export default Popup;
