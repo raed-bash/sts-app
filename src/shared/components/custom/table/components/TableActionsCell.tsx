@@ -14,6 +14,7 @@ export type TableAction<Row extends TableRowRecord> = {
   label: string;
   icon: ReactNode;
   variant?: VariantProps<typeof buttonVariants>["variant"];
+  hidden?: (row: Row) => boolean;
   onClick: (row: Row) => void;
 };
 
@@ -28,18 +29,20 @@ function TableActionsCell<Row extends TableRowRecord>({
 }: TableActionsCellProps<Row>) {
   return (
     <div className="flex gap-3 justify-start">
-      {actions.map(({ name, label, icon, variant = "outline", onClick }) => (
-        <Tooltip key={name}>
-          <TooltipTrigger
-            render={
-              <Button variant={variant} onClick={() => onClick(row)}>
-                {icon}
-              </Button>
-            }
-          />
-          <TooltipContent>{label}</TooltipContent>
-        </Tooltip>
-      ))}
+      {actions
+        .filter((action) => !action.hidden?.(row))
+        .map(({ name, label, icon, variant = "outline", onClick }) => (
+          <Tooltip key={name}>
+            <TooltipTrigger
+              render={
+                <Button variant={variant} onClick={() => onClick(row)}>
+                  {icon}
+                </Button>
+              }
+            />
+            <TooltipContent>{label}</TooltipContent>
+          </Tooltip>
+        ))}
     </div>
   );
 }
