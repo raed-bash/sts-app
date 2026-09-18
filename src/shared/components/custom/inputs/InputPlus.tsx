@@ -118,14 +118,15 @@ function InputPlus<Value, Multiple extends boolean | undefined = false>({
     <Field
       {...inputPlusContainerProps}
       data-invalid={invalid ? true : undefined}
-      orientation={oneline ? "horizontal" : "vertical"}
+      orientation={
+        oneline && props.type !== "checkbox" ? "horizontal" : "vertical"
+      }
       className={cn(
         "w-full gap-1",
-        oneline
-          ? props.type === "checkbox"
-            ? "items-center justify-end flex-row-reverse"
-            : "flex-row items-center"
-          : "",
+        oneline &&
+          (props.type === "checkbox"
+            ? "flex-row-reverse items-center justify-end [&>*]:w-auto!"
+            : "flex-row items-center"),
         inputPlusContainerProps.className,
       )}
     >
@@ -143,7 +144,13 @@ function InputPlus<Value, Multiple extends boolean | undefined = false>({
           {titleIcon}
         </FieldLabel>
       )}
-      <FieldContent>
+      <FieldContent
+        className={cn(
+          oneline &&
+            props.type === "checkbox" &&
+            "flex-none justify-center items-center",
+        )}
+      >
         {loading ? (
           <Skeleton {...skeletonProps} />
         ) : props.type === "comboboxApi" ? (
