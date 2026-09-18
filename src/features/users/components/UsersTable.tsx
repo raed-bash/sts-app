@@ -171,6 +171,7 @@ export default function UsersTable({
       pagination={pagination}
       ordering={ordering}
       filtering={filtering}
+      csv={{ fileName: "users" }}
       loading={loading}
     />
   );

@@ -106,6 +106,7 @@ export default function QuestionsTable({
       pagination={pagination}
       ordering={ordering}
       filtering={filtering}
+      csv={{ fileName: "questions" }}
       loading={loading}
     />
   );

@@ -5,12 +5,19 @@ import type {
   UseTableSelectedRows,
 } from "../hooks/useTable";
 import type { TableRowRecord, TableColumn } from "../Table";
-import type {
-  TableDensityProps,
-} from "./TableDensityButton";
+import type { TableDensityProps } from "./TableDensityButton";
 import TableDensityButton from "./TableDensityButton";
 import TableMenuColumns from "./TableMenuColumns";
 import TableSelectedRows from "./TableSelectedRows";
+import TableCsvButton from "./TableCsvButton";
+
+export type TableCsvProps = {
+  onCopy: () => void;
+
+  onDownload: () => void;
+
+  disabled?: boolean;
+};
 
 export type TableHeaderNonHideableColumns = {
   hideableColumns: false;
@@ -54,6 +61,8 @@ export type TableHeaderProps<Row extends TableRowRecord> = (
   };
 
   density: TableDensityProps;
+
+  csv?: TableCsvProps;
 };
 
 export default function TableHeader<Row extends TableRowRecord>({
@@ -65,6 +74,7 @@ export default function TableHeader<Row extends TableRowRecord>({
   selection,
   filtering,
   density,
+  csv,
 }: TableHeaderProps<Row>) {
   const { columns, setColumns } = data;
   const { selectedRows, onSelectRows, getSelectionLabel } = selection;
@@ -98,6 +108,13 @@ export default function TableHeader<Row extends TableRowRecord>({
       )}
 
       <div className="flex items-center gap-2">
+        {csv && (
+          <TableCsvButton
+            onCopy={csv.onCopy}
+            onDownload={csv.onDownload}
+            disabled={csv.disabled}
+          />
+        )}
         <TableDensityButton
           density={density.density}
           onDensityChange={density.onDensityChange}
