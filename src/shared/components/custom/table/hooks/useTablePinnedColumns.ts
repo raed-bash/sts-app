@@ -11,6 +11,8 @@ export type UseTablePinnedColumnsReturn<Row extends TableRowRecord> = {
   ref: React.Ref<HTMLTableElement>;
 
   getRightOffset: (name: TableColumn<Row>["name"]) => number | undefined;
+
+  isFirstPinned: (name: TableColumn<Row>["name"]) => boolean;
 };
 
 export function useTablePinnedColumns<Row extends TableRowRecord>({
@@ -81,10 +83,20 @@ export function useTablePinnedColumns<Row extends TableRowRecord>({
     acc += widths[pinnedColumnNames[i]] ?? 0;
   }
 
+  const firstPinnedColumnName = columns.find((column) =>
+    pinnedColumns.has(column.name),
+  );
+
+  const isFirstPinned = (name: TableColumn<Row>["name"]) =>
+    firstPinnedColumnName !== undefined &&
+    String(firstPinnedColumnName.name) === String(name);
+
   return {
     ref,
 
     getRightOffset: (name: TableColumn<Row>["name"]) =>
       pinnedColumns.has(name) ? rightOffsets[String(name)] : undefined,
+
+    isFirstPinned,
   };
 }

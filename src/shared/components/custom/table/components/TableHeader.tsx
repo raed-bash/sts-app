@@ -5,6 +5,10 @@ import type {
   UseTableSelectedRows,
 } from "../hooks/useTable";
 import type { TableRowRecord, TableColumn } from "../Table";
+import type {
+  TableDensityProps,
+} from "./TableDensityButton";
+import TableDensityButton from "./TableDensityButton";
 import TableMenuColumns from "./TableMenuColumns";
 import TableSelectedRows from "./TableSelectedRows";
 
@@ -48,6 +52,8 @@ export type TableHeaderProps<Row extends TableRowRecord> = (
   filtering: {
     filterUtils: ReturnType<typeof useFilter>;
   };
+
+  density: TableDensityProps;
 };
 
 export default function TableHeader<Row extends TableRowRecord>({
@@ -58,6 +64,7 @@ export default function TableHeader<Row extends TableRowRecord>({
   data,
   selection,
   filtering,
+  density,
 }: TableHeaderProps<Row>) {
   const { columns, setColumns } = data;
   const { selectedRows, onSelectRows, getSelectionLabel } = selection;
@@ -90,8 +97,12 @@ export default function TableHeader<Row extends TableRowRecord>({
         <div></div>
       )}
 
-      {hideableColumns && (
-        <div>
+      <div className="flex items-center gap-2">
+        <TableDensityButton
+          density={density.density}
+          onDensityChange={density.onDensityChange}
+        />
+        {hideableColumns && (
           <TableMenuColumns
             data={{ columns, setColumns }}
             hiding={{
@@ -100,8 +111,8 @@ export default function TableHeader<Row extends TableRowRecord>({
               hiddenColumns,
             }}
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

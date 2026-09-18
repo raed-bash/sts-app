@@ -14,6 +14,8 @@ import type {
   SortButtonStatus,
 } from "../../buttons/SortButton";
 import type { SyntheticEvent } from "@/shared/utils";
+import { useTableDensity } from "@/shared/stores/table-density-store";
+import { getTableDensityPadding } from "../constants/table-density";
 
 export type UseTableCreateToggleColumnsClickHandler<
   Row extends TableRowRecord,
@@ -108,6 +110,10 @@ export function useTable<Row extends TableRowRecord>({
 
   const { filters, onFiltersChange, logicalOperator, onLogicalOperatorChange } =
     filtering;
+
+  const [density, setTableDensity] = useTableDensity();
+
+  const densityPadding = getTableDensityPadding(density);
   const [prevOriginalColumns, setPrevOriginalColumns] =
     useState(originalColumns);
   const [columns, setColumns] = useState(() => {
@@ -271,5 +277,8 @@ export function useTable<Row extends TableRowRecord>({
     setColumns,
     filterUtils,
     createColumnFilterClickHandler,
+    density,
+    setTableDensity,
+    densityPadding,
   };
 }

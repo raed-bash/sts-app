@@ -49,6 +49,11 @@ export type TableHeadProps<Row extends TableRowRecord> =
 
     pinning?: TablePinningProps<Row>;
 
+    /**
+     * Cell padding applied to every head cell
+     */
+    density?: string;
+
     elements?: {
       /** Head row; <tr> element */
       rowProps?: TableRowProps;
@@ -67,6 +72,7 @@ function TableHead<Row extends TableRowRecord>({
   selection,
   filtering,
   pinning,
+  density,
   elements = {},
   ...props
 }: TableHeadProps<Row>) {
@@ -97,6 +103,7 @@ function TableHead<Row extends TableRowRecord>({
               `w-20`,
               cellProps.className,
               checkboxCellProps.className,
+              density,
             )}
           >
             <Checkbox
@@ -142,6 +149,7 @@ function TableHead<Row extends TableRowRecord>({
                 className,
                 cellProps.className,
                 headCellProps.className,
+                density,
               )}
             >
               <div className="flex items-center gap-2">

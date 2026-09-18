@@ -354,6 +354,9 @@ function Table<Row extends TableRowRecord>({
     setColumns,
     filterUtils,
     createColumnFilterClickHandler,
+    density,
+    setTableDensity,
+    densityPadding,
   } = useTable<Row>({
     data: { rows, originalColumns },
     sorting: { onSortChange },
@@ -369,18 +372,14 @@ function Table<Row extends TableRowRecord>({
     },
   });
 
-  const { ref: tableScrollRef, getRightOffset } = useTablePinnedColumns({
+  const {
+    ref: tableScrollRef,
+    getRightOffset,
+    isFirstPinned,
+  } = useTablePinnedColumns({
     columns: displayedColumns,
     pinnedColumns,
   });
-
-  const firstPinnedColumnName = displayedColumns.find((column) =>
-    pinnedColumns.has(column.name),
-  );
-
-  const isFirstPinned = (name: TableColumn<Row>["name"]) =>
-    firstPinnedColumnName !== undefined &&
-    String(firstPinnedColumnName.name) === String(name);
 
   const pinningColumns: TablePinningProps<Row> = {
     pinnableColumns,
@@ -406,6 +405,10 @@ function Table<Row extends TableRowRecord>({
         data={{ columns, setColumns }}
         selection={{ selectedRows, onSelectRows, getSelectionLabel }}
         filtering={{ filterUtils }}
+        density={{
+          density,
+          onDensityChange: setTableDensity,
+        }}
         {...theaderProps}
       />
 
@@ -425,6 +428,7 @@ function Table<Row extends TableRowRecord>({
             }}
             filtering={{ createColumnFilterClickHandler }}
             pinning={pinningColumns}
+            density={densityPadding}
             elements={{
               rowProps: headRowProps,
               cellProps: headCellProps,
@@ -443,6 +447,7 @@ function Table<Row extends TableRowRecord>({
             }}
             loading={{ loading: isLoading, scLoading }}
             pinning={pinningColumns}
+            density={densityPadding}
             elements={{
               rowProps: bodyRowProps,
               cellProps: bodyCellProps,

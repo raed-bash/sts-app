@@ -43,6 +43,11 @@ export type TableBodyProps<Row extends TableRowRecord> =
 
     pinning?: TablePinningProps<Row>;
 
+    /**
+     * Cell padding applied to every body cell
+     */
+    density?: string;
+
     elements?: {
       /** Body rows; <tr> elements */
       rowProps?: TableRowProps;
@@ -61,6 +66,7 @@ function TableBody<Row extends TableRowRecord>({
   selection,
   loading = {},
   pinning,
+  density,
   elements = {},
   className,
   ...props
@@ -147,6 +153,7 @@ function TableBody<Row extends TableRowRecord>({
                   checkboxCellProps.className,
                   "select-none",
                   getSelectedAreaBorders(i, "first"),
+                  density,
                 )}
               >
                 <Checkbox
@@ -189,6 +196,7 @@ function TableBody<Row extends TableRowRecord>({
                     className,
                     cellProps.className,
                     bodyCellProps.className,
+                    density,
                   )}
                 >
                   {column.type === "actions" ? (
