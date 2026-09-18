@@ -19,6 +19,7 @@ import {
   InputGroupButton,
 } from "@/shared/components/ui/input-group";
 import { Spinner } from "@/shared/components/ui/spinner";
+import { Kbd } from "@/shared/components/ui/kbd";
 import { useUsers } from "@/features/users/api/get-users.api";
 import { QueryUserDto } from "@/features/users/dtos/query-user.dto";
 import { useSubjects } from "@/features/subjects/api/get-subjects.api";
@@ -319,9 +320,7 @@ export default function GlobalSearch() {
               align="inline-end"
               className="hidden md:flex pointer-events-none"
             >
-              <kbd className="rounded border border-input bg-muted px-1.5 text-[10px] font-medium text-muted-foreground">
-                ⌘K
-              </kbd>
+              <Kbd className="rounded border border-input">⌘K</Kbd>
             </InputGroupAddon>
           )}
         </ComboboxInput>
