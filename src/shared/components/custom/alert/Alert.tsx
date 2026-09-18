@@ -1,35 +1,39 @@
 import { CircleCheck, Info, TriangleAlert } from "lucide-react";
+import { cn } from "cn";
+import {
+  Alert as AlertRoot,
+  AlertTitle as AlertTitlePrimitive,
+} from "@/shared/components/ui/alert";
+import type { VariantProps } from "class-variance-authority";
+import { alertVariants } from "./alert-variants";
 
-export type AlertProps = {
-  children?: React.ReactNode;
-  color?: "danger" | "warning" | "info" | "success";
+export type AlertColor = NonNullable<
+  VariantProps<typeof alertVariants>["color"]
+>;
+
+export type AlertProps = React.ComponentProps<typeof AlertRoot> &
+  VariantProps<typeof alertVariants>;
+
+const alertIcons: Record<AlertColor, React.ReactNode> = {
+  danger: <Info className="size-6" />,
+  warning: <TriangleAlert className="size-6" />,
+  info: <Info className="size-6" />,
+  success: <CircleCheck className="size-6" />,
 };
 
-export default function Alert({ children, color }: AlertProps) {
-  const colorClasses = {
-    danger: "bg-(--danger)/10 text-(--danger)",
-    warning: "bg-(--warning)/10 text-(--warning)",
-    info: "bg-(--info)/10 text-(--info)",
-    success: "bg-(--success)/10 text-(--success)",
-  };
-
-  const icons = {
-    danger: <Info className="inline-block me-1 w-6 stroke-(--danger)" />,
-    warning: (
-      <TriangleAlert className="inline-block me-1 w-6 stroke-(--warning)" />
-    ),
-    info: <Info className="inline-block me-1 w-6 stroke-(--info)" />,
-    success: (
-      <CircleCheck className="inline-block me-1 w-6 stroke-(--success)" />
-    ),
-  };
-
+function Alert({ className, color, children, ...props }: AlertProps) {
   return (
-    <div
-      className={`p-2 rounded-md flex items-center mt-2 ${colorClasses[color || "info"]}`}
+    <AlertRoot
+      role="alert"
+      className={cn(alertVariants({ color }), className)}
+      {...props}
     >
-      {icons[color || "info"]}
-      <div className="text-[15px] font-medium">{children}</div>
-    </div>
+      <AlertTitlePrimitive className="flex items-center gap-3 text-[15px] font-medium">
+        {alertIcons[color ?? "info"]}
+        {children}
+      </AlertTitlePrimitive>
+    </AlertRoot>
   );
 }
+
+export default Alert;
