@@ -2,8 +2,8 @@ import { Moon, Sun } from "lucide-react";
 import { useThemeContext } from "@/contexts/ThemeContext";
 import ProfileButton from "../profile/ProfileButton";
 import GlobalSearch from "../search/GlobalSearch";
-import IconButton from "@/shared/components/custom/buttons/IconButton";
 import { SidebarTrigger } from "@/shared/components/ui/sidebar";
+import { Button } from "@/shared/components/ui/button";
 
 export default function Navbar() {
   const { darkMode, toggleDarkMode } = useThemeContext();
@@ -16,13 +16,13 @@ export default function Navbar() {
           <GlobalSearch />
         </div>
         <div className="flex items-center gap-4">
-          <IconButton onClick={toggleDarkMode}>
+          <Button size="icon" variant="ghost" onClick={toggleDarkMode}>
             {darkMode ? (
               <Sun size={22} className="stroke-white" />
             ) : (
               <Moon size={22} />
             )}
-          </IconButton>
+          </Button>
           <ProfileButton />
         </div>
       </nav>
