@@ -24,7 +24,7 @@ import { testSessionsQueryKeys } from "../test-sessions.api-keys";
 import { useRole } from "@/hooks/useRole";
 import { Button } from "@/shared/components/ui/button";
 import toast from "react-hot-toast";
-import Loading from "@/shared/components/custom/skeleton/Loading";
+import Loading from "@/shared/components/custom/loading/Loading";
 import { useTestSessionsStudents } from "../hooks/useTestSessionsStudents";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -193,9 +193,7 @@ function StudentTestSessionsView() {
       ) : data && data.length > 0 ? (
         <StudentSessions
           data={data}
-          loading={
-            registerMutation.isPending || startMutation.isPending
-          }
+          loading={registerMutation.isPending || startMutation.isPending}
           onRegister={(session) => registerMutation.mutate(session.id)}
           onStart={(session) => startMutation.mutate(session.id)}
           onResults={(session) =>

@@ -3,7 +3,7 @@ import { useLogout } from "@/hooks";
 import { cn } from "cn";
 import { ROLE_TITLES } from "@/constants/user-role";
 import Animation from "@/shared/components/custom/Animation";
-import Loading from "@/shared/components/custom/skeleton/Loading";
+import Loading from "@/shared/components/custom/loading/Loading";
 import { Button } from "@/shared/components/ui/button";
 import AppLink from "@/shared/components/custom/AppLink";
 import { useMe } from "@/features/users/api/get-me.api";

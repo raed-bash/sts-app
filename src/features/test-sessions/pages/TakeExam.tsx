@@ -7,7 +7,7 @@ import { cn } from "cn";
 
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
-import Loading from "@/shared/components/custom/skeleton/Loading";
+import Loading from "@/shared/components/custom/loading/Loading";
 import QuestionTypeBadge from "@/components/QuestionTypeBadge";
 
 import { useExamTestSession } from "../api/get-exam-test-session.api";
@@ -180,7 +180,10 @@ export default function TakeExam() {
           Unable to load the exam. You may have already finished it or it has
           not started yet.
         </div>
-        <Button variant="outline" onClick={() => navigate(`/${testSessionsPaths.list}`)}>
+        <Button
+          variant="outline"
+          onClick={() => navigate(`/${testSessionsPaths.list}`)}
+        >
           Back to sessions
         </Button>
         <Button
@@ -500,7 +503,9 @@ function CompleteAnswers({
                 }}
                 onDrop={(event) => {
                   event.preventDefault();
-                  const dropped = Number(event.dataTransfer.getData("text/plain"));
+                  const dropped = Number(
+                    event.dataTransfer.getData("text/plain"),
+                  );
                   if (Number.isInteger(dropped)) {
                     const next = [...value];
                     next[blankIndex] = dropped;

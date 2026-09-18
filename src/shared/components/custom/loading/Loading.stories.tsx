@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import Loading from "./Loading";
 
 const meta = {
-  title: "Custom/Skeleton/Loading",
+  title: "Custom/Loading",
   component: Loading,
   argTypes: {
     className: { control: "text" },

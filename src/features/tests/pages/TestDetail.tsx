@@ -34,7 +34,7 @@ import { useDeleteTest } from "../api/delete-test.api";
 import { questionsQueryKeys } from "@/features/questions/questions.api-keys";
 import { testsQueryKeys } from "../tests.api-keys";
 import toast from "react-hot-toast";
-import Loading from "@/shared/components/custom/skeleton/Loading";
+import Loading from "@/shared/components/custom/loading/Loading";
 import { Button } from "@/shared/components/ui/button";
 import type { QuestionDto } from "@/features/questions/dtos/question.dto";
 import type { TestDto } from "../dtos/test.dto";
@@ -116,7 +116,8 @@ export default function TestDetail() {
       name: "answers",
       label: "Answers",
       icon: <ListChecks size={16} />,
-      onClick: (question) => navigate(questionsPaths.questionDetailLink(question.id)),
+      onClick: (question) =>
+        navigate(questionsPaths.questionDetailLink(question.id)),
     },
     {
       name: "edit",
@@ -256,7 +257,9 @@ export default function TestDetail() {
         isOpen={createQuestionOpen}
         initialSelectedTests={[test]}
         onClose={() => setCreateQuestionOpen(false)}
-        onSuccess={(data) => navigate(questionsPaths.questionDetailLink(data.id))}
+        onSuccess={(data) =>
+          navigate(questionsPaths.questionDetailLink(data.id))
+        }
       />
 
       {editingQuestion && (
@@ -276,8 +279,7 @@ export default function TestDetail() {
         loading={deleteQuestionMutation.isPending}
         onCancel={() => setConfirmQuestion(null)}
         onConfirm={() =>
-          confirmQuestion &&
-          deleteQuestionMutation.mutate(confirmQuestion.id)
+          confirmQuestion && deleteQuestionMutation.mutate(confirmQuestion.id)
         }
       />
 
@@ -289,7 +291,9 @@ export default function TestDetail() {
         destructive
         loading={deleteTestMutation.isPending}
         onCancel={() => setConfirmTest(null)}
-        onConfirm={() => confirmTest && deleteTestMutation.mutate(confirmTest.id)}
+        onConfirm={() =>
+          confirmTest && deleteTestMutation.mutate(confirmTest.id)
+        }
       />
     </div>
   );

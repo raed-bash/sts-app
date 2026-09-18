@@ -16,7 +16,7 @@ import { useDeleteAnswer } from "@/features/answers/api/delete-answer.api";
 import { questionsQueryKeys } from "../questions.api-keys";
 import { answersQueryKeys } from "@/features/answers/answers.api-keys";
 import toast from "react-hot-toast";
-import Loading from "@/shared/components/custom/skeleton/Loading";
+import Loading from "@/shared/components/custom/loading/Loading";
 import { Button } from "@/shared/components/ui/button";
 import QuestionTypeBadge from "@/components/QuestionTypeBadge";
 import { dateFormater } from "@/shared/utils";

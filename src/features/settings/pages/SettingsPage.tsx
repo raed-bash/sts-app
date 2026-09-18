@@ -7,7 +7,7 @@ import { settingsQueryKeys } from "../settings.api-keys";
 import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import Input from "@/shared/components/custom/inputs/Input";
-import Loading from "@/shared/components/custom/skeleton/Loading";
+import Loading from "@/shared/components/custom/loading/Loading";
 import { useRequireRole } from "@/hooks/useRequireRole";
 
 const SETTING_LABELS: Record<string, string> = {

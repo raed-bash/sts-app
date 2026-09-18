@@ -14,8 +14,8 @@ import type {
   UseTableCreateSelectRowChangeHandler,
 } from "../hooks/useTable";
 import { useTableBody } from "../hooks/useTableBody";
-import LinearLoading from "../../skeleton/LinearLoading";
-import Loading from "../../skeleton/Loading";
+import LinearLoading from "../../loading/LinearLoading";
+import Loading from "../../loading/Loading";
 import Checkbox from "../../inputs/Checkbox";
 import TableActionsCell, { type TableAction } from "./TableActionsCell";
 

@@ -4,7 +4,7 @@ import { testSessionsPaths } from "../test-sessions.paths";
 import { useTestSessionResults } from "../api/get-test-session-results.api";
 import { useTestSessionStudents } from "../api/get-test-session-students.api";
 import { Card, CardContent } from "@/shared/components/ui/card";
-import Loading from "@/shared/components/custom/skeleton/Loading";
+import Loading from "@/shared/components/custom/loading/Loading";
 import QuestionTypeBadge from "@/components/QuestionTypeBadge";
 import { useRole } from "@/hooks/useRole";
 import { dateFormater } from "@/shared/utils";

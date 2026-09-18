@@ -25,7 +25,7 @@ import { useRestoreTest } from "@/features/tests/api/restore-test.api";
 import { subjectsQueryKeys } from "../subjects.api-keys";
 import { testsQueryKeys } from "@/features/tests/tests.api-keys";
 import toast from "react-hot-toast";
-import Loading from "@/shared/components/custom/skeleton/Loading";
+import Loading from "@/shared/components/custom/loading/Loading";
 import { Button } from "@/shared/components/ui/button";
 import { dateFormater } from "@/shared/utils";
 import type { TestDto } from "@/features/tests/dtos/test.dto";
@@ -145,9 +145,7 @@ export default function SubjectDetail() {
               </div>
             </div>
             <div className="p-4 rounded-lg bg-(--secondary)/10">
-              <div className="text-xs text-(--text-muted) uppercase">
-                Tests
-              </div>
+              <div className="text-xs text-(--text-muted) uppercase">Tests</div>
               <div className="text-lg font-semibold">
                 {tableProps.data?.rows?.length ?? 0} assigned
               </div>

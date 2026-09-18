@@ -1,5 +1,5 @@
 import { Suspense, type SuspenseProps } from "react";
-import Loading from "./skeleton/Loading";
+import Loading from "./loading/Loading";
 
 export type PageFallbackProps = SuspenseProps & {
   height?: string;

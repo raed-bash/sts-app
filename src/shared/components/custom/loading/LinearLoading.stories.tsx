@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import LinearLoading from "./LinearLoading";
 
 const meta = {
-  title: "Custom/Skeleton/LinearLoading",
+  title: "Custom/Loading/LinearLoading",
   component: LinearLoading,
   parameters: { layout: "padded" },
 } satisfies Meta;
