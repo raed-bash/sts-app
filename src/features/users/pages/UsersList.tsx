@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { BadgeCheck, CheckCircle2, CircleSlash, Edit, KeyRound, Trash, UserPlus, RotateCcw } from "lucide-react";
+import {
+  BadgeCheck,
+  CheckCircle2,
+  CircleSlash,
+  Edit,
+  KeyRound,
+  Trash,
+  UserPlus,
+  RotateCcw,
+} from "lucide-react";
 import type { TableAction } from "@/shared/components/custom/table/components/TableActionsCell";
 import UsersTable from "../components/UsersTable";
 import CreateUserFormModal from "../components/CreateUserFormModal";
@@ -62,10 +71,7 @@ export default function UsersList() {
 
   if (!allowed) return null;
 
-  const handleStatus = (
-    user: UserDto,
-    status: "ACTIVE" | "BLOCKED",
-  ) => {
+  const handleStatus = (user: UserDto, status: "ACTIVE" | "BLOCKED") => {
     blockMutation.mutate({
       id: user.id,
       data: new UpdateUserDto(user.id, {
