@@ -232,15 +232,7 @@ function TableMenuColumns<Row extends TableRowRecord>({
       <PopoverContent>
         <InputIcon
           placeholder="Search..."
-          EndIcon={(props) => (
-            <Search
-              {...props}
-              className={`dark:stroke-(--text) ${props.className}`}
-            />
-          )}
-          inputFrameProps={{ className: "rounded-md h-8" }}
-          className="w-30 text-[14px]"
-          containerProps={{ className: "pt-2" }}
+          EndIcon={<Search />}
           onChange={handleSearchChange}
         />
 

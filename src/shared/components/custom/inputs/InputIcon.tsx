@@ -1,119 +1,63 @@
-import React, { forwardRef, useRef, useState, type ForwardedRef } from "react";
+import * as React from "react";
 import { cn } from "cn";
-export type InputIconProps = React.ComponentProps<"input"> & {
-  ref?: HTMLInputElement | null;
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/shared/components/ui/input-group";
 
-  helperText?: string;
-
-  helperTextProps?: React.ComponentProps<"p">;
-
-  containerProps?: React.ComponentProps<"p">;
-
-  inputFrameProps?: React.ComponentProps<"div">;
-
+export type InputIconProps = Omit<React.ComponentProps<"input">, "ref"> & {
   error?: boolean;
 
-  StartIcon?: React.FC<React.SVGProps<SVGSVGElement>>;
+  StartIcon?: React.ReactNode;
 
-  EndIcon?: React.FC<React.SVGProps<SVGSVGElement>>;
+  EndIcon?: React.ReactNode;
 
   iconClassName?: string;
 };
 
-function InputIcon(
-  {
-    className,
-    helperText = "",
-    helperTextProps = {},
-    containerProps = {},
-    inputFrameProps = {},
-    error,
-    StartIcon,
-    EndIcon,
-    iconClassName,
-    ...props
-  }: InputIconProps,
-  ref: ForwardedRef<HTMLInputElement>,
-) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [focus, setFocus] = useState(false);
+const InputIcon = React.forwardRef<HTMLInputElement, InputIconProps>(
+  function InputIcon(
+    {
+      className,
+      error,
+      disabled,
+      StartIcon,
+      EndIcon,
+      iconClassName,
+      "aria-invalid": ariaInvalid,
+      ...props
+    },
+    ref,
+  ) {
+    const invalid =
+      Boolean(error) || ariaInvalid === true || ariaInvalid === "true";
 
-  const iconClassNameCN = cn(
-    `h-full`,
-    focus ? "stroke-(--primary)" : "",
-    iconClassName,
-  );
-
-  const handleInputRef = (el: HTMLInputElement | null) => {
-    if (el) {
-      inputRef.current = el;
-      if (typeof ref === "function") ref(el);
-      else if (ref) ref.current = el;
-    }
-  };
-
-  return (
-    <div
-      {...containerProps}
-      onClick={(e) => {
-        if (inputRef.current) {
-          inputRef.current.focus();
-        }
-
-        if (containerProps.onClick) {
-          containerProps.onClick(e);
-        }
-      }}
-      className={cn(`w-full rounded-full`, containerProps.className)}
-    >
-      <div
-        {...inputFrameProps}
-        className={cn(
-          `flex items-stretch 
-           bg-gray-400/10 rounded-full
-           px-3 py-2 h-full justify-between`,
-          props.disabled ? "opacity-60" : "",
-          focus ? " outline outline-(--primary) " : "",
-          helperText && error ? "border-(--danger) border border-solid" : "",
-          inputFrameProps.className,
+    return (
+      <InputGroup className={className}>
+        {StartIcon && (
+          <InputGroupAddon align="inline-start">
+            <span className={cn("flex items-center", iconClassName)}>
+              {StartIcon}
+            </span>
+          </InputGroupAddon>
         )}
-        style={{ outlineWidth: 1 }}
-      >
-        {StartIcon && <StartIcon className={iconClassNameCN} />}
-        <input
+        <InputGroupInput
           {...props}
-          ref={handleInputRef}
-          onFocus={(e) => {
-            setFocus(true);
-            if (props.onFocus) {
-              props.onFocus(e);
-            }
-          }}
-          onBlur={(e) => {
-            setFocus(false);
-            if (props.onBlur) {
-              props.onBlur(e);
-            }
-          }}
-          className={cn(
-            ` bg-transparent focus:outline-none w-full indent-1 p-1`,
-            className,
-          )}
+          ref={ref}
+          disabled={disabled}
+          aria-invalid={invalid ? true : undefined}
         />
-        {EndIcon && <EndIcon className={iconClassNameCN} />}
-      </div>
-      <p
-        {...helperTextProps}
-        className={cn(
-          "text-sm",
-          error ? "text-(--danger)" : "",
-          helperTextProps.className,
+        {EndIcon && (
+          <InputGroupAddon align="inline-end">
+            <span className={cn("flex items-center", iconClassName)}>
+              {EndIcon}
+            </span>
+          </InputGroupAddon>
         )}
-      >
-        {helperText}
-      </p>
-    </div>
-  );
-}
+      </InputGroup>
+    );
+  },
+);
 
-export default forwardRef(InputIcon);
+export default InputIcon;

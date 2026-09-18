@@ -10,12 +10,8 @@ const meta = {
     StartIcon: { control: false },
     EndIcon: { control: false },
     error: { control: "boolean" },
-    helperText: { control: "text" },
     disabled: { control: "boolean" },
     iconClassName: { control: "text" },
-    containerProps: { control: false },
-    inputFrameProps: { control: false },
-    helperTextProps: { control: false },
   },
 } satisfies Meta;
 
@@ -27,7 +23,7 @@ export const WithStartIcon: Story = {
   args: {
     type: "email",
     placeholder: "you@example.com",
-    StartIcon: Mail,
+    StartIcon: <Mail />,
   },
 };
 
@@ -35,16 +31,7 @@ export const WithEndIcon: Story = {
   args: {
     type: "search",
     placeholder: "Search...",
-    EndIcon: Search,
-  },
-};
-
-export const WithHelperText: Story = {
-  args: {
-    type: "text",
-    placeholder: "Username",
-    StartIcon: Mail,
-    helperText: "Use only letters and numbers.",
+    EndIcon: <Search />,
   },
 };
 
@@ -52,8 +39,7 @@ export const WithError: Story = {
   args: {
     type: "email",
     placeholder: "you@example.com",
-    StartIcon: Mail,
-    helperText: "Invalid email address.",
+    StartIcon: <Mail />,
     error: true,
   },
 };
@@ -62,7 +48,7 @@ export const Disabled: Story = {
   args: {
     type: "text",
     placeholder: "Disabled",
-    StartIcon: Mail,
+    StartIcon: <Mail />,
     disabled: true,
   },
 };

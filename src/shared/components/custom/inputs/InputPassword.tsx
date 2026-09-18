@@ -1,33 +1,46 @@
 import { useState } from "react";
-import Input from "./Input";
 import { Eye, EyeOff } from "lucide-react";
-import IconButton from "../buttons/IconButton";
+import { cn } from "cn";
+import { Button } from "@/shared/components/ui/button";
+import InputIcon from "./InputIcon";
+import { inputPasswordIconVariants } from "./input-password-variants";
 
-const iconStyle =
-  "stroke-(--text) group-hover:stroke-(--primary) duration-75 aria-invalid:stroke-(--danger)";
-
-export default function InputPassword(
-  props: Omit<Parameters<typeof Input>[0], "type">,
-) {
+function InputPassword(props: Omit<React.ComponentProps<"input">, "type">) {
   const [showPassword, setShowPassword] = useState(false);
+  const {
+    className,
+    disabled,
+    "aria-invalid": ariaInvalid,
+    ...inputProps
+  } = props;
+  const invalid = ariaInvalid === true || ariaInvalid === "true";
 
   return (
-    <div className="relative">
-      <Input {...props} type={showPassword ? "text" : "password"} />
-      <IconButton
-        type="button"
-        onClick={() => setShowPassword(!showPassword)}
-        className="absolute top-1/2 right-2 -translate-y-1/2 p-1 group"
-      >
-        {showPassword ? (
-          <EyeOff
-            className={iconStyle}
-            aria-invalid={props["aria-invalid"]}
-          />
-        ) : (
-          <Eye className={iconStyle} aria-invalid={props["aria-invalid"]} />
-        )}
-      </IconButton>
-    </div>
+    <InputIcon
+      {...inputProps}
+      className={className}
+      disabled={disabled}
+      aria-invalid={ariaInvalid}
+      type={showPassword ? "text" : "password"}
+      EndIcon={
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          disabled={disabled}
+          aria-label={showPassword ? "Hide password" : "Show password"}
+          className="group"
+          onClick={() => setShowPassword((visible) => !visible)}
+        >
+          {showPassword ? (
+            <EyeOff className={cn(inputPasswordIconVariants({ invalid }))} />
+          ) : (
+            <Eye className={cn(inputPasswordIconVariants({ invalid }))} />
+          )}
+        </Button>
+      }
+    />
   );
 }
+
+export default InputPassword;
