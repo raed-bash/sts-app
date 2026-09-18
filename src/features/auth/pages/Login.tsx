@@ -84,7 +84,7 @@ export default function Login() {
             </p>
             <AppLink
               to={`/${authPaths.signUp}`}
-              className="text-(--accent) hover:text-(--primary) mt-1 duration-150 underline text-shadow-2xs w-fit"
+              className="text-(--primary) hover:text-(--primary-hover) mt-1 duration-150 underline text-shadow-2xs w-fit"
             >
               Sign Up
             </AppLink>
