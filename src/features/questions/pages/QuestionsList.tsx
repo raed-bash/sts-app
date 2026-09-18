@@ -112,7 +112,7 @@ export default function QuestionsList() {
           Add Question
         </Button>
       </div>
-      <Card className="pb-52">
+      <Card className="pb-0">
         <CardContent>
           <QuestionsTable {...tableProps} actions={actions} />
         </CardContent>

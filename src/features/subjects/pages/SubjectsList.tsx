@@ -104,7 +104,7 @@ export default function SubjectsList() {
           Add Subject
         </Button>
       </div>
-      <Card className="pb-52">
+      <Card className="pb-0">
         <CardContent>
           <SubjectsTable {...tableProps} actions={actions} />
         </CardContent>

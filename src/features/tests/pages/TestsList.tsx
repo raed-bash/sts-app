@@ -110,7 +110,7 @@ export default function TestsList() {
           Add Test
         </Button>
       </div>
-      <Card className="pb-52">
+      <Card className="pb-0">
         <CardContent>
           <TestsTable {...tableProps} actions={actions} />
         </CardContent>

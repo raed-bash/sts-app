@@ -83,7 +83,7 @@ export default function AnswersList() {
           Add Answer
         </Button>
       </div>
-      <Card className="pb-52">
+      <Card className="pb-0">
         <CardContent>
           <AnswersTable {...tableProps} actions={actions} />
         </CardContent>

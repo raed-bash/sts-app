@@ -122,7 +122,7 @@ function AdminTestSessionsView() {
           Create Session
         </Button>
       </div>
-      <Card className="pb-52">
+      <Card className="pb-0">
         <CardContent>
           <TestSessionsTable {...tableProps} actions={actions} />
         </CardContent>

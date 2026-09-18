@@ -155,7 +155,7 @@ export default function UsersList() {
           Add User
         </Button>
       </div>
-      <Card className="pb-52">
+      <Card className="pb-0">
         <CardContent>
           <UsersTable {...tableProps} actions={actions} />
         </CardContent>
