@@ -7,7 +7,7 @@ export function useDebounce<T extends (...args: any[]) => void>(
   func: T,
   delay: number = DEBOUNCE_DELAY,
 ) {
-  const timerId = useRef<number>(0);
+  const timerId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const debounce = (...args: Parameters<T>) => {
     clearTimeout(timerId.current);

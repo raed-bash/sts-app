@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 export function useTimer(execute: () => void, delay = 1000, pause = false) {
-  const timeIdRef = useRef<number | null>(null);
+  const timeIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const savedCallback = useRef(execute);
 
   useEffect(() => {

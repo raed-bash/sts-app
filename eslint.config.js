@@ -7,7 +7,7 @@ import tseslint from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(["dist"]),
+  globalIgnores(["dist", "storybook-static"]),
   {
     files: ["**/*.{ts,tsx}"],
     extends: [
@@ -24,6 +24,18 @@ export default defineConfig([
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "react-compiler/react-compiler": "error",
+    },
+  },
+  {
+    files: ["src/**/*.stories.@(ts|tsx)"],
+    rules: {
+      "react-hooks/rules-of-hooks": "off",
+    },
+  },
+  {
+    files: [".storybook/**/*.{ts,tsx}"],
+    rules: {
+      "react-refresh/only-export-components": "off",
     },
   },
 ]);
