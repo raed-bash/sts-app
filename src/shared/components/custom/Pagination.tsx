@@ -159,7 +159,7 @@ function Pagination({
         title="Go:"
         type="number"
         disabled={disabled}
-        inputPlusContainerProps={{ className: "w-30" }}
+        fieldProps={{ className: "w-30" }}
         onChange={(e) => {
           const newPage = +e.target.value;
 

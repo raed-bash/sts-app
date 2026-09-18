@@ -82,7 +82,7 @@ export type LabeledFieldProps<
 
   loading?: boolean;
 
-  inputPlusContainerProps?: React.ComponentProps<"div">;
+  fieldProps?: React.ComponentProps<"div">;
 
   skeletonProps?: React.ComponentProps<typeof Skeleton>;
 
@@ -101,7 +101,7 @@ function LabeledField<Value, Multiple extends boolean | undefined = false>({
   title,
   titleIcon,
   loading,
-  inputPlusContainerProps = {},
+  fieldProps = {},
   skeletonProps = {},
   titleProps = {},
   error,
@@ -116,7 +116,7 @@ function LabeledField<Value, Multiple extends boolean | undefined = false>({
 
   return (
     <Field
-      {...inputPlusContainerProps}
+      {...fieldProps}
       data-invalid={invalid ? true : undefined}
       orientation={
         oneline && props.type !== "checkbox" ? "horizontal" : "vertical"
@@ -127,7 +127,7 @@ function LabeledField<Value, Multiple extends boolean | undefined = false>({
           (props.type === "checkbox"
             ? "flex-row-reverse items-center justify-end [&>*]:w-auto!"
             : "flex-row items-center"),
-        inputPlusContainerProps.className,
+        fieldProps.className,
       )}
     >
       {hasTitle && (
@@ -152,7 +152,10 @@ function LabeledField<Value, Multiple extends boolean | undefined = false>({
         )}
       >
         {loading ? (
-          <Skeleton {...skeletonProps} />
+          <Skeleton
+            {...skeletonProps}
+            className={cn("h-8 w-full", skeletonProps.className)}
+          />
         ) : props.type === "comboboxApi" ? (
           <ComboboxApi
             aria-invalid={invalid ? true : undefined}

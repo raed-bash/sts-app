@@ -106,7 +106,7 @@ export default function SignUp() {
             id="isNameViewed"
             checked={formik.values.isNameViewed}
             onChange={formik.handleChange}
-            inputPlusContainerProps={{ className: " gap-3" }}
+            fieldProps={{ className: " gap-3" }}
             oneline
           />
           <Button

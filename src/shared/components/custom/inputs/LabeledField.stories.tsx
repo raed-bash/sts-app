@@ -25,7 +25,7 @@ const meta = {
     helperText: { control: "text" },
     disabled: { control: "boolean" },
     titleIcon: { control: false },
-    inputPlusContainerProps: { control: false },
+    fieldProps: { control: false },
     skeletonProps: { control: false },
     titleProps: { control: false },
     helperTextProps: { control: false },
@@ -87,5 +87,15 @@ export const WithIconTitle: Story = {
     title: "Search",
     titleIcon: <Search className="h-4 w-4" />,
     placeholder: "Search...",
+  },
+};
+
+export const OnelineCheckbox: Story = {
+  args: {
+    type: "checkbox",
+    title: "View name publicly",
+    oneline: true,
+    checked: true,
+    fieldProps: { className: "max-w-80" },
   },
 };

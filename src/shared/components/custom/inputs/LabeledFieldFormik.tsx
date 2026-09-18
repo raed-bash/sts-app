@@ -15,16 +15,22 @@ function LabeledFieldFormik<
   Value,
   Multiple extends boolean | undefined = false,
 >({
+  name,
   values = {},
   errors = {},
   ...props
 }: LabeledFieldFormikProps<Value, Multiple>) {
+  const binding =
+    props.type === "checkbox"
+      ? { checked: Boolean(values[name]) }
+      : { value: values[name] };
+
   return (
     <LabeledField<Value, Multiple>
       {...props}
-      error
-      helperText={errors[props.name]}
-      value={values[props.name]}
+      {...binding}
+      error={Boolean(errors[name])}
+      helperText={errors[name]}
     />
   );
 }
