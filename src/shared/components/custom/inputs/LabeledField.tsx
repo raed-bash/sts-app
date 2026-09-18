@@ -62,7 +62,7 @@ export type NativeSelectPropsWithType = NativeSelectProps & {
   type: "nativeSelect";
 };
 
-export type InputPlusProps<
+export type LabeledFieldProps<
   Value,
   Multiple extends boolean | undefined = false,
 > = (
@@ -97,7 +97,7 @@ export type InputPlusProps<
   helperTextProps?: React.ComponentProps<"p">;
 };
 
-function InputPlus<Value, Multiple extends boolean | undefined = false>({
+function LabeledField<Value, Multiple extends boolean | undefined = false>({
   title,
   titleIcon,
   loading,
@@ -109,7 +109,7 @@ function InputPlus<Value, Multiple extends boolean | undefined = false>({
   helperTextProps = {},
   oneline = false,
   ...props
-}: InputPlusProps<Value, Multiple>) {
+}: LabeledFieldProps<Value, Multiple>) {
   const hasTitle = Boolean(title || titleIcon);
 
   const invalid = Boolean(helperText && error);
@@ -206,4 +206,4 @@ function InputPlus<Value, Multiple extends boolean | undefined = false>({
   );
 }
 
-export default InputPlus;
+export default LabeledField;

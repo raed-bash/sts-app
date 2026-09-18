@@ -5,7 +5,7 @@ import { GENDERS, type Gender } from "@/constants/gender";
 import { capitalize } from "lodash";
 import { useAppFormik } from "@/shared/lib/formik";
 import { Card } from "@/shared/components/ui/card";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { Button } from "@/shared/components/ui/button";
 import Alert from "@/shared/components/custom/alert/Alert";
 import AppLink from "@/shared/components/custom/AppLink";
@@ -53,7 +53,7 @@ export default function SignUp() {
         aria-invalid={signUpMutation.isError}
       >
         <form className="flex flex-col gap-2 " onSubmit={formik.handleSubmit}>
-          <InputPlus
+          <LabeledField
             type="text"
             name="username"
             title="Username"
@@ -63,7 +63,7 @@ export default function SignUp() {
             onBlur={formik.handleBlur}
             error
           />
-          <InputPlus
+          <LabeledField
             type="password"
             name="password"
             title="Password"
@@ -73,7 +73,7 @@ export default function SignUp() {
             onBlur={formik.handleBlur}
             error
           />
-          <InputPlus
+          <LabeledField
             type="text"
             name="fullName"
             title="Full Name"
@@ -83,7 +83,7 @@ export default function SignUp() {
             onBlur={formik.handleBlur}
             error
           />
-          <InputPlus
+          <LabeledField
             type="select"
             name="gender"
             title="Gender"
@@ -98,8 +98,8 @@ export default function SignUp() {
                 {capitalize(gender)}
               </SelectItem>
             ))}
-          </InputPlus>
-          <InputPlus
+          </LabeledField>
+          <LabeledField
             type="checkbox"
             title="View name publicly"
             name="isNameViewed"

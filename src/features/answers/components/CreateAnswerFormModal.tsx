@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Popup from "@/shared/components/custom/popups/Popup";
 import { Button } from "@/shared/components/ui/button";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { useAppFormik } from "@/shared/lib/formik";
 import {
   SelectGroup,
@@ -77,7 +77,7 @@ export default function CreateAnswerFormModal({
         className="flex flex-col gap-3 w-full sm:w-[440px]"
         onSubmit={formik.handleSubmit}
       >
-        <InputPlus
+        <LabeledField
           type="textarea"
           name="text"
           title="Answer text"
@@ -86,7 +86,7 @@ export default function CreateAnswerFormModal({
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
         />
-        <InputPlus<QuestionDto>
+        <LabeledField<QuestionDto>
           type="selectApi"
           title="Question"
           name="question"
@@ -111,9 +111,9 @@ export default function CreateAnswerFormModal({
               )}
             </SelectGroup>
           )}
-        </InputPlus>
+        </LabeledField>
         <div className="grid grid-cols-3 gap-3">
-          <InputPlus
+          <LabeledField
             type="number"
             name="order"
             title="Order"
@@ -122,7 +122,7 @@ export default function CreateAnswerFormModal({
             onChange={formik.handleChange}
           />
           {requiresCorrectIndex ? (
-            <InputPlus
+            <LabeledField
               type="number"
               name="correctIndex"
               title="Correct index"
@@ -131,7 +131,7 @@ export default function CreateAnswerFormModal({
               onChange={formik.handleChange}
             />
           ) : (
-            <InputPlus
+            <LabeledField
               type="checkbox"
               name="isCorrect"
               title="Is correct"

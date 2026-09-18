@@ -27,7 +27,9 @@ import {
   SelectItem,
   SelectLabel,
 } from "@/shared/components/ui/select";
-import InputPlus, { type InputPlusProps } from "../../inputs/InputPlus";
+import LabeledField, {
+  type LabeledFieldProps,
+} from "../../inputs/LabeledField";
 import { NativeSelectOption } from "@/shared/components/ui/native-select";
 import { filterOperations } from "./constants/constants";
 import type {
@@ -40,7 +42,7 @@ import type {
 export type FilterFieldProps<
   Option,
   Multiple extends boolean | undefined = false,
-> = InputPlusProps<Option, Multiple> &
+> = LabeledFieldProps<Option, Multiple> &
   (
     | FilterTextOperationsWithTypes
     | FilterSelectOperationsWithTypes
@@ -227,19 +229,19 @@ export default function FilterBoard<Row extends TableRowRecord>({
                     <div></div>
                   ) : (
                     i > 0 && (
-                      <InputPlus
+                      <LabeledField
                         type="nativeSelect"
                         onChange={handleChangeLogicalOperator}
                         value={logicalOperator}
                       >
                         <NativeSelectOption value="AND">AND</NativeSelectOption>
                         <NativeSelectOption value="OR">OR</NativeSelectOption>
-                      </InputPlus>
+                      </LabeledField>
                     )
                   )}
                 </div>
                 <div className="grid grid-cols-3 gap-4 w-full">
-                  <InputPlus
+                  <LabeledField
                     type="select"
                     name="name"
                     onChange={createFilterColumnChangeHandler(i)}
@@ -258,9 +260,9 @@ export default function FilterBoard<Row extends TableRowRecord>({
                         </SelectItem>
                       ))}
                     </SelectGroup>
-                  </InputPlus>
+                  </LabeledField>
 
-                  <InputPlus
+                  <LabeledField
                     type="nativeSelect"
                     name="operation"
                     multiple={false}
@@ -272,8 +274,8 @@ export default function FilterBoard<Row extends TableRowRecord>({
                         {filterOperations[op]}
                       </NativeSelectOption>
                     ))}
-                  </InputPlus>
-                  <InputPlus
+                  </LabeledField>
+                  <LabeledField
                     name="value"
                     onChange={createFilterOperationChangeHandler(i)}
                     value={filters[i].value}

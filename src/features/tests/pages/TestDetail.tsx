@@ -26,7 +26,7 @@ import {
 import { useQuestionsTable } from "@/features/questions/hooks/useQuestionsTable";
 import { useRequireRole } from "@/hooks/useRequireRole";
 import { useQueryClient } from "@tanstack/react-query";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { useTestSubjects } from "../hooks/useTestSubjects";
 import { useDeleteQuestion } from "@/features/questions/api/delete-question.api";
 import { useRestoreQuestion } from "@/features/questions/api/restore-question.api";
@@ -198,7 +198,7 @@ export default function TestDetail() {
                 Subjects
               </div>
               <div className="mt-1">
-                <InputPlus
+                <LabeledField
                   type="selectApi"
                   getInputLabel={() =>
                     subjects.length
@@ -222,7 +222,7 @@ export default function TestDetail() {
                       )}
                     </SelectGroup>
                   )}
-                </InputPlus>
+                </LabeledField>
               </div>
             </div>
           </div>

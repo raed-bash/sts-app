@@ -45,7 +45,7 @@ export type ComboboxFieldProps<
  * @example
  * ```tsx
  *
- *  <InputPlus<ItemDto>
+ *  <LabeledField<ItemDto>
  *    type="combobox"
  *    isItemEqualToValue={(item, value) => item.id === value.id}
  *    itemToStringLabel={(item) => item.name}
@@ -61,10 +61,10 @@ export type ComboboxFieldProps<
  *          {item.name}
  *        </ComboboxItem>
  *      )}
- *    </InputPlus>
+ *    </LabeledField>
  *
  * // multiple selection
- *  <InputPlus
+ *  <LabeledField
  *    type="combobox"
  *    title="Multiple Combobox Field"
  *    placeholder="Multiple Combobox Field"
@@ -84,7 +84,7 @@ export type ComboboxFieldProps<
  *        {item.name}
  *      </ComboboxItem>
  *    )}
- *  </InputPlus>
+ *  </LabeledField>
  *
  * ```
  */
@@ -205,9 +205,7 @@ export function ComboboxFieldChips<
       <ComboboxValue>
         {(values: ValueType<Value, Multiple>) => (
           <>
-            {isFunction(getInputLabel)
-              ? getInputLabel(values)
-              : getInputLabel}
+            {isFunction(getInputLabel) ? getInputLabel(values) : getInputLabel}
             <ComboboxChipsInput
               aria-invalid={ariaInvalid}
               placeholder={placeholder}

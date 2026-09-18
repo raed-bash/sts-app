@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Popup from "@/shared/components/custom/popups/Popup";
 import { Button } from "@/shared/components/ui/button";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { useAppFormik } from "@/shared/lib/formik";
 import { useUpdateTestSession } from "../api/update-test-session.api";
 import { testSessionsQueryKeys } from "../test-sessions.api-keys";
@@ -75,7 +75,7 @@ export default function EditTestSessionFormModal({
         onSubmit={formik.handleSubmit}
       >
         <div className="grid grid-cols-2 gap-3">
-          <InputPlus
+          <LabeledField
             type="datetime-local"
             name="startAt"
             title="Starts at"
@@ -83,7 +83,7 @@ export default function EditTestSessionFormModal({
             helperText={formik.touchedErrors.startAt}
             onChange={formik.handleChange}
           />
-          <InputPlus
+          <LabeledField
             type="datetime-local"
             name="endAt"
             title="Ends at"

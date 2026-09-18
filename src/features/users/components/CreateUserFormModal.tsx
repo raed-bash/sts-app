@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Popup from "@/shared/components/custom/popups/Popup";
 import { Button } from "@/shared/components/ui/button";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { SelectItem } from "@/shared/components/ui/select";
 import { useAppFormik } from "@/shared/lib/formik";
 import { useCreateUser } from "../api/create-user.api";
@@ -55,7 +55,7 @@ export default function CreateUserFormModal({
         className="flex flex-col gap-3 w-full sm:w-[420px]"
         onSubmit={formik.handleSubmit}
       >
-        <InputPlus
+        <LabeledField
           type="text"
           name="username"
           title="Username"
@@ -64,7 +64,7 @@ export default function CreateUserFormModal({
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
         />
-        <InputPlus
+        <LabeledField
           type="password"
           name="password"
           title="Password"
@@ -74,7 +74,7 @@ export default function CreateUserFormModal({
           onBlur={formik.handleBlur}
           autoComplete="new-password"
         />
-        <InputPlus
+        <LabeledField
           type="select"
           name="role"
           title="Role"
@@ -89,8 +89,8 @@ export default function CreateUserFormModal({
               {ROLE_TITLES[role]}
             </SelectItem>
           ))}
-        </InputPlus>
-        <InputPlus
+        </LabeledField>
+        <LabeledField
           type="select"
           name="status"
           title="Status"
@@ -105,7 +105,7 @@ export default function CreateUserFormModal({
               {STATUS_TITLES[status]}
             </SelectItem>
           ))}
-        </InputPlus>
+        </LabeledField>
 
         <div className="flex justify-end gap-3 mt-2">
           <Button

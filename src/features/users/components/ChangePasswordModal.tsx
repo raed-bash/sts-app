@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Popup from "@/shared/components/custom/popups/Popup";
 import { Button } from "@/shared/components/ui/button";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { useAppFormik } from "@/shared/lib/formik";
 import { useChangeUserPassword } from "../api/change-user-password.api";
 import { usersQueryKeys } from "../users.api-keys";
@@ -58,7 +58,7 @@ export default function ChangePasswordModal({
         className="flex flex-col gap-3 w-full sm:w-[420px]"
         onSubmit={formik.handleSubmit}
       >
-        <InputPlus
+        <LabeledField
           type="password"
           name="password"
           title="New password"

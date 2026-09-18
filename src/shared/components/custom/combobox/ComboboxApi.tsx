@@ -37,7 +37,7 @@ export type ComboboxApiProps<
 /**
  * @example
  * ```tsx
- *  <InputPlus
+ *  <LabeledField
  *    type="comboboxApi"
  *    isItemEqualToValue={(item, value) => item.id === value.id}
  *    itemToStringLabel={(item) => item.name}
@@ -58,7 +58,7 @@ export type ComboboxApiProps<
  *         </ComboboxItem>
  *      ))
  *    )}
- *  </InputPlus>
+ *  </LabeledField>
  *
  * ```
  */

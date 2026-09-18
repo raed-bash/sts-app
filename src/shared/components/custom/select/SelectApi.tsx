@@ -34,7 +34,7 @@ export type SelectApiProps<
  * @example
  * ```tsx
  *
- *  <InputPlus
+ *  <LabeledField
  *    type="selectApi"
  *    title="API Select"
  *    value={itemValue}
@@ -57,7 +57,7 @@ export type SelectApiProps<
  *        }
  *      </SelectGroup>
  *    )}
- *  </InputPlus>
+ *  </LabeledField>
 
  *
  * ```

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Search } from "lucide-react";
-import InputPlus from "./InputPlus";
+import LabeledField from "./LabeledField";
 
 const meta = {
-  title: "Custom/Inputs/InputPlus",
-  component: InputPlus,
+  title: "Custom/Inputs/LabeledField",
+  component: LabeledField,
   parameters: { layout: "padded" },
   argTypes: {
     type: {

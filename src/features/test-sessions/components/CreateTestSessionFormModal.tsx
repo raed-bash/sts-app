@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Popup from "@/shared/components/custom/popups/Popup";
 import { Button } from "@/shared/components/ui/button";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { useAppFormik } from "@/shared/lib/formik";
 import {
   SelectGroup,
@@ -54,7 +54,8 @@ export default function CreateTestSessionFormModal({
       subject: null,
     },
     validationZodSchema: createTestSessionFormSchema,
-    onSubmit: (values) => createMutation.mutate(new CreateTestSessionDto(values)),
+    onSubmit: (values) =>
+      createMutation.mutate(new CreateTestSessionDto(values)),
   });
 
   return (
@@ -68,7 +69,7 @@ export default function CreateTestSessionFormModal({
         className="flex flex-col gap-3 w-[440px] max-w-full"
         onSubmit={formik.handleSubmit}
       >
-        <InputPlus<TestDto>
+        <LabeledField<TestDto>
           type="selectApi"
           title="Test"
           name="test"
@@ -93,8 +94,8 @@ export default function CreateTestSessionFormModal({
               )}
             </SelectGroup>
           )}
-        </InputPlus>
-        <InputPlus<SubjectDto>
+        </LabeledField>
+        <LabeledField<SubjectDto>
           type="selectApi"
           title="Subject"
           name="subject"
@@ -119,8 +120,8 @@ export default function CreateTestSessionFormModal({
               )}
             </SelectGroup>
           )}
-        </InputPlus>
-        <InputPlus
+        </LabeledField>
+        <LabeledField
           type="datetime-local"
           name="startAt"
           title="Starts at"
@@ -128,7 +129,7 @@ export default function CreateTestSessionFormModal({
           helperText={formik.touchedErrors.startAt}
           onChange={formik.handleChange}
         />
-        <InputPlus
+        <LabeledField
           type="number"
           name="period"
           title="Duration (minutes)"

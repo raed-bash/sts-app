@@ -2,13 +2,16 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Popup from "@/shared/components/custom/popups/Popup";
 import { Button } from "@/shared/components/ui/button";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { useAppFormik } from "@/shared/lib/formik";
 import { useUpdateSubject } from "../api/update-subject.api";
 import { subjectsQueryKeys } from "../subjects.api-keys";
 import { UpdateSubjectDto } from "../dtos/update-subject.dto";
 import type { SubjectDto } from "../dtos/subject.dto";
-import { subjectFormSchema, type SubjectFormValues } from "../schemas/subject-form.schema";
+import {
+  subjectFormSchema,
+  type SubjectFormValues,
+} from "../schemas/subject-form.schema";
 
 export type EditSubjectFormModalProps = {
   isOpen: boolean;
@@ -58,7 +61,7 @@ export default function EditSubjectFormModal({
         className="flex flex-col gap-3 w-full sm:w-[420px]"
         onSubmit={formik.handleSubmit}
       >
-        <InputPlus
+        <LabeledField
           type="text"
           name="name"
           title="Name"
@@ -78,11 +81,7 @@ export default function EditSubjectFormModal({
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            className="w-fit"
-            disabled={loading}
-          >
+          <Button type="submit" className="w-fit" disabled={loading}>
             {loading ? "Saving..." : "Save"}
           </Button>
         </div>

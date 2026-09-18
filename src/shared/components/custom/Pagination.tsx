@@ -3,7 +3,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useDebounce } from "@/shared/hooks";
 import { cn } from "cn";
 import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
-import InputPlus from "./inputs/InputPlus";
+import LabeledField from "./inputs/LabeledField";
 import { Button } from "@/shared/components/ui/button";
 
 type PageItem = number | "ellipsis";
@@ -154,7 +154,7 @@ function Pagination({
         </Button>
       </div>
 
-      <InputPlus
+      <LabeledField
         oneline
         title="Go:"
         type="number"

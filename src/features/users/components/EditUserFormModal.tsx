@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Popup from "@/shared/components/custom/popups/Popup";
 import { Button } from "@/shared/components/ui/button";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { SelectItem } from "@/shared/components/ui/select";
 import { useAppFormik } from "@/shared/lib/formik";
 import { useUpdateUser } from "../api/update-user.api";
@@ -66,7 +66,7 @@ export default function EditUserFormModal({
         className="flex flex-col gap-3 w-full sm:w-[420px]"
         onSubmit={formik.handleSubmit}
       >
-        <InputPlus
+        <LabeledField
           type="text"
           name="username"
           title="Username"
@@ -75,7 +75,7 @@ export default function EditUserFormModal({
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
         />
-        <InputPlus
+        <LabeledField
           type="select"
           name="role"
           title="Role"
@@ -90,8 +90,8 @@ export default function EditUserFormModal({
               {ROLE_TITLES[role]}
             </SelectItem>
           ))}
-        </InputPlus>
-        <InputPlus
+        </LabeledField>
+        <LabeledField
           type="select"
           name="status"
           title="Status"
@@ -106,7 +106,7 @@ export default function EditUserFormModal({
               {STATUS_TITLES[status]}
             </SelectItem>
           ))}
-        </InputPlus>
+        </LabeledField>
 
         <div className="flex justify-end gap-3 mt-2">
           <Button

@@ -2,7 +2,7 @@ import { loginSchema } from "../schemas/login.schema";
 import { useAuthContext } from "@/contexts/AuthContext";
 import toast from "react-hot-toast";
 import { Card } from "@/shared/components/ui/card";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { Button } from "@/shared/components/ui/button";
 import Alert from "@/shared/components/custom/alert/Alert";
 import AppLink from "@/shared/components/custom/AppLink";
@@ -41,7 +41,7 @@ export default function Login() {
         aria-invalid={Boolean(loginMutation.isError)}
       >
         <form className="flex flex-col gap-2 " onSubmit={formik.handleSubmit}>
-          <InputPlus
+          <LabeledField
             type="text"
             name="username"
             title="Username"
@@ -51,7 +51,7 @@ export default function Login() {
             onBlur={formik.handleBlur}
             error
           />
-          <InputPlus
+          <LabeledField
             type="password"
             name="password"
             title="Password"

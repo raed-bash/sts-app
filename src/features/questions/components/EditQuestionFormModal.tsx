@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Popup from "@/shared/components/custom/popups/Popup";
 import { Button } from "@/shared/components/ui/button";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { useAppFormik } from "@/shared/lib/formik";
 import {
   SelectGroup,
@@ -76,7 +76,7 @@ export default function EditQuestionFormModal({
         className="flex flex-col gap-3 w-full sm:w-[460px]"
         onSubmit={formik.handleSubmit}
       >
-        <InputPlus
+        <LabeledField
           type="textarea"
           name="text"
           title="Question text"
@@ -86,7 +86,7 @@ export default function EditQuestionFormModal({
           onBlur={formik.handleBlur}
         />
         <div className="grid grid-cols-2 gap-3">
-          <InputPlus
+          <LabeledField
             type="select"
             name="type"
             title="Type"
@@ -105,8 +105,8 @@ export default function EditQuestionFormModal({
                 </SelectItem>
               ),
             )}
-          </InputPlus>
-          <InputPlus
+          </LabeledField>
+          <LabeledField
             type="number"
             name="points"
             title="Points"
@@ -115,7 +115,7 @@ export default function EditQuestionFormModal({
             onChange={formik.handleChange}
           />
         </div>
-        <InputPlus<TestDto, true>
+        <LabeledField<TestDto, true>
           type="selectApi"
           title="Tests"
           name="tests"
@@ -145,9 +145,9 @@ export default function EditQuestionFormModal({
               )}
             </SelectGroup>
           )}
-        </InputPlus>
+        </LabeledField>
         {isComplete && (
-          <InputPlus
+          <LabeledField
             type="textarea"
             name="completeQuestion"
             title="Complete answer text"

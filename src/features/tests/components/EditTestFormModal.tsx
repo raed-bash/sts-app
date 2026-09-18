@@ -2,9 +2,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Popup from "@/shared/components/custom/popups/Popup";
 import { Button } from "@/shared/components/ui/button";
-import InputPlus from "@/shared/components/custom/inputs/InputPlus";
+import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { useAppFormik } from "@/shared/lib/formik";
-import { testFormSchema, type TestFormValues } from "../schemas/test-form.schema";
+import {
+  testFormSchema,
+  type TestFormValues,
+} from "../schemas/test-form.schema";
 import {
   SelectGroup,
   SelectItem,
@@ -71,7 +74,7 @@ export default function EditTestFormModal({
         className="flex flex-col gap-3 w-full sm:w-[440px]"
         onSubmit={formik.handleSubmit}
       >
-        <InputPlus
+        <LabeledField
           type="text"
           name="name"
           title="Name"
@@ -80,7 +83,7 @@ export default function EditTestFormModal({
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
         />
-        <InputPlus
+        <LabeledField
           type="number"
           name="period"
           title="Duration (minutes)"
@@ -88,7 +91,7 @@ export default function EditTestFormModal({
           helperText={formik.touchedErrors.period}
           onChange={formik.handleChange}
         />
-        <InputPlus<SubjectDto, true>
+        <LabeledField<SubjectDto, true>
           type="selectApi"
           title="Subjects"
           name="subjects"
@@ -118,7 +121,7 @@ export default function EditTestFormModal({
               )}
             </SelectGroup>
           )}
-        </InputPlus>
+        </LabeledField>
 
         <div className="flex justify-end gap-3 mt-2">
           <Button

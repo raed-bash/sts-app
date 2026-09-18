@@ -34,7 +34,7 @@ export type SelectFieldProps<
  * @example
  * ```tsx
  *
- *  <InputPlus
+ *  <LabeledField
  *    type="select"
  *    title="Select Field"
  *    value={itemValue}
@@ -50,11 +50,11 @@ export type SelectFieldProps<
  *        </SelectItem>
  *      ))}
  *    </SelectGroup>
- *  </InputPlus>  
+ *  </LabeledField>  
  *
  * // multiple
  *
- *  <InputPlus
+ *  <LabeledField
  *    type="select"
  *    title="Multiple Select Field"
  *    multiple
@@ -75,7 +75,7 @@ export type SelectFieldProps<
  *        </SelectItem>
  *      ))}
  *    </SelectGroup>
- *  </InputPlus>
+ *  </LabeledField>
  * ```
  */
 export default function SelectField<
