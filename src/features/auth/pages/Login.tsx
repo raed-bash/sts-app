@@ -1,7 +1,7 @@
 import { loginSchema } from "../schemas/login.schema";
 import { useAuthContext } from "@/contexts/AuthContext";
 import toast from "react-hot-toast";
-import Paper from "@/shared/components/custom/paper/Paper";
+import { Card } from "@/shared/components/ui/card";
 import InputPlus from "@/shared/components/custom/inputs/InputPlus";
 import { Button } from "@/shared/components/ui/button";
 import Alert from "@/shared/components/custom/alert/Alert";
@@ -36,8 +36,8 @@ export default function Login() {
     <div className="h-screen flex flex-col items-center justify-center bg-(--background) text-(--text)">
       <h2 className="text-[26px] mb-1 font-medium ">Welcome Back</h2>
       <p className="text-(--text-muted) text-sm">Please Login to continue</p>
-      <Paper
-        className="max-w-md w-full mt-5 aria-invalid:border-(--danger) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger)/30 "
+      <Card
+        className="max-w-md w-full mt-5 p-6 aria-invalid:border-(--danger) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger)/30 "
         aria-invalid={Boolean(loginMutation.isError)}
       >
         <form className="flex flex-col gap-2 " onSubmit={formik.handleSubmit}>
@@ -90,7 +90,7 @@ export default function Login() {
             </AppLink>
           </div>
         </form>
-      </Paper>
+      </Card>
     </div>
   );
 }

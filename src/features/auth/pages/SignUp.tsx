@@ -4,7 +4,7 @@ import { SignUpDto } from "../dtos/sign-up.dto";
 import { GENDERS, type Gender } from "@/constants/gender";
 import { capitalize } from "lodash";
 import { useAppFormik } from "@/shared/lib/formik";
-import Paper from "@/shared/components/custom/paper/Paper";
+import { Card } from "@/shared/components/ui/card";
 import InputPlus from "@/shared/components/custom/inputs/InputPlus";
 import { Button } from "@/shared/components/ui/button";
 import Alert from "@/shared/components/custom/alert/Alert";
@@ -48,8 +48,8 @@ export default function SignUp() {
 
       <p className="text-(--text-muted) text-sm">Please sign up to continue</p>
 
-      <Paper
-        className="max-w-md w-full mt-5 aria-invalid:border-(--danger) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger)/30 "
+      <Card
+        className="max-w-md w-full mt-5 p-6 aria-invalid:border-(--danger) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger)/30 "
         aria-invalid={signUpMutation.isError}
       >
         <form className="flex flex-col gap-2 " onSubmit={formik.handleSubmit}>
@@ -136,7 +136,7 @@ export default function SignUp() {
             </AppLink>
           </div>
         </form>
-      </Paper>
+      </Card>
     </div>
   );
 }
