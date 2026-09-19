@@ -30,6 +30,14 @@ import { useTablePinnedColumns } from "./hooks/useTablePinnedColumns";
 import { buildCsv } from "./utils/csv";
 import toast from "react-hot-toast";
 
+const TABLE_ROW_HEIGHTS: Record<string, number> = {
+  compact: 44,
+  comfortable: 60,
+  roomy: 80,
+};
+
+const TABLE_HEADER_HEIGHT = 64;
+
 export type TableRowRecord = Record<string, any>;
 
 type TableColumnKey<Row extends TableRowRecord> = keyof Row | (string & {});
@@ -366,6 +374,7 @@ function Table<Row extends TableRowRecord>({
     bodyCellProps,
     bodyCheckboxCellProps,
   } = elements;
+
   const {
     displayedColumns,
     resetHiddenColumns,
@@ -396,6 +405,10 @@ function Table<Row extends TableRowRecord>({
       onLogicalOperatorChange,
     },
   });
+
+  const rowHeight = TABLE_ROW_HEIGHTS[density] ?? TABLE_ROW_HEIGHTS.comfortable;
+
+  const verticalMaxHeight = TABLE_HEADER_HEIGHT + perPage * rowHeight;
 
   const {
     ref: tableScrollRef,
@@ -490,7 +503,10 @@ function Table<Row extends TableRowRecord>({
         {...theaderProps}
       />
 
-      <div className="overflow-x-auto w-full max-w-full rounded-lg pb-[5px]">
+      <div
+        className="overflow-x-auto overflow-y-auto w-full max-w-full rounded-lg pb-[5px]"
+        style={{ maxHeight: verticalMaxHeight }}
+      >
         <table
           ref={tableScrollRef}
           className="w-full min-w-max table-auto border-separate border-spacing-0 relative"

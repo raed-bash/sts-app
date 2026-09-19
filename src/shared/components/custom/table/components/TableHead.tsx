@@ -90,7 +90,13 @@ function TableHead<Row extends TableRowRecord>({
   const [openMenuFor, setOpenMenuFor] = useState<string | null>(null);
 
   return (
-    <thead {...props}>
+    <thead
+      {...props}
+      className={cn(
+        "sticky top-0 z-[3] bg-gray-100 dark:bg-gray-700",
+        props.className,
+      )}
+    >
       <TableRow
         {...rowProps}
         className={cn("bg-gray-100 dark:bg-gray-700 ", rowProps.className)}
