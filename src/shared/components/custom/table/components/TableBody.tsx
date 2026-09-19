@@ -48,6 +48,12 @@ export type TableBodyProps<Row extends TableRowRecord> =
      */
     density?: string;
 
+    /**
+     * Minimum height (px) the body area should occupy. Applied to the
+     * loading/empty overlay so the table doesn't change height once data loads.
+     */
+    bodyMinHeight?: number;
+
     elements?: {
       /** Body rows; <tr> elements */
       rowProps?: TableRowProps;
@@ -67,6 +73,7 @@ function TableBody<Row extends TableRowRecord>({
   loading = {},
   pinning,
   density,
+  bodyMinHeight,
   elements = {},
   className,
   ...props
@@ -123,7 +130,10 @@ function TableBody<Row extends TableRowRecord>({
         </tr>
       )}
       {isLoading || noRows ? (
-        <TableOverlay>
+        <TableOverlay
+          colSpan={columns.length + (selectable ? 1 : 0)}
+          minHeight={bodyMinHeight}
+        >
           {isLoading ? (
             <Loading />
           ) : (

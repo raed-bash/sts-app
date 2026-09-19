@@ -3,6 +3,18 @@ import TableCell, { type TableCellProps } from "./TableCell";
 import { cn } from "cn";
 
 export type TableOverlayProps = React.ComponentProps<"div"> & {
+  /**
+   * Number of table columns the overlay should span.
+   * Pass the body column count (include the selection column when selectable).
+   */
+  colSpan?: number;
+
+  /**
+   * Height (px) the overlay should fill. When provided, it sizes the overlay
+   * to the full body area so the table doesn't jump when data loads.
+   */
+  minHeight?: number;
+
   elements?: {
     /** Overlay row; <tr> element */
     rowProps?: TableRowProps;
@@ -13,6 +25,8 @@ export type TableOverlayProps = React.ComponentProps<"div"> & {
 };
 
 function TableOverlay({
+  colSpan = 1,
+  minHeight,
   elements = {},
   children,
   ...props
@@ -26,12 +40,18 @@ function TableOverlay({
     >
       <TableCell
         {...cellProps}
-        className={cn("h-14", cellProps.className)}
+        colSpan={colSpan}
+        style={
+          minHeight
+            ? { height: minHeight, ...cellProps.style }
+            : cellProps.style
+        }
+        className={cn(!minHeight && "h-56", cellProps.className)}
       >
         <div
           {...props}
           className={cn(
-            "flex justify-center items-center absolute top-[80%] rtl:right-1/2 ltr:left-1/2 ltr:-translate-x-1/2 ltr:-translate-y-1/2 rtl:translate-x-1/2 rtl:translate-y-1/2 w-fit",
+            "absolute inset-0 flex items-center justify-center",
             props.className,
           )}
         >

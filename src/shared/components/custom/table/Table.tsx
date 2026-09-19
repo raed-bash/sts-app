@@ -410,6 +410,8 @@ function Table<Row extends TableRowRecord>({
 
   const verticalMaxHeight = TABLE_HEADER_HEIGHT + perPage * rowHeight;
 
+  const bodyMinHeight = perPage * rowHeight;
+
   const {
     ref: tableScrollRef,
     getRightOffset,
@@ -504,12 +506,12 @@ function Table<Row extends TableRowRecord>({
       />
 
       <div
-        className="overflow-x-auto overflow-y-auto w-full max-w-full rounded-lg pb-[5px]"
+        className="relative overflow-x-auto overflow-y-auto w-full max-w-full rounded-lg pb-[5px]"
         style={{ maxHeight: verticalMaxHeight }}
       >
         <table
           ref={tableScrollRef}
-          className="w-full min-w-max table-auto border-separate border-spacing-0 relative"
+          className="w-full min-w-max table-auto border-separate border-spacing-0"
         >
           <TableHead
             data={{ columns: displayedColumns }}
@@ -542,6 +544,7 @@ function Table<Row extends TableRowRecord>({
             loading={{ loading: isLoading, scLoading }}
             pinning={pinningColumns}
             density={densityPadding}
+            bodyMinHeight={bodyMinHeight}
             elements={{
               rowProps: bodyRowProps,
               cellProps: bodyCellProps,
