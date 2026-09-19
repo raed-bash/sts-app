@@ -22,6 +22,8 @@ export type UserOrderAttributes = (typeof userOrderAttributes)[number];
 
 export interface QueryUserInput {
   page?: number;
+
+  perPage?: number;
   username?: string;
   status?: UserStatus;
   role?: UserRole;

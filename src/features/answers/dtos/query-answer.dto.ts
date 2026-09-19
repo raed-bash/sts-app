@@ -18,6 +18,8 @@ export type AnswerOrderAttributes = (typeof answerOrderAttributes)[number];
 
 export interface QueryAnswerInput {
   page?: number;
+
+  perPage?: number;
   text?: string;
   questionId?: number;
   orderBy?: AnswerOrderAttributes;

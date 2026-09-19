@@ -1,6 +1,14 @@
 import Pagination from "../../Pagination";
 import { Button } from "@/shared/components/ui/button";
 import { Spinner } from "@/shared/components/ui/spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/ui/select";
+import { cn } from "cn";
 import type { TablePaginationProps } from "../Table";
 
 export type TableFooterProps = {
@@ -9,6 +17,8 @@ export type TableFooterProps = {
 
 export default function TableFooter({ pagination }: TableFooterProps) {
   const { loadMore } = pagination;
+
+  const disabled = loadMore?.enabled ?? false;
 
   return (
     <div className="flex justify-between items-center gap-4 px-4">
@@ -19,8 +29,28 @@ export default function TableFooter({ pagination }: TableFooterProps) {
         </div>
 
         <div className="flex items-center gap-1 font-medium text-sm">
-          <p>PerPage: </p>
-          <span>{pagination.perPage}</span>
+          <p>Rows per page: </p>
+          <Select
+            value={pagination.perPage}
+            onValueChange={(value) =>
+              value != null && pagination.onPerPageChange?.(value)
+            }
+            disabled={disabled}
+          >
+            <SelectTrigger
+              size="sm"
+              className={cn("w-16 justify-center px-2")}
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {pagination.perPageOptions?.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -45,7 +75,7 @@ export default function TableFooter({ pagination }: TableFooterProps) {
           maxVisibleNeighbors={pagination.maxVisibleNeighbors}
           count={pagination.count}
           perPage={pagination.perPage}
-          disabled={loadMore?.enabled ?? false}
+          disabled={disabled}
         />
       </div>
     </div>

@@ -12,6 +12,7 @@ export function useTestsTable(options: { subjectIds?: number[] } = {}) {
     ),
     ...(options.subjectIds?.length ? { subjectIds: options.subjectIds } : {}),
     sorts: state.sorting.sortStatuses,
+    perPage: state.pagination.perPage,
   });
 
   const paginated = useTests({

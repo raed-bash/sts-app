@@ -30,13 +30,13 @@ import { useTablePinnedColumns } from "./hooks/useTablePinnedColumns";
 import { buildCsv } from "./utils/csv";
 import toast from "react-hot-toast";
 
-const TABLE_ROW_HEIGHTS: Record<string, number> = {
-  compact: 44,
-  comfortable: 60,
-  roomy: 80,
-};
+const TABLE_MAX_HEIGHT = 500;
 
 const TABLE_HEADER_HEIGHT = 64;
+
+const DEFAULT_PER_PAGE_OPTIONS = Array.from(
+  new Set([PER_PAGE, 25, 50, 100]),
+).sort((a, b) => a - b);
 
 export type TableRowRecord = Record<string, any>;
 
@@ -126,6 +126,12 @@ export type TablePaginationProps = {
   onPageChange: PaginationProps["onChange"];
 
   maxVisibleNeighbors?: PaginationProps["maxVisibleNeighbors"];
+
+  /** Per-page options offered by the "Rows per page" selector */
+  perPageOptions?: number[];
+
+  /** Called when the user picks a new per-page value */
+  onPerPageChange?: (perPage: number) => void;
 
   loadMore?: TableLoadMoreProps;
 };
@@ -329,6 +335,8 @@ function Table<Row extends TableRowRecord>({
   const {
     currentPage = 1,
     perPage = PER_PAGE,
+    perPageOptions = DEFAULT_PER_PAGE_OPTIONS,
+    onPerPageChange = () => {},
     count = rows.length,
     onPageChange = () => {},
     maxVisibleNeighbors = 2,
@@ -406,11 +414,9 @@ function Table<Row extends TableRowRecord>({
     },
   });
 
-  const rowHeight = TABLE_ROW_HEIGHTS[density] ?? TABLE_ROW_HEIGHTS.comfortable;
+  const verticalMaxHeight = TABLE_MAX_HEIGHT;
 
-  const verticalMaxHeight = TABLE_HEADER_HEIGHT + perPage * rowHeight;
-
-  const bodyMinHeight = perPage * rowHeight;
+  const bodyMinHeight = Math.max(0, TABLE_MAX_HEIGHT - TABLE_HEADER_HEIGHT);
 
   const {
     ref: tableScrollRef,
@@ -561,6 +567,8 @@ function Table<Row extends TableRowRecord>({
           onPageChange,
           maxVisibleNeighbors,
           perPage,
+          perPageOptions,
+          onPerPageChange,
           loadMore,
         }}
       />

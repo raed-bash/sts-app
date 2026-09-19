@@ -16,6 +16,7 @@ export function useTestSessionsTable() {
       state.debouncedFilters.map((filter) => [filter.name, filter.value]),
     ),
     sorts: state.sorting.sortStatuses,
+    perPage: state.pagination.perPage,
   });
 
   const paginated = useTestSessions({

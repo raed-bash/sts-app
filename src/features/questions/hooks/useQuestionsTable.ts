@@ -17,6 +17,7 @@ export function useQuestionsTable(
     ),
     ...(options.testIds?.length ? { testIds: options.testIds } : {}),
     sorts: state.sorting.sortStatuses,
+    perPage: state.pagination.perPage,
   });
 
   const paginated = useQuestions({

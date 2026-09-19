@@ -6,6 +6,7 @@ import { useOrderedColumns } from "./useOrderedColumns";
 import { usePinnedColumns } from "./usePinnedColumns";
 import { useSelectedRows } from "./useSelectedRows";
 import { useSortStatuses, type DefaultSortStatuses } from "./useSortStatuses";
+import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
 import type { SortButtonStatus } from "@/shared/components/custom/buttons/SortButton";
 import type {
   FilterCondition,
@@ -17,6 +18,7 @@ export type UseTableStateOptions<SortKey extends string> = {
   /** Base key used for caching/local storage (e.g. "users") */
   name: string;
   defaultSortStatuses?: DefaultSortStatuses<SortKey>;
+  defaultPerPage?: number;
   multi?: boolean;
   caching?: boolean;
 };
@@ -25,6 +27,8 @@ export type UseTableStateReturn<SortKey extends string> = {
   pagination: {
     currentPage: number;
     onPageChange: (page: number) => void;
+    perPage: number;
+    onPerPageChange: (perPage: number) => void;
   };
   loadMore: {
     enabled: boolean;
@@ -64,12 +68,23 @@ const defaultSortStatusesDefault: DefaultSortStatuses<string> = {};
 export function useTableState<SortKey extends string>({
   name,
   defaultSortStatuses = defaultSortStatusesDefault,
+  defaultPerPage = PER_PAGE,
   multi = false,
   caching = true,
 }: UseTableStateOptions<SortKey>): UseTableStateReturn<SortKey> {
   const [page, setPage] = useState(1);
 
+  const [perPage, setPerPage] = useState(defaultPerPage);
+
   const [isLoadMore, setIsLoadMore] = useState(false);
+
+  const handlePerPageChange = (nextPerPage: number) => {
+    if (nextPerPage === perPage) return;
+
+    setPerPage(nextPerPage);
+
+    setPage(1);
+  };
 
   const { sortStatuses, handleSortChange } = useSortStatuses<SortKey>(
     name,
@@ -101,7 +116,12 @@ export function useTableState<SortKey extends string>({
   const debouncedFilters = useDebouncedValue(filters);
 
   return {
-    pagination: { currentPage: page, onPageChange: setPage },
+    pagination: {
+      currentPage: page,
+      onPageChange: setPage,
+      perPage,
+      onPerPageChange: handlePerPageChange,
+    },
     loadMore: {
       enabled: isLoadMore,
       onEnableLoadMore: () => setIsLoadMore(true),

@@ -12,6 +12,7 @@ export function useAnswersTable(options: { questionId?: number } = {}) {
     ),
     ...(options.questionId ? { questionId: options.questionId } : {}),
     sorts: state.sorting.sortStatuses,
+    perPage: state.pagination.perPage,
   });
 
   const paginated = useAnswers({
