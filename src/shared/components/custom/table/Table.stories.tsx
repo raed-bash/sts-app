@@ -193,6 +193,7 @@ function DemoTable({ withPinning = false }: { withPinning?: boolean }) {
         perPage: 10,
         onPageChange: () => undefined,
       }}
+      csv={{ fileName: "demo-table" }}
       loading={{}}
     />
   );

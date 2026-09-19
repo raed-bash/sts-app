@@ -82,6 +82,7 @@ export default function TestsTable({
       pagination={pagination}
       ordering={ordering}
       filtering={filtering}
+      csv={{ fileName: "tests" }}
       loading={loading}
     />
   );

@@ -99,6 +99,7 @@ export default function TestSessionsTable({
       pagination={pagination}
       ordering={ordering}
       filtering={filtering}
+      csv={{ fileName: "test-sessions" }}
       loading={loading}
     />
   );

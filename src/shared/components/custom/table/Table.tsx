@@ -27,6 +27,8 @@ import type { FilterLogicalOperator } from "./filter";
 import type { TableAction } from "./components/TableActionsCell";
 import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
 import { useTablePinnedColumns } from "./hooks/useTablePinnedColumns";
+import { buildCsv } from "./utils/csv";
+import toast from "react-hot-toast";
 
 export type TableRowRecord = Record<string, any>;
 
@@ -45,6 +47,12 @@ export type TableColumn<Row extends TableRowRecord> = (
   headerName: string;
 
   getCell?: (value: any, row: Row) => ReactNode;
+
+  /** Extracts a plain-text value for CSV export, overriding getCell/raw row value */
+  getCellValue?: (
+    value: any,
+    row: Row,
+  ) => string | number | boolean | null | undefined;
 
   className?: string;
 
@@ -66,6 +74,17 @@ export type TableColumn<Row extends TableRowRecord> = (
 };
 
 export type TableRowItem<Row = any | { id: number }> = Row;
+
+export type TableCsvOptions<Row extends TableRowRecord> = {
+  /** Download file name without extension; defaults to "table" */
+  fileName?: string;
+
+  /** Also export columns that are currently hidden via the columns menu */
+  includeHiddenColumns?: boolean;
+
+  /** Transform the rows to export (e.g. selected rows only). Defaults to the selected rows when any are selected, otherwise the current table rows. */
+  getRows?: (rows: TableRowItem<Row>[]) => TableRowItem[];
+};
 
 export type TableSortStatuses = Record<string, SortButtonStatus>;
 
@@ -224,6 +243,11 @@ export type TableProps<Row extends TableRowRecord> = {
   actions?: TableAction<Row>[];
 
   /**
+   * Enable "Copy as CSV" / "Download CSV" in the table header
+   */
+  csv?: TableCsvOptions<Row>;
+
+  /**
    * Column visibility toggling
    */
   hiding?: TableHideableColumns<Row> | TableNonHideableColumns;
@@ -288,6 +312,7 @@ function Table<Row extends TableRowRecord>({
   ordering,
   filtering,
   elements = {},
+  csv,
 }: TableProps<Row>) {
   const { rows = [], columns: originalColumns = [] } = data;
 
@@ -389,6 +414,52 @@ function Table<Row extends TableRowRecord>({
     isFirstPinned,
   };
 
+  const csvFileName = csv?.fileName || "table";
+
+  const csvRows = csv?.getRows
+    ? csv.getRows(rows)
+    : selectable && selectedRows.size > 0
+      ? [...selectedRows.values()]
+      : rows;
+
+  const csvColumns = columns.filter(
+    (column) =>
+      column.type !== "actions" &&
+      (csv?.includeHiddenColumns || !hiddenColumns.has(column.name)),
+  );
+
+  const csvDisabled = csvRows.length === 0 || csvColumns.length === 0;
+
+  const handleCopyCsv = async () => {
+    const content = buildCsv(csvRows, csvColumns, "\t");
+
+    try {
+      if (!navigator.clipboard) throw new Error("Clipboard unavailable");
+
+      await navigator.clipboard.writeText(content);
+
+      toast.success("Copied as tab-separated values");
+    } catch {
+      toast.error("Could not copy");
+    }
+  };
+
+  const handleDownloadCsv = () => {
+    const content = `\uFEFF${buildCsv(csvRows, csvColumns)}`;
+    const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `${csvFileName}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast.success("CSV downloaded");
+  };
+
   const theaderProps = {
     hideableColumns: hideableColumns,
 
@@ -409,6 +480,13 @@ function Table<Row extends TableRowRecord>({
           density,
           onDensityChange: setTableDensity,
         }}
+        csv={
+          csv && {
+            onCopy: handleCopyCsv,
+            onDownload: handleDownloadCsv,
+            disabled: csvDisabled,
+          }
+        }
         {...theaderProps}
       />
 

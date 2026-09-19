@@ -79,6 +79,7 @@ export default function AnswersTable({
       pagination={pagination}
       ordering={ordering}
       filtering={filtering}
+      csv={{ fileName: "answers" }}
       loading={loading}
     />
   );
