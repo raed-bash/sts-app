@@ -35,7 +35,7 @@ const TABLE_MAX_HEIGHT = 500;
 const TABLE_HEADER_HEIGHT = 64;
 
 const DEFAULT_PER_PAGE_OPTIONS = Array.from(
-  new Set([PER_PAGE, 25, 50, 100, 200, 100000]),
+  new Set([PER_PAGE, 25, 50, 100]),
 ).sort((a, b) => a - b);
 
 export type TableRowRecord = Record<string, any>;
