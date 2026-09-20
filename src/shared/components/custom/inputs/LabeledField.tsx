@@ -133,7 +133,7 @@ function LabeledField<Value, Multiple extends boolean | undefined = false>({
 }: LabeledFieldProps<Value, Multiple>) {
   const hasTitle = Boolean(title || titleIcon);
 
-  const invalid = Boolean(helperText && error);
+  const invalid = Boolean(helperText) && error !== false;
 
   return (
     <Field

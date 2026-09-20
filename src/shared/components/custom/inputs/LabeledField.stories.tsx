@@ -50,6 +50,7 @@ export const WithHelperText: Story = {
     title: "Username",
     placeholder: "johndoe",
     helperText: "This will be your public username.",
+    error: false,
   },
 };
 
