@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import toast from "@/shared/lib/toast";
 import Popup from "@/shared/components/custom/popups/Popup";
 import { Button } from "@/shared/components/ui/button";
 import LabeledField from "@/shared/components/custom/inputs/LabeledField";

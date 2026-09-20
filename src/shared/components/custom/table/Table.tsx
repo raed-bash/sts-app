@@ -28,14 +28,14 @@ import type { TableAction } from "./components/TableActionsCell";
 import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
 import { useTablePinnedColumns } from "./hooks/useTablePinnedColumns";
 import { buildCsv } from "./utils/csv";
-import toast from "react-hot-toast";
+import toast from "@/shared/lib/toast";
 
 const TABLE_MAX_HEIGHT = 500;
 
 const TABLE_HEADER_HEIGHT = 64;
 
 const DEFAULT_PER_PAGE_OPTIONS = Array.from(
-  new Set([PER_PAGE, 25, 50, 100]),
+  new Set([PER_PAGE, 25, 50, 100, 200, 100000]),
 ).sort((a, b) => a - b);
 
 export type TableRowRecord = Record<string, any>;

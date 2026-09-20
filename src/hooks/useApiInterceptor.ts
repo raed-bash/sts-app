@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect } from "react";
-import toast from "react-hot-toast";
+import toast from "@/shared/lib/toast";
 import { api } from "@/lib/api";
 import type { AxiosResponse } from "axios";
 import { useLogout } from "./useLogout";

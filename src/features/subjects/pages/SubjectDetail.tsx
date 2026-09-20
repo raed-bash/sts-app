@@ -24,7 +24,7 @@ import { useDeleteTest } from "@/features/tests/api/delete-test.api";
 import { useRestoreTest } from "@/features/tests/api/restore-test.api";
 import { subjectsQueryKeys } from "../subjects.api-keys";
 import { testsQueryKeys } from "@/features/tests/tests.api-keys";
-import toast from "react-hot-toast";
+import toast from "@/shared/lib/toast";
 import Loading from "@/shared/components/custom/loading/Loading";
 import { Button } from "@/shared/components/ui/button";
 import { dateFormater } from "@/shared/utils";

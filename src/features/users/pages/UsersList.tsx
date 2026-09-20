@@ -23,7 +23,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { useUsersTable } from "../hooks/useUsersTable";
 import { useRequireRole } from "@/hooks/useRequireRole";
 import { Button } from "@/shared/components/ui/button";
-import toast from "react-hot-toast";
+import toast from "@/shared/lib/toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { usersQueryKeys } from "../users.api-keys";
 import { useUpdateUser } from "../api/update-user.api";

@@ -1,6 +1,6 @@
 import { loginSchema } from "../schemas/login.schema";
 import { useAuthContext } from "@/contexts/AuthContext";
-import toast from "react-hot-toast";
+import toast from "@/shared/lib/toast";
 import { Card } from "@/shared/components/ui/card";
 import LabeledField from "@/shared/components/custom/inputs/LabeledField";
 import { Button } from "@/shared/components/ui/button";

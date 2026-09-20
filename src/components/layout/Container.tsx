@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "@/shared/components/ui/sonner";
 import { Outlet, useNavigation } from "react-router";
 import { useApiInterceptor } from "@/hooks";
 
@@ -11,7 +11,7 @@ function Container() {
       <Progress />
 
       <Outlet />
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster position="top-center" />
     </>
   );
 }

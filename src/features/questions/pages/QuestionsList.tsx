@@ -15,7 +15,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { useQuestionsTable } from "../hooks/useQuestionsTable";
 import { useRequireRole } from "@/hooks/useRequireRole";
 import { Button } from "@/shared/components/ui/button";
-import toast from "react-hot-toast";
+import toast from "@/shared/lib/toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { questionsQueryKeys } from "../questions.api-keys";
 import { useDeleteQuestion } from "../api/delete-question.api";

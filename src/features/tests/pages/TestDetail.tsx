@@ -33,7 +33,7 @@ import { useRestoreQuestion } from "@/features/questions/api/restore-question.ap
 import { useDeleteTest } from "../api/delete-test.api";
 import { questionsQueryKeys } from "@/features/questions/questions.api-keys";
 import { testsQueryKeys } from "../tests.api-keys";
-import toast from "react-hot-toast";
+import toast from "@/shared/lib/toast";
 import Loading from "@/shared/components/custom/loading/Loading";
 import { Button } from "@/shared/components/ui/button";
 import type { QuestionDto } from "@/features/questions/dtos/question.dto";

@@ -15,7 +15,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { useTestsTable } from "../hooks/useTestsTable";
 import { useRequireRole } from "@/hooks/useRequireRole";
 import { Button } from "@/shared/components/ui/button";
-import toast from "react-hot-toast";
+import toast from "@/shared/lib/toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { testsQueryKeys } from "../tests.api-keys";
 import { useDeleteTest } from "../api/delete-test.api";

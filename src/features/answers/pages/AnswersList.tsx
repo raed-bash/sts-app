@@ -13,7 +13,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { useAnswersTable } from "../hooks/useAnswersTable";
 import { useRequireRole } from "@/hooks/useRequireRole";
 import { Button } from "@/shared/components/ui/button";
-import toast from "react-hot-toast";
+import toast from "@/shared/lib/toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { answersQueryKeys } from "../answers.api-keys";
 import { useDeleteAnswer } from "../api/delete-answer.api";

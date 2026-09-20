@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { testSessionsPaths } from "../test-sessions.paths";
 import { CheckCircle2, Clock3, Send } from "lucide-react";
-import toast from "react-hot-toast";
+import toast from "@/shared/lib/toast";
 import { cn } from "cn";
 
 import { Card, CardContent } from "@/shared/components/ui/card";

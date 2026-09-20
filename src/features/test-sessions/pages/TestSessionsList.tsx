@@ -23,7 +23,7 @@ import { testSessionsPaths } from "../test-sessions.paths";
 import { testSessionsQueryKeys } from "../test-sessions.api-keys";
 import { useRole } from "@/hooks/useRole";
 import { Button } from "@/shared/components/ui/button";
-import toast from "react-hot-toast";
+import toast from "@/shared/lib/toast";
 import Loading from "@/shared/components/custom/loading/Loading";
 import { useTestSessionsStudents } from "../hooks/useTestSessionsStudents";
 
