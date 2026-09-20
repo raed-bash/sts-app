@@ -1,5 +1,6 @@
 import Input from "./Input";
 import { cn } from "cn";
+import { lazy, Suspense } from "react";
 import type { HTMLInputTypeAttribute, ReactNode } from "react";
 import type { OnlyStringLiterals } from "@/shared/types/utils";
 import InputPassword from "./InputPassword";
@@ -18,10 +19,30 @@ import type { SelectApiProps } from "../select/SelectApi";
 import type { ComboboxApiProps } from "../combobox/ComboboxApi";
 import type { ComboboxFieldProps } from "../combobox/ComboboxField";
 import { NativeSelect, type NativeSelectProps } from "../../ui/native-select";
-import ComboboxApi from "../combobox/ComboboxApi";
-import ComboboxField from "../combobox/ComboboxField";
-import SelectField from "../select/SelectField";
-import SelectApi from "../select/SelectApi";
+
+const SelectField = lazy(() =>
+  import("../select/SelectField"),
+) as unknown as <Value, Multiple extends boolean | undefined = false>(
+  props: SelectPropsWithType<Value, Multiple>,
+) => React.ReactElement;
+
+const SelectApi = lazy(() =>
+  import("../select/SelectApi"),
+) as unknown as <Value, Multiple extends boolean | undefined = false>(
+  props: SelectApiPropsWithType<Value, Multiple>,
+) => React.ReactElement;
+
+const ComboboxField = lazy(() =>
+  import("../combobox/ComboboxField"),
+) as unknown as <Value, Multiple extends boolean | undefined = false>(
+  props: ComboboxPropsWithType<Value, Multiple>,
+) => React.ReactElement;
+
+const ComboboxApi = lazy(() =>
+  import("../combobox/ComboboxApi"),
+) as unknown as <Value, Multiple extends boolean | undefined = false>(
+  props: ComboboxApiPropsWithType<Value, Multiple>,
+) => React.ReactElement;
 
 export type InputPropsWithType = React.ComponentProps<"input"> & {
   type: OnlyStringLiterals<HTMLInputTypeAttribute>;
@@ -151,7 +172,15 @@ function LabeledField<Value, Multiple extends boolean | undefined = false>({
             "flex-none justify-center items-center",
         )}
       >
-        {loading ? (
+        <Suspense
+          fallback={
+            <Skeleton
+              {...skeletonProps}
+              className={cn("h-8 w-full", skeletonProps.className)}
+            />
+          }
+        >
+          {loading ? (
           <Skeleton
             {...skeletonProps}
             className={cn("h-8 w-full", skeletonProps.className)}
@@ -195,6 +224,7 @@ function LabeledField<Value, Multiple extends boolean | undefined = false>({
         ) : (
           <Input {...props} aria-invalid={invalid ? true : undefined} />
         )}
+        </Suspense>
         {helperText ? (
           invalid ? (
             <FieldError {...helperTextProps}>{helperText}</FieldError>
