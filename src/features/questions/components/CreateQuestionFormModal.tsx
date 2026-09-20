@@ -67,7 +67,7 @@ export default function CreateQuestionFormModal({
   return (
     <Popup isOpen={isOpen} onClose={onClose} title="Create question">
       <form
-        className="flex flex-col gap-3 w-full sm:w-[460px]"
+        className="flex flex-col gap-3 w-full"
         onSubmit={formik.handleSubmit}
       >
         <LabeledField

@@ -67,7 +67,7 @@ export default function CreateTestFormModal({
       description="A test groups questions and a duration (minutes) shared by all of its test sessions."
     >
       <form
-        className="flex flex-col gap-3 w-full sm:w-[440px]"
+        className="flex flex-col gap-3 w-full"
         onSubmit={formik.handleSubmit}
       >
         <LabeledField

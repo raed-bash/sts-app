@@ -58,7 +58,7 @@ export default function EditSubjectFormModal({
       title={`Edit subject — ${subject.name ?? ""}`}
     >
       <form
-        className="flex flex-col gap-3 w-full sm:w-[420px]"
+        className="flex flex-col gap-3 w-full"
         onSubmit={formik.handleSubmit}
       >
         <LabeledField

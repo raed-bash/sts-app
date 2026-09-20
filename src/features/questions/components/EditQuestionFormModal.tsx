@@ -73,7 +73,7 @@ export default function EditQuestionFormModal({
       title={`Edit question #${question?.id ?? ""}`}
     >
       <form
-        className="flex flex-col gap-3 w-full sm:w-[460px]"
+        className="flex flex-col gap-3 w-full"
         onSubmit={formik.handleSubmit}
       >
         <LabeledField

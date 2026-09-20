@@ -52,7 +52,7 @@ export default function CreateUserFormModal({
   return (
     <Popup isOpen={isOpen} onClose={onClose} title="Create user">
       <form
-        className="flex flex-col gap-3 w-full sm:w-[420px]"
+        className="flex flex-col gap-3 w-full"
         onSubmit={formik.handleSubmit}
       >
         <LabeledField
