@@ -238,7 +238,7 @@ function TableMenuColumns<Row extends TableRowRecord>({
 
         <div
           ref={ghostRef}
-          className="fixed z-200 items-center gap-2 rounded text-[13px] px-2 bg-(--primary) text-(--primary-foreground) opacity-90 pointer-events-none select-none"
+          className="fixed z-40 items-center gap-2 rounded text-[13px] px-2 bg-(--primary) text-(--primary-foreground) opacity-90 pointer-events-none select-none"
           style={{ display: "none" }}
         />
 

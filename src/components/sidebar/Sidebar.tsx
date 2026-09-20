@@ -58,7 +58,7 @@ export default function Sidebar() {
   return (
     <SidebarPrimitive
       collapsible="icon"
-      className="z-40 border-r border-sidebar-border"
+      className="z-20 border-r border-sidebar-border"
     >
       <SidebarHeader className="border-b border-sidebar-border">
         <SidebarMenu>
