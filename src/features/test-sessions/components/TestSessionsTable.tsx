@@ -3,7 +3,7 @@ import Table, {
 } from "@/shared/components/custom/table/Table";
 import type { TableAdapterProps } from "@/shared/components/custom/table/TableAdapter";
 import type { TableAction } from "@/shared/components/custom/table/components/TableActionsCell";
-import { dateFormater } from "@/shared/utils";
+import { dateFormatter } from "@/shared/utils";
 import TestSessionStatusBadge from "@/components/TestSessionStatusBadge";
 import { SelectItem } from "@/shared/components/ui/select";
 import { TEST_SESSION_STATUS_TITLES } from "@/constants/test-session-status";
@@ -48,19 +48,19 @@ const columns: TableColumn<TestSessionDto>[] = [
   {
     name: "startDate",
     headerName: "Start date",
-    getCell: (startDate) => dateFormater(startDate),
+    getCell: (startDate) => dateFormatter(startDate),
     sort: true,
   },
   {
     name: "finishDate",
     headerName: "Finish date",
-    getCell: (finishDate) => dateFormater(finishDate),
+    getCell: (finishDate) => dateFormatter(finishDate),
     sort: true,
   },
   {
     name: "updatedAt",
     headerName: "Updated at",
-    getCell: (updatedAt) => dateFormater(updatedAt),
+    getCell: (updatedAt) => dateFormatter(updatedAt),
     sort: true,
     strict: false,
   },

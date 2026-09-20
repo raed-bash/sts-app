@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/shared/components/ui/card";
 import Loading from "@/shared/components/custom/loading/Loading";
 import QuestionTypeBadge from "@/components/QuestionTypeBadge";
 import { useRole } from "@/hooks/useRole";
-import { dateFormater } from "@/shared/utils";
+import { dateFormatter } from "@/shared/utils";
 import { cn } from "cn";
 import type { SessionStudentResultDto } from "../dtos/session-student-result.dto";
 
@@ -380,7 +380,7 @@ export default function TestSessionResults() {
 
                 {answeredAt && (
                   <div className="text-xs text-(--text-muted)">
-                    Answered at {dateFormater(answeredAt)}
+                    Answered at {dateFormatter(answeredAt)}
                   </div>
                 )}
               </CardContent>

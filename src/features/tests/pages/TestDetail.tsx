@@ -38,7 +38,7 @@ import Loading from "@/shared/components/custom/loading/Loading";
 import { Button } from "@/shared/components/ui/button";
 import type { QuestionDto } from "@/features/questions/dtos/question.dto";
 import type { TestDto } from "../dtos/test.dto";
-import { dateFormater } from "@/shared/utils";
+import { dateFormatter } from "@/shared/utils";
 
 export default function TestDetail() {
   const allowed = useRequireRole(["SUPER_ADMIN"]);
@@ -190,7 +190,7 @@ export default function TestDetail() {
                 Created
               </div>
               <div className="text-lg font-semibold">
-                {dateFormater(test.createdAt)}
+                {dateFormatter(test.createdAt)}
               </div>
             </div>
             <div className="p-4 rounded-lg bg-(--secondary)/10">

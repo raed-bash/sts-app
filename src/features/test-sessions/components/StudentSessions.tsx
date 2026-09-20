@@ -1,7 +1,7 @@
 import { Play, UserPlus, BarChart3 } from "lucide-react";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
-import { dateFormater } from "@/shared/utils";
+import { dateFormatter } from "@/shared/utils";
 import TestSessionStatusBadge from "@/components/TestSessionStatusBadge";
 import type { TestSessionDto } from "../dtos/test-session.dto";
 
@@ -47,11 +47,11 @@ export default function StudentSessions({
               <div className="flex flex-col gap-1 text-sm">
                 <div className="flex justify-between">
                   <span className="text-(--text-muted)">Starts</span>
-                  <span>{dateFormater(session.startDate)}</span>
+                  <span>{dateFormatter(session.startDate)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-(--text-muted)">Ends</span>
-                  <span>{dateFormater(session.finishDate)}</span>
+                  <span>{dateFormatter(session.finishDate)}</span>
                 </div>
               </div>
 

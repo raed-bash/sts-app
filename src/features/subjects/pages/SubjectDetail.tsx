@@ -27,7 +27,7 @@ import { testsQueryKeys } from "@/features/tests/tests.api-keys";
 import toast from "@/shared/lib/toast";
 import Loading from "@/shared/components/custom/loading/Loading";
 import { Button } from "@/shared/components/ui/button";
-import { dateFormater } from "@/shared/utils";
+import { dateFormatter } from "@/shared/utils";
 import type { TestDto } from "@/features/tests/dtos/test.dto";
 
 export default function SubjectDetail() {
@@ -141,7 +141,7 @@ export default function SubjectDetail() {
                 Created
               </div>
               <div className="text-lg font-semibold">
-                {dateFormater(subject.createdAt)}
+                {dateFormatter(subject.createdAt)}
               </div>
             </div>
             <div className="p-4 rounded-lg bg-(--secondary)/10">

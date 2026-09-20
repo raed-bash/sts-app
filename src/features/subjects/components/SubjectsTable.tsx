@@ -3,7 +3,7 @@ import Table, {
 } from "@/shared/components/custom/table/Table";
 import type { TableAdapterProps } from "@/shared/components/custom/table/TableAdapter";
 import type { TableAction } from "@/shared/components/custom/table/components/TableActionsCell";
-import { dateFormater } from "@/shared/utils";
+import { dateFormatter } from "@/shared/utils";
 import type { SubjectDto } from "../dtos/subject.dto";
 
 export type SubjectsTableProps = TableAdapterProps<SubjectDto> & {
@@ -28,20 +28,20 @@ const columns: TableColumn<SubjectDto>[] = [
   {
     name: "createdAt",
     headerName: "Created at",
-    getCell: (createdAt) => dateFormater(createdAt),
+    getCell: (createdAt) => dateFormatter(createdAt),
     sort: true,
   },
   {
     name: "updatedAt",
     headerName: "Updated at",
-    getCell: (updatedAt) => dateFormater(updatedAt),
+    getCell: (updatedAt) => dateFormatter(updatedAt),
     sort: true,
     strict: false,
   },
   {
     name: "deletedAt",
     headerName: "Deleted at",
-    getCell: (deletedAt) => dateFormater(deletedAt),
+    getCell: (deletedAt) => dateFormatter(deletedAt),
     strict: false,
   },
   {

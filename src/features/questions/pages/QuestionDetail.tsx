@@ -19,7 +19,7 @@ import toast from "@/shared/lib/toast";
 import Loading from "@/shared/components/custom/loading/Loading";
 import { Button } from "@/shared/components/ui/button";
 import QuestionTypeBadge from "@/components/QuestionTypeBadge";
-import { dateFormater } from "@/shared/utils";
+import { dateFormatter } from "@/shared/utils";
 import type { AnswerDto } from "@/features/answers/dtos/answer.dto";
 
 export default function QuestionDetail() {
@@ -121,7 +121,7 @@ export default function QuestionDetail() {
                 Created
               </div>
               <div className="text-lg font-semibold">
-                {dateFormater(question.createdAt)}
+                {dateFormatter(question.createdAt)}
               </div>
             </div>
           </div>
