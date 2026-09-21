@@ -44,15 +44,17 @@ export default function SignUp() {
   });
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-(--background) text-(--text)">
+    <div className="h-screen flex flex-col items-center justify-center bg-background text-foreground">
       <h2 className="text-[26px] mb-1 font-medium ">
         {t("auth:signUp.title")}
       </h2>
 
-      <p className="text-(--text-muted) text-sm">{t("auth:signUp.subtitle")}</p>
+      <p className="text-muted-foreground text-sm">
+        {t("auth:signUp.subtitle")}
+      </p>
 
       <Card
-        className="max-w-md w-full mt-5 p-6 aria-invalid:border-(--danger) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger)/30 "
+        className="max-w-md w-full mt-5 p-6 aria-invalid:border-destructive aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-destructive/30 "
         aria-invalid={signUpMutation.isError}
       >
         <form className="flex flex-col gap-2 " onSubmit={formik.handleSubmit}>
@@ -90,15 +92,15 @@ export default function SignUp() {
             type="select"
             name="gender"
             title={t("common:fields.gender")}
+            placeholder={t("auth:signUp.selectGender")}
             value={formik.values.gender}
             helperText={formik.touchedErrors.gender}
             onChange={formik.handleChange}
             error
             getInputLabel={(gender) =>
-              translateDynamic(
-                t,
-                `common:gender.${gender?.toLowerCase() ?? ""}`,
-              )
+              gender
+                ? translateDynamic(t, `common:gender.${gender.toLowerCase()}`)
+                : t("auth:signUp.selectGender")
             }
           >
             {GENDERS.map((gender) => (
@@ -142,7 +144,7 @@ export default function SignUp() {
             </p>
             <AppLink
               to={`/${authPaths.login}`}
-              className="text-(--primary) hover:text-(--primary-hover) mt-1 duration-150 underline text-shadow-2xs w-fit"
+              className="text-primary hover:text-primary/90 mt-1 duration-150 underline text-shadow-2xs w-fit"
             >
               {t("auth:signUp.login")}
             </AppLink>
