@@ -10,10 +10,10 @@ export type StudentTestSessionStatusBadgeProps = React.ComponentProps<"div"> & {
 };
 
 const STATUS_STYLES: Record<StudentTestSessionStatus, string> = {
-  PENDING: "bg-(--warning)",
-  STARTED: "bg-(--info)",
-  FINISHED: "bg-(--success)",
-  CANCELED: "bg-(--danger)",
+  PENDING: "bg-warning",
+  STARTED: "bg-info",
+  FINISHED: "bg-success",
+  CANCELED: "bg-destructive",
 };
 
 export default function StudentTestSessionStatusBadge({

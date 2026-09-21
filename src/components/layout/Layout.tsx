@@ -7,7 +7,7 @@ export default function Layout() {
   return (
     <SidebarProvider>
       <Sidebar />
-      <SidebarInset className="min-w-0 bg-(--background) text-(--text)">
+      <SidebarInset className="min-w-0 bg-background text-foreground">
         <Navbar />
         <div className="min-w-0 flex-1 p-6">
           <Outlet />

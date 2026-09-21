@@ -184,7 +184,7 @@ function StudentTestSessionsView() {
     <div className="flex flex-col gap-5">
       <div>
         <h1 className="text-3xl font-bold">{t("testSessions:list.myTitle")}</h1>
-        <p className="text-(--text-muted) text-sm">
+        <p className="text-muted-foreground text-sm">
           {t("testSessions:list.subtitle")}
         </p>
       </div>
@@ -204,7 +204,7 @@ function StudentTestSessionsView() {
           }
         />
       ) : (
-        <div className="text-center text-(--text-muted) py-20">
+        <div className="text-center text-muted-foreground py-20">
           {t("testSessions:list.noSessions")}
         </div>
       )}

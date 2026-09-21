@@ -25,7 +25,7 @@ export default function TableFooter({ pagination }: TableFooterProps) {
 
   return (
     <div className="flex justify-between items-center gap-4 px-4">
-      <div className="flex gap-5 text-(--text)">
+      <div className="flex gap-5 text-foreground">
         <div className="flex items-center gap-1 font-medium text-sm">
           <p>{t("table.total")} </p>
           <span>{pagination.count}</span>

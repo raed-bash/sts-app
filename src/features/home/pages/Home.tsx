@@ -144,7 +144,7 @@ export default function Home() {
               })
             : t("home:dashboard")}
         </h1>
-        <p className="text-(--text-muted) text-sm">
+        <p className="text-muted-foreground text-sm">
           {isStudent ? t("home:subtitle.student") : t("home:subtitle.default")}
         </p>
       </div>
@@ -155,10 +155,10 @@ export default function Home() {
         {stats.map(({ Icon, color, label, value }) => (
           <Card key={label} className="transition-shadow hover:shadow-lg">
             <CardContent className="flex flex-col items-center gap-3 pt-6 pb-8">
-              <div className={`p-3 rounded-full bg-(--secondary)/10 ${color}`}>
+              <div className={`p-3 rounded-full bg-secondary/10 ${color}`}>
                 <Icon size={28} />
               </div>
-              <span className="text-sm font-medium text-(--text-muted)">
+              <span className="text-sm font-medium text-muted-foreground">
                 {label}
               </span>
               <span className="text-3xl font-bold">{value}</span>
@@ -180,7 +180,7 @@ export default function Home() {
                   <AppLink
                     key={to}
                     to={to}
-                    className="p-3 rounded-lg border border-(--border) hover:bg-(--secondary)/10 transition-colors no-underline text-(--text)"
+                    className="p-3 rounded-lg border border-border hover:bg-secondary/10 transition-colors no-underline text-foreground"
                   >
                     {label}
                   </AppLink>

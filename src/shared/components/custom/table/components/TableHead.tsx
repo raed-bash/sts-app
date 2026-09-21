@@ -200,7 +200,7 @@ function TableHead<Row extends TableRowRecord>({
                         {column.filterable && (
                           <button
                             type="button"
-                            className="flex items-center gap-2 rounded px-2 py-1 text-[13px] hover:bg-(--primary) hover:text-(--primary-foreground)"
+                            className="flex items-center gap-2 rounded px-2 py-1 text-[13px] hover:bg-primary hover:text-primary-foreground"
                             onClick={() => {
                               setOpenMenuFor(null);
                               createColumnFilterClickHandler(column)();
@@ -213,7 +213,7 @@ function TableHead<Row extends TableRowRecord>({
                         {pinning?.pinnableColumns && (
                           <button
                             type="button"
-                            className="flex items-center gap-2 rounded px-2 py-1 text-[13px] hover:bg-(--primary) hover:text-(--primary-foreground)"
+                            className="flex items-center gap-2 rounded px-2 py-1 text-[13px] hover:bg-primary hover:text-primary-foreground"
                             onClick={() => {
                               pinning.createTogglePinColumnHandler?.(column)();
                               setOpenMenuFor(null);

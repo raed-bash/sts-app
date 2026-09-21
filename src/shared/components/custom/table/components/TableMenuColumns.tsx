@@ -243,7 +243,7 @@ function TableMenuColumns<Row extends TableRowRecord>({
 
         <div
           ref={ghostRef}
-          className="fixed z-40 items-center gap-2 rounded text-[13px] px-2 bg-(--primary) text-(--primary-foreground) opacity-90 pointer-events-none select-none"
+          className="fixed z-40 items-center gap-2 rounded text-[13px] px-2 bg-primary text-primary-foreground opacity-90 pointer-events-none select-none"
           style={{ display: "none" }}
         />
 
@@ -259,9 +259,9 @@ function TableMenuColumns<Row extends TableRowRecord>({
                 }}
                 className={[
                   "flex items-center gap-3 rounded text-[13px] px-2 py-1 select-none touch-none cursor-pointer",
-                  "hover:bg-(--primary) hover:text-(--primary-foreground)",
-                  "data-[dragging=true]:opacity-30 data-[dragging=true]:border data-[dragging=true]:cursor-grabbing data-[dragging=true]:border-dashed data-[dragging=true]:border-(--primary)",
-                  "data-[drag-over=true]:bg-(--primary) data-[drag-over=true]:text-(--primary-foreground)",
+                  "hover:bg-primary hover:text-primary-foreground",
+                  "data-[dragging=true]:opacity-30 data-[dragging=true]:border data-[dragging=true]:cursor-grabbing data-[dragging=true]:border-dashed data-[dragging=true]:border-primary",
+                  "data-[drag-over=true]:bg-primary data-[drag-over=true]:text-primary-foreground",
                 ].join(" ")}
                 onClick={(e) => handleClick(e, column)}
                 onPointerDown={(e) =>

@@ -68,8 +68,8 @@ function TableDensityButton({
                 value={option.value}
                 className={cn(
                   "rounded-md px-2 py-1 text-[13px]",
-                  "data-highlighted:bg-(--primary) data-highlighted:text-(--primary-foreground)",
-                  "data-checked:bg-(--primary) data-checked:text-(--primary-foreground)",
+                  "data-highlighted:bg-primary data-highlighted:text-primary-foreground",
+                  "data-checked:bg-primary data-checked:text-primary-foreground",
                 )}
               >
                 {translateDynamic(t, option.label)}

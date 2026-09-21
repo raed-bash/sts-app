@@ -57,7 +57,7 @@ export default function SettingsPage() {
         {settingEntries.map((setting: SettingDto) => (
           <Card key={setting.key}>
             <CardContent className="flex flex-col gap-3 pt-6">
-              <div className="text-sm font-semibold text-(--text-muted)">
+              <div className="text-sm font-semibold text-muted-foreground">
                 {translateDynamic(
                   t,
                   SETTING_LABELS[setting.key] ?? setting.key,
@@ -88,7 +88,7 @@ export default function SettingsPage() {
           </Card>
         ))}
         {settingEntries.length === 0 && (
-          <div className="text-(--text-muted) text-sm">
+          <div className="text-muted-foreground text-sm">
             {t("settings:noSettings")}
           </div>
         )}

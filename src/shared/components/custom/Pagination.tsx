@@ -124,7 +124,7 @@ function Pagination({
           page === "ellipsis" ? (
             <span
               key={`ellipsis-${idx}`}
-              className="px-1 text-(--text)/50 select-none"
+              className="px-1 text-foreground/50 select-none"
             >
               …
             </span>
@@ -136,7 +136,7 @@ function Pagination({
               aria-label={`Page ${page}`}
               aria-current={page === currentPage ? "page" : undefined}
               className={cn(
-                "h-8 min-w-8 px-2 rounded-md aria-selected:bg-(--primary) aria-selected:text-white aria-selected:font-medium",
+                "h-8 min-w-8 px-2 rounded-md aria-selected:bg-primary aria-selected:text-white aria-selected:font-medium",
                 page === currentPage && "aria-selected:pointer-events-none",
               )}
               aria-selected={page === currentPage}

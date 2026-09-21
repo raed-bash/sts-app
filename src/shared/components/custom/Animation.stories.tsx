@@ -29,7 +29,7 @@ export const Basic: Story = {
           Toggle
         </Button>
         <Animation {...args} isOpen={open} className="w-full">
-          <div className="rounded-lg bg-(--primary) p-4 text-(--primary-foreground)">
+          <div className="rounded-lg bg-primary p-4 text-primary-foreground">
             Slide-in content
           </div>
         </Animation>
@@ -42,7 +42,7 @@ export const Open: Story = {
   args: {
     isOpen: true,
     children: (
-      <div className="rounded-lg bg-(--primary) p-4 text-(--primary-foreground)">
+      <div className="rounded-lg bg-primary p-4 text-primary-foreground">
         Visible content
       </div>
     ),
@@ -53,7 +53,7 @@ export const Closed: Story = {
   args: {
     isOpen: false,
     children: (
-      <div className="rounded-lg bg-(--primary) p-4 text-(--primary-foreground)">
+      <div className="rounded-lg bg-primary p-4 text-primary-foreground">
         Hidden content
       </div>
     ),

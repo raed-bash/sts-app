@@ -12,7 +12,7 @@ export default function Navbar() {
 
   return (
     <header className="mb-5 sticky top-0 pt-5 transition-all duration-300 z-20 after:content-[''] after:w-full after:backdrop-blur-md after:absolute after:left-0 after:top-0 after:h-full after:-z-10">
-      <nav className="px-6 py-3 mx-6 flex items-center justify-between bg-(--surface) shadow-base z-10 rounded-md">
+      <nav className="px-6 py-3 mx-6 flex items-center justify-between bg-card shadow-base z-10 rounded-md">
         <div className="flex items-center gap-3">
           <SidebarTrigger className="-ms-2" />
           <GlobalSearch />

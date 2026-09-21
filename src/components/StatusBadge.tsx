@@ -8,9 +8,9 @@ export type StatusBadgeProps = React.ComponentProps<"div"> & {
 };
 
 const STATUS_STYLES: Record<UserStatus, string> = {
-  ACTIVE: "bg-(--success)",
-  BLOCKED: "bg-(--danger)",
-  PENDING: "bg-(--warning)",
+  ACTIVE: "bg-success",
+  BLOCKED: "bg-destructive",
+  PENDING: "bg-warning",
 };
 
 export default function StatusBadge({ status, ...props }: StatusBadgeProps) {

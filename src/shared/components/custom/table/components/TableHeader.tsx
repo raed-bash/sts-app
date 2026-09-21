@@ -82,7 +82,7 @@ export default function TableHeader<Row extends TableRowRecord>({
   const { filterUtils } = filtering;
 
   return (
-    <div className="bg-primary-light flex justify-between items-center py-2 px-4">
+    <div className="flex justify-between items-center py-2 px-4">
       <FilterBoard<Row>
         data={{ columns }}
         filtering={{

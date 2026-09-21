@@ -22,9 +22,9 @@ function Checkbox({
     <span
       className={cn(
         "relative inline-flex size-4 shrink-0 items-center justify-center rounded border",
-        "border-(--secondary)/50 bg-(--secondary)/10 text-white transition-colors duration-150",
-        "hover:border-(--primary) focus-within:ring-2 focus-within:ring-(--ring)",
-        isActive && "border-(--primary) bg-(--primary)",
+        "border-secondary/50 bg-secondary/10 text-white transition-colors duration-150",
+        "hover:border-primary focus-within:ring-2 focus-within:ring-ring",
+        isActive && "border-primary bg-primary",
         className,
       )}
     >

@@ -5,7 +5,7 @@ export type LinearLoadingProps = React.ComponentProps<"div">;
 function LinearLoading(props: LinearLoadingProps) {
   return (
     <div {...props}>
-      <div className="loader-line before:bg-(--primary)"></div>
+      <div className="loader-line before:bg-primary"></div>
     </div>
   );
 }

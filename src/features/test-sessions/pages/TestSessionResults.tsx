@@ -74,7 +74,7 @@ export default function TestSessionResults() {
 
   if (isAdmin && students.length === 0) {
     return (
-      <div className="text-center text-(--text-muted) py-20">
+      <div className="text-center text-muted-foreground py-20">
         {t("testSessions:results.noStudents")}
       </div>
     );
@@ -82,7 +82,7 @@ export default function TestSessionResults() {
 
   if (resultsQuery.isError || !data || Number.isNaN(testSessionId)) {
     return (
-      <div className="text-center text-(--text-muted) py-20">
+      <div className="text-center text-muted-foreground py-20">
         {t("testSessions:results.loadError")}
       </div>
     );
@@ -90,7 +90,7 @@ export default function TestSessionResults() {
 
   if (isAdmin && !studentIdParam) {
     return (
-      <div className="text-center text-(--text-muted) py-20">
+      <div className="text-center text-muted-foreground py-20">
         {t("testSessions:results.noFinishedResults")}
       </div>
     );
@@ -107,7 +107,7 @@ export default function TestSessionResults() {
         </h1>
         <a
           href={`/${testSessionsPaths.list}`}
-          className="text-sm text-(--primary) no-underline hover:underline"
+          className="text-sm text-primary no-underline hover:underline"
         >
           {t("common:actions.backToSessions")}
         </a>
@@ -125,12 +125,12 @@ export default function TestSessionResults() {
                 disabled={!finished}
                 onClick={() => selectStudent(student)}
                 className={cn(
-                  "px-3 py-2 rounded-lg text-sm border transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--primary)",
+                  "px-3 py-2 rounded-lg text-sm border transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
                   isActive
-                    ? "bg-(--primary) text-white border-(--primary) shadow-sm hover:bg-(--primary-hover) hover:border-(--primary-hover)"
+                    ? "bg-primary text-white border-primary shadow-sm hover:bg-primary/90 hover:border-primary/90"
                     : finished
-                      ? "bg-(--secondary)/10 text-(--text) border-(--border) hover:bg-(--primary)/10 hover:border-(--primary)/40"
-                      : "bg-(--secondary)/5 text-(--text-muted) border-(--border) opacity-60 cursor-not-allowed",
+                      ? "bg-secondary/10 text-foreground border-border hover:bg-primary/10 hover:border-primary/40"
+                      : "bg-secondary/5 text-muted-foreground border-border opacity-60 cursor-not-allowed",
                 )}
               >
                 <span className="font-medium">
@@ -142,7 +142,7 @@ export default function TestSessionResults() {
                       "ms-2 text-xs rounded-full px-2 py-0.5",
                       isActive
                         ? "bg-white/20 text-white"
-                        : "bg-(--success)/15 text-(--success)",
+                        : "bg-success/15 text-success",
                     )}
                   >
                     {student.studentPoints}/{student.points} (
@@ -150,7 +150,7 @@ export default function TestSessionResults() {
                     %)
                   </span>
                 ) : (
-                  <span className="ms-2 text-xs text-(--text-muted) uppercase">
+                  <span className="ms-2 text-xs text-muted-foreground uppercase">
                     {t(
                       STUDENT_TEST_SESSION_STATUS_TITLES[
                         student.status as keyof typeof STUDENT_TEST_SESSION_STATUS_TITLES
@@ -166,31 +166,31 @@ export default function TestSessionResults() {
 
       <Card>
         <CardContent className="pt-6 grid md:grid-cols-4 gap-4">
-          <div className="p-4 rounded-lg bg-(--secondary)/10">
-            <div className="text-xs text-(--text-muted) uppercase">
+          <div className="p-4 rounded-lg bg-secondary/10">
+            <div className="text-xs text-muted-foreground uppercase">
               {t("testSessions:results.subject")}
             </div>
             <div className="text-lg font-semibold">{data.subject.name}</div>
           </div>
-          <div className="p-4 rounded-lg bg-(--secondary)/10">
-            <div className="text-xs text-(--text-muted) uppercase">
+          <div className="p-4 rounded-lg bg-secondary/10">
+            <div className="text-xs text-muted-foreground uppercase">
               {t("testSessions:results.totalPoints")}
             </div>
             <div className="text-lg font-semibold">{data.points}</div>
           </div>
-          <div className="p-4 rounded-lg bg-(--success)/10">
-            <div className="text-xs text-(--text-muted) uppercase">
+          <div className="p-4 rounded-lg bg-success/10">
+            <div className="text-xs text-muted-foreground uppercase">
               {t("testSessions:results.studentPoints")}
             </div>
-            <div className="text-lg font-semibold text-(--success)">
+            <div className="text-lg font-semibold text-success">
               {data.studentPoints}
             </div>
           </div>
-          <div className="p-4 rounded-lg bg-(--primary)/10">
-            <div className="text-xs text-(--text-muted) uppercase">
+          <div className="p-4 rounded-lg bg-primary/10">
+            <div className="text-xs text-muted-foreground uppercase">
               {t("common:fields.score")}
             </div>
-            <div className="text-lg font-semibold text-(--primary)">
+            <div className="text-lg font-semibold text-primary">
               {percentage}%
             </div>
           </div>
@@ -205,16 +205,16 @@ export default function TestSessionResults() {
             <Card key={question.id}>
               <CardContent className="pt-6 flex flex-col gap-3">
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-bold text-(--text-muted)">
+                  <span className="text-sm font-bold text-muted-foreground">
                     {t("testSessions:results.q", { n: qIndex + 1 })}
                   </span>
                   <QuestionTypeBadge type={question.type} />
-                  <span className="text-xs text-(--text-muted)">
+                  <span className="text-xs text-muted-foreground">
                     {t("testSessions:results.pts", {
                       count: question.points,
                     })}
                   </span>
-                  <span className="ms-auto text-xs font-semibold text-(--success)">
+                  <span className="ms-auto text-xs font-semibold text-success">
                     {t("testSessions:results.plusPoints", {
                       count: question.studentPoints,
                     })}
@@ -235,23 +235,23 @@ export default function TestSessionResults() {
                           key={answer.id}
                           className={`px-3 py-2 rounded-lg text-sm border ${
                             isRightAnswer
-                              ? "bg-(--success)/10 border-(--success)/40"
+                              ? "bg-success/10 border-success/40"
                               : isStudentAnswer && !isRightAnswer
-                                ? "bg-(--danger)/10 border-(--danger)/40"
-                                : "bg-(--secondary)/5 border-(--border)"
+                                ? "bg-destructive/10 border-destructive/40"
+                                : "bg-secondary/5 border-border"
                           }`}
                         >
-                          <span className="me-2 text-(--text-muted)">
+                          <span className="me-2 text-muted-foreground">
                             {answer.order}.
                           </span>
                           {answer.text}
                           {isRightAnswer && (
-                            <span className="ms-2 text-xs text-(--success)">
+                            <span className="ms-2 text-xs text-success">
                               {t("testSessions:results.correctAnswer")}
                             </span>
                           )}
                           {isStudentAnswer && !isRightAnswer && (
-                            <span className="ms-2 text-xs text-(--danger)">
+                            <span className="ms-2 text-xs text-destructive">
                               {t("testSessions:results.yourAnswer")}
                             </span>
                           )}
@@ -262,7 +262,7 @@ export default function TestSessionResults() {
                 ) : question.type === "DRAG_DROP" &&
                   question.answers?.length ? (
                   <div className="flex flex-col gap-2 mt-2">
-                    <div className="text-xs text-(--text-muted)">
+                    <div className="text-xs text-muted-foreground">
                       {t("testSessions:results.correctOrder", {
                         order: [...question.answers]
                           .sort(
@@ -289,28 +289,28 @@ export default function TestSessionResults() {
                           key={answer.id}
                           className={`px-3 py-2 rounded-lg text-sm border flex items-center gap-3 ${
                             isAtCorrectPosition
-                              ? "bg-(--success)/10 border-(--success)/40"
+                              ? "bg-success/10 border-success/40"
                               : placedIndex !== null
-                                ? "bg-(--danger)/10 border-(--danger)/40"
-                                : "bg-(--secondary)/5 border-(--border)"
+                                ? "bg-destructive/10 border-destructive/40"
+                                : "bg-secondary/5 border-border"
                           }`}
                         >
-                          <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-(--secondary)/15 text-xs font-bold">
+                          <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-secondary/15 text-xs font-bold">
                             {placedIndex !== null ? placedIndex + 1 : "–"}
                           </span>
                           <span className="min-w-0 flex-1">{answer.text}</span>
                           {isAtCorrectPosition ? (
-                            <span className="ms-2 shrink-0 text-xs text-(--success)">
+                            <span className="ms-2 shrink-0 text-xs text-success">
                               {t("testSessions:results.correctPosition")}
                             </span>
                           ) : placedIndex !== null ? (
-                            <span className="ms-2 shrink-0 text-xs text-(--danger)">
+                            <span className="ms-2 shrink-0 text-xs text-destructive">
                               {t("testSessions:results.wrongPosition", {
                                 position: (answer.correctIndex ?? 0) + 1,
                               })}
                             </span>
                           ) : (
-                            <span className="ms-2 shrink-0 text-xs text-(--text-muted)">
+                            <span className="ms-2 shrink-0 text-xs text-muted-foreground">
                               {t("testSessions:results.notPlaced")}
                             </span>
                           )}
@@ -320,7 +320,7 @@ export default function TestSessionResults() {
                   </div>
                 ) : question.type === "COMPLETE" ? (
                   <div className="mt-2 flex flex-col gap-3">
-                    <div className="rounded-lg border border-(--border) bg-(--secondary)/5 p-3 text-sm leading-8">
+                    <div className="rounded-lg border border-border bg-secondary/5 p-3 text-sm leading-8">
                       {(question.completeQuestion?.text ?? question.text)
                         .split(";;;;")
                         .map((segment, blankIndex, segments) => {
@@ -341,9 +341,9 @@ export default function TestSessionResults() {
                                     "mx-1 inline-flex min-w-20 items-center justify-center border-b-2 px-1 text-sm",
                                     placed
                                       ? isCorrect
-                                        ? "border-(--success) text-(--success)"
-                                        : "border-(--danger) text-(--danger)"
-                                      : "border-(--border) text-(--text-muted)",
+                                        ? "border-success text-success"
+                                        : "border-destructive text-destructive"
+                                      : "border-border text-muted-foreground",
                                   )}
                                 >
                                   {placed?.answer?.text ?? "—"}
@@ -368,28 +368,28 @@ export default function TestSessionResults() {
                             key={answer.id}
                             className={`px-3 py-2 rounded-lg text-sm border ${
                               isInCorrectBlank
-                                ? "bg-(--success)/10 border-(--success)/40"
+                                ? "bg-success/10 border-success/40"
                                 : placedIndex !== null
-                                  ? "bg-(--danger)/10 border-(--danger)/40"
-                                  : "bg-(--secondary)/5 border-(--border)"
+                                  ? "bg-destructive/10 border-destructive/40"
+                                  : "bg-secondary/5 border-border"
                             }`}
                           >
-                            <span className="me-2 text-(--text-muted)">
+                            <span className="me-2 text-muted-foreground">
                               {answer.order}.
                             </span>
                             {answer.text}
                             {isInCorrectBlank ? (
-                              <span className="ms-2 text-xs text-(--success)">
+                              <span className="ms-2 text-xs text-success">
                                 {t("testSessions:results.correctBlank")}
                               </span>
                             ) : placedIndex !== null ? (
-                              <span className="ms-2 text-xs text-(--danger)">
+                              <span className="ms-2 text-xs text-destructive">
                                 {t("testSessions:results.wrongBlank", {
                                   position: (answer.correctIndex ?? 0) + 1,
                                 })}
                               </span>
                             ) : (
-                              <span className="ms-2 text-xs text-(--text-muted)">
+                              <span className="ms-2 text-xs text-muted-foreground">
                                 {t("testSessions:results.notUsed")}
                               </span>
                             )}
@@ -401,7 +401,7 @@ export default function TestSessionResults() {
                 ) : null}
 
                 {answeredAt && (
-                  <div className="text-xs text-(--text-muted)">
+                  <div className="text-xs text-muted-foreground">
                     {t("testSessions:results.answeredAt", {
                       time: dateFormatter(answeredAt),
                     })}

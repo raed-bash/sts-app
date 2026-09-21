@@ -64,7 +64,7 @@ export default function ConfirmPopup({
         <button
           type="button"
           onClick={onCancel}
-          className="absolute top-3 end-3 text-(--text-muted) hover:text-(--text)"
+          className="absolute top-3 end-3 text-muted-foreground hover:text-foreground"
           aria-label="Close"
         >
           <XIcon size={16} />

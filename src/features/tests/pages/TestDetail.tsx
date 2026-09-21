@@ -181,24 +181,24 @@ export default function TestDetail() {
         <CardContent className="pt-6">
           <h1 className="text-3xl font-bold">{test.name}</h1>
           <div className="grid md:grid-cols-3 gap-4 mt-4">
-            <div className="p-4 rounded-lg bg-(--secondary)/10">
-              <div className="text-xs text-(--text-muted) uppercase">
+            <div className="p-4 rounded-lg bg-secondary/10">
+              <div className="text-xs text-muted-foreground uppercase">
                 {t("tests:detail.duration")}
               </div>
               <div className="text-lg font-semibold">
                 {t("tests:detail.minutes", { count: test.period })}
               </div>
             </div>
-            <div className="p-4 rounded-lg bg-(--secondary)/10">
-              <div className="text-xs text-(--text-muted) uppercase">
+            <div className="p-4 rounded-lg bg-secondary/10">
+              <div className="text-xs text-muted-foreground uppercase">
                 {t("common:fields.created")}
               </div>
               <div className="text-lg font-semibold">
                 {dateFormatter(test.createdAt)}
               </div>
             </div>
-            <div className="p-4 rounded-lg bg-(--secondary)/10">
-              <div className="text-xs text-(--text-muted) uppercase">
+            <div className="p-4 rounded-lg bg-secondary/10">
+              <div className="text-xs text-muted-foreground uppercase">
                 {t("tests:detail.subjects")}
               </div>
               <div className="mt-1">

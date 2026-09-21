@@ -23,7 +23,7 @@ export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
   return (
     <Animation isOpen={isOpen}>
       <div
-        className="absolute flex gap-8 flex-col justify-center items-center top-[160%] end-0  min-w-[218px] min-h-32 bg-(--surface)  shadow-base rounded-lg"
+        className="absolute flex gap-8 flex-col justify-center items-center top-[160%] end-0  min-w-[218px] min-h-32 bg-card  shadow-base rounded-lg"
         tabIndex={0}
       >
         {meQuery.isLoading ? (
@@ -32,12 +32,12 @@ export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
           <div className="w-full flex flex-col gap-5">
             <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-300">
               <div className="w-[45px] h-[45px]">
-                <UserRound className="stroke-(--text) w-full h-full" />
+                <UserRound className="stroke-foreground w-full h-full" />
               </div>
               <div className="flex justify-center items-start flex-col">
                 <p className="text-sm">{me?.username}</p>
 
-                <p className="font-light text-xs capitalize text-(--text-muted)">
+                <p className="font-light text-xs capitalize text-muted-foreground">
                   {me?.role && t(ROLE_TITLES[me.role])}
                 </p>
               </div>
@@ -56,7 +56,7 @@ export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
                   >
                     <opt.Icon className="stroke-white " />
                   </span>
-                  <span className="block text-sm group-hover:text-(--primary-hover) capitalize text-(--text-muted) ">
+                  <span className="block text-sm group-hover:text-primary/90 capitalize text-muted-foreground ">
                     {translateDynamic(t, opt.label)}
                   </span>
                 </AppLink>

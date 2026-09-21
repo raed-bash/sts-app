@@ -27,7 +27,7 @@ export const Interactive: Story = {
       {({ handleOpen, handleClose, inPopup }) =>
         inPopup ? (
           <div className="flex flex-col gap-4">
-            <p className="text-(--text-muted)">
+            <p className="text-muted-foreground">
               This content is rendered inside the dialog.
             </p>
             <div className="flex justify-end">
@@ -58,7 +58,7 @@ export const Controlled: Story = {
           Open popup
         </Button>
         <Popup {...args} isOpen={open} onClose={() => setOpen(false)}>
-          <p className="text-(--text-muted)">
+          <p className="text-muted-foreground">
             Static children shown in the dialog.
           </p>
         </Popup>

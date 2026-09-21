@@ -138,16 +138,16 @@ export default function SubjectDetail() {
         <CardContent className="pt-6">
           <h1 className="text-3xl font-bold">{subject.name}</h1>
           <div className="grid md:grid-cols-2 gap-4 mt-4">
-            <div className="p-4 rounded-lg bg-(--secondary)/10">
-              <div className="text-xs text-(--text-muted) uppercase">
+            <div className="p-4 rounded-lg bg-secondary/10">
+              <div className="text-xs text-muted-foreground uppercase">
                 {t("common:fields.created")}
               </div>
               <div className="text-lg font-semibold">
                 {dateFormatter(subject.createdAt)}
               </div>
             </div>
-            <div className="p-4 rounded-lg bg-(--secondary)/10">
-              <div className="text-xs text-(--text-muted) uppercase">
+            <div className="p-4 rounded-lg bg-secondary/10">
+              <div className="text-xs text-muted-foreground uppercase">
                 {t("entities.tests")}
               </div>
               <div className="text-lg font-semibold">

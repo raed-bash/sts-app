@@ -178,7 +178,7 @@ export default function TakeExam() {
   if (examQuery.isError || !exam || Number.isNaN(testSessionId)) {
     return (
       <div className="flex flex-col items-center gap-4 py-20 text-center">
-        <div className="text-(--text-muted)">
+        <div className="text-muted-foreground">
           {t("testSessions:exam.loadError")}
         </div>
         <Button
@@ -204,10 +204,10 @@ export default function TakeExam() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="sticky top-0 z-10 -mx-4 -mt-1 border-b bg-(--background) px-4 py-3 backdrop-blur">
+      <div className="sticky top-0 z-10 -mx-4 -mt-1 border-b bg-background px-4 py-3 backdrop-blur">
         <div className="flex items-center justify-between gap-4">
           <div className="min-w-0">
-            <div className="text-xs text-(--text-muted) uppercase">
+            <div className="text-xs text-muted-foreground uppercase">
               {exam.subject.name}
             </div>
             <div className="text-lg font-bold">{exam.test.name}</div>
@@ -218,8 +218,8 @@ export default function TakeExam() {
               className={cn(
                 "flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-bold tabular-nums",
                 remaining <= 60
-                  ? "border-(--danger)/40 bg-(--danger)/10 text-(--danger)"
-                  : "border-(--border) bg-(--secondary)/10",
+                  ? "border-destructive/40 bg-destructive/10 text-destructive"
+                  : "border-border bg-secondary/10",
               )}
             >
               <Clock3 size={16} />
@@ -237,15 +237,15 @@ export default function TakeExam() {
             </Button>
           </div>
         </div>
-        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-(--secondary)/20">
+        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-secondary/20">
           <div
-            className="h-full rounded-full bg-(--primary) transition-all"
+            className="h-full rounded-full bg-primary transition-all"
             style={{ width: `${progress}%` }}
           />
         </div>
       </div>
 
-      <div className="text-sm text-(--text-muted)">
+      <div className="text-sm text-muted-foreground">
         {t("testSessions:exam.answeredProgress", {
           answered: answeredCount,
           total: exam.questions.length,
@@ -294,18 +294,18 @@ function ExamQuestionCard({
   const answered = value.some((answerId) => answerId !== null);
 
   return (
-    <Card className={cn(answered && "border-(--success)/40")}>
+    <Card className={cn(answered && "border-success/40")}>
       <CardContent className="pt-6 flex flex-col gap-3">
         <div className="flex items-center gap-3">
-          <span className="text-sm font-bold text-(--text-muted)">
+          <span className="text-sm font-bold text-muted-foreground">
             Q{index + 1}
           </span>
           <QuestionTypeBadge type={question.type} />
-          <span className="text-xs text-(--text-muted)">
+          <span className="text-xs text-muted-foreground">
             {question.points} pts
           </span>
           {answered && (
-            <CheckCircle2 size={16} className="ms-auto text-(--success)" />
+            <CheckCircle2 size={16} className="ms-auto text-success" />
           )}
         </div>
 
@@ -371,11 +371,11 @@ function ChooseAnswers({
             className={cn(
               "px-3 py-2 rounded-lg text-sm border text-start transition-colors",
               isSelected
-                ? "bg-(--primary)/10 border-(--primary)"
-                : "bg-(--secondary)/5 border-(--border) hover:bg-(--secondary)/10",
+                ? "bg-primary/10 border-primary"
+                : "bg-secondary/5 border-border hover:bg-secondary/10",
             )}
           >
-            <span className="me-2 text-xs text-(--text-muted)">
+            <span className="me-2 text-xs text-muted-foreground">
               {String.fromCharCode(65 + index)}.
             </span>
             {answer.text}
@@ -421,7 +421,7 @@ function DragDropAnswers({
 
   return (
     <div>
-      <div className="text-xs text-(--text-muted) mb-2">
+      <div className="text-xs text-muted-foreground mb-2">
         {t("testSessions:exam.dragOrder")}
       </div>
       <div className="flex flex-col gap-2">
@@ -440,12 +440,12 @@ function DragDropAnswers({
               onDragOver={(event) => event.preventDefault()}
               onDrop={() => move(answerId)}
               className={cn(
-                "px-3 py-2 rounded-lg text-sm border bg-(--secondary)/5 flex items-center gap-3 cursor-grab select-none transition-opacity",
+                "px-3 py-2 rounded-lg text-sm border bg-secondary/5 flex items-center gap-3 cursor-grab select-none transition-opacity",
                 isDragging && "opacity-40",
-                "border-(--border)",
+                "border-border",
               )}
             >
-              <span className="flex size-6 items-center justify-center rounded-full bg-(--secondary)/15 text-xs font-bold">
+              <span className="flex size-6 items-center justify-center rounded-full bg-secondary/15 text-xs font-bold">
                 {position + 1}
               </span>
               {answer.text}
@@ -492,13 +492,13 @@ function CompleteAnswers({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="text-xs text-(--text-muted)">
+      <div className="text-xs text-muted-foreground">
         {dragMode
           ? t("testSessions:exam.dragHint")
           : t("testSessions:exam.fillHint")}
       </div>
 
-      <div className="rounded-lg border border-(--border) bg-(--secondary)/5 p-3 text-sm leading-8">
+      <div className="rounded-lg border border-border bg-secondary/5 p-3 text-sm leading-8">
         {segments.map((segment, blankIndex) => (
           <span key={blankIndex}>
             {segment}
@@ -528,11 +528,10 @@ function CompleteAnswers({
                 className={cn(
                   "mx-1 inline-flex min-w-20 items-center justify-center border-b-2 px-1 text-sm",
                   value[blankIndex] !== null
-                    ? "text-(--text) border-(--success)"
+                    ? "text-foreground border-success"
                     : cn(
-                        "border-dashed border-(--border)",
-                        active === blankIndex &&
-                          "border-(--primary) text-(--primary)",
+                        "border-dashed border-border",
+                        active === blankIndex && "border-primary text-primary",
                       ),
                 )}
               >
@@ -563,10 +562,10 @@ function CompleteAnswers({
             className={cn(
               "px-3 py-1.5 rounded-lg text-sm border",
               isUsed(answer.id)
-                ? "opacity-40 bg-(--secondary)/5 border-(--border) cursor-not-allowed"
+                ? "opacity-40 bg-secondary/5 border-border cursor-not-allowed"
                 : active !== null
-                  ? "border-(--primary) bg-(--primary)/10 hover:bg-(--primary)/20"
-                  : "border-(--border) bg-(--secondary)/5 hover:bg-(--secondary)/10",
+                  ? "border-primary bg-primary/10 hover:bg-primary/20"
+                  : "border-border bg-secondary/5 hover:bg-secondary/10",
             )}
           >
             {answer.text}

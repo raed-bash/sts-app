@@ -109,8 +109,8 @@ export default function QuestionDetail() {
             <QuestionTypeBadge type={question.type} />
           </div>
           <div className="grid md:grid-cols-3 gap-4 mt-4">
-            <div className="p-4 rounded-lg bg-(--secondary)/10">
-              <div className="text-xs text-(--text-muted) uppercase">
+            <div className="p-4 rounded-lg bg-secondary/10">
+              <div className="text-xs text-muted-foreground uppercase">
                 {t("common:fields.type")}
               </div>
               <div className="text-lg font-semibold">
@@ -120,14 +120,14 @@ export default function QuestionDetail() {
                 )}
               </div>
             </div>
-            <div className="p-4 rounded-lg bg-(--secondary)/10">
-              <div className="text-xs text-(--text-muted) uppercase">
+            <div className="p-4 rounded-lg bg-secondary/10">
+              <div className="text-xs text-muted-foreground uppercase">
                 {t("common:fields.points")}
               </div>
               <div className="text-lg font-semibold">{question.points}</div>
             </div>
-            <div className="p-4 rounded-lg bg-(--secondary)/10">
-              <div className="text-xs text-(--text-muted) uppercase">
+            <div className="p-4 rounded-lg bg-secondary/10">
+              <div className="text-xs text-muted-foreground uppercase">
                 {t("common:fields.created")}
               </div>
               <div className="text-lg font-semibold">
@@ -136,8 +136,8 @@ export default function QuestionDetail() {
             </div>
           </div>
           {question.completeQuestion && (
-            <div className="mt-4 p-4 rounded-lg bg-(--info)/10">
-              <div className="text-xs text-(--text-muted) uppercase">
+            <div className="mt-4 p-4 rounded-lg bg-info/10">
+              <div className="text-xs text-muted-foreground uppercase">
                 {t("questions:detail.completeAnswer")}
               </div>
               <div className="text-lg font-semibold">

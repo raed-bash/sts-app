@@ -34,14 +34,14 @@ export default function StudentSessions({
             <CardContent className="flex flex-col gap-3 pt-6">
               <div className="flex items-center justify-between">
                 <TestSessionStatusBadge status={session.status} />
-                <span className="text-xs text-(--text-muted)">
+                <span className="text-xs text-muted-foreground">
                   #{session.id}
                 </span>
               </div>
 
               <div>
                 <div className="text-lg font-semibold">{session.test.name}</div>
-                <div className="text-sm text-(--text-muted)">
+                <div className="text-sm text-muted-foreground">
                   {t("testSessions:student.duration", {
                     count: session.test.period ?? "—",
                   })}
@@ -50,13 +50,13 @@ export default function StudentSessions({
 
               <div className="flex flex-col gap-1 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-(--text-muted)">
+                  <span className="text-muted-foreground">
                     {t("testSessions:student.starts")}
                   </span>
                   <span>{dateFormatter(session.startDate)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-(--text-muted)">
+                  <span className="text-muted-foreground">
                     {t("testSessions:student.ends")}
                   </span>
                   <span>{dateFormatter(session.finishDate)}</span>

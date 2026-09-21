@@ -68,7 +68,7 @@ function SortButton({
       {props.children}
       <ChevronDown
         className={cn(
-          `w-3 h-3 duration-150 stroke-(--text)`,
+          `w-3 h-3 duration-150 stroke-foreground`,
           handleSortStatusStyle(sortStatus),
         )}
       />

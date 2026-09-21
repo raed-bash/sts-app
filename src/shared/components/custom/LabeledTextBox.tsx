@@ -20,7 +20,7 @@ function LabeledTextBox({
     <div
       {...props}
       className={cn(
-        "flex border-2 border-(--secondary) w-full p-2 rounded-lg text-md gap-2",
+        "flex border-2 border-secondary w-full p-2 rounded-lg text-md gap-2",
         props.className,
       )}
     >

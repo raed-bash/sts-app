@@ -24,7 +24,7 @@ export default function ProfileButton() {
         className="aria-expanded:bg-[#DFDFDF]/40"
         aria-expanded={openProfile}
       >
-        <UserRound className="stroke-(--text)" />
+        <UserRound className="stroke-foreground" />
       </Button>
       <ProfileMenu isOpen={openProfile} />
     </div>
