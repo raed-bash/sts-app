@@ -1,7 +1,7 @@
 export type UserStatus = "PENDING" | "ACTIVE" | "BLOCKED";
 
-export const STATUS_TITLES: Record<UserStatus, string> = {
-  ACTIVE: "Active",
-  BLOCKED: "Blocked",
-  PENDING: "Pending",
-};
+export const STATUS_TITLES = {
+  ACTIVE: "common:statuses.active",
+  BLOCKED: "common:statuses.blocked",
+  PENDING: "common:statuses.pending",
+} as const satisfies Record<UserStatus, string>;

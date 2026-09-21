@@ -20,6 +20,7 @@ import { testsQueryKeys } from "../tests.api-keys";
 import { UpdateTestDto } from "../dtos/update-test.dto";
 import type { TestDto } from "../dtos/test.dto";
 import type { SubjectDto } from "@/features/subjects/dtos/subject.dto";
+import { useTranslation } from "react-i18next";
 
 export type EditTestFormModalProps = {
   isOpen: boolean;
@@ -36,12 +37,14 @@ export default function EditTestFormModal({
 }: EditTestFormModalProps) {
   const queryClient = useQueryClient();
 
+  const { t } = useTranslation(["common", "tests"]);
+
   const updateMutation = useUpdateTest({
     mutationConfig: {
       onSuccess: () => {
         onClose();
         queryClient.invalidateQueries({ queryKey: testsQueryKeys.all });
-        toast.success("Test updated");
+        toast.success(t("tests:toasts.updated"));
       },
     },
   });
@@ -55,7 +58,7 @@ export default function EditTestFormModal({
       subjects: initialSelectedSubjects ?? [],
     },
     enableReinitialize: true,
-    validationZodSchema: testFormSchema,
+    validationZodSchema: () => testFormSchema(t),
     onSubmit: (values) =>
       updateMutation.mutate({
         id: test.id,
@@ -67,8 +70,8 @@ export default function EditTestFormModal({
     <Popup
       isOpen={isOpen}
       onClose={onClose}
-      title={`Edit test — ${test?.name ?? ""}`}
-      description="A test groups questions and a duration (minutes) shared by all of its test sessions."
+      title={t("tests:modal.editTitle", { name: test?.name ?? "" })}
+      description={t("tests:modal.description")}
     >
       <form
         className="flex flex-col gap-3 w-full"
@@ -77,7 +80,7 @@ export default function EditTestFormModal({
         <LabeledField
           type="text"
           name="name"
-          title="Name"
+          title={t("common:fields.name")}
           value={formik.values.name}
           helperText={formik.touchedErrors.name}
           onChange={formik.handleChange}
@@ -86,14 +89,14 @@ export default function EditTestFormModal({
         <LabeledField
           type="number"
           name="period"
-          title="Duration (minutes)"
+          title={t("common:fields.duration")}
           value={formik.values.period}
           helperText={formik.touchedErrors.period}
           onChange={formik.handleChange}
         />
         <LabeledField<SubjectDto, true>
           type="selectApi"
-          title="Subjects"
+          title={t("tests:modal.subjects")}
           name="subjects"
           multiple
           value={formik.values.subjects}
@@ -101,7 +104,7 @@ export default function EditTestFormModal({
           getInputLabel={(items) =>
             items?.length
               ? items.map((subject) => subject.name).join(", ")
-              : "Select subjects..."
+              : t("tests:modal.selectSubjects")
           }
           onChange={formik.handleChange}
           queryProps={{
@@ -111,7 +114,7 @@ export default function EditTestFormModal({
         >
           {(data) => (
             <SelectGroup>
-              <SelectLabel>Subjects</SelectLabel>
+              <SelectLabel>{t("tests:modal.subjects")}</SelectLabel>
               {data?.pages.map((page) =>
                 page.data.map((subject) => (
                   <SelectItem key={subject.id} value={subject}>
@@ -131,10 +134,10 @@ export default function EditTestFormModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            {t("common:actions.cancel")}
           </Button>
           <Button type="submit" className="w-fit" disabled={loading}>
-            {loading ? "Saving..." : "Save"}
+            {loading ? t("common:actions.saving") : t("common:actions.save")}
           </Button>
         </div>
       </form>

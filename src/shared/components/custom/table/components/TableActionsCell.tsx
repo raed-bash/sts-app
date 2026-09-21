@@ -2,11 +2,7 @@ import type { ReactNode } from "react";
 import { type VariantProps } from "class-variance-authority";
 import { Button } from "../../../ui/button";
 import { buttonVariants } from "../../../ui/button-variants";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "../../../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../../ui/tooltip";
 import type { TableRowRecord } from "../Table";
 
 export type TableAction<Row extends TableRowRecord> = {

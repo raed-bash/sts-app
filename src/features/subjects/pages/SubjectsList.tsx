@@ -20,6 +20,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { subjectsQueryKeys } from "../subjects.api-keys";
 import { useDeleteSubject } from "../api/delete-subject.api";
 import { useRestoreSubject } from "../api/restore-subject.api";
+import { useTranslation } from "react-i18next";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const clientLoader = (queryClient: QueryClient) => async () => {
@@ -34,6 +35,7 @@ export default function SubjectsList() {
   const allowed = useRequireRole(["SUPER_ADMIN"]);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { t } = useTranslation(["subjects", "common"]);
   const { tableProps } = useSubjectsTable();
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -51,29 +53,30 @@ export default function SubjectsList() {
   const actions: TableAction<SubjectDto>[] = [
     {
       name: "view",
-      label: "Open subject",
+      label: t("subjects:actions.open"),
       icon: <FolderOpen />,
-      onClick: (subject) => navigate(subjectsPaths.subjectDetailLink(subject.id)),
+      onClick: (subject) =>
+        navigate(subjectsPaths.subjectDetailLink(subject.id)),
     },
     {
       name: "edit",
-      label: "Edit",
+      label: t("common:actions.edit"),
       icon: <Edit />,
       onClick: (subject) => setEditing(subject),
     },
     {
       name: "restore",
-      label: "Restore",
+      label: t("common:actions.restore"),
       icon: <RotateCcw />,
       hidden: (subject) => !subject.deletedAt,
       onClick: (subject) => {
         restoreMutation.mutate(subject.id, { onSuccess: refresh });
-        toast.success("Subject restored");
+        toast.success(t("subjects:toasts.restored"));
       },
     },
     {
       name: "delete",
-      label: "Remove",
+      label: t("common:actions.remove"),
       icon: <Trash />,
       variant: "destructive",
       hidden: (subject) => Boolean(subject.deletedAt),
@@ -87,7 +90,7 @@ export default function SubjectsList() {
       onSuccess: () => {
         setConfirm(null);
         refresh();
-        toast.success("Subject deleted");
+        toast.success(t("subjects:toasts.deleted"));
       },
     });
   };
@@ -95,13 +98,13 @@ export default function SubjectsList() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Subjects</h1>
+        <h1 className="text-3xl font-bold">{t("subjects:list.title")}</h1>
         <Button
           className="w-fit flex items-center gap-2"
           onClick={() => setCreateOpen(true)}
         >
           <Plus size={16} />
-          Add Subject
+          {t("subjects:list.add")}
         </Button>
       </div>
       <Card className="pb-0">
@@ -126,9 +129,9 @@ export default function SubjectsList() {
 
       <ConfirmPopup
         isOpen={Boolean(confirm)}
-        title={`Delete ${confirm?.name ?? ""}?`}
-        message="The subject will be soft-deleted. Content stays in the database."
-        confirmLabel="Delete"
+        title={t("common:confirm.deleteTitle", { name: confirm?.name ?? "" })}
+        message={t("subjects:confirm.deleteMessage")}
+        confirmLabel={t("common:actions.delete")}
         destructive
         loading={deleteMutation.isPending}
         onCancel={() => setConfirm(null)}

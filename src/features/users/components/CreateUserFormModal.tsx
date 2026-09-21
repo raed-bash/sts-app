@@ -14,6 +14,7 @@ import {
   createUserFormSchema,
   type CreateUserFormValues,
 } from "../schemas/user-form.schema";
+import { useTranslation } from "react-i18next";
 
 export type CreateUserFormModalProps = {
   isOpen: boolean;
@@ -26,12 +27,14 @@ export default function CreateUserFormModal({
 }: CreateUserFormModalProps) {
   const queryClient = useQueryClient();
 
+  const { t } = useTranslation(["common", "users"]);
+
   const createMutation = useCreateUser({
     mutationConfig: {
       onSuccess: () => {
         onClose();
         queryClient.invalidateQueries({ queryKey: usersQueryKeys.all });
-        toast.success("User created");
+        toast.success(t("users:toasts.created"));
       },
     },
   });
@@ -45,12 +48,16 @@ export default function CreateUserFormModal({
       role: "STUDENT",
       status: "PENDING",
     },
-    validationZodSchema: createUserFormSchema,
+    validationZodSchema: () => createUserFormSchema(t),
     onSubmit: (values) => createMutation.mutate(new CreateUserDto(values)),
   });
 
   return (
-    <Popup isOpen={isOpen} onClose={onClose} title="Create user">
+    <Popup
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t("users:modal.createTitle")}
+    >
       <form
         className="flex flex-col gap-3 w-full"
         onSubmit={formik.handleSubmit}
@@ -58,7 +65,7 @@ export default function CreateUserFormModal({
         <LabeledField
           type="text"
           name="username"
-          title="Username"
+          title={t("common:fields.username")}
           value={formik.values.username}
           helperText={formik.touchedErrors.username}
           onChange={formik.handleChange}
@@ -67,7 +74,7 @@ export default function CreateUserFormModal({
         <LabeledField
           type="password"
           name="password"
-          title="Password"
+          title={t("common:fields.password")}
           value={formik.values.password}
           helperText={formik.touchedErrors.password}
           onChange={formik.handleChange}
@@ -77,32 +84,36 @@ export default function CreateUserFormModal({
         <LabeledField
           type="select"
           name="role"
-          title="Role"
+          title={t("common:fields.role")}
           value={formik.values.role}
           onChange={formik.handleChange}
           getInputLabel={(value) =>
-            value ? ROLE_TITLES[value as UserRole] : "Select role"
+            value
+              ? t(ROLE_TITLES[value as UserRole])
+              : t("users:modal.selectRole")
           }
         >
           {(Object.keys(ROLE_TITLES) as UserRole[]).map((role) => (
             <SelectItem key={role} value={role}>
-              {ROLE_TITLES[role]}
+              {t(ROLE_TITLES[role])}
             </SelectItem>
           ))}
         </LabeledField>
         <LabeledField
           type="select"
           name="status"
-          title="Status"
+          title={t("common:fields.status")}
           value={formik.values.status}
           onChange={formik.handleChange}
           getInputLabel={(value) =>
-            value ? STATUS_TITLES[value as UserStatus] : "Select status"
+            value
+              ? t(STATUS_TITLES[value as UserStatus])
+              : t("users:modal.selectStatus")
           }
         >
           {(Object.keys(STATUS_TITLES) as UserStatus[]).map((status) => (
             <SelectItem key={status} value={status}>
-              {STATUS_TITLES[status]}
+              {t(STATUS_TITLES[status])}
             </SelectItem>
           ))}
         </LabeledField>
@@ -115,10 +126,10 @@ export default function CreateUserFormModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            {t("common:actions.cancel")}
           </Button>
           <Button type="submit" className="w-fit" disabled={loading}>
-            {loading ? "Saving..." : "Create"}
+            {loading ? t("common:actions.saving") : t("common:actions.create")}
           </Button>
         </div>
       </form>

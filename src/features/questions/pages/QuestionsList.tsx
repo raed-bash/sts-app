@@ -20,6 +20,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { questionsQueryKeys } from "../questions.api-keys";
 import { useDeleteQuestion } from "../api/delete-question.api";
 import { useRestoreQuestion } from "../api/restore-question.api";
+import { useTranslation } from "react-i18next";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const clientLoader = (queryClient: QueryClient) => async () => {
@@ -34,6 +35,7 @@ export default function QuestionsList() {
   const allowed = useRequireRole(["SUPER_ADMIN"]);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { t } = useTranslation(["common", "questions"]);
   const { tableProps } = useQuestionsTable();
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -49,7 +51,7 @@ export default function QuestionsList() {
       onSuccess: () => {
         setConfirm(null);
         refresh();
-        toast.success("Question deleted");
+        toast.success(t("questions:toasts.deleted"));
       },
     },
   });
@@ -58,7 +60,7 @@ export default function QuestionsList() {
     mutationConfig: {
       onSuccess: () => {
         refresh();
-        toast.success("Question restored");
+        toast.success(t("questions:toasts.restored"));
       },
     },
   });
@@ -68,19 +70,20 @@ export default function QuestionsList() {
   const actions: TableAction<QuestionDto>[] = [
     {
       name: "answers",
-      label: "Manage answers",
+      label: t("questions:actions.manageAnswers"),
       icon: <ListChecks />,
-      onClick: (question) => navigate(questionsPaths.questionDetailLink(question.id)),
+      onClick: (question) =>
+        navigate(questionsPaths.questionDetailLink(question.id)),
     },
     {
       name: "edit",
-      label: "Edit",
+      label: t("common:actions.edit"),
       icon: <Edit />,
       onClick: (question) => setEditing(question),
     },
     {
       name: "restore",
-      label: "Restore",
+      label: t("common:actions.restore"),
       icon: <RotateCcw />,
       hidden: (question) => !question.deletedAt,
       onClick: (question) => {
@@ -89,7 +92,7 @@ export default function QuestionsList() {
     },
     {
       name: "delete",
-      label: "Remove",
+      label: t("common:actions.remove"),
       icon: <Trash />,
       variant: "destructive",
       hidden: (question) => Boolean(question.deletedAt),
@@ -103,13 +106,13 @@ export default function QuestionsList() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Questions</h1>
+        <h1 className="text-3xl font-bold">{t("entities.questions")}</h1>
         <Button
           className="w-fit flex items-center gap-2"
           onClick={() => setCreateOpen(true)}
         >
           <Plus size={16} />
-          Add Question
+          {t("common:actions.addQuestion")}
         </Button>
       </div>
       <Card className="pb-0">
@@ -121,7 +124,9 @@ export default function QuestionsList() {
       <CreateQuestionFormModal
         isOpen={createOpen}
         onClose={() => setCreateOpen(false)}
-        onSuccess={(data) => navigate(questionsPaths.questionDetailLink(data.id))}
+        onSuccess={(data) =>
+          navigate(questionsPaths.questionDetailLink(data.id))
+        }
       />
 
       {editing && (
@@ -134,9 +139,9 @@ export default function QuestionsList() {
 
       <ConfirmPopup
         isOpen={Boolean(confirm)}
-        title={`Delete question #${confirm?.id ?? ""}?`}
-        message="The question will be soft-deleted. Existing sessions keep their data."
-        confirmLabel="Delete"
+        title={t("questions:confirm.deleteTitle", { id: confirm?.id ?? "" })}
+        message={t("questions:confirm.deleteMessage")}
+        confirmLabel={t("common:actions.delete")}
         destructive
         loading={deleteMutation.isPending}
         onCancel={() => setConfirm(null)}

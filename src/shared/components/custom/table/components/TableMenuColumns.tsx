@@ -1,5 +1,7 @@
 import React, { useMemo, useRef, useState } from "react";
 import type { TableRowRecord, TableColumn } from "../Table";
+import { translateHeader } from "../utils/translate-header";
+import { useTranslation } from "react-i18next";
 import InputIcon from "../../inputs/InputIcon";
 import Checkbox from "../../inputs/Checkbox";
 import type { UseTableCreateToggleColumnsClickHandler } from "../hooks/useTable";
@@ -42,6 +44,8 @@ function TableMenuColumns<Row extends TableRowRecord>({
 
   const [searchMenuCols, setSearchMenuCols] = useState("");
 
+  const { t } = useTranslation();
+
   const containerRef = useRef<HTMLDivElement>(null);
   const ghostRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
@@ -62,7 +66,7 @@ function TableMenuColumns<Row extends TableRowRecord>({
       columns
         .map((column, originalIndex) => ({ column, originalIndex }))
         .filter(({ column }) =>
-          column.headerName
+          translateHeader(column.headerName)
             .toLowerCase()
             .includes(searchMenuCols.toLowerCase()),
         ),
@@ -117,8 +121,9 @@ function TableMenuColumns<Row extends TableRowRecord>({
     };
 
     if (ghostRef.current) {
-      ghostRef.current.textContent =
-        filteredColumns[filteredIndex]?.column.headerName ?? "";
+      ghostRef.current.textContent = translateHeader(
+        filteredColumns[filteredIndex]?.column.headerName ?? "",
+      );
 
       Object.assign(ghostRef.current.style, {
         display: "none",
@@ -227,11 +232,11 @@ function TableMenuColumns<Row extends TableRowRecord>({
             />
           }
         />
-        <TooltipContent>show/hide columns</TooltipContent>
+        <TooltipContent>{t("table.showHideColumns")}</TooltipContent>
       </Tooltip>
       <PopoverContent>
         <InputIcon
-          placeholder="Search..."
+          placeholder={t("search.placeholder")}
           EndIcon={<Search />}
           onChange={handleSearchChange}
         />
@@ -272,16 +277,16 @@ function TableMenuColumns<Row extends TableRowRecord>({
                   checked={!hiddenColumns.has(column.name)}
                   tabIndex={-1}
                 />
-                {column.headerName}
+                {translateHeader(column.headerName)}
               </button>
             ))
           ) : (
-            <p className="text-gray-400">no columns...</p>
+            <p className="text-gray-400">{t("table.noColumns")}</p>
           )}
         </div>
 
         <Button variant="outline" onClick={onReset}>
-          Reset
+          {t("table.reset")}
         </Button>
       </PopoverContent>
     </Popover>

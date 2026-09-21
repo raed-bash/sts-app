@@ -1,0 +1,25 @@
+{
+  "list": {
+    "title": "Subjects",
+    "add": "Add Subject"
+  },
+  "detail": {
+    "back": "Back to subjects"
+  },
+  "modal": {
+    "createTitle": "Create subject",
+    "editTitle": "Edit subject — {{name}}"
+  },
+  "actions": {
+    "open": "Open subject"
+  },
+  "confirm": {
+    "deleteMessage": "The subject will be soft-deleted. Content stays in the database."
+  },
+  "toasts": {
+    "created": "Subject created",
+    "updated": "Subject updated",
+    "deleted": "Subject deleted",
+    "restored": "Subject restored"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "list": {
+    "title": "جلسات الاختبارات",
+    "create": "إنشاء جلسة",
+    "myTitle": "جلسات الاختبارات الخاصة بي",
+    "subtitle": "سجّل في الجلسة مسبقًا، ثم ابدأها عند بدايتها.",
+    "noSessions": "لا توجد جلسات اختبارات متاحة بعد."
+  },
+  "modal": {
+    "createTitle": "إنشاء جلسة اختبار",
+    "createDescription": "اختر اختبارًا والموضوع الذي يغطّيه ووقت البدء.",
+    "editTitle": "تعديل الجلسة #{{id}}",
+    "editDescription": "تحديث جدول الجلسة.",
+    "test": "الاختبار",
+    "selectTest": "اختر الاختبار...",
+    "subject": "الموضوع",
+    "selectSubject": "اختر الموضوع...",
+    "subjects": "الموضوعات",
+    "startsAt": "يبدأ في",
+    "endsAt": "ينتهي في"
+  },
+  "actions": {
+    "editSchedule": "تعديل الجدول",
+    "start": "بدء",
+    "finish": "إنهاء",
+    "register": "تسجيل"
+  },
+  "confirm": {
+    "deleteTitle": "حذف الجلسة #{{id}}؟",
+    "deleteMessage": "سيتم حذف جلسة الاختبار بشكل ناعم."
+  },
+  "student": {
+    "duration": "المدة: {{count}} دقيقة",
+    "starts": "البداية",
+    "ends": "النهاية"
+  },
+  "results": {
+    "title": "نتائج الاختبار",
+    "noStudents": "لا يوجد طلاب مسجّلون في جلسة الاختبار هذه.",
+    "loadError": "تعذّر تحميل نتائج جلسة الاختبار هذه.",
+    "noFinishedResults": "لا توجد نتائج منتهية بعد.",
+    "subject": "الموضوع",
+    "totalPoints": "إجمالي النقاط",
+    "studentPoints": "نقاط الطالب",
+    "q": "س{{n}}",
+    "pts": "{{count}} نقطة",
+    "plusPoints": "+{{count}}",
+    "correctAnswer": "الإجابة الصحيحة",
+    "yourAnswer": "إجابتك",
+    "correctOrder": "الترتيب الصحيح: {{order}}",
+    "correctPosition": "الموضع الصحيح",
+    "wrongPosition": "موضع خاطئ (الصحيح: {{position}})",
+    "notPlaced": "لم يُوضع",
+    "correctBlank": "الفراغ الصحيح",
+    "wrongBlank": "فراغ خاطئ (الصحيح: {{position}})",
+    "notUsed": "غير مستخدم",
+    "answeredAt": "أُجيب في {{time}}"
+  },
+  "exam": {
+    "loadError": "تعذّر تحميل الاختبار. ربما أنهيتَه بالفعل أو لم يبدأ بعد.",
+    "submitting": "جارٍ الإرسال...",
+    "submit": "إرسال",
+    "answeredProgress": "تمت الإجابة على {{answered}} من أصل {{total}} سؤالًا",
+    "submitExam": "إنهاء الاختبار",
+    "dragOrder": "اسحب الإجابات إلى الترتيب الصحيح.",
+    "dragHint": "اسحب إجابةً وأفلتها في الفراغ الصحيح (أو اضغط على فراغ ثم على إجابة).",
+    "fillHint": "اختر فراغًا ثم اضغط على إجابة لتعبئته."
+  },
+  "toasts": {
+    "created": "تم إنشاء جلسة الاختبار",
+    "updated": "تم تحديث جلسة الاختبار",
+    "deleted": "تم حذف جلسة الاختبار",
+    "submitted": "تم إرسال الإجابات بنجاح",
+    "submitError": "فشل إرسال الإجابات"
+  },
+  "errors": {
+    "startDateRequired": "تاريخ البدء مطلوب",
+    "endDateRequired": "تاريخ الانتهاء مطلوب",
+    "positiveNumber": "يجب أن يكون رقمًا موجبًا"
+  },
+  "table": {
+    "test": "الاختبار",
+    "startDate": "تاريخ البدء",
+    "finishDate": "تاريخ الانتهاء",
+    "updatedAt": "آخر تحديث"
+  }
+}

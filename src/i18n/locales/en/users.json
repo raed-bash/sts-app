@@ -1,0 +1,44 @@
+{
+  "list": {
+    "add": "Add User"
+  },
+  "modal": {
+    "createTitle": "Create user",
+    "editTitle": "Edit user — {{name}}",
+    "selectRole": "Select role",
+    "selectStatus": "Select status"
+  },
+  "passwordModal": {
+    "title": "Change password — {{name}}",
+    "description": "The user will use the new password on next login.",
+    "newPassword": "New password"
+  },
+  "actions": {
+    "approve": "Approve",
+    "changePassword": "Change password"
+  },
+  "confirm": {
+    "deleteMessage": "The user account will be soft-deleted. Existing data is kept.",
+    "blockTitle": "Block {{name}}?",
+    "blockMessage": "The user will not be able to sign in.",
+    "activateTitle": "Activate {{name}}?",
+    "restoreTitle": "Restore {{name}}?"
+  },
+  "toasts": {
+    "created": "User created",
+    "updated": "User updated",
+    "deleted": "User deleted",
+    "restored": "User restored",
+    "blocked": "User blocked",
+    "activated": "User activated",
+    "passwordChanged": "Password changed"
+  },
+  "errors": {
+    "passwordRequired": "Password is required"
+  },
+  "table": {
+    "phone": "Phone",
+    "address": "Address",
+    "company": "Company"
+  }
+}

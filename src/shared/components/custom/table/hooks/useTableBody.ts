@@ -181,8 +181,8 @@ export function useTableBody<Row extends TableRowRecord>({
 
     return cn(
       "border-solid border-blue-500",
-      position === "first" && "border-l-[2px]",
-      position === "last" && "border-r-[2px]",
+      position === "first" && "border-s-[2px]",
+      position === "last" && "border-e-[2px]",
       !isPrevRowSelected && "border-t-[2px]",
       !isNextRowSelected && "border-b-[2px]",
     );

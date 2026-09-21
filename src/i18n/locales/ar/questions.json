@@ -1,0 +1,31 @@
+{
+  "detail": {
+    "back": "العودة إلى الأسئلة",
+    "completeAnswer": "الإجابة الكاملة"
+  },
+  "modal": {
+    "createTitle": "إنشاء سؤال",
+    "editTitle": "تعديل السؤال #{{id}}",
+    "questionText": "نص السؤال",
+    "selectType": "اختر النوع",
+    "selectTests": "اختر الاختبارات...",
+    "completeAnswerText": "نص الإجابة الكاملة"
+  },
+  "actions": {
+    "manageAnswers": "إدارة الإجابات"
+  },
+  "confirm": {
+    "deleteTitle": "حذف السؤال #{{id}}؟",
+    "deleteMessage": "سيتم حذف السؤال بشكل ناعم. تبقى إجاباته في قاعدة البيانات."
+  },
+  "toasts": {
+    "created": "تم إنشاء السؤال",
+    "updated": "تم تحديث السؤال",
+    "deleted": "تم حذف السؤال",
+    "restored": "تمت استعادة السؤال"
+  },
+  "errors": {
+    "pointsPositive": "يجب أن تكون النقاط رقماً موجباً",
+    "completeTextRequired": "نص الإجابة مطلوب لأسئلة الإكمال"
+  }
+}

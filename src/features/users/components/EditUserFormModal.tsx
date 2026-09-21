@@ -15,6 +15,7 @@ import {
   editUserFormSchema,
   type EditUserFormValues,
 } from "../schemas/user-form.schema";
+import { useTranslation } from "react-i18next";
 
 export type EditUserFormModalProps = {
   isOpen: boolean;
@@ -29,12 +30,14 @@ export default function EditUserFormModal({
 }: EditUserFormModalProps) {
   const queryClient = useQueryClient();
 
+  const { t } = useTranslation(["common", "users"]);
+
   const updateMutation = useUpdateUser({
     mutationConfig: {
       onSuccess: () => {
         onClose();
         queryClient.invalidateQueries({ queryKey: usersQueryKeys.all });
-        toast.success("User updated");
+        toast.success(t("users:toasts.updated"));
       },
     },
   });
@@ -48,7 +51,7 @@ export default function EditUserFormModal({
       status: user.status,
     },
     enableReinitialize: true,
-    validationZodSchema: editUserFormSchema,
+    validationZodSchema: () => editUserFormSchema(t),
     onSubmit: (values) =>
       updateMutation.mutate({
         id: user.id,
@@ -60,7 +63,7 @@ export default function EditUserFormModal({
     <Popup
       isOpen={isOpen}
       onClose={onClose}
-      title={`Edit user — ${user?.username ?? ""}`}
+      title={t("users:modal.editTitle", { name: user?.username ?? "" })}
     >
       <form
         className="flex flex-col gap-3 w-full"
@@ -69,7 +72,7 @@ export default function EditUserFormModal({
         <LabeledField
           type="text"
           name="username"
-          title="Username"
+          title={t("common:fields.username")}
           value={formik.values.username}
           helperText={formik.touchedErrors.username}
           onChange={formik.handleChange}
@@ -78,32 +81,36 @@ export default function EditUserFormModal({
         <LabeledField
           type="select"
           name="role"
-          title="Role"
+          title={t("common:fields.role")}
           value={formik.values.role}
           onChange={formik.handleChange}
           getInputLabel={(value) =>
-            value ? ROLE_TITLES[value as UserRole] : "Select role"
+            value
+              ? t(ROLE_TITLES[value as UserRole])
+              : t("users:modal.selectRole")
           }
         >
           {(Object.keys(ROLE_TITLES) as UserRole[]).map((role) => (
             <SelectItem key={role} value={role}>
-              {ROLE_TITLES[role]}
+              {t(ROLE_TITLES[role])}
             </SelectItem>
           ))}
         </LabeledField>
         <LabeledField
           type="select"
           name="status"
-          title="Status"
+          title={t("common:fields.status")}
           value={formik.values.status}
           onChange={formik.handleChange}
           getInputLabel={(value) =>
-            value ? STATUS_TITLES[value as UserStatus] : "Select status"
+            value
+              ? t(STATUS_TITLES[value as UserStatus])
+              : t("users:modal.selectStatus")
           }
         >
           {(Object.keys(STATUS_TITLES) as UserStatus[]).map((status) => (
             <SelectItem key={status} value={status}>
-              {STATUS_TITLES[status]}
+              {t(STATUS_TITLES[status])}
             </SelectItem>
           ))}
         </LabeledField>
@@ -116,10 +123,10 @@ export default function EditUserFormModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            {t("common:actions.cancel")}
           </Button>
           <Button type="submit" className="w-fit" disabled={loading}>
-            {loading ? "Saving..." : "Save"}
+            {loading ? t("common:actions.saving") : t("common:actions.save")}
           </Button>
         </div>
       </form>

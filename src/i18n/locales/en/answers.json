@@ -1,0 +1,24 @@
+{
+  "modal": {
+    "createTitle": "Create answer",
+    "editTitle": "Edit answer #{{id}}",
+    "answerText": "Answer text",
+    "question": "Question",
+    "selectQuestion": "Select question...",
+    "correctIndex": "Correct index",
+    "isCorrect": "Is correct"
+  },
+  "confirm": {
+    "deleteTitle": "Delete answer #{{id}}?",
+    "deleteMessage": "This answer will be removed from its question."
+  },
+  "toasts": {
+    "created": "Answer created",
+    "updated": "Answer updated",
+    "deleted": "Answer deleted"
+  },
+  "table": {
+    "isCorrect": "Is Correct",
+    "correctIndex": "Correct Index"
+  }
+}

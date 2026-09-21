@@ -1,0 +1,7 @@
+{
+  "labels": {
+    "STUDENT_PENDING_TTL_MINUTES": "مدة انتظار الطالب المعلّق (بالدقائق)",
+    "SESSION_EXPIRE_MINUTES": "مدة انتهاء الجلسة (بالدقائق)"
+  },
+  "noSettings": "لا توجد إعدادات مضبوطة."
+}

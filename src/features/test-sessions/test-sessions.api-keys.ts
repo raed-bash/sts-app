@@ -11,11 +11,7 @@ export const testSessionsQueryKeys = {
 
   byId: (id: string) => [...testSessionsQueryKeys.all, id],
 
-  exam: (id: number | string) => [
-    ...testSessionsQueryKeys.all,
-    "exam",
-    id,
-  ],
+  exam: (id: number | string) => [...testSessionsQueryKeys.all, "exam", id],
 
   results: (id: number | string, studentId?: number | string) =>
     studentId !== undefined

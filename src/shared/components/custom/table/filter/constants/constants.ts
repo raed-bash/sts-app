@@ -2,20 +2,20 @@ import type { FilterFieldProps } from "../FilterBoard";
 import type { FilterOperation } from "../types";
 
 export const filterOperations = {
-  equals: "Equals",
-  notEquals: "Not equals",
-  contains: "Contains",
-  notContains: "Not contains",
-  startsWith: "Starts with",
-  endsWith: "Ends with",
-  gt: "Greater than",
-  lt: "Less than",
-  gte: "Greater than or equal",
-  lte: "Less than or equal",
-  in: "In",
-  notIn: "Not in",
-  isNull: "Is null",
-  isNotNull: "is not null",
+  equals: "table.operators.equals",
+  notEquals: "table.operators.notEquals",
+  contains: "table.operators.contains",
+  notContains: "table.operators.notContains",
+  startsWith: "table.operators.startsWith",
+  endsWith: "table.operators.endsWith",
+  gt: "table.operators.gt",
+  lt: "table.operators.lt",
+  gte: "table.operators.gte",
+  lte: "table.operators.lte",
+  in: "table.operators.in",
+  notIn: "table.operators.notIn",
+  isNull: "table.operators.isNull",
+  isNotNull: "table.operators.isNotNull",
 } as const;
 
 export const textFilterOperations = [

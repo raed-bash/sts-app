@@ -1,20 +1,23 @@
 import { z } from "zod";
+import type { AppTFunction } from "@/i18next";
 import type { TestDto } from "@/features/tests/dtos/test.dto";
 import type { SubjectDto } from "@/features/subjects/dtos/subject.dto";
 
-export const createTestSessionFormSchema = z.object({
-  startAt: z.string().min(1, "Start date is required"),
-  period: z
-    .number({ error: "Must be a positive number" })
-    .positive("Must be a positive number"),
-  test: z.object({ id: z.number() }).loose().nullable(),
-  subject: z.object({ id: z.number() }).loose().nullable(),
-});
+export const createTestSessionFormSchema = (t: AppTFunction) =>
+  z.object({
+    startAt: z.string().min(1, t("testSessions:errors.startDateRequired")),
+    period: z
+      .number({ error: t("testSessions:errors.positiveNumber") })
+      .positive(t("testSessions:errors.positiveNumber")),
+    test: z.object({ id: z.number() }).loose().nullable(),
+    subject: z.object({ id: z.number() }).loose().nullable(),
+  });
 
-export const editTestSessionFormSchema = z.object({
-  startAt: z.string().min(1, "Start date is required"),
-  endAt: z.string().min(1, "End date is required"),
-});
+export const editTestSessionFormSchema = (t: AppTFunction) =>
+  z.object({
+    startAt: z.string().min(1, t("testSessions:errors.startDateRequired")),
+    endAt: z.string().min(1, t("testSessions:errors.endDateRequired")),
+  });
 
 export type CreateTestSessionFormValues = {
   startAt: string;
@@ -22,4 +25,6 @@ export type CreateTestSessionFormValues = {
   test: TestDto | null;
   subject: SubjectDto | null;
 };
-export type EditTestSessionFormValues = z.infer<typeof editTestSessionFormSchema>;
+export type EditTestSessionFormValues = z.infer<
+  ReturnType<typeof editTestSessionFormSchema>
+>;

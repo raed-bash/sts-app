@@ -1,0 +1,87 @@
+{
+  "list": {
+    "title": "Test Sessions",
+    "create": "Create Session",
+    "myTitle": "My Test Sessions",
+    "subtitle": "Register for a session ahead of time, then start it when it goes live.",
+    "noSessions": "No test sessions available yet."
+  },
+  "modal": {
+    "createTitle": "Create test session",
+    "createDescription": "Pick a test, the subject it covers and when it starts.",
+    "editTitle": "Edit session #{{id}}",
+    "editDescription": "Update the session schedule.",
+    "test": "Test",
+    "selectTest": "Select test...",
+    "subject": "Subject",
+    "selectSubject": "Select subject...",
+    "subjects": "Subjects",
+    "startsAt": "Starts at",
+    "endsAt": "Ends at"
+  },
+  "actions": {
+    "editSchedule": "Edit schedule",
+    "start": "Start",
+    "finish": "Finish",
+    "register": "Register"
+  },
+  "confirm": {
+    "deleteTitle": "Delete session #{{id}}?",
+    "deleteMessage": "The test session will be soft-deleted."
+  },
+  "student": {
+    "duration": "Duration: {{count}} min",
+    "starts": "Starts",
+    "ends": "Ends"
+  },
+  "results": {
+    "title": "Test Results",
+    "noStudents": "No students are registered in this test session.",
+    "loadError": "Unable to load results for this test session.",
+    "noFinishedResults": "No finished results yet.",
+    "subject": "Subject",
+    "totalPoints": "Total points",
+    "studentPoints": "Student points",
+    "q": "Q{{n}}",
+    "pts": "{{count}} pts",
+    "plusPoints": "+{{count}}",
+    "correctAnswer": "Correct answer",
+    "yourAnswer": "Your answer",
+    "correctOrder": "Correct order: {{order}}",
+    "correctPosition": "Correct position",
+    "wrongPosition": "Wrong position (correct: {{position}})",
+    "notPlaced": "Not placed",
+    "correctBlank": "Correct blank",
+    "wrongBlank": "Wrong blank (correct: {{position}})",
+    "notUsed": "Not used",
+    "answeredAt": "Answered at {{time}}"
+  },
+  "exam": {
+    "loadError": "Unable to load the exam. You may have already finished it or it has not started yet.",
+    "submitting": "Submitting...",
+    "submit": "Submit",
+    "answeredProgress": "{{answered}} of {{total}} questions answered",
+    "submitExam": "Submit exam",
+    "dragOrder": "Drag the answers into the correct order.",
+    "dragHint": "Drag an answer and drop it into the correct blank (or click a blank, then an answer).",
+    "fillHint": "Select a blank, then click an answer to fill it."
+  },
+  "toasts": {
+    "created": "Test session created",
+    "updated": "Test session updated",
+    "deleted": "Test session deleted",
+    "submitted": "Answers submitted successfully",
+    "submitError": "Failed to submit answers"
+  },
+  "errors": {
+    "startDateRequired": "Start date is required",
+    "endDateRequired": "End date is required",
+    "positiveNumber": "Must be a positive number"
+  },
+  "table": {
+    "test": "Test",
+    "startDate": "Start date",
+    "finishDate": "Finish date",
+    "updatedAt": "Updated at"
+  }
+}

@@ -18,6 +18,7 @@ import LinearLoading from "../../loading/LinearLoading";
 import Loading from "../../loading/Loading";
 import Checkbox from "../../inputs/Checkbox";
 import TableActionsCell, { type TableAction } from "./TableActionsCell";
+import { useTranslation } from "react-i18next";
 
 export type TableBodyProps<Row extends TableRowRecord> =
   React.ComponentProps<"tbody"> & {
@@ -80,6 +81,8 @@ function TableBody<Row extends TableRowRecord>({
 }: TableBodyProps<Row>) {
   const { rows, columns } = data;
 
+  const { t } = useTranslation();
+
   const {
     createSelectRowChangeHandler,
     selectedRows,
@@ -137,7 +140,7 @@ function TableBody<Row extends TableRowRecord>({
           {isLoading ? (
             <Loading />
           ) : (
-            <p className="min-w-max text-lg">No data...</p>
+            <p className="min-w-max text-lg">{t("table.noData")}</p>
           )}
         </TableOverlay>
       ) : (
@@ -182,10 +185,24 @@ function TableBody<Row extends TableRowRecord>({
                 ? pinning?.getRightOffset(column.name)
                 : undefined;
 
+              const position =
+                ci === columns.length - 1
+                  ? "last"
+                  : ci === 0 && !selectable
+                    ? "first"
+                    : "middle";
+
+              const rowIsSelected = selectedRows?.has(row.id) ?? false;
+
+              const suppressPinnedSeparator =
+                rowIsSelected && position === "first" && isPinned;
+
               return (
                 <TableCell
                   key={String(column.name)}
-                  style={right !== undefined ? { right } : undefined}
+                  style={
+                    right !== undefined ? { insetInlineEnd: right } : undefined
+                  }
                   {...cellProps}
                   {...bodyCellProps}
                   className={cn(
@@ -193,16 +210,10 @@ function TableBody<Row extends TableRowRecord>({
                       cn(
                         "sticky z-[1] bg-card hover:bg-gray-100/30 dark:hover:bg-gray-700",
                         pinning?.isFirstPinned(column.name) &&
-                          "border-l-2! border-(--primary)!",
+                          !suppressPinnedSeparator &&
+                          "border-s border-s-[var(--border)]!",
                       ),
-                    getSelectedAreaBorders(
-                      i,
-                      ci === columns.length - 1
-                        ? "last"
-                        : ci === 0 && !selectable
-                          ? "first"
-                          : "middle",
-                    ),
+                    getSelectedAreaBorders(i, position),
                     className,
                     cellProps.className,
                     bodyCellProps.className,

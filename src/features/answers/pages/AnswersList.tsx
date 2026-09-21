@@ -17,6 +17,7 @@ import toast from "@/shared/lib/toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { answersQueryKeys } from "../answers.api-keys";
 import { useDeleteAnswer } from "../api/delete-answer.api";
+import { useTranslation } from "react-i18next";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const clientLoader = (queryClient: QueryClient) => async () => {
@@ -30,6 +31,7 @@ export const clientLoader = (queryClient: QueryClient) => async () => {
 export default function AnswersList() {
   const allowed = useRequireRole(["SUPER_ADMIN"]);
   const queryClient = useQueryClient();
+  const { t } = useTranslation(["common", "answers"]);
   const { tableProps } = useAnswersTable();
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -45,7 +47,7 @@ export default function AnswersList() {
       onSuccess: () => {
         setConfirm(null);
         refresh();
-        toast.success("Answer deleted");
+        toast.success(t("answers:toasts.deleted"));
       },
     },
   });
@@ -55,13 +57,13 @@ export default function AnswersList() {
   const actions: TableAction<AnswerDto>[] = [
     {
       name: "edit",
-      label: "Edit",
+      label: t("common:actions.edit"),
       icon: <Edit />,
       onClick: (answer) => setEditing(answer),
     },
     {
       name: "delete",
-      label: "Remove",
+      label: t("common:actions.remove"),
       icon: <Trash />,
       variant: "destructive",
       onClick: (answer) => {
@@ -74,13 +76,13 @@ export default function AnswersList() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Answers</h1>
+        <h1 className="text-3xl font-bold">{t("entities.answers")}</h1>
         <Button
           className="w-fit flex items-center gap-2"
           onClick={() => setCreateOpen(true)}
         >
           <Plus size={16} />
-          Add Answer
+          {t("common:actions.addAnswer")}
         </Button>
       </div>
       <Card className="pb-0">
@@ -104,9 +106,9 @@ export default function AnswersList() {
 
       <ConfirmPopup
         isOpen={Boolean(confirm)}
-        title={`Delete answer #${confirm?.id ?? ""}?`}
-        message="This answer will be removed from its question."
-        confirmLabel="Delete"
+        title={t("answers:confirm.deleteTitle", { id: confirm?.id ?? "" })}
+        message={t("answers:confirm.deleteMessage")}
+        confirmLabel={t("common:actions.delete")}
         destructive
         loading={deleteMutation.isPending}
         onCancel={() => setConfirm(null)}

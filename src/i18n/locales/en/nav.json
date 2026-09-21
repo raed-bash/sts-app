@@ -1,0 +1,9 @@
+{
+  "brand": {
+    "name": "Student Testing System",
+    "tagline": "Management Console"
+  },
+  "menu": "Menu",
+  "home": "Home",
+  "bank": "Bank"
+}

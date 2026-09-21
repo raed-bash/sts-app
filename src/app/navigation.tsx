@@ -49,63 +49,63 @@ export type SidebarCategory = {
 };
 
 export const sidebarBrand = {
-  name: "Student Testing System",
-  tagline: "Management Console",
+  name: "nav:brand.name",
+  tagline: "nav:brand.tagline",
   to: `/${homePaths.home}`,
 };
 
 export const sidebarCategories: SidebarCategory[] = [
   {
-    title: "Menu",
+    title: "nav:menu",
     links: [
       {
         to: homePaths.home,
-        label: "Home",
+        label: "nav:home",
         Icon: Home,
       },
       {
         to: usersPaths.list,
-        label: "Users",
+        label: "entities.users",
         Icon: Users,
         roles: ["SUPER_ADMIN"],
       },
       {
         key: "bank",
-        label: "Bank",
+        label: "nav:bank",
         Icon: LibraryBig,
         roles: ["SUPER_ADMIN"],
         pages: [
           {
             to: subjectsPaths.list,
-            label: "Subjects",
+            label: "entities.subjects",
             Icon: BookOpen,
           },
           {
             to: testsPaths.list,
-            label: "Tests",
+            label: "entities.tests",
             Icon: FileText,
           },
           {
             to: questionsPaths.list,
-            label: "Questions",
+            label: "entities.questions",
             Icon: CircleHelp,
           },
           {
             to: answersPaths.list,
-            label: "Answers",
+            label: "entities.answers",
             Icon: CircleCheck,
           },
         ],
       },
       {
         to: testSessionsPaths.list,
-        label: "Test Sessions",
+        label: "entities.testSessions",
         Icon: CalendarCheck,
         roles: ["SUPER_ADMIN", "STUDENT"],
       },
       {
         to: settingsPaths.settings,
-        label: "Settings",
+        label: "entities.settings",
         Icon: Settings,
         roles: ["SUPER_ADMIN"],
       },

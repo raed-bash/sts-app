@@ -19,7 +19,9 @@ type UseUpdateUserOptions = {
   mutationConfig?: MutationConfig<typeof updateUser>;
 };
 
-export const useUpdateUser = ({ mutationConfig }: UseUpdateUserOptions = {}) => {
+export const useUpdateUser = ({
+  mutationConfig,
+}: UseUpdateUserOptions = {}) => {
   return useMutation({
     ...mutationConfig,
     mutationFn: updateUser,

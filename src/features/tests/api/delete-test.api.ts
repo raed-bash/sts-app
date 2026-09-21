@@ -10,7 +10,9 @@ type UseDeleteTestOptions = {
   mutationConfig?: MutationConfig<typeof deleteTest>;
 };
 
-export const useDeleteTest = ({ mutationConfig }: UseDeleteTestOptions = {}) => {
+export const useDeleteTest = ({
+  mutationConfig,
+}: UseDeleteTestOptions = {}) => {
   return useMutation({
     ...mutationConfig,
     mutationFn: deleteTest,

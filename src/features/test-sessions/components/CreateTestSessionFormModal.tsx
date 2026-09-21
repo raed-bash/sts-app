@@ -1,4 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import toast from "@/shared/lib/toast";
 import Popup from "@/shared/components/custom/popups/Popup";
 import { Button } from "@/shared/components/ui/button";
@@ -32,6 +33,7 @@ export default function CreateTestSessionFormModal({
   isOpen,
   onClose,
 }: CreateTestSessionFormModalProps) {
+  const { t } = useTranslation(["common", "testSessions"]);
   const queryClient = useQueryClient();
 
   const createMutation = useCreateTestSession({
@@ -39,7 +41,7 @@ export default function CreateTestSessionFormModal({
       onSuccess: () => {
         onClose();
         queryClient.invalidateQueries({ queryKey: testSessionsQueryKeys.all });
-        toast.success("Test session created");
+        toast.success(t("testSessions:toasts.created"));
       },
     },
   });
@@ -53,7 +55,7 @@ export default function CreateTestSessionFormModal({
       test: null,
       subject: null,
     },
-    validationZodSchema: createTestSessionFormSchema,
+    validationZodSchema: () => createTestSessionFormSchema(t),
     onSubmit: (values) =>
       createMutation.mutate(new CreateTestSessionDto(values)),
   });
@@ -62,8 +64,8 @@ export default function CreateTestSessionFormModal({
     <Popup
       isOpen={isOpen}
       onClose={onClose}
-      title="Create test session"
-      description="Pick a test, the subject it covers and when it starts."
+      title={t("testSessions:modal.createTitle")}
+      description={t("testSessions:modal.createDescription")}
     >
       <form
         className="flex flex-col gap-3 w-[440px] max-w-full"
@@ -71,10 +73,12 @@ export default function CreateTestSessionFormModal({
       >
         <LabeledField<TestDto>
           type="selectApi"
-          title="Test"
+          title={t("testSessions:modal.test")}
           name="test"
           value={formik.values.test}
-          getInputLabel={(item) => item?.name || "Select test..."}
+          getInputLabel={(item) =>
+            item?.name || t("testSessions:modal.selectTest")
+          }
           isItemEqualToValue={(item, value) => item.id === value.id}
           onChange={formik.handleChange}
           queryProps={{
@@ -84,7 +88,7 @@ export default function CreateTestSessionFormModal({
         >
           {(data) => (
             <SelectGroup>
-              <SelectLabel>Tests</SelectLabel>
+              <SelectLabel>{t("entities.tests")}</SelectLabel>
               {data?.pages.map((page) =>
                 page.data.map((test) => (
                   <SelectItem key={test.id} value={test}>
@@ -97,10 +101,12 @@ export default function CreateTestSessionFormModal({
         </LabeledField>
         <LabeledField<SubjectDto>
           type="selectApi"
-          title="Subject"
+          title={t("testSessions:modal.subject")}
           name="subject"
           value={formik.values.subject}
-          getInputLabel={(item) => item?.name || "Select subject..."}
+          getInputLabel={(item) =>
+            item?.name || t("testSessions:modal.selectSubject")
+          }
           isItemEqualToValue={(item, value) => item.id === value.id}
           onChange={formik.handleChange}
           queryProps={{
@@ -110,7 +116,7 @@ export default function CreateTestSessionFormModal({
         >
           {(data) => (
             <SelectGroup>
-              <SelectLabel>Subjects</SelectLabel>
+              <SelectLabel>{t("testSessions:modal.subjects")}</SelectLabel>
               {data?.pages.map((page) =>
                 page.data.map((subject) => (
                   <SelectItem key={subject.id} value={subject}>
@@ -124,7 +130,7 @@ export default function CreateTestSessionFormModal({
         <LabeledField
           type="datetime-local"
           name="startAt"
-          title="Starts at"
+          title={t("testSessions:modal.startsAt")}
           value={formik.values.startAt}
           helperText={formik.touchedErrors.startAt}
           onChange={formik.handleChange}
@@ -132,7 +138,7 @@ export default function CreateTestSessionFormModal({
         <LabeledField
           type="number"
           name="period"
-          title="Duration (minutes)"
+          title={t("common:fields.duration")}
           value={formik.values.period}
           helperText={formik.touchedErrors.period}
           onChange={formik.handleChange}
@@ -146,10 +152,10 @@ export default function CreateTestSessionFormModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            {t("common:actions.cancel")}
           </Button>
           <Button type="submit" className="w-fit" disabled={loading}>
-            {loading ? "Saving..." : "Create"}
+            {loading ? t("common:actions.saving") : t("common:actions.create")}
           </Button>
         </div>
       </form>

@@ -12,15 +12,13 @@ export class CreateQuestionDto {
 
   completeQuestion?: string;
 
-  constructor(
-    question: {
-      text: string;
-      type: QuestionType;
-      points: number;
-      completeQuestion?: string;
-      tests: { id: number }[];
-    },
-  ) {
+  constructor(question: {
+    text: string;
+    type: QuestionType;
+    points: number;
+    completeQuestion?: string;
+    tests: { id: number }[];
+  }) {
     Object.assign(this, pick(question, ["text", "type", "points"]));
     this.testIds = question.tests.map((test) => test.id);
     this.completeQuestion =

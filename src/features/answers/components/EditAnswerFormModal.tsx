@@ -12,6 +12,7 @@ import {
   answerFormSchema,
   type AnswerFormValues,
 } from "../schemas/answer-form.schema";
+import { useTranslation } from "react-i18next";
 
 export type EditAnswerFormModalProps = {
   isOpen: boolean;
@@ -26,12 +27,14 @@ export default function EditAnswerFormModal({
 }: EditAnswerFormModalProps) {
   const queryClient = useQueryClient();
 
+  const { t } = useTranslation(["common", "answers"]);
+
   const updateMutation = useUpdateAnswer({
     mutationConfig: {
       onSuccess: () => {
         onClose();
         queryClient.invalidateQueries({ queryKey: answersQueryKeys.all });
-        toast.success("Answer updated");
+        toast.success(t("answers:toasts.updated"));
       },
     },
   });
@@ -47,7 +50,7 @@ export default function EditAnswerFormModal({
       question: null,
     },
     enableReinitialize: true,
-    validationZodSchema: answerFormSchema,
+    validationZodSchema: () => answerFormSchema(t),
     onSubmit: (values) =>
       updateMutation.mutate({
         id: answer.id,
@@ -59,7 +62,7 @@ export default function EditAnswerFormModal({
     <Popup
       isOpen={isOpen}
       onClose={onClose}
-      title={`Edit answer #${answer?.id ?? ""}`}
+      title={t("answers:modal.editTitle", { id: answer?.id ?? "" })}
     >
       <form
         className="flex flex-col gap-3 w-full"
@@ -68,7 +71,7 @@ export default function EditAnswerFormModal({
         <LabeledField
           type="textarea"
           name="text"
-          title="Answer text"
+          title={t("answers:modal.answerText")}
           value={formik.values.text}
           helperText={formik.touchedErrors.text}
           onChange={formik.handleChange}
@@ -78,7 +81,7 @@ export default function EditAnswerFormModal({
           <LabeledField
             type="number"
             name="order"
-            title="Order"
+            title={t("common:fields.order")}
             value={formik.values.order}
             helperText={formik.touchedErrors.order}
             onChange={formik.handleChange}
@@ -86,7 +89,7 @@ export default function EditAnswerFormModal({
           <LabeledField
             type="checkbox"
             name="isCorrect"
-            title="Is correct"
+            title={t("answers:modal.isCorrect")}
             checked={formik.values.isCorrect}
             onChange={formik.handleChange}
           />
@@ -100,10 +103,10 @@ export default function EditAnswerFormModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            {t("common:actions.cancel")}
           </Button>
           <Button type="submit" className="w-fit" disabled={loading}>
-            {loading ? "Saving..." : "Save"}
+            {loading ? t("common:actions.saving") : t("common:actions.save")}
           </Button>
         </div>
       </form>

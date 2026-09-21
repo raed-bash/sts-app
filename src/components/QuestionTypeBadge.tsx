@@ -3,6 +3,7 @@ import {
   type QuestionType,
 } from "@/constants/question-type";
 import { cn } from "cn";
+import { useTranslation } from "react-i18next";
 
 export type QuestionTypeBadgeProps = React.ComponentProps<"div"> & {
   type?: QuestionType;
@@ -18,6 +19,8 @@ export default function QuestionTypeBadge({
   type,
   ...props
 }: QuestionTypeBadgeProps) {
+  const { t } = useTranslation(["common"]);
+
   return (
     <div
       {...props}
@@ -27,7 +30,7 @@ export default function QuestionTypeBadge({
         props.className,
       )}
     >
-      {type && QUESTION_TYPE_TITLES[type]}
+      {type && t(QUESTION_TYPE_TITLES[type])}
     </div>
   );
 }

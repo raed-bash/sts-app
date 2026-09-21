@@ -11,7 +11,8 @@ export const updateAnswer = async ({
 }: {
   id: number;
   data: UpdateAnswerDto;
-}): Promise<AnswerDto> => (await api.patch(ep("answers", String(id)), data)).data;
+}): Promise<AnswerDto> =>
+  (await api.patch(ep("answers", String(id)), data)).data;
 
 type UseUpdateAnswerOptions = {
   mutationConfig?: MutationConfig<typeof updateAnswer>;

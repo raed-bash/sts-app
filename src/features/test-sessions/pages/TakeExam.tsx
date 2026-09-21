@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { useTranslation } from "react-i18next";
 import { testSessionsPaths } from "../test-sessions.paths";
 import { CheckCircle2, Clock3, Send } from "lucide-react";
 import toast from "@/shared/lib/toast";
@@ -52,6 +53,7 @@ function formatTime(totalSeconds: number): string {
 }
 
 export default function TakeExam() {
+  const { t } = useTranslation(["common", "testSessions"]);
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -102,11 +104,11 @@ export default function TakeExam() {
   const submitMutation = useSubmitTestSession({
     mutationConfig: {
       onSuccess: () => {
-        toast.success("Answers submitted successfully");
+        toast.success(t("testSessions:toasts.submitted"));
         navigate(testSessionsPaths.resultsLink(testSessionId));
       },
       onError: () => {
-        toast.error("Failed to submit answers");
+        toast.error(t("testSessions:toasts.submitError"));
       },
     },
   });
@@ -177,20 +179,19 @@ export default function TakeExam() {
     return (
       <div className="flex flex-col items-center gap-4 py-20 text-center">
         <div className="text-(--text-muted)">
-          Unable to load the exam. You may have already finished it or it has
-          not started yet.
+          {t("testSessions:exam.loadError")}
         </div>
         <Button
           variant="outline"
           onClick={() => navigate(`/${testSessionsPaths.list}`)}
         >
-          Back to sessions
+          {t("common:actions.backToSessions")}
         </Button>
         <Button
           variant="outline-info"
           onClick={() => navigate(testSessionsPaths.resultsLink(testSessionId))}
         >
-          View results
+          {t("common:actions.viewResults")}
         </Button>
       </div>
     );
@@ -230,7 +231,9 @@ export default function TakeExam() {
               onClick={() => submit()}
             >
               <Send size={16} />
-              {submitMutation.isPending ? "Submitting..." : "Submit"}
+              {submitMutation.isPending
+                ? t("testSessions:exam.submitting")
+                : t("testSessions:exam.submit")}
             </Button>
           </div>
         </div>
@@ -243,7 +246,10 @@ export default function TakeExam() {
       </div>
 
       <div className="text-sm text-(--text-muted)">
-        {answeredCount} of {exam.questions.length} questions answered
+        {t("testSessions:exam.answeredProgress", {
+          answered: answeredCount,
+          total: exam.questions.length,
+        })}
       </div>
 
       <div className="flex flex-col gap-4">
@@ -267,7 +273,7 @@ export default function TakeExam() {
           onClick={() => submit()}
         >
           <CheckCircle2 size={18} />
-          Submit exam
+          {t("testSessions:exam.submitExam")}
         </Button>
       </div>
     </div>
@@ -363,7 +369,7 @@ function ChooseAnswers({
             type="button"
             onClick={() => onSelect(answer.id)}
             className={cn(
-              "px-3 py-2 rounded-lg text-sm border text-left transition-colors",
+              "px-3 py-2 rounded-lg text-sm border text-start transition-colors",
               isSelected
                 ? "bg-(--primary)/10 border-(--primary)"
                 : "bg-(--secondary)/5 border-(--border) hover:bg-(--secondary)/10",
@@ -389,6 +395,7 @@ function DragDropAnswers({
   value: number[];
   onChange: (answerIds: number[]) => void;
 }) {
+  const { t } = useTranslation(["common", "testSessions"]);
   const [dragging, setDragging] = useState<number | null>(null);
 
   const move = (targetId: number) => {
@@ -415,7 +422,7 @@ function DragDropAnswers({
   return (
     <div>
       <div className="text-xs text-(--text-muted) mb-2">
-        Drag the answers into the correct order.
+        {t("testSessions:exam.dragOrder")}
       </div>
       <div className="flex flex-col gap-2">
         {value.map((answerId, position) => {
@@ -461,6 +468,7 @@ function CompleteAnswers({
   onChange: (answerIds: (number | null)[]) => void;
   dragMode?: boolean;
 }) {
+  const { t } = useTranslation(["common", "testSessions"]);
   const [active, setActive] = useState<number | null>(null);
 
   const template = question.completeQuestion?.text ?? "";
@@ -486,8 +494,8 @@ function CompleteAnswers({
     <div className="flex flex-col gap-3">
       <div className="text-xs text-(--text-muted)">
         {dragMode
-          ? "Drag an answer and drop it into the correct blank (or click a blank, then an answer)."
-          : "Select a blank, then click an answer to fill it."}
+          ? t("testSessions:exam.dragHint")
+          : t("testSessions:exam.fillHint")}
       </div>
 
       <div className="rounded-lg border border-(--border) bg-(--secondary)/5 p-3 text-sm leading-8">

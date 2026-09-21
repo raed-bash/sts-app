@@ -29,12 +29,14 @@ import Loading from "@/shared/components/custom/loading/Loading";
 import { Button } from "@/shared/components/ui/button";
 import { dateFormatter } from "@/shared/utils";
 import type { TestDto } from "@/features/tests/dtos/test.dto";
+import { useTranslation } from "react-i18next";
 
 export default function SubjectDetail() {
   const allowed = useRequireRole(["SUPER_ADMIN"]);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const subjectId = Number(id);
+  const { t } = useTranslation(["common", "subjects", "tests"]);
 
   const queryClient = useQueryClient();
 
@@ -60,7 +62,7 @@ export default function SubjectDetail() {
       onSuccess: () => {
         setConfirm(null);
         refresh();
-        toast.success("Test deleted");
+        toast.success(t("tests:toasts.deleted"));
       },
     },
   });
@@ -69,7 +71,7 @@ export default function SubjectDetail() {
     mutationConfig: {
       onSuccess: () => {
         refresh();
-        toast.success("Test restored");
+        toast.success(t("tests:toasts.restored"));
       },
     },
   });
@@ -87,19 +89,19 @@ export default function SubjectDetail() {
   const actions: TableAction<TestDto>[] = [
     {
       name: "view",
-      label: "Open test",
+      label: t("tests:actions.open"),
       icon: <ListChecks size={16} />,
       onClick: (test) => navigate(testsPaths.testDetailLink(test.id)),
     },
     {
       name: "edit",
-      label: "Edit",
+      label: t("common:actions.edit"),
       icon: <Edit size={16} />,
       onClick: (test) => setEditing(test),
     },
     {
       name: "restore",
-      label: "Restore",
+      label: t("common:actions.restore"),
       icon: <RotateCcw size={16} />,
       hidden: (test) => !test.deletedAt,
       onClick: (test) => {
@@ -108,7 +110,7 @@ export default function SubjectDetail() {
     },
     {
       name: "delete",
-      label: "Remove",
+      label: t("common:actions.remove"),
       icon: <Trash size={16} />,
       variant: "destructive",
       hidden: (test) => Boolean(test.deletedAt),
@@ -128,7 +130,7 @@ export default function SubjectDetail() {
           onClick={() => navigate(`/${subjectsPaths.list}`)}
         >
           <ArrowLeft size={16} />
-          Back to subjects
+          {t("subjects:detail.back")}
         </Button>
       </div>
 
@@ -138,16 +140,20 @@ export default function SubjectDetail() {
           <div className="grid md:grid-cols-2 gap-4 mt-4">
             <div className="p-4 rounded-lg bg-(--secondary)/10">
               <div className="text-xs text-(--text-muted) uppercase">
-                Created
+                {t("common:fields.created")}
               </div>
               <div className="text-lg font-semibold">
                 {dateFormatter(subject.createdAt)}
               </div>
             </div>
             <div className="p-4 rounded-lg bg-(--secondary)/10">
-              <div className="text-xs text-(--text-muted) uppercase">Tests</div>
+              <div className="text-xs text-(--text-muted) uppercase">
+                {t("entities.tests")}
+              </div>
               <div className="text-lg font-semibold">
-                {tableProps.data?.rows?.length ?? 0} assigned
+                {t("common:labels.assignedCount", {
+                  count: tableProps.data?.rows?.length ?? 0,
+                })}
               </div>
             </div>
           </div>
@@ -155,13 +161,13 @@ export default function SubjectDetail() {
       </Card>
 
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Tests</h2>
+        <h2 className="text-2xl font-bold">{t("entities.tests")}</h2>
         <Button
           className="w-fit flex items-center gap-2"
           onClick={() => setCreateOpen(true)}
         >
           <Plus size={16} />
-          Add Test
+          {t("tests:list.add")}
         </Button>
       </div>
       <Card className="pb-52">
@@ -187,9 +193,9 @@ export default function SubjectDetail() {
 
       <ConfirmPopup
         isOpen={Boolean(confirm)}
-        title={`Delete ${confirm?.name ?? ""}?`}
-        message="The test will be soft-deleted. Its questions stay in the database."
-        confirmLabel="Delete"
+        title={t("common:confirm.deleteTitle", { name: confirm?.name ?? "" })}
+        message={t("tests:confirm.deleteMessage")}
+        confirmLabel={t("common:actions.delete")}
         destructive
         loading={deleteMutation.isPending}
         onCancel={() => setConfirm(null)}

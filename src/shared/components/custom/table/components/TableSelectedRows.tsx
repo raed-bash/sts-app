@@ -16,6 +16,7 @@ import type {
   UseTableSelectRowsHandler,
   UseTableSelectedRows,
 } from "../hooks/useTable";
+import { useTranslation } from "react-i18next";
 
 export type TableSelectedRowsProps<Row extends TableRowRecord> = {
   selection: {
@@ -31,6 +32,8 @@ function TableSelectedRows<Row extends TableRowRecord>({
   selection,
 }: TableSelectedRowsProps<Row>) {
   const { selectedRows, onSelectRows, getSelectionLabel } = selection;
+
+  const { t } = useTranslation();
 
   const rows = [...selectedRows.values()];
 
@@ -52,25 +55,25 @@ function TableSelectedRows<Row extends TableRowRecord>({
             <TooltipTrigger
               render={
                 <Button variant="outline" size="sm">
-                  Selected ({selectedRows.size})
+                  {t("table.selected", { count: selectedRows.size })}
                 </Button>
               }
             />
           }
         />
-        <TooltipContent>View selected rows</TooltipContent>
+        <TooltipContent>{t("table.viewSelectedRows")}</TooltipContent>
       </Tooltip>
       <PopoverContent align="end">
         <div className="flex items-center justify-between gap-2 px-1">
           <p className="text-sm font-medium">
-            Selected rows ({selectedRows.size})
+            {t("table.selectedRows", { count: selectedRows.size })}
           </p>
           <Button variant="ghost" size="xs" onClick={clearAll}>
-            Clear all
+            {t("table.clearAll")}
           </Button>
         </div>
 
-        <div className="flex max-h-64 flex-col gap-1 overflow-auto pr-1">
+        <div className="flex max-h-64 flex-col gap-1 overflow-auto pe-1">
           {rows.length ? (
             rows.map((row) => (
               <div
@@ -88,7 +91,7 @@ function TableSelectedRows<Row extends TableRowRecord>({
                   variant="ghost"
                   size="icon-xs"
                   onClick={unselect(row)}
-                  title="Remove from selection"
+                  title={t("table.removeFromSelection")}
                   className="opacity-0 group-hover:opacity-100 shrink-0"
                 >
                   <XIcon />
@@ -97,7 +100,7 @@ function TableSelectedRows<Row extends TableRowRecord>({
             ))
           ) : (
             <p className="px-1 py-4 text-center text-gray-400">
-              No rows selected.
+              {t("table.noRowsSelected")}
             </p>
           )}
         </div>

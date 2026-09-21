@@ -1,4 +1,5 @@
 import { Play, UserPlus, BarChart3 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
 import { dateFormatter } from "@/shared/utils";
@@ -20,6 +21,8 @@ export default function StudentSessions({
   onStart,
   onResults,
 }: StudentSessionsProps) {
+  const { t } = useTranslation(["common", "testSessions"]);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
       {data.map((session) => {
@@ -27,30 +30,35 @@ export default function StudentSessions({
         const finished = session.status === "FINISHED";
 
         return (
-          <Card
-            key={session.id}
-            className="transition-shadow hover:shadow-lg"
-          >
+          <Card key={session.id} className="transition-shadow hover:shadow-lg">
             <CardContent className="flex flex-col gap-3 pt-6">
               <div className="flex items-center justify-between">
                 <TestSessionStatusBadge status={session.status} />
-                <span className="text-xs text-(--text-muted)">#{session.id}</span>
+                <span className="text-xs text-(--text-muted)">
+                  #{session.id}
+                </span>
               </div>
 
               <div>
                 <div className="text-lg font-semibold">{session.test.name}</div>
                 <div className="text-sm text-(--text-muted)">
-                  Duration: {session.test.period ?? "—"} min
+                  {t("testSessions:student.duration", {
+                    count: session.test.period ?? "—",
+                  })}
                 </div>
               </div>
 
               <div className="flex flex-col gap-1 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-(--text-muted)">Starts</span>
+                  <span className="text-(--text-muted)">
+                    {t("testSessions:student.starts")}
+                  </span>
                   <span>{dateFormatter(session.startDate)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-(--text-muted)">Ends</span>
+                  <span className="text-(--text-muted)">
+                    {t("testSessions:student.ends")}
+                  </span>
                   <span>{dateFormatter(session.finishDate)}</span>
                 </div>
               </div>
@@ -63,7 +71,7 @@ export default function StudentSessions({
                     disabled={loading}
                   >
                     <UserPlus size={16} />
-                    Register
+                    {t("testSessions:actions.register")}
                   </Button>
                 )}
                 {started && (
@@ -74,7 +82,7 @@ export default function StudentSessions({
                     disabled={loading}
                   >
                     <Play size={16} />
-                    Start
+                    {t("testSessions:actions.start")}
                   </Button>
                 )}
                 {finished && (
@@ -84,7 +92,7 @@ export default function StudentSessions({
                     onClick={() => onResults(session)}
                   >
                     <BarChart3 size={16} />
-                    View results
+                    {t("common:actions.viewResults")}
                   </Button>
                 )}
               </div>

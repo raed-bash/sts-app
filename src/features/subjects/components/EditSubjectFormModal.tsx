@@ -12,6 +12,7 @@ import {
   subjectFormSchema,
   type SubjectFormValues,
 } from "../schemas/subject-form.schema";
+import { useTranslation } from "react-i18next";
 
 export type EditSubjectFormModalProps = {
   isOpen: boolean;
@@ -26,12 +27,14 @@ export default function EditSubjectFormModal({
 }: EditSubjectFormModalProps) {
   const queryClient = useQueryClient();
 
+  const { t } = useTranslation(["common", "subjects"]);
+
   const updateMutation = useUpdateSubject({
     mutationConfig: {
       onSuccess: () => {
         onClose();
         queryClient.invalidateQueries({ queryKey: subjectsQueryKeys.all });
-        toast.success("Subject updated");
+        toast.success(t("subjects:toasts.updated"));
       },
     },
   });
@@ -43,7 +46,7 @@ export default function EditSubjectFormModal({
       name: subject.name,
     },
     enableReinitialize: true,
-    validationZodSchema: subjectFormSchema,
+    validationZodSchema: () => subjectFormSchema(t),
     onSubmit: (values) =>
       updateMutation.mutate({
         id: subject.id,
@@ -55,7 +58,7 @@ export default function EditSubjectFormModal({
     <Popup
       isOpen={isOpen}
       onClose={onClose}
-      title={`Edit subject — ${subject.name ?? ""}`}
+      title={t("subjects:modal.editTitle", { name: subject.name ?? "" })}
     >
       <form
         className="flex flex-col gap-3 w-full"
@@ -64,7 +67,7 @@ export default function EditSubjectFormModal({
         <LabeledField
           type="text"
           name="name"
-          title="Name"
+          title={t("common:fields.name")}
           value={formik.values.name}
           helperText={formik.touchedErrors.name}
           onChange={formik.handleChange}
@@ -79,10 +82,10 @@ export default function EditSubjectFormModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            {t("common:actions.cancel")}
           </Button>
           <Button type="submit" className="w-fit" disabled={loading}>
-            {loading ? "Saving..." : "Save"}
+            {loading ? t("common:actions.saving") : t("common:actions.save")}
           </Button>
         </div>
       </form>

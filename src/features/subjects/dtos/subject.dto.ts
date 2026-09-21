@@ -8,6 +8,9 @@ export class SubjectDto {
   deletedAt?: Date | null;
 
   constructor(subject: SubjectDto) {
-    Object.assign(this, pick(subject, ["id", "name", "createdAt", "updatedAt", "deletedAt"]));
+    Object.assign(
+      this,
+      pick(subject, ["id", "name", "createdAt", "updatedAt", "deletedAt"]),
+    );
   }
 }

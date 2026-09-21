@@ -6,76 +6,13 @@ import type { TableAction } from "@/shared/components/custom/table/components/Ta
 import { dateFormatter } from "@/shared/utils";
 import { SelectItem } from "@/shared/components/ui/select";
 import { QUESTION_TYPE_TITLES } from "@/constants/question-type";
-import type { QuestionDto } from "../dtos/question.dto";
+import { useTranslation } from "react-i18next";
+import { translateDynamic } from "@/shared/lib/translate-dynamic";
+import type { QuestionDto, QuestionType } from "../dtos/question.dto";
 
 export type QuestionsTableProps = TableAdapterProps<QuestionDto> & {
   actions: TableAction<QuestionDto>[];
 };
-
-const columns: TableColumn<QuestionDto>[] = [
-  {
-    name: "id",
-    headerName: "#",
-    sort: true,
-  },
-  {
-    name: "text",
-    headerName: "Text",
-    sort: true,
-    filterable: true,
-    filterProps: {
-      type: "text",
-    },
-  },
-  {
-    name: "type",
-    headerName: "Type",
-    sort: true,
-    filterable: true,
-    filterProps: {
-      type: "select",
-      getInputLabel(value: keyof typeof QUESTION_TYPE_TITLES) {
-        return QUESTION_TYPE_TITLES[value];
-      },
-      children: Object.entries(QUESTION_TYPE_TITLES).map(([value, label]) => (
-        <SelectItem key={value} value={value}>
-          {label}
-        </SelectItem>
-      )),
-    },
-  },
-  {
-    name: "points",
-    headerName: "Points",
-    sort: true,
-  },
-  {
-    name: "createdAt",
-    headerName: "Created at",
-    getCell: (createdAt) => dateFormatter(createdAt),
-    sort: true,
-  },
-  {
-    name: "updatedAt",
-    headerName: "Updated at",
-    getCell: (updatedAt) => dateFormatter(updatedAt),
-    sort: true,
-    strict: false,
-  },
-  {
-    name: "deletedAt",
-    headerName: "Deleted at",
-    getCell: (deletedAt) => dateFormatter(deletedAt),
-    sort: true,
-    strict: false,
-  },
-  {
-    name: "actions",
-    headerName: "Actions",
-    strict: false,
-    type: "actions",
-  },
-];
 
 export default function QuestionsTable({
   data,
@@ -89,7 +26,78 @@ export default function QuestionsTable({
   loading,
   actions,
 }: QuestionsTableProps) {
+  const { t } = useTranslation(["questions", "common"]);
+
   const defaultSelectionLabel = (row: QuestionDto) => row.text || `#${row.id}`;
+
+  const columns: TableColumn<QuestionDto>[] = [
+    {
+      name: "id",
+      headerName: "common:table.id",
+      sort: true,
+    },
+    {
+      name: "text",
+      headerName: "common:fields.text",
+      sort: true,
+      filterable: true,
+      filterProps: {
+        type: "text",
+      },
+    },
+    {
+      name: "type",
+      headerName: "common:fields.type",
+      sort: true,
+      filterable: true,
+      filterProps: {
+        type: "select",
+        getInputLabel(value) {
+          return value
+            ? t(QUESTION_TYPE_TITLES[value as QuestionType])
+            : t("questions:modal.selectType");
+        },
+        children: (
+          Object.entries(QUESTION_TYPE_TITLES) as [QuestionType, string][]
+        ).map(([value, label]) => (
+          <SelectItem key={value} value={value}>
+            {translateDynamic(t, label)}
+          </SelectItem>
+        )),
+      },
+    },
+    {
+      name: "points",
+      headerName: "common:fields.points",
+      sort: true,
+    },
+    {
+      name: "createdAt",
+      headerName: "common:table.createdAt",
+      getCell: (createdAt) => dateFormatter(createdAt),
+      sort: true,
+    },
+    {
+      name: "updatedAt",
+      headerName: "common:table.updatedAt",
+      getCell: (updatedAt) => dateFormatter(updatedAt),
+      sort: true,
+      strict: false,
+    },
+    {
+      name: "deletedAt",
+      headerName: "common:table.deletedAt",
+      getCell: (deletedAt) => dateFormatter(deletedAt),
+      sort: true,
+      strict: false,
+    },
+    {
+      name: "actions",
+      headerName: "common:table.actions",
+      strict: false,
+      type: "actions",
+    },
+  ];
 
   return (
     <Table<QuestionDto>

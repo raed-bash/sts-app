@@ -12,6 +12,7 @@ import {
   changePasswordSchema,
   type ChangePasswordValues,
 } from "../schemas/user-form.schema";
+import { useTranslation } from "react-i18next";
 
 export type ChangePasswordModalProps = {
   isOpen: boolean;
@@ -26,12 +27,14 @@ export default function ChangePasswordModal({
 }: ChangePasswordModalProps) {
   const queryClient = useQueryClient();
 
+  const { t } = useTranslation(["common", "users"]);
+
   const passwordMutation = useChangeUserPassword({
     mutationConfig: {
       onSuccess: () => {
         onClose();
         queryClient.invalidateQueries({ queryKey: usersQueryKeys.all });
-        toast.success("Password changed");
+        toast.success(t("users:toasts.passwordChanged"));
       },
     },
   });
@@ -42,7 +45,7 @@ export default function ChangePasswordModal({
     initialValues: {
       password: "",
     },
-    validationZodSchema: changePasswordSchema,
+    validationZodSchema: () => changePasswordSchema(t),
     onSubmit: (values) =>
       passwordMutation.mutate(new ChangePasswordDto(user.id, values.password)),
   });
@@ -51,8 +54,8 @@ export default function ChangePasswordModal({
     <Popup
       isOpen={isOpen}
       onClose={onClose}
-      title={`Change password — ${user?.username ?? ""}`}
-      description="The user will use the new password on next login."
+      title={t("users:passwordModal.title", { name: user?.username ?? "" })}
+      description={t("users:passwordModal.description")}
     >
       <form
         className="flex flex-col gap-3 w-full"
@@ -61,7 +64,7 @@ export default function ChangePasswordModal({
         <LabeledField
           type="password"
           name="password"
-          title="New password"
+          title={t("users:passwordModal.newPassword")}
           value={formik.values.password}
           helperText={formik.touchedErrors.password}
           onChange={formik.handleChange}
@@ -77,10 +80,10 @@ export default function ChangePasswordModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            {t("common:actions.cancel")}
           </Button>
           <Button type="submit" className="w-fit" disabled={loading}>
-            {loading ? "Saving..." : "Save"}
+            {loading ? t("common:actions.saving") : t("common:actions.save")}
           </Button>
         </div>
       </form>

@@ -2,6 +2,7 @@ import { isValidElement, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { getObjectValue } from "@/shared/utils";
 import type { TableColumn, TableRowItem, TableRowRecord } from "../Table";
+import { translateHeader } from "./translate-header";
 
 export function getCsvCellValue<Row extends TableRowRecord>(
   column: TableColumn<Row>,
@@ -61,7 +62,9 @@ export function buildCsv<Row extends TableRowRecord>(
   separator = ",",
 ): string {
   const header = columns
-    .map((column) => escapeCsvField(column.headerName, separator))
+    .map((column) =>
+      escapeCsvField(translateHeader(column.headerName), separator),
+    )
     .join(separator);
 
   const body = rows.map((row) =>

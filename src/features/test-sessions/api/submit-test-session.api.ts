@@ -22,8 +22,9 @@ const submitTestSession = async ({
   id,
   questions,
 }: SubmitTestSessionInput): Promise<ResultTestSessionDto> => {
-  return (await api.post(ep("test-sessions", String(id), "submit"), { questions }))
-    .data;
+  return (
+    await api.post(ep("test-sessions", String(id), "submit"), { questions })
+  ).data;
 };
 
 type UseSubmitTestSessionOptions = {

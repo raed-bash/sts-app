@@ -1,5 +1,6 @@
 import type { SettingDto } from "../dtos/setting.dto";
 import { Card, CardContent } from "@/shared/components/ui/card";
+import { useTranslation } from "react-i18next";
 import { useSettings } from "../api/get-settings.api";
 import { useUpdateSetting } from "../api/update-setting.api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -9,10 +10,11 @@ import { Button } from "@/shared/components/ui/button";
 import Input from "@/shared/components/custom/inputs/Input";
 import Loading from "@/shared/components/custom/loading/Loading";
 import { useRequireRole } from "@/hooks/useRequireRole";
+import { translateDynamic } from "@/shared/lib/translate-dynamic";
 
 const SETTING_LABELS: Record<string, string> = {
-  STUDENT_PENDING_TTL_MINUTES: "Student Pending TTL (minutes)",
-  SESSION_EXPIRE_MINUTES: "Session Expire Minutes",
+  STUDENT_PENDING_TTL_MINUTES: "settings:labels.STUDENT_PENDING_TTL_MINUTES",
+  SESSION_EXPIRE_MINUTES: "settings:labels.SESSION_EXPIRE_MINUTES",
 };
 
 export default function SettingsPage() {
@@ -20,6 +22,7 @@ export default function SettingsPage() {
   const { data: settings, isLoading } = useSettings();
   const updateSetting = useUpdateSetting();
   const queryClient = useQueryClient();
+  const { t } = useTranslation(["common", "settings"]);
   const [values, setValues] = useState<Record<string, string>>({});
 
   if (!allowed) return null;
@@ -49,13 +52,16 @@ export default function SettingsPage() {
 
   return (
     <div className="flex flex-col gap-5">
-      <h1 className="text-3xl font-bold mb-4">Settings</h1>
+      <h1 className="text-3xl font-bold mb-4">{t("entities.settings")}</h1>
       <div className="grid gap-4 max-w-xl">
         {settingEntries.map((setting: SettingDto) => (
           <Card key={setting.key}>
             <CardContent className="flex flex-col gap-3 pt-6">
               <div className="text-sm font-semibold text-(--text-muted)">
-                {SETTING_LABELS[setting.key] ?? setting.key}
+                {translateDynamic(
+                  t,
+                  SETTING_LABELS[setting.key] ?? setting.key,
+                )}
               </div>
               <div className="flex items-center gap-3">
                 <Input
@@ -73,7 +79,9 @@ export default function SettingsPage() {
                   onClick={() => handleSave(setting.key)}
                   disabled={updateSetting.isPending}
                 >
-                  {updateSetting.isPending ? "Saving..." : "Save"}
+                  {updateSetting.isPending
+                    ? t("common:actions.saving")
+                    : t("common:actions.save")}
                 </Button>
               </div>
             </CardContent>
@@ -81,7 +89,7 @@ export default function SettingsPage() {
         ))}
         {settingEntries.length === 0 && (
           <div className="text-(--text-muted) text-sm">
-            No settings configured.
+            {t("settings:noSettings")}
           </div>
         )}
       </div>

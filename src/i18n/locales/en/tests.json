@@ -1,0 +1,38 @@
+{
+  "list": {
+    "add": "Add Test"
+  },
+  "detail": {
+    "back": "Back to tests",
+    "edit": "Edit test",
+    "duration": "Duration",
+    "minutes": "{{count}} min",
+    "subjects": "Subjects",
+    "subjectsNotAssigned": "Not assigned"
+  },
+  "modal": {
+    "createTitle": "Create test",
+    "editTitle": "Edit test — {{name}}",
+    "description": "A test groups questions and a duration (minutes) shared by all of its test sessions.",
+    "subjects": "Subjects",
+    "selectSubjects": "Select subjects..."
+  },
+  "actions": {
+    "open": "Open test"
+  },
+  "confirm": {
+    "deleteMessage": "The test will be soft-deleted. Its questions stay in the database."
+  },
+  "toasts": {
+    "created": "Test created",
+    "updated": "Test updated",
+    "deleted": "Test deleted",
+    "restored": "Test restored"
+  },
+  "errors": {
+    "periodNumber": "Period must be a number",
+    "periodWhole": "Period must be a whole number",
+    "periodPositive": "Period must be a positive number",
+    "subjectsMin": "Select at least one subject"
+  }
+}

@@ -2,6 +2,7 @@ import { cn } from "cn";
 import { FunnelIcon, FunnelXIcon, Plus, XIcon } from "lucide-react";
 import { getAvailableFilterOps } from "./utils/utils";
 import type { TableRowRecord, TableColumn } from "../Table";
+import { translateHeader } from "../utils/translate-header";
 import type {
   FilterCondition,
   FilterLogicalOperator,
@@ -32,6 +33,7 @@ import LabeledField, {
 } from "../../inputs/LabeledField";
 import { NativeSelectOption } from "@/shared/components/ui/native-select";
 import { filterOperations } from "./constants/constants";
+import { useTranslation } from "react-i18next";
 import type {
   FilterDateOperationsWithTypes,
   FilterNumberOperationsWithTypes,
@@ -95,6 +97,8 @@ export default function FilterBoard<Row extends TableRowRecord>({
   } = filtering;
 
   const { isOpen, onOpen, onClose } = popup;
+
+  const { t } = useTranslation();
 
   const filterColumns = columns.filter((column) => column.filterable);
 
@@ -187,7 +191,7 @@ export default function FilterBoard<Row extends TableRowRecord>({
             />
           }
         />
-        <TooltipContent>Filters</TooltipContent>
+        <TooltipContent>{t("table.filters")}</TooltipContent>
       </Tooltip>
       <PopoverContent
         alignOffset={0}
@@ -246,17 +250,17 @@ export default function FilterBoard<Row extends TableRowRecord>({
                     name="name"
                     onChange={createFilterColumnChangeHandler(i)}
                     value={name}
-                    placeholder="Select column"
-                    getInputLabel={column.headerName}
+                    placeholder={t("table.selectColumn")}
+                    getInputLabel={translateHeader(column.headerName)}
                   >
                     <SelectGroup>
-                      <SelectLabel>User</SelectLabel>
+                      <SelectLabel>{t("table.user")}</SelectLabel>
                       {filterColumns.map((column) => (
                         <SelectItem
                           key={column.name.toString()}
                           value={column.name}
                         >
-                          {column.headerName}
+                          {translateHeader(column.headerName)}
                         </SelectItem>
                       ))}
                     </SelectGroup>
@@ -271,7 +275,7 @@ export default function FilterBoard<Row extends TableRowRecord>({
                   >
                     {filterOps.map((op) => (
                       <NativeSelectOption key={op} value={op}>
-                        {filterOperations[op]}
+                        {t(filterOperations[op])}
                       </NativeSelectOption>
                     ))}
                   </LabeledField>
@@ -279,7 +283,9 @@ export default function FilterBoard<Row extends TableRowRecord>({
                     name="value"
                     onChange={createFilterOperationChangeHandler(i)}
                     value={filters[i].value}
-                    {...{ placeholder: `${column?.headerName}` }}
+                    {...{
+                      placeholder: `${translateHeader(column?.headerName ?? "")}`,
+                    }}
                     {...filterProps}
                   />
                 </div>
@@ -301,7 +307,9 @@ export default function FilterBoard<Row extends TableRowRecord>({
                 </Button>
               }
             />
-            <TooltipContent side="bottom">Add Filter</TooltipContent>
+            <TooltipContent side="bottom">
+              {t("table.addFilter")}
+            </TooltipContent>
           </Tooltip>
         </div>
       </PopoverContent>

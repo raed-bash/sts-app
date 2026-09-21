@@ -11,7 +11,9 @@ type UseRestoreTestOptions = {
   mutationConfig?: MutationConfig<typeof restoreTest>;
 };
 
-export const useRestoreTest = ({ mutationConfig }: UseRestoreTestOptions = {}) => {
+export const useRestoreTest = ({
+  mutationConfig,
+}: UseRestoreTestOptions = {}) => {
   return useMutation({
     ...mutationConfig,
     mutationFn: restoreTest,

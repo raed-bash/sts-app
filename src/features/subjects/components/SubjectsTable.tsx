@@ -13,12 +13,12 @@ export type SubjectsTableProps = TableAdapterProps<SubjectDto> & {
 const columns: TableColumn<SubjectDto>[] = [
   {
     name: "id",
-    headerName: "#",
+    headerName: "common:table.id",
     sort: true,
   },
   {
     name: "name",
-    headerName: "Name",
+    headerName: "common:table.name",
     sort: true,
     filterable: true,
     filterProps: {
@@ -27,26 +27,26 @@ const columns: TableColumn<SubjectDto>[] = [
   },
   {
     name: "createdAt",
-    headerName: "Created at",
+    headerName: "common:table.createdAt",
     getCell: (createdAt) => dateFormatter(createdAt),
     sort: true,
   },
   {
     name: "updatedAt",
-    headerName: "Updated at",
+    headerName: "common:table.updatedAt",
     getCell: (updatedAt) => dateFormatter(updatedAt),
     sort: true,
     strict: false,
   },
   {
     name: "deletedAt",
-    headerName: "Deleted at",
+    headerName: "common:table.deletedAt",
     getCell: (deletedAt) => dateFormatter(deletedAt),
     strict: false,
   },
   {
     name: "actions",
-    headerName: "Actions",
+    headerName: "common:table.actions",
     strict: false,
     type: "actions",
   },

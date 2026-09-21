@@ -12,7 +12,9 @@ type UseCreateTestOptions = {
   mutationConfig?: MutationConfig<typeof createTest>;
 };
 
-export const useCreateTest = ({ mutationConfig }: UseCreateTestOptions = {}) => {
+export const useCreateTest = ({
+  mutationConfig,
+}: UseCreateTestOptions = {}) => {
   return useMutation({
     ...mutationConfig,
     mutationFn: createTest,

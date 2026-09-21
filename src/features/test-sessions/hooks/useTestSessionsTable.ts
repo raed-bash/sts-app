@@ -1,6 +1,9 @@
 import { useTableState } from "@/hooks";
 import { TableAdapter } from "@/shared/components/custom/table/TableAdapter";
-import { useTestSessions, useTestSessionsInfinite } from "../api/get-test-sessions.api";
+import {
+  useTestSessions,
+  useTestSessionsInfinite,
+} from "../api/get-test-sessions.api";
 import {
   QueryTestSessionDto,
   type TestSessionOrderAttributes,

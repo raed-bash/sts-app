@@ -1,4 +1,5 @@
 import { CircleUserRound, LogOut, Settings, UserRound } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useLogout } from "@/hooks";
 import { cn } from "cn";
 import { ROLE_TITLES } from "@/constants/user-role";
@@ -8,18 +9,21 @@ import { Button } from "@/shared/components/ui/button";
 import AppLink from "@/shared/components/custom/AppLink";
 import { useMe } from "@/features/users/api/get-me.api";
 import { settingsPaths } from "@/features/settings/settings.paths";
+import { translateDynamic } from "@/shared/lib/translate-dynamic";
 
 export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
   const handleLogout = useLogout();
 
   const meQuery = useMe();
 
+  const { t } = useTranslation(["common"]);
+
   const me = meQuery.data;
 
   return (
     <Animation isOpen={isOpen}>
       <div
-        className="absolute flex gap-8 flex-col justify-center items-center top-[160%] right-0  min-w-[218px] min-h-32 bg-(--surface)  shadow-base rounded-lg"
+        className="absolute flex gap-8 flex-col justify-center items-center top-[160%] end-0  min-w-[218px] min-h-32 bg-(--surface)  shadow-base rounded-lg"
         tabIndex={0}
       >
         {meQuery.isLoading ? (
@@ -34,7 +38,7 @@ export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
                 <p className="text-sm">{me?.username}</p>
 
                 <p className="font-light text-xs capitalize text-(--text-muted)">
-                  {me?.role && ROLE_TITLES[me.role]}
+                  {me?.role && t(ROLE_TITLES[me.role])}
                 </p>
               </div>
             </div>
@@ -53,7 +57,7 @@ export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
                     <opt.Icon className="stroke-white " />
                   </span>
                   <span className="block text-sm group-hover:text-(--primary-hover) capitalize text-(--text-muted) ">
-                    {opt.label}
+                    {translateDynamic(t, opt.label)}
                   </span>
                 </AppLink>
               ))}
@@ -64,7 +68,7 @@ export default function ProfileMenu({ isOpen }: { isOpen: boolean }) {
                 onClick={handleLogout}
               >
                 <LogOut className="w-5 h-5" />
-                Logout
+                {t("profile.logout")}
               </Button>
             </div>
           </div>
@@ -87,13 +91,13 @@ const profileOptions: ProfileOption[] = [
       <CircleUserRound {...props} />
     ),
     bgColorClassName: "bg-green-500",
-    label: "Profile",
+    label: "profile.profile",
     to: "profile",
   },
   {
     Icon: (props: React.SVGProps<SVGSVGElement>) => <Settings {...props} />,
     bgColorClassName: "bg-yellow-500",
-    label: "Settings",
+    label: "profile.settings",
     to: settingsPaths.settings,
   },
 ];

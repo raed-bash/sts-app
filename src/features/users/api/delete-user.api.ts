@@ -12,7 +12,9 @@ type UseDeleteUserOptions = {
   mutationConfig?: MutationConfig<typeof deleteUser>;
 };
 
-export const useDeleteUser = ({ mutationConfig }: UseDeleteUserOptions = {}) => {
+export const useDeleteUser = ({
+  mutationConfig,
+}: UseDeleteUserOptions = {}) => {
   return useMutation({
     ...mutationConfig,
     mutationFn: deleteUser,

@@ -58,16 +58,19 @@ function Popup({
   return (
     <>
       {typeof children === "function"
-        ? children({ isOpen, setIsOpen, inPopup: false, handleClose, handleOpen })
+        ? children({
+            isOpen,
+            setIsOpen,
+            inPopup: false,
+            handleClose,
+            handleOpen,
+          })
         : null}
       <Dialog
         open={isOpen}
         onOpenChange={(open) => (open ? handleOpen() : handleClose())}
       >
-        <DialogContent
-          showCloseButton
-          className={cn("sm:max-w-lg", className)}
-        >
+        <DialogContent showCloseButton className={cn("sm:max-w-lg", className)}>
           {(title || description) && (
             <DialogHeader>
               {title && <DialogTitle>{title}</DialogTitle>}
@@ -78,7 +81,13 @@ function Popup({
           )}
           <div className="mt-2 flex flex-col gap-3">
             {typeof children === "function"
-              ? children({ isOpen, setIsOpen, inPopup: true, handleClose, handleOpen })
+              ? children({
+                  isOpen,
+                  setIsOpen,
+                  inPopup: true,
+                  handleClose,
+                  handleOpen,
+                })
               : children}
           </div>
         </DialogContent>

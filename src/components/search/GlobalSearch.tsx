@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { Search, X } from "lucide-react";
 import { useDebouncedValue } from "@/shared/hooks";
@@ -35,6 +36,7 @@ import { subjectsPaths } from "@/features/subjects/subjects.paths";
 import { testsPaths } from "@/features/tests/tests.paths";
 import { questionsPaths } from "@/features/questions/questions.paths";
 import { answersPaths } from "@/features/answers/answers.paths";
+import { translateDynamic } from "@/shared/lib/translate-dynamic";
 
 type SearchResult = {
   to: string;
@@ -63,6 +65,8 @@ function canAccess(role: UserRole | null, roles?: UserRole[]) {
 
 export default function GlobalSearch() {
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -144,7 +148,7 @@ export default function GlobalSearch() {
           if (!canAccess(role, link.roles)) continue;
 
           for (const page of link.pages) {
-            if (page.label.toLowerCase().includes(query)) {
+            if (translateDynamic(t, page.label).toLowerCase().includes(query)) {
               pages.push({
                 to: `/${page.to}`,
                 label: page.label,
@@ -155,7 +159,7 @@ export default function GlobalSearch() {
         } else {
           if (!canAccess(role, link.roles)) continue;
 
-          if (link.label.toLowerCase().includes(query)) {
+          if (translateDynamic(t, link.label).toLowerCase().includes(query)) {
             pages.push({
               to: `/${link.to}`,
               label: link.label,
@@ -167,69 +171,70 @@ export default function GlobalSearch() {
     }
 
     if (!search) {
-      return pages.length ? [{ label: "Pages", results: pages }] : [];
+      return pages.length ? [{ label: "search.pages", results: pages }] : [];
     }
 
     const result: SearchGroup[] = [];
 
-    if (pages.length) result.push({ label: "Pages", results: pages });
+    if (pages.length) result.push({ label: "search.pages", results: pages });
 
     const userResults = (users.data?.data ?? []).map<SearchResult>((user) => ({
       to: `/${usersPaths.list}`,
       label: user.username,
-      hint: "User",
+      hint: "search.user",
     }));
 
     if (userResults.length)
-      result.push({ label: "Users", results: userResults });
+      result.push({ label: "search.users", results: userResults });
 
     const subjectResults = (subjects.data?.data ?? []).map<SearchResult>(
       (subject) => ({
         to: subjectsPaths.subjectDetailLink(subject.id),
         label: subject.name,
-        hint: "Subject",
+        hint: "search.subject",
       }),
     );
 
     if (subjectResults.length)
-      result.push({ label: "Subjects", results: subjectResults });
+      result.push({ label: "search.subjects", results: subjectResults });
 
     const testResults = (tests.data?.data ?? []).map<SearchResult>((test) => ({
       to: testsPaths.testDetailLink(test.id),
       label: test.name,
-      hint: "Test",
+      hint: "search.test",
     }));
 
     if (testResults.length)
-      result.push({ label: "Tests", results: testResults });
+      result.push({ label: "search.tests", results: testResults });
 
     const questionResults = (questions.data?.data ?? []).map<SearchResult>(
       (question) => ({
         to: questionsPaths.questionDetailLink(question.id),
         label: truncate(question.text),
-        hint: "Question",
+        hint: "search.question",
       }),
     );
 
     if (questionResults.length)
-      result.push({ label: "Questions", results: questionResults });
+      result.push({ label: "search.questions", results: questionResults });
 
     const answerResults = (answers.data?.data ?? []).map<SearchResult>(
       (answer) => ({
         to: `/${answersPaths.list}`,
         label: truncate(answer.text),
-        hint: "Answer",
+        hint: "search.answer",
       }),
     );
 
     if (answerResults.length)
-      result.push({ label: "Answers", results: answerResults });
+      result.push({ label: "search.answers", results: answerResults });
 
     return result;
   }, [
     role,
     rawTerm,
     search,
+    t,
     users.data,
     subjects.data,
     tests.data,
@@ -283,7 +288,7 @@ export default function GlobalSearch() {
         onOpenChange={setOpen}
       >
         <ComboboxInput
-          placeholder="Search..."
+          placeholder={t("search.placeholder")}
           showTrigger={false}
           showClear={false}
           className="w-56 md:w-72"
@@ -305,7 +310,7 @@ export default function GlobalSearch() {
             <InputGroupAddon align="inline-end">
               <InputGroupButton
                 size="icon-xs"
-                aria-label="Clear search"
+                aria-label={t("search.clear")}
                 onClick={() => {
                   setTerm("");
                   setOpen(false);
@@ -329,7 +334,9 @@ export default function GlobalSearch() {
           <ComboboxList>
             {groups.map((group) => (
               <ComboboxGroup key={group.label}>
-                <ComboboxLabel>{group.label}</ComboboxLabel>
+                <ComboboxLabel>
+                  {translateDynamic(t, group.label)}
+                </ComboboxLabel>
                 {group.results.map((result, index) => (
                   <ComboboxItem
                     key={`${group.label}-${result.to}-${index}`}
@@ -338,8 +345,8 @@ export default function GlobalSearch() {
                     <span className="flex min-w-0 flex-col">
                       <span className="truncate">{result.label}</span>
                     </span>
-                    <span className="ml-auto shrink-0 text-xs text-muted-foreground">
-                      {result.hint}
+                    <span className="ms-auto shrink-0 text-xs text-muted-foreground">
+                      {translateDynamic(t, result.hint)}
                     </span>
                   </ComboboxItem>
                 ))}
@@ -351,12 +358,12 @@ export default function GlobalSearch() {
                 {isFetching ? (
                   <>
                     <Spinner />
-                    Searching...
+                    {t("search.searching")}
                   </>
                 ) : rawTerm.length < MIN_TERM ? (
-                  "Keep typing to search…"
+                  t("search.keepTyping")
                 ) : (
-                  `No results for “${rawTerm}”`
+                  t("search.noResults", { term: rawTerm })
                 )}
               </div>
             )}

@@ -1,0 +1,19 @@
+{
+  "dashboard": "لوحة التحكم",
+  "welcome": "مرحباً، {{name}}",
+  "fallbackStudent": "طالب",
+  "subtitle": {
+    "student": "سجّل في جلسات الاختبار القادمة وابدأها عند إتاحتها.",
+    "default": "نظرة عامة على نظام اختبارات الطلاب"
+  },
+  "quickNav": "تنقّل سريع",
+  "actions": {
+    "myTestSessions": "جلسات الاختبار الخاصة بي",
+    "usersManagement": "إدارة المستخدمين",
+    "subjectsManagement": "إدارة المواد",
+    "testsManagement": "إدارة الاختبارات",
+    "questionsManagement": "إدارة الأسئلة",
+    "answersManagement": "إدارة الإجابات",
+    "systemSettings": "إعدادات النظام"
+  }
+}

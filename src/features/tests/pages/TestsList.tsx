@@ -20,6 +20,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { testsQueryKeys } from "../tests.api-keys";
 import { useDeleteTest } from "../api/delete-test.api";
 import { useRestoreTest } from "../api/restore-test.api";
+import { useTranslation } from "react-i18next";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const clientLoader = (queryClient: QueryClient) => async () => {
@@ -34,6 +35,7 @@ export default function TestsList() {
   const allowed = useRequireRole(["SUPER_ADMIN"]);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { t } = useTranslation(["common", "tests"]);
   const { tableProps } = useTestsTable();
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -49,7 +51,7 @@ export default function TestsList() {
       onSuccess: () => {
         setConfirm(null);
         refresh();
-        toast.success("Test deleted");
+        toast.success(t("tests:toasts.deleted"));
       },
     },
   });
@@ -58,7 +60,7 @@ export default function TestsList() {
     mutationConfig: {
       onSuccess: () => {
         refresh();
-        toast.success("Test restored");
+        toast.success(t("tests:toasts.restored"));
       },
     },
   });
@@ -68,26 +70,26 @@ export default function TestsList() {
   const actions: TableAction<TestDto>[] = [
     {
       name: "view",
-      label: "Open test",
+      label: t("tests:actions.open"),
       icon: <ListChecks size={16} />,
       onClick: (test) => navigate(testsPaths.testDetailLink(test.id)),
     },
     {
       name: "edit",
-      label: "Edit",
+      label: t("common:actions.edit"),
       icon: <Edit />,
       onClick: (test) => setEditing(test),
     },
     {
       name: "restore",
-      label: "Restore",
+      label: t("common:actions.restore"),
       icon: <RotateCcw />,
       hidden: (test) => !test.deletedAt,
       onClick: (test) => restoreMutation.mutate(test.id),
     },
     {
       name: "delete",
-      label: "Remove",
+      label: t("common:actions.remove"),
       icon: <Trash />,
       variant: "destructive",
       hidden: (test) => Boolean(test.deletedAt),
@@ -101,13 +103,13 @@ export default function TestsList() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Tests</h1>
+        <h1 className="text-3xl font-bold">{t("entities.tests")}</h1>
         <Button
           className="w-fit flex items-center gap-2"
           onClick={() => setCreateOpen(true)}
         >
           <Plus size={16} />
-          Add Test
+          {t("tests:list.add")}
         </Button>
       </div>
       <Card className="pb-0">
@@ -132,9 +134,9 @@ export default function TestsList() {
 
       <ConfirmPopup
         isOpen={Boolean(confirm)}
-        title={`Delete ${confirm?.name ?? ""}?`}
-        message="The test will be soft-deleted. Its questions stay in the database."
-        confirmLabel="Delete"
+        title={t("common:confirm.deleteTitle", { name: confirm?.name ?? "" })}
+        message={t("tests:confirm.deleteMessage")}
+        confirmLabel={t("common:actions.delete")}
         destructive
         loading={deleteMutation.isPending}
         onCancel={() => setConfirm(null)}

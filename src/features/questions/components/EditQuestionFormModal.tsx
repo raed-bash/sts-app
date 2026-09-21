@@ -21,6 +21,7 @@ import {
   questionFormSchema,
   type QuestionFormValues,
 } from "../schemas/question-form.schema";
+import { useTranslation } from "react-i18next";
 
 export type EditQuestionFormModalProps = {
   isOpen: boolean;
@@ -35,12 +36,14 @@ export default function EditQuestionFormModal({
 }: EditQuestionFormModalProps) {
   const queryClient = useQueryClient();
 
+  const { t } = useTranslation(["common", "questions"]);
+
   const updateMutation = useUpdateQuestion({
     mutationConfig: {
       onSuccess: () => {
         onClose();
         queryClient.invalidateQueries({ queryKey: questionsQueryKeys.all });
-        toast.success("Question updated");
+        toast.success(t("questions:toasts.updated"));
       },
     },
   });
@@ -56,7 +59,7 @@ export default function EditQuestionFormModal({
       completeQuestion: question?.completeQuestion?.text ?? "",
     },
     enableReinitialize: true,
-    validationZodSchema: questionFormSchema,
+    validationZodSchema: () => questionFormSchema(t),
     onSubmit: (values) =>
       updateMutation.mutate({
         id: question.id,
@@ -70,7 +73,7 @@ export default function EditQuestionFormModal({
     <Popup
       isOpen={isOpen}
       onClose={onClose}
-      title={`Edit question #${question?.id ?? ""}`}
+      title={t("questions:modal.editTitle", { id: question?.id ?? "" })}
     >
       <form
         className="flex flex-col gap-3 w-full"
@@ -79,7 +82,7 @@ export default function EditQuestionFormModal({
         <LabeledField
           type="textarea"
           name="text"
-          title="Question text"
+          title={t("questions:modal.questionText")}
           value={formik.values.text}
           helperText={formik.touchedErrors.text}
           onChange={formik.handleChange}
@@ -89,19 +92,19 @@ export default function EditQuestionFormModal({
           <LabeledField
             type="select"
             name="type"
-            title="Type"
+            title={t("common:fields.type")}
             value={formik.values.type}
             onChange={formik.handleChange}
             getInputLabel={(value) =>
               value
-                ? QUESTION_TYPE_TITLES[value as QuestionType]
-                : "Select type"
+                ? t(QUESTION_TYPE_TITLES[value as QuestionType])
+                : t("questions:modal.selectType")
             }
           >
             {(Object.keys(QUESTION_TYPE_TITLES) as QuestionType[]).map(
               (type) => (
                 <SelectItem key={type} value={type}>
-                  {QUESTION_TYPE_TITLES[type]}
+                  {t(QUESTION_TYPE_TITLES[type])}
                 </SelectItem>
               ),
             )}
@@ -109,7 +112,7 @@ export default function EditQuestionFormModal({
           <LabeledField
             type="number"
             name="points"
-            title="Points"
+            title={t("common:fields.points")}
             value={formik.values.points}
             helperText={formik.touchedErrors.points}
             onChange={formik.handleChange}
@@ -117,7 +120,7 @@ export default function EditQuestionFormModal({
         </div>
         <LabeledField<TestDto, true>
           type="selectApi"
-          title="Tests"
+          title={t("entities.tests")}
           name="tests"
           multiple
           value={formik.values.tests}
@@ -125,7 +128,7 @@ export default function EditQuestionFormModal({
           getInputLabel={(items) =>
             items?.length
               ? items.map((test) => test.name).join(", ")
-              : "Select tests..."
+              : t("questions:modal.selectTests")
           }
           onChange={formik.handleChange}
           queryProps={{
@@ -135,7 +138,7 @@ export default function EditQuestionFormModal({
         >
           {(data) => (
             <SelectGroup>
-              <SelectLabel>Tests</SelectLabel>
+              <SelectLabel>{t("entities.tests")}</SelectLabel>
               {data?.pages.map((page) =>
                 page.data.map((test) => (
                   <SelectItem key={test.id} value={test}>
@@ -150,7 +153,7 @@ export default function EditQuestionFormModal({
           <LabeledField
             type="textarea"
             name="completeQuestion"
-            title="Complete answer text"
+            title={t("questions:modal.completeAnswerText")}
             value={formik.values.completeQuestion}
             helperText={formik.touchedErrors.completeQuestion}
             onChange={formik.handleChange}
@@ -166,10 +169,10 @@ export default function EditQuestionFormModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            {t("common:actions.cancel")}
           </Button>
           <Button type="submit" className="w-fit" disabled={loading}>
-            {loading ? "Saving..." : "Save"}
+            {loading ? t("common:actions.saving") : t("common:actions.save")}
           </Button>
         </div>
       </form>

@@ -20,6 +20,7 @@ import {
   answerFormSchema,
   type AnswerFormValues,
 } from "../schemas/answer-form.schema";
+import { useTranslation } from "react-i18next";
 
 export type CreateAnswerFormModalProps = {
   isOpen: boolean;
@@ -36,12 +37,14 @@ export default function CreateAnswerFormModal({
 }: CreateAnswerFormModalProps) {
   const queryClient = useQueryClient();
 
+  const { t } = useTranslation(["common", "answers"]);
+
   const createMutation = useCreateAnswer({
     mutationConfig: {
       onSuccess: (data) => {
         onClose();
         queryClient.invalidateQueries({ queryKey: answersQueryKeys.all });
-        toast.success("Answer created");
+        toast.success(t("answers:toasts.created"));
         onSuccess?.(data);
       },
     },
@@ -57,7 +60,7 @@ export default function CreateAnswerFormModal({
       correctIndex: 0,
       question: initialQuestion ?? null,
     },
-    validationZodSchema: answerFormSchema,
+    validationZodSchema: () => answerFormSchema(t),
     onSubmit: (values) =>
       createMutation.mutate(
         new CreateAnswerDto(
@@ -72,7 +75,11 @@ export default function CreateAnswerFormModal({
   );
 
   return (
-    <Popup isOpen={isOpen} onClose={onClose} title="Create answer">
+    <Popup
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t("answers:modal.createTitle")}
+    >
       <form
         className="flex flex-col gap-3 w-full"
         onSubmit={formik.handleSubmit}
@@ -80,7 +87,7 @@ export default function CreateAnswerFormModal({
         <LabeledField
           type="textarea"
           name="text"
-          title="Answer text"
+          title={t("answers:modal.answerText")}
           value={formik.values.text}
           helperText={formik.touchedErrors.text}
           onChange={formik.handleChange}
@@ -88,10 +95,12 @@ export default function CreateAnswerFormModal({
         />
         <LabeledField<QuestionDto>
           type="selectApi"
-          title="Question"
+          title={t("answers:modal.question")}
           name="question"
           value={formik.values.question}
-          getInputLabel={(item) => item?.text || "Select question..."}
+          getInputLabel={(item) =>
+            item?.text || t("answers:modal.selectQuestion")
+          }
           isItemEqualToValue={(item, value) => item.id === value.id}
           onChange={formik.handleChange}
           queryProps={{
@@ -101,7 +110,7 @@ export default function CreateAnswerFormModal({
         >
           {(data) => (
             <SelectGroup>
-              <SelectLabel>Questions</SelectLabel>
+              <SelectLabel>{t("entities.questions")}</SelectLabel>
               {data?.pages.map((page) =>
                 page.data.map((question) => (
                   <SelectItem key={question.id} value={question}>
@@ -116,7 +125,7 @@ export default function CreateAnswerFormModal({
           <LabeledField
             type="number"
             name="order"
-            title="Order"
+            title={t("common:fields.order")}
             value={formik.values.order}
             helperText={formik.touchedErrors.order}
             onChange={formik.handleChange}
@@ -125,7 +134,7 @@ export default function CreateAnswerFormModal({
             <LabeledField
               type="number"
               name="correctIndex"
-              title="Correct index"
+              title={t("answers:modal.correctIndex")}
               value={formik.values.correctIndex}
               helperText={formik.touchedErrors.correctIndex}
               onChange={formik.handleChange}
@@ -134,7 +143,7 @@ export default function CreateAnswerFormModal({
             <LabeledField
               type="checkbox"
               name="isCorrect"
-              title="Is correct"
+              title={t("answers:modal.isCorrect")}
               checked={formik.values.isCorrect}
               onChange={formik.handleChange}
             />
@@ -149,10 +158,10 @@ export default function CreateAnswerFormModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            {t("common:actions.cancel")}
           </Button>
           <Button type="submit" className="w-fit" disabled={loading}>
-            {loading ? "Saving..." : "Create"}
+            {loading ? t("common:actions.saving") : t("common:actions.create")}
           </Button>
         </div>
       </form>

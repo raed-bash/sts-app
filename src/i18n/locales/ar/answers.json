@@ -1,0 +1,24 @@
+{
+  "modal": {
+    "createTitle": "إنشاء إجابة",
+    "editTitle": "تعديل الإجابة #{{id}}",
+    "answerText": "نص الإجابة",
+    "question": "السؤال",
+    "selectQuestion": "اختر السؤال...",
+    "correctIndex": "الفهرس الصحيح",
+    "isCorrect": "إجابة صحيحة"
+  },
+  "confirm": {
+    "deleteTitle": "حذف الإجابة #{{id}}؟",
+    "deleteMessage": "سيتم حذف هذه الإجابة من سؤالها."
+  },
+  "toasts": {
+    "created": "تم إنشاء الإجابة",
+    "updated": "تم تحديث الإجابة",
+    "deleted": "تم حذف الإجابة"
+  },
+  "table": {
+    "isCorrect": "إجابة صحيحة",
+    "correctIndex": "الفهرس الصحيح"
+  }
+}

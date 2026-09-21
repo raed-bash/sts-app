@@ -31,7 +31,14 @@ export class ExamQuestionDto {
   constructor(examQuestion: ExamQuestionDto) {
     Object.assign(
       this,
-      pick(examQuestion, ["id", "text", "type", "points", "completeQuestion", "answers"]),
+      pick(examQuestion, [
+        "id",
+        "text",
+        "type",
+        "points",
+        "completeQuestion",
+        "answers",
+      ]),
     );
   }
 }

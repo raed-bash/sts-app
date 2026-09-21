@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Pencil, Play, Plus, Square, Trash, BarChart3 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { TableAction } from "@/shared/components/custom/table/components/TableActionsCell";
 import TestSessionsTable from "../components/TestSessionsTable";
 import CreateTestSessionFormModal from "../components/CreateTestSessionFormModal";
@@ -44,6 +45,7 @@ export default function TestSessionsList() {
 }
 
 function AdminTestSessionsView() {
+  const { t } = useTranslation(["testSessions", "common"]);
   const { tableProps } = useTestSessionsTable();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -67,7 +69,7 @@ function AdminTestSessionsView() {
       onSuccess: () => {
         setConfirm(null);
         refresh();
-        toast.success("Test session deleted");
+        toast.success(t("testSessions:toasts.deleted"));
       },
     },
   });
@@ -75,34 +77,34 @@ function AdminTestSessionsView() {
   const actions: TableAction<TestSessionDto>[] = [
     {
       name: "edit",
-      label: "Edit schedule",
+      label: t("testSessions:actions.editSchedule"),
       icon: <Pencil />,
       onClick: (session) => setEditing(session),
     },
     {
       name: "start",
-      label: "Start",
+      label: t("testSessions:actions.start"),
       icon: <Play />,
       hidden: (session) => session.status !== "PENDING",
       onClick: (session) => startMutation.mutate(session.id),
     },
     {
       name: "finish",
-      label: "Finish",
+      label: t("testSessions:actions.finish"),
       icon: <Square />,
       hidden: (session) => session.status !== "STARTED",
       onClick: (session) => finishMutation.mutate(session.id),
     },
     {
       name: "results",
-      label: "View results",
+      label: t("common:actions.viewResults"),
       icon: <BarChart3 />,
       hidden: (session) => session.status !== "FINISHED",
       onClick: (session) => navigate(testSessionsPaths.resultsLink(session.id)),
     },
     {
       name: "delete",
-      label: "Remove",
+      label: t("common:actions.remove"),
       icon: <Trash />,
       variant: "destructive",
       hidden: (session) => Boolean(session.deletedAt),
@@ -113,13 +115,13 @@ function AdminTestSessionsView() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Test Sessions</h1>
+        <h1 className="text-3xl font-bold">{t("testSessions:list.title")}</h1>
         <Button
           className="w-fit flex items-center gap-2"
           onClick={() => setCreateOpen(true)}
         >
           <Plus size={16} />
-          Create Session
+          {t("testSessions:list.create")}
         </Button>
       </div>
       <Card className="pb-0">
@@ -143,9 +145,9 @@ function AdminTestSessionsView() {
 
       <ConfirmPopup
         isOpen={Boolean(confirm)}
-        title={`Delete session #${confirm?.id ?? ""}?`}
-        message="The test session will be soft-deleted."
-        confirmLabel="Delete"
+        title={t("testSessions:confirm.deleteTitle", { id: confirm?.id ?? "" })}
+        message={t("testSessions:confirm.deleteMessage")}
+        confirmLabel={t("common:actions.delete")}
         destructive
         loading={deleteMutation.isPending}
         onCancel={() => setConfirm(null)}
@@ -156,6 +158,7 @@ function AdminTestSessionsView() {
 }
 
 function StudentTestSessionsView() {
+  const { t } = useTranslation(["testSessions"]);
   const { data, isLoading } = useTestSessionsStudents();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -180,9 +183,9 @@ function StudentTestSessionsView() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h1 className="text-3xl font-bold">My Test Sessions</h1>
+        <h1 className="text-3xl font-bold">{t("testSessions:list.myTitle")}</h1>
         <p className="text-(--text-muted) text-sm">
-          Register for a session ahead of time, then start it when it goes live.
+          {t("testSessions:list.subtitle")}
         </p>
       </div>
 
@@ -202,7 +205,7 @@ function StudentTestSessionsView() {
         />
       ) : (
         <div className="text-center text-(--text-muted) py-20">
-          No test sessions available yet.
+          {t("testSessions:list.noSessions")}
         </div>
       )}
     </div>

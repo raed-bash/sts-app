@@ -1,5 +1,6 @@
 import { ROLE_TITLES, type UserRole } from "@/constants/user-role";
 import { cn } from "cn";
+import { useTranslation } from "react-i18next";
 
 export type RoleBadgeProps = React.ComponentProps<"div"> & {
   role?: UserRole;
@@ -12,6 +13,8 @@ const ROLE_STYLES: Record<UserRole, string> = {
 };
 
 export default function RoleBadge({ role, ...props }: RoleBadgeProps) {
+  const { t } = useTranslation(["common"]);
+
   return (
     <div
       {...props}
@@ -21,7 +24,7 @@ export default function RoleBadge({ role, ...props }: RoleBadgeProps) {
         props.className,
       )}
     >
-      {role && ROLE_TITLES[role]}
+      {role && t(ROLE_TITLES[role])}
     </div>
   );
 }

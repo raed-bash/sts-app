@@ -1,0 +1,19 @@
+{
+  "dashboard": "Dashboard",
+  "welcome": "Welcome, {{name}}",
+  "fallbackStudent": "student",
+  "subtitle": {
+    "student": "Register for upcoming test sessions and start them when they go live.",
+    "default": "Overview of the Student Testing System"
+  },
+  "quickNav": "Quick Navigation",
+  "actions": {
+    "myTestSessions": "My Test Sessions",
+    "usersManagement": "Users Management",
+    "subjectsManagement": "Subjects Management",
+    "testsManagement": "Tests Management",
+    "questionsManagement": "Questions Management",
+    "answersManagement": "Answers Management",
+    "systemSettings": "System Settings"
+  }
+}

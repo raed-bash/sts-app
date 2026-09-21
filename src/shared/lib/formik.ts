@@ -9,7 +9,7 @@ import type { ZodError, ZodObject } from "zod";
 
 export function useAppFormik<Values extends FormikValues = FormikValues>(
   formikConfig: FormikConfig<Values> & {
-    validationZodSchema?: ZodObject;
+    validationZodSchema?: ZodObject | (() => ZodObject);
   },
 ) {
   const getValidate = () => {
@@ -18,7 +18,12 @@ export function useAppFormik<Values extends FormikValues = FormikValues>(
 
       if (!formikConfig.validationZodSchema) return;
 
-      const result = formikConfig.validationZodSchema.safeParse(values);
+      const schema =
+        typeof formikConfig.validationZodSchema === "function"
+          ? formikConfig.validationZodSchema()
+          : formikConfig.validationZodSchema;
+
+      const result = schema.safeParse(values);
 
       if (!result.success) {
         return zodToFormikErrors(result.error);

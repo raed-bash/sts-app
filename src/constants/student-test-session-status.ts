@@ -1,15 +1,9 @@
 export type StudentTestSessionStatus =
-  | "PENDING"
-  | "STARTED"
-  | "FINISHED"
-  | "CANCELED";
+  "PENDING" | "STARTED" | "FINISHED" | "CANCELED";
 
-export const STUDENT_TEST_SESSION_STATUS_TITLES: Record<
-  StudentTestSessionStatus,
-  string
-> = {
-  PENDING: "Pending",
-  STARTED: "Started",
-  FINISHED: "Finished",
-  CANCELED: "Canceled",
-};
+export const STUDENT_TEST_SESSION_STATUS_TITLES = {
+  PENDING: "common:statuses.pending",
+  STARTED: "common:statuses.started",
+  FINISHED: "common:statuses.finished",
+  CANCELED: "common:statuses.canceled",
+} as const satisfies Record<StudentTestSessionStatus, string>;

@@ -6,9 +6,7 @@ import {
   type QuestionOrderAttributes,
 } from "../dtos/query-question.dto";
 
-export function useQuestionsTable(
-  options: { testIds?: number[] } = {},
-) {
+export function useQuestionsTable(options: { testIds?: number[] } = {}) {
   const state = useTableState<QuestionOrderAttributes>({ name: "questions" });
 
   const queryBase = new QueryQuestionDto({

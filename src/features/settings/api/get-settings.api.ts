@@ -9,9 +9,8 @@ import { settingsQueryKeys } from "../settings.api-keys";
 const getSettings = async (
   signal: AbortSignal,
 ): Promise<PaginatedResultsDto<SettingDto>> => {
-  return (
-    await api.get(ep("settings"), { signal, params: { perPage: 100 } })
-  ).data;
+  return (await api.get(ep("settings"), { signal, params: { perPage: 100 } }))
+    .data;
 };
 
 export const getSettingsQueryOptions = () => {

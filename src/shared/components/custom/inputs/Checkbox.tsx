@@ -1,5 +1,6 @@
 import type React from "react";
 import { cn } from "cn";
+import { Check } from "lucide-react";
 
 export type CheckboxProps = Omit<React.ComponentProps<"input">, "type"> & {
   secondaryStatus?: boolean;
@@ -8,27 +9,55 @@ export type CheckboxProps = Omit<React.ComponentProps<"input">, "type"> & {
 function Checkbox({
   className,
   secondaryStatus = false,
+  checked,
   ...props
 }: CheckboxProps) {
+  const isActive = Boolean(secondaryStatus) || Boolean(checked);
+
+  const showCheck = Boolean(checked) && !secondaryStatus;
+
+  const showDash = secondaryStatus;
+
   return (
-    <input
-      type="checkbox"
+    <span
       className={cn(
-        "appearance-none w-4 h-4 relative duration-150 before:duration-150 after:duration-150 inline-flex justify-center items-center bg-(--secondary)/10 rounded border border-(--secondary)/50 hover:border-(--primary)",
-
-        "checked:bg-(--primary) data-[secondary=true]:bg-(--primary)",
-
-        "checked:before:content-[''] before:absolute checked:before:w-2.5 before:h-[1.5px] before:bg-white checked:before:-rotate-52 before:right-px",
-
-        "checked:after:content-[''] after:absolute checked:after:w-1 after:-translate-x-[3.5px] after:translate-y-[1.6px] after:h-[1.5px] after:bg-white after:rotate-45",
-
-        "data-[secondary=true]:before:w-2.5 data-[secondary=true]:before:rotate-0 data-[secondary=true]:before:left-[50%] data-[secondary=true]:before:-translate-x-[50%] ",
+        "relative inline-flex size-4 shrink-0 items-center justify-center rounded border",
+        "border-(--secondary)/50 bg-(--secondary)/10 text-white transition-colors duration-150",
+        "hover:border-(--primary) focus-within:ring-2 focus-within:ring-(--ring)",
+        isActive && "border-(--primary) bg-(--primary)",
         className,
       )}
-      aria-checked={!secondaryStatus && props.checked}
-      data-secondary={secondaryStatus}
-      {...props}
-    />
+    >
+      <input
+        type="checkbox"
+        className="absolute inset-0 z-10 m-0 size-full cursor-pointer appearance-none opacity-0"
+        aria-checked={!secondaryStatus && checked}
+        {...props}
+      />
+      {showCheck && (
+        <Check
+          className="pointer-events-none size-3"
+          strokeWidth={3}
+          aria-hidden
+        />
+      )}
+      {showDash && (
+        <svg
+          viewBox="0 0 16 16"
+          className="pointer-events-none size-3 fill-none stroke-current"
+          aria-hidden
+        >
+          <line
+            x1="2"
+            y1="8"
+            x2="14"
+            y2="8"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+          />
+        </svg>
+      )}
+    </span>
   );
 }
 

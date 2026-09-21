@@ -39,6 +39,7 @@ import { Button } from "@/shared/components/ui/button";
 import type { QuestionDto } from "@/features/questions/dtos/question.dto";
 import type { TestDto } from "../dtos/test.dto";
 import { dateFormatter } from "@/shared/utils";
+import { useTranslation } from "react-i18next";
 
 export default function TestDetail() {
   const allowed = useRequireRole(["SUPER_ADMIN"]);
@@ -47,6 +48,7 @@ export default function TestDetail() {
   const testId = Number(id);
 
   const queryClient = useQueryClient();
+  const { t } = useTranslation(["common", "tests", "questions"]);
 
   const { data: test, isLoading } = useTest({
     id: testId,
@@ -76,7 +78,7 @@ export default function TestDetail() {
   const deleteTestMutation = useDeleteTest({
     mutationConfig: {
       onSuccess: () => {
-        toast.success("Test deleted");
+        toast.success(t("tests:toasts.deleted"));
         navigate(`/${testsPaths.list}`);
       },
     },
@@ -87,7 +89,7 @@ export default function TestDetail() {
       onSuccess: () => {
         setConfirmQuestion(null);
         refresh();
-        toast.success("Question deleted");
+        toast.success(t("questions:toasts.deleted"));
       },
     },
   });
@@ -96,7 +98,7 @@ export default function TestDetail() {
     mutationConfig: {
       onSuccess: () => {
         refresh();
-        toast.success("Question restored");
+        toast.success(t("questions:toasts.restored"));
       },
     },
   });
@@ -114,20 +116,20 @@ export default function TestDetail() {
   const questionActions: TableAction<QuestionDto>[] = [
     {
       name: "answers",
-      label: "Answers",
+      label: t("entities.answers"),
       icon: <ListChecks size={16} />,
       onClick: (question) =>
         navigate(questionsPaths.questionDetailLink(question.id)),
     },
     {
       name: "edit",
-      label: "Edit",
+      label: t("common:actions.edit"),
       icon: <Edit size={16} />,
       onClick: (question) => setEditingQuestion(question),
     },
     {
       name: "restore",
-      label: "Restore",
+      label: t("common:actions.restore"),
       icon: <RotateCcw size={16} />,
       hidden: (question) => !question.deletedAt,
       onClick: (question) => {
@@ -136,7 +138,7 @@ export default function TestDetail() {
     },
     {
       name: "delete",
-      label: "Remove",
+      label: t("common:actions.remove"),
       icon: <Trash size={16} />,
       variant: "destructive",
       hidden: (question) => Boolean(question.deletedAt),
@@ -153,7 +155,7 @@ export default function TestDetail() {
           onClick={() => navigate(`/${testsPaths.list}`)}
         >
           <ArrowLeft size={16} />
-          Back to tests
+          {t("tests:detail.back")}
         </Button>
         <div className="flex gap-2">
           <Button
@@ -162,7 +164,7 @@ export default function TestDetail() {
             onClick={() => setEditingTest(test)}
           >
             <Edit size={16} />
-            Edit test
+            {t("tests:detail.edit")}
           </Button>
           <Button
             variant="destructive"
@@ -170,7 +172,7 @@ export default function TestDetail() {
             onClick={() => setConfirmTest(test)}
           >
             <Trash size={16} />
-            Delete
+            {t("common:actions.delete")}
           </Button>
         </div>
       </div>
@@ -181,13 +183,15 @@ export default function TestDetail() {
           <div className="grid md:grid-cols-3 gap-4 mt-4">
             <div className="p-4 rounded-lg bg-(--secondary)/10">
               <div className="text-xs text-(--text-muted) uppercase">
-                Duration
+                {t("tests:detail.duration")}
               </div>
-              <div className="text-lg font-semibold">{test.period} min</div>
+              <div className="text-lg font-semibold">
+                {t("tests:detail.minutes", { count: test.period })}
+              </div>
             </div>
             <div className="p-4 rounded-lg bg-(--secondary)/10">
               <div className="text-xs text-(--text-muted) uppercase">
-                Created
+                {t("common:fields.created")}
               </div>
               <div className="text-lg font-semibold">
                 {dateFormatter(test.createdAt)}
@@ -195,15 +199,17 @@ export default function TestDetail() {
             </div>
             <div className="p-4 rounded-lg bg-(--secondary)/10">
               <div className="text-xs text-(--text-muted) uppercase">
-                Subjects
+                {t("tests:detail.subjects")}
               </div>
               <div className="mt-1">
                 <LabeledField
                   type="selectApi"
                   getInputLabel={() =>
                     subjects.length
-                      ? `${subjects.length} assigned`
-                      : "Not assigned"
+                      ? t("common:labels.assignedCount", {
+                          count: subjects.length,
+                        })
+                      : t("tests:detail.subjectsNotAssigned")
                   }
                   queryProps={{
                     queryFn: loadSubjects,
@@ -212,7 +218,7 @@ export default function TestDetail() {
                 >
                   {(data) => (
                     <SelectGroup>
-                      <SelectLabel>Subjects</SelectLabel>
+                      <SelectLabel>{t("tests:detail.subjects")}</SelectLabel>
                       {data?.pages.map((page) =>
                         page.data.map((subject) => (
                           <SelectItem key={subject.id} value={subject}>
@@ -230,13 +236,13 @@ export default function TestDetail() {
       </Card>
 
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Questions</h2>
+        <h2 className="text-2xl font-bold">{t("entities.questions")}</h2>
         <Button
           className="w-fit flex items-center gap-2"
           onClick={() => setCreateQuestionOpen(true)}
         >
           <Plus size={16} />
-          Add Question
+          {t("common:actions.addQuestion")}
         </Button>
       </div>
       <Card className="pb-52">
@@ -272,9 +278,11 @@ export default function TestDetail() {
 
       <ConfirmPopup
         isOpen={Boolean(confirmQuestion)}
-        title={`Delete question #${confirmQuestion?.id ?? ""}?`}
-        message="The question will be soft-deleted. Its answers stay in the database."
-        confirmLabel="Delete"
+        title={t("questions:confirm.deleteTitle", {
+          id: confirmQuestion?.id ?? "",
+        })}
+        message={t("questions:confirm.deleteMessage")}
+        confirmLabel={t("common:actions.delete")}
         destructive
         loading={deleteQuestionMutation.isPending}
         onCancel={() => setConfirmQuestion(null)}
@@ -285,9 +293,11 @@ export default function TestDetail() {
 
       <ConfirmPopup
         isOpen={Boolean(confirmTest)}
-        title={`Delete ${confirmTest?.name ?? ""}?`}
-        message="The test will be soft-deleted. Its questions stay in the database."
-        confirmLabel="Delete"
+        title={t("common:confirm.deleteTitle", {
+          name: confirmTest?.name ?? "",
+        })}
+        message={t("tests:confirm.deleteMessage")}
+        confirmLabel={t("common:actions.delete")}
         destructive
         loading={deleteTestMutation.isPending}
         onCancel={() => setConfirmTest(null)}

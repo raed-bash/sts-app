@@ -16,17 +16,20 @@ import { useDeleteAnswer } from "@/features/answers/api/delete-answer.api";
 import { questionsQueryKeys } from "../questions.api-keys";
 import { answersQueryKeys } from "@/features/answers/answers.api-keys";
 import toast from "@/shared/lib/toast";
+import { translateDynamic } from "@/shared/lib/translate-dynamic";
 import Loading from "@/shared/components/custom/loading/Loading";
 import { Button } from "@/shared/components/ui/button";
 import QuestionTypeBadge from "@/components/QuestionTypeBadge";
 import { dateFormatter } from "@/shared/utils";
 import type { AnswerDto } from "@/features/answers/dtos/answer.dto";
+import { useTranslation } from "react-i18next";
 
 export default function QuestionDetail() {
   const allowed = useRequireRole(["SUPER_ADMIN"]);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const questionId = Number(id);
+  const { t } = useTranslation(["common", "questions", "answers"]);
 
   const queryClient = useQueryClient();
 
@@ -52,7 +55,7 @@ export default function QuestionDetail() {
       onSuccess: () => {
         setConfirm(null);
         refresh();
-        toast.success("Answer deleted");
+        toast.success(t("answers:toasts.deleted"));
       },
     },
   });
@@ -70,13 +73,13 @@ export default function QuestionDetail() {
   const actions: TableAction<AnswerDto>[] = [
     {
       name: "edit",
-      label: "Edit",
+      label: t("common:actions.edit"),
       icon: <Edit size={16} />,
       onClick: (answer) => setEditing(answer),
     },
     {
       name: "delete",
-      label: "Remove",
+      label: t("common:actions.remove"),
       icon: <Trash size={16} />,
       variant: "destructive",
       onClick: (answer) => {
@@ -95,7 +98,7 @@ export default function QuestionDetail() {
           onClick={() => navigate(`/${questionsPaths.list}`)}
         >
           <ArrowLeft size={16} />
-          Back to questions
+          {t("questions:detail.back")}
         </Button>
       </div>
 
@@ -107,18 +110,25 @@ export default function QuestionDetail() {
           </div>
           <div className="grid md:grid-cols-3 gap-4 mt-4">
             <div className="p-4 rounded-lg bg-(--secondary)/10">
-              <div className="text-xs text-(--text-muted) uppercase">Type</div>
-              <div className="text-lg font-semibold">{question.type}</div>
+              <div className="text-xs text-(--text-muted) uppercase">
+                {t("common:fields.type")}
+              </div>
+              <div className="text-lg font-semibold">
+                {translateDynamic(
+                  t,
+                  `common:questionTypes.${question.type.toLowerCase()}`,
+                )}
+              </div>
             </div>
             <div className="p-4 rounded-lg bg-(--secondary)/10">
               <div className="text-xs text-(--text-muted) uppercase">
-                Points
+                {t("common:fields.points")}
               </div>
               <div className="text-lg font-semibold">{question.points}</div>
             </div>
             <div className="p-4 rounded-lg bg-(--secondary)/10">
               <div className="text-xs text-(--text-muted) uppercase">
-                Created
+                {t("common:fields.created")}
               </div>
               <div className="text-lg font-semibold">
                 {dateFormatter(question.createdAt)}
@@ -128,7 +138,7 @@ export default function QuestionDetail() {
           {question.completeQuestion && (
             <div className="mt-4 p-4 rounded-lg bg-(--info)/10">
               <div className="text-xs text-(--text-muted) uppercase">
-                Complete answer
+                {t("questions:detail.completeAnswer")}
               </div>
               <div className="text-lg font-semibold">
                 {question.completeQuestion.text}
@@ -139,13 +149,13 @@ export default function QuestionDetail() {
       </Card>
 
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Answers</h2>
+        <h2 className="text-2xl font-bold">{t("entities.answers")}</h2>
         <Button
           className="w-fit flex items-center gap-2"
           onClick={() => setCreateOpen(true)}
         >
           <Plus size={16} />
-          Add Answer
+          {t("common:actions.addAnswer")}
         </Button>
       </div>
       <Card className="pb-52">
@@ -170,9 +180,9 @@ export default function QuestionDetail() {
 
       <ConfirmPopup
         isOpen={Boolean(confirm)}
-        title={`Delete answer #${confirm?.id ?? ""}?`}
-        message="This answer will be removed from its question."
-        confirmLabel="Delete"
+        title={t("answers:confirm.deleteTitle", { id: confirm?.id ?? "" })}
+        message={t("answers:confirm.deleteMessage")}
+        confirmLabel={t("common:actions.delete")}
         destructive
         loading={deleteMutation.isPending}
         onCancel={() => setConfirm(null)}

@@ -80,7 +80,7 @@ function SelectApi<Value, Multiple extends boolean | undefined = false>({
       <SelectItem
         disabled
         itemTextProps={{ className: "justify-center " }}
-        className="pr-0"
+        className="pe-0"
         unselectable="on"
         value={crypto.randomUUID()}
       >

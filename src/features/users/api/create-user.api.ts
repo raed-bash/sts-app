@@ -13,7 +13,9 @@ type UseCreateUserOptions = {
   mutationConfig?: MutationConfig<typeof createUser>;
 };
 
-export const useCreateUser = ({ mutationConfig }: UseCreateUserOptions = {}) => {
+export const useCreateUser = ({
+  mutationConfig,
+}: UseCreateUserOptions = {}) => {
   return useMutation({
     ...mutationConfig,
     mutationFn: createUser,

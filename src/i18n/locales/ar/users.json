@@ -1,0 +1,44 @@
+{
+  "list": {
+    "add": "إضافة مستخدم"
+  },
+  "modal": {
+    "createTitle": "إنشاء مستخدم",
+    "editTitle": "تعديل المستخدم — {{name}}",
+    "selectRole": "اختر الدور",
+    "selectStatus": "اختر الحالة"
+  },
+  "passwordModal": {
+    "title": "تغيير كلمة المرور — {{name}}",
+    "description": "سيستخدم المستخدم كلمة المرور الجديدة عند تسجيل الدخول التالي.",
+    "newPassword": "كلمة المرور الجديدة"
+  },
+  "actions": {
+    "approve": "موافقة",
+    "changePassword": "تغيير كلمة المرور"
+  },
+  "confirm": {
+    "deleteMessage": "سيتم حذف حساب المستخدم بشكل ناعم. تُحفظ البيانات الحالية.",
+    "blockTitle": "حظر {{name}}؟",
+    "blockMessage": "لن يتمكن المستخدم من تسجيل الدخول.",
+    "activateTitle": "تفعيل {{name}}؟",
+    "restoreTitle": "استعادة {{name}}؟"
+  },
+  "toasts": {
+    "created": "تم إنشاء المستخدم",
+    "updated": "تم تحديث المستخدم",
+    "deleted": "تم حذف المستخدم",
+    "restored": "تمت استعادة المستخدم",
+    "blocked": "تم حظر المستخدم",
+    "activated": "تم تفعيل المستخدم",
+    "passwordChanged": "تم تغيير كلمة المرور"
+  },
+  "errors": {
+    "passwordRequired": "كلمة المرور مطلوبة"
+  },
+  "table": {
+    "phone": "الهاتف",
+    "address": "العنوان",
+    "company": "الشركة"
+  }
+}

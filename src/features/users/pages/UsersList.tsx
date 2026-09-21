@@ -30,6 +30,7 @@ import { useUpdateUser } from "../api/update-user.api";
 import { useDeleteUser } from "../api/delete-user.api";
 import { useRestoreUser } from "../api/restore-user.api";
 import { UpdateUserDto } from "../dtos/update-user.dto";
+import { useTranslation } from "react-i18next";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const clientLoader = (queryClient: QueryClient) => async () => {
@@ -50,6 +51,7 @@ type ConfirmState =
 export default function UsersList() {
   const allowed = useRequireRole(["SUPER_ADMIN"]);
   const queryClient = useQueryClient();
+  const { t } = useTranslation(["common", "users"]);
   const { tableProps } = useUsersTable();
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -85,40 +87,40 @@ export default function UsersList() {
   const actions: TableAction<UserDto>[] = [
     {
       name: "edit",
-      label: "Edit",
+      label: t("common:actions.edit"),
       icon: <Edit />,
       onClick: (user) => setEditing(user),
     },
     {
       name: "approve",
-      label: "Approve",
+      label: t("users:actions.approve"),
       icon: <BadgeCheck />,
       hidden: (user) => user.status !== "PENDING",
       onClick: (user) => handleStatus(user, "ACTIVE"),
     },
     {
       name: "activate",
-      label: "Activate",
+      label: t("common:actions.activate"),
       icon: <CheckCircle2 />,
       hidden: (user) => user.status !== "BLOCKED",
       onClick: (user) => handleStatus(user, "ACTIVE"),
     },
     {
       name: "block",
-      label: "Block",
+      label: t("common:actions.block"),
       icon: <CircleSlash />,
       hidden: (user) => user.status !== "ACTIVE",
       onClick: (user) => setConfirm({ action: "block", user }),
     },
     {
       name: "password",
-      label: "Change password",
+      label: t("users:actions.changePassword"),
       icon: <KeyRound />,
       onClick: (user) => setChangingPassword(user),
     },
     {
       name: "restore",
-      label: "Restore",
+      label: t("common:actions.restore"),
       icon: <RotateCcw />,
       hidden: (user) => !user.deletedAt,
       onClick: (user) => {
@@ -133,7 +135,7 @@ export default function UsersList() {
     },
     {
       name: "delete",
-      label: "Remove",
+      label: t("common:actions.remove"),
       icon: <Trash />,
       variant: "destructive",
       hidden: (user) => Boolean(user.deletedAt),
@@ -146,13 +148,13 @@ export default function UsersList() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Users</h1>
+        <h1 className="text-3xl font-bold">{t("entities.users")}</h1>
         <Button
           className="w-fit flex items-center gap-2"
           onClick={() => setCreateOpen(true)}
         >
           <UserPlus size={16} />
-          Add User
+          {t("users:list.add")}
         </Button>
       </div>
       <Card className="pb-0">
@@ -186,28 +188,36 @@ export default function UsersList() {
         isOpen={Boolean(confirm)}
         title={
           confirmState?.action === "delete"
-            ? `Delete ${confirmState?.user?.username ?? ""}?`
+            ? t("common:confirm.deleteTitle", {
+                name: confirmState?.user?.username ?? "",
+              })
             : confirmState?.action === "block"
-              ? `Block ${confirmState?.user?.username ?? ""}?`
+              ? t("users:confirm.blockTitle", {
+                  name: confirmState?.user?.username ?? "",
+                })
               : confirmState?.action === "activate"
-                ? `Activate ${confirmState?.user?.username ?? ""}?`
-                : `Restore ${confirmState?.user?.username ?? ""}?`
+                ? t("users:confirm.activateTitle", {
+                    name: confirmState?.user?.username ?? "",
+                  })
+                : t("users:confirm.restoreTitle", {
+                    name: confirmState?.user?.username ?? "",
+                  })
         }
         message={
           confirmState?.action === "delete"
-            ? "The user account will be soft-deleted. Existing data is kept."
+            ? t("users:confirm.deleteMessage")
             : confirmState?.action === "block"
-              ? "The user will not be able to sign in."
+              ? t("users:confirm.blockMessage")
               : undefined
         }
         confirmLabel={
           confirmState?.action === "delete"
-            ? "Delete"
+            ? t("common:actions.delete")
             : confirmState?.action === "block"
-              ? "Block"
+              ? t("common:actions.block")
               : confirmState?.action === "activate"
-                ? "Activate"
-                : "Restore"
+                ? t("common:actions.activate")
+                : t("common:actions.restore")
         }
         destructive={confirmState?.action === "delete"}
         loading={pendingId !== null}
@@ -222,17 +232,17 @@ export default function UsersList() {
                 setPendingId(null);
                 setConfirm(null);
                 refresh();
-                toast.success("User deleted");
+                toast.success(t("users:toasts.deleted"));
               },
             });
           } else if (confirm.action === "block") {
             handleStatus(confirm.user, "BLOCKED");
             setConfirm(null);
-            toast.success("User blocked");
+            toast.success(t("users:toasts.blocked"));
           } else if (confirm.action === "activate") {
             handleStatus(confirm.user, "ACTIVE");
             setConfirm(null);
-            toast.success("User activated");
+            toast.success(t("users:toasts.activated"));
           } else if (confirm.action === "restore") {
             setPendingId(confirm.user.id);
             restoreMutation.mutate(confirm.user.id, {

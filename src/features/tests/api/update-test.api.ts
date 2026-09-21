@@ -17,7 +17,9 @@ type UseUpdateTestOptions = {
   mutationConfig?: MutationConfig<typeof updateTest>;
 };
 
-export const useUpdateTest = ({ mutationConfig }: UseUpdateTestOptions = {}) => {
+export const useUpdateTest = ({
+  mutationConfig,
+}: UseUpdateTestOptions = {}) => {
   return useMutation({
     ...mutationConfig,
     mutationFn: updateTest,

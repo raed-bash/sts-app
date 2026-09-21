@@ -2,7 +2,8 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import { signUpSchema } from "../schemas/sign-up.schema";
 import { SignUpDto } from "../dtos/sign-up.dto";
 import { GENDERS, type Gender } from "@/constants/gender";
-import { capitalize } from "lodash";
+import { useTranslation } from "react-i18next";
+import { translateDynamic } from "@/shared/lib/translate-dynamic";
 import { useAppFormik } from "@/shared/lib/formik";
 import { Card } from "@/shared/components/ui/card";
 import LabeledField from "@/shared/components/custom/inputs/LabeledField";
@@ -18,6 +19,8 @@ export default function SignUp() {
 
   const signUpMutation = useSignUp();
 
+  const { t } = useTranslation(["common", "auth"]);
+
   const formik = useAppFormik<
     Omit<SignUpDto, "gender"> & {
       gender: Gender | "";
@@ -30,7 +33,7 @@ export default function SignUp() {
       gender: "",
       isNameViewed: true,
     },
-    validationZodSchema: signUpSchema,
+    validationZodSchema: () => signUpSchema(t),
     onSubmit: (values) => {
       signUpMutation.mutate(new SignUpDto(values as SignUpDto), {
         onSuccess: (data) => {
@@ -43,10 +46,10 @@ export default function SignUp() {
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-(--background) text-(--text)">
       <h2 className="text-[26px] mb-1 font-medium ">
-        Welcome to Student Testing System
+        {t("auth:signUp.title")}
       </h2>
 
-      <p className="text-(--text-muted) text-sm">Please sign up to continue</p>
+      <p className="text-(--text-muted) text-sm">{t("auth:signUp.subtitle")}</p>
 
       <Card
         className="max-w-md w-full mt-5 p-6 aria-invalid:border-(--danger) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger)/30 "
@@ -56,7 +59,7 @@ export default function SignUp() {
           <LabeledField
             type="text"
             name="username"
-            title="Username"
+            title={t("common:fields.username")}
             value={formik.values.username}
             helperText={formik.touchedErrors.username}
             onChange={formik.handleChange}
@@ -66,7 +69,7 @@ export default function SignUp() {
           <LabeledField
             type="password"
             name="password"
-            title="Password"
+            title={t("common:fields.password")}
             value={formik.values.password}
             helperText={formik.touchedErrors.password}
             onChange={formik.handleChange}
@@ -76,7 +79,7 @@ export default function SignUp() {
           <LabeledField
             type="text"
             name="fullName"
-            title="Full Name"
+            title={t("common:fields.fullName")}
             value={formik.values.fullName}
             helperText={formik.touchedErrors.fullName}
             onChange={formik.handleChange}
@@ -86,22 +89,27 @@ export default function SignUp() {
           <LabeledField
             type="select"
             name="gender"
-            title="Gender"
+            title={t("common:fields.gender")}
             value={formik.values.gender}
             helperText={formik.touchedErrors.gender}
             onChange={formik.handleChange}
             error
-            getInputLabel={(gender) => capitalize(gender)}
+            getInputLabel={(gender) =>
+              translateDynamic(
+                t,
+                `common:gender.${gender?.toLowerCase() ?? ""}`,
+              )
+            }
           >
             {GENDERS.map((gender) => (
               <SelectItem key={gender} value={gender}>
-                {capitalize(gender)}
+                {translateDynamic(t, `common:gender.${gender.toLowerCase()}`)}
               </SelectItem>
             ))}
           </LabeledField>
           <LabeledField
             type="checkbox"
-            title="View name publicly"
+            title={t("common:fields.viewNamePublicly")}
             name="isNameViewed"
             id="isNameViewed"
             checked={formik.values.isNameViewed}
@@ -114,25 +122,29 @@ export default function SignUp() {
             disabled={signUpMutation.isPending}
             className="mt-2 w-full"
           >
-            {signUpMutation.isPending ? "Signing up..." : "Sign up"}
+            {signUpMutation.isPending
+              ? t("auth:signUp.submitting")
+              : t("auth:signUp.submit")}
           </Button>
           {signUpMutation.isError && (
             <Alert color="danger">{signUpMutation.error.message}</Alert>
           )}
           <div className="flex items-center mt-2">
             <div className="border-b w-full border-gray-300 "></div>
-            <div className="mx-3 text-md min-w-max text-gray-400">OR</div>
+            <div className="mx-3 text-md min-w-max text-gray-400">
+              {t("auth:signUp.or")}
+            </div>
             <div className="border-b w-full border-gray-300"></div>
           </div>
           <div>
             <p className="inline-block text-gray-400 font-medium me-2">
-              Have an account?
+              {t("auth:signUp.haveAccount")}
             </p>
             <AppLink
               to={`/${authPaths.login}`}
               className="text-(--primary) hover:text-(--primary-hover) mt-1 duration-150 underline text-shadow-2xs w-fit"
             >
-              Login
+              {t("auth:signUp.login")}
             </AppLink>
           </div>
         </form>

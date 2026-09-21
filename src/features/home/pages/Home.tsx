@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import {
   Users,
@@ -34,6 +35,8 @@ export default function Home() {
   const role = useRole();
   const { user } = useAuthContext();
 
+  const { t } = useTranslation(["common", "home"]);
+
   const usersQuery = useQuery(getUsersQueryOptions(new QueryUserDto({})));
   const subjectsQuery = useQuery(
     getSubjectsQueryOptions(new QuerySubjectDto({})),
@@ -53,7 +56,7 @@ export default function Home() {
         {
           Icon: CalendarCheck,
           color: "text-teal-500",
-          label: "Test Sessions",
+          label: t("entities.testSessions"),
           value: sessionsQuery.data?.meta.total ?? 0,
         },
       ]
@@ -61,62 +64,88 @@ export default function Home() {
         {
           Icon: Users,
           color: "text-blue-500",
-          label: "Users",
+          label: t("entities.users"),
           value: usersQuery.data?.meta.total ?? 0,
         },
         {
           Icon: BookOpen,
           color: "text-green-500",
-          label: "Subjects",
+          label: t("entities.subjects"),
           value: subjectsQuery.data?.meta.total ?? 0,
         },
         {
           Icon: FileText,
           color: "text-purple-500",
-          label: "Tests",
+          label: t("entities.tests"),
           value: testsQuery.data?.meta.total ?? 0,
         },
         {
           Icon: HelpCircle,
           color: "text-orange-500",
-          label: "Questions",
+          label: t("entities.questions"),
           value: questionsQuery.data?.meta.total ?? 0,
         },
         {
           Icon: CalendarCheck,
           color: "text-teal-500",
-          label: "Test Sessions",
+          label: t("entities.testSessions"),
           value: sessionsQuery.data?.meta.total ?? 0,
         },
       ];
 
   const actionLinks = isStudent
     ? [
-        { to: `/${testSessionsPaths.list}`, label: "My Test Sessions" },
-        { to: `/${homePaths.home}`, label: "Dashboard" },
+        {
+          to: `/${testSessionsPaths.list}`,
+          label: t("home:actions.myTestSessions"),
+        },
+        { to: `/${homePaths.home}`, label: t("home:dashboard") },
       ]
     : role === "TEACHER"
       ? []
       : [
-          { to: `/${usersPaths.list}`, label: "Users Management" },
-          { to: `/${subjectsPaths.list}`, label: "Subjects Management" },
-          { to: `/${testsPaths.list}`, label: "Tests Management" },
-          { to: `/${questionsPaths.list}`, label: "Questions Management" },
-          { to: `/${answersPaths.list}`, label: "Answers Management" },
-          { to: `/${testSessionsPaths.list}`, label: "Test Sessions" },
-          { to: `/${settingsPaths.settings}`, label: "System Settings" },
+          {
+            to: `/${usersPaths.list}`,
+            label: t("home:actions.usersManagement"),
+          },
+          {
+            to: `/${subjectsPaths.list}`,
+            label: t("home:actions.subjectsManagement"),
+          },
+          {
+            to: `/${testsPaths.list}`,
+            label: t("home:actions.testsManagement"),
+          },
+          {
+            to: `/${questionsPaths.list}`,
+            label: t("home:actions.questionsManagement"),
+          },
+          {
+            to: `/${answersPaths.list}`,
+            label: t("home:actions.answersManagement"),
+          },
+          {
+            to: `/${testSessionsPaths.list}`,
+            label: t("entities.testSessions"),
+          },
+          {
+            to: `/${settingsPaths.settings}`,
+            label: t("home:actions.systemSettings"),
+          },
         ];
 
   return (
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-3xl font-bold mb-1">
-          {isStudent ? `Welcome, ${user?.username ?? "student"}` : "Dashboard"}
+          {isStudent
+            ? t("home:welcome", {
+                name: user?.username ?? t("home:fallbackStudent"),
+              })
+            : t("home:dashboard")}
         </h1>
         <p className="text-(--text-muted) text-sm">
-          {isStudent
-            ? "Register for upcoming test sessions and start them when they go live."
-            : "Overview of the Student Testing System"}
+          {isStudent ? t("home:subtitle.student") : t("home:subtitle.default")}
         </p>
       </div>
 
@@ -144,7 +173,7 @@ export default function Home() {
             <div className="flex flex-col gap-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <TrendingUp size={18} />
-                Quick Navigation
+                {t("home:quickNav")}
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                 {actionLinks.map(({ to, label }) => (

@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useParams, useSearchParams } from "react-router";
+import { useTranslation } from "react-i18next";
 import { testSessionsPaths } from "../test-sessions.paths";
 import { useTestSessionResults } from "../api/get-test-session-results.api";
 import { useTestSessionStudents } from "../api/get-test-session-students.api";
@@ -8,10 +9,12 @@ import Loading from "@/shared/components/custom/loading/Loading";
 import QuestionTypeBadge from "@/components/QuestionTypeBadge";
 import { useRole } from "@/hooks/useRole";
 import { dateFormatter } from "@/shared/utils";
+import { STUDENT_TEST_SESSION_STATUS_TITLES } from "@/constants/student-test-session-status";
 import { cn } from "cn";
 import type { SessionStudentResultDto } from "../dtos/session-student-result.dto";
 
 export default function TestSessionResults() {
+  const { t } = useTranslation(["common", "testSessions"]);
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const role = useRole();
@@ -72,7 +75,7 @@ export default function TestSessionResults() {
   if (isAdmin && students.length === 0) {
     return (
       <div className="text-center text-(--text-muted) py-20">
-        No students are registered in this test session.
+        {t("testSessions:results.noStudents")}
       </div>
     );
   }
@@ -80,7 +83,7 @@ export default function TestSessionResults() {
   if (resultsQuery.isError || !data || Number.isNaN(testSessionId)) {
     return (
       <div className="text-center text-(--text-muted) py-20">
-        Unable to load results for this test session.
+        {t("testSessions:results.loadError")}
       </div>
     );
   }
@@ -88,7 +91,7 @@ export default function TestSessionResults() {
   if (isAdmin && !studentIdParam) {
     return (
       <div className="text-center text-(--text-muted) py-20">
-        No finished results yet.
+        {t("testSessions:results.noFinishedResults")}
       </div>
     );
   }
@@ -99,12 +102,14 @@ export default function TestSessionResults() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Test Results</h1>
+        <h1 className="text-3xl font-bold">
+          {t("testSessions:results.title")}
+        </h1>
         <a
           href={`/${testSessionsPaths.list}`}
           className="text-sm text-(--primary) no-underline hover:underline"
         >
-          Back to sessions
+          {t("common:actions.backToSessions")}
         </a>
       </div>
 
@@ -146,7 +151,11 @@ export default function TestSessionResults() {
                   </span>
                 ) : (
                   <span className="ms-2 text-xs text-(--text-muted) uppercase">
-                    {student.status}
+                    {t(
+                      STUDENT_TEST_SESSION_STATUS_TITLES[
+                        student.status as keyof typeof STUDENT_TEST_SESSION_STATUS_TITLES
+                      ],
+                    )}
                   </span>
                 )}
               </button>
@@ -158,25 +167,29 @@ export default function TestSessionResults() {
       <Card>
         <CardContent className="pt-6 grid md:grid-cols-4 gap-4">
           <div className="p-4 rounded-lg bg-(--secondary)/10">
-            <div className="text-xs text-(--text-muted) uppercase">Subject</div>
+            <div className="text-xs text-(--text-muted) uppercase">
+              {t("testSessions:results.subject")}
+            </div>
             <div className="text-lg font-semibold">{data.subject.name}</div>
           </div>
           <div className="p-4 rounded-lg bg-(--secondary)/10">
             <div className="text-xs text-(--text-muted) uppercase">
-              Total points
+              {t("testSessions:results.totalPoints")}
             </div>
             <div className="text-lg font-semibold">{data.points}</div>
           </div>
           <div className="p-4 rounded-lg bg-(--success)/10">
             <div className="text-xs text-(--text-muted) uppercase">
-              Student points
+              {t("testSessions:results.studentPoints")}
             </div>
             <div className="text-lg font-semibold text-(--success)">
               {data.studentPoints}
             </div>
           </div>
           <div className="p-4 rounded-lg bg-(--primary)/10">
-            <div className="text-xs text-(--text-muted) uppercase">Score</div>
+            <div className="text-xs text-(--text-muted) uppercase">
+              {t("common:fields.score")}
+            </div>
             <div className="text-lg font-semibold text-(--primary)">
               {percentage}%
             </div>
@@ -193,14 +206,18 @@ export default function TestSessionResults() {
               <CardContent className="pt-6 flex flex-col gap-3">
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-bold text-(--text-muted)">
-                    Q{qIndex + 1}
+                    {t("testSessions:results.q", { n: qIndex + 1 })}
                   </span>
                   <QuestionTypeBadge type={question.type} />
                   <span className="text-xs text-(--text-muted)">
-                    {question.points} pts
+                    {t("testSessions:results.pts", {
+                      count: question.points,
+                    })}
                   </span>
                   <span className="ms-auto text-xs font-semibold text-(--success)">
-                    +{question.studentPoints}
+                    {t("testSessions:results.plusPoints", {
+                      count: question.studentPoints,
+                    })}
                   </span>
                 </div>
                 <div className="font-medium">{question.text}</div>
@@ -230,12 +247,12 @@ export default function TestSessionResults() {
                           {answer.text}
                           {isRightAnswer && (
                             <span className="ms-2 text-xs text-(--success)">
-                              Correct answer
+                              {t("testSessions:results.correctAnswer")}
                             </span>
                           )}
                           {isStudentAnswer && !isRightAnswer && (
                             <span className="ms-2 text-xs text-(--danger)">
-                              Your answer
+                              {t("testSessions:results.yourAnswer")}
                             </span>
                           )}
                         </div>
@@ -246,14 +263,17 @@ export default function TestSessionResults() {
                   question.answers?.length ? (
                   <div className="flex flex-col gap-2 mt-2">
                     <div className="text-xs text-(--text-muted)">
-                      Correct order:{" "}
-                      {[...question.answers]
-                        .sort(
-                          (a, b) =>
-                            (a.correctIndex ?? 0) - (b.correctIndex ?? 0),
-                        )
-                        .map((answer, index) => `${index + 1}. ${answer.text}`)
-                        .join("  ")}
+                      {t("testSessions:results.correctOrder", {
+                        order: [...question.answers]
+                          .sort(
+                            (a, b) =>
+                              (a.correctIndex ?? 0) - (b.correctIndex ?? 0),
+                          )
+                          .map(
+                            (answer, index) => `${index + 1}. ${answer.text}`,
+                          )
+                          .join("  "),
+                      })}
                     </div>
                     {question.answers.map((answer) => {
                       const placed = question.studentAnswers?.find(
@@ -281,16 +301,17 @@ export default function TestSessionResults() {
                           <span className="min-w-0 flex-1">{answer.text}</span>
                           {isAtCorrectPosition ? (
                             <span className="ms-2 shrink-0 text-xs text-(--success)">
-                              Correct position
+                              {t("testSessions:results.correctPosition")}
                             </span>
                           ) : placedIndex !== null ? (
                             <span className="ms-2 shrink-0 text-xs text-(--danger)">
-                              Wrong position (correct:{" "}
-                              {(answer.correctIndex ?? 0) + 1})
+                              {t("testSessions:results.wrongPosition", {
+                                position: (answer.correctIndex ?? 0) + 1,
+                              })}
                             </span>
                           ) : (
                             <span className="ms-2 shrink-0 text-xs text-(--text-muted)">
-                              Not placed
+                              {t("testSessions:results.notPlaced")}
                             </span>
                           )}
                         </div>
@@ -359,16 +380,17 @@ export default function TestSessionResults() {
                             {answer.text}
                             {isInCorrectBlank ? (
                               <span className="ms-2 text-xs text-(--success)">
-                                Correct blank
+                                {t("testSessions:results.correctBlank")}
                               </span>
                             ) : placedIndex !== null ? (
                               <span className="ms-2 text-xs text-(--danger)">
-                                Wrong blank (correct:{" "}
-                                {(answer.correctIndex ?? 0) + 1})
+                                {t("testSessions:results.wrongBlank", {
+                                  position: (answer.correctIndex ?? 0) + 1,
+                                })}
                               </span>
                             ) : (
                               <span className="ms-2 text-xs text-(--text-muted)">
-                                Not used
+                                {t("testSessions:results.notUsed")}
                               </span>
                             )}
                           </div>
@@ -380,7 +402,9 @@ export default function TestSessionResults() {
 
                 {answeredAt && (
                   <div className="text-xs text-(--text-muted)">
-                    Answered at {dateFormatter(answeredAt)}
+                    {t("testSessions:results.answeredAt", {
+                      time: dateFormatter(answeredAt),
+                    })}
                   </div>
                 )}
               </CardContent>

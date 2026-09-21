@@ -1,5 +1,6 @@
 import { STATUS_TITLES, type UserStatus } from "@/constants/user-status";
 import { cn } from "cn";
+import { useTranslation } from "react-i18next";
 import type React from "react";
 
 export type StatusBadgeProps = React.ComponentProps<"div"> & {
@@ -13,6 +14,8 @@ const STATUS_STYLES: Record<UserStatus, string> = {
 };
 
 export default function StatusBadge({ status, ...props }: StatusBadgeProps) {
+  const { t } = useTranslation(["common"]);
+
   return (
     <div
       {...props}
@@ -22,7 +25,7 @@ export default function StatusBadge({ status, ...props }: StatusBadgeProps) {
         props.className,
       )}
     >
-      {status && STATUS_TITLES[status]}
+      {status && t(STATUS_TITLES[status])}
     </div>
   );
 }

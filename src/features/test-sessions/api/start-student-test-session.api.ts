@@ -8,7 +8,9 @@ const startStudentTestSession = async (
   id: number,
 ): Promise<StudentTestSessionDto> => {
   return (
-    await api.post(ep("test-sessions", String(id), "start-student-test-session"))
+    await api.post(
+      ep("test-sessions", String(id), "start-student-test-session"),
+    )
   ).data;
 };
 

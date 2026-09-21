@@ -1,4 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import toast from "@/shared/lib/toast";
 import Popup from "@/shared/components/custom/popups/Popup";
 import { Button } from "@/shared/components/ui/button";
@@ -24,6 +25,7 @@ export default function EditTestSessionFormModal({
   session,
   onClose,
 }: EditTestSessionFormModalProps) {
+  const { t } = useTranslation(["common", "testSessions"]);
   const queryClient = useQueryClient();
 
   const updateMutation = useUpdateTestSession({
@@ -31,7 +33,7 @@ export default function EditTestSessionFormModal({
       onSuccess: () => {
         onClose();
         queryClient.invalidateQueries({ queryKey: testSessionsQueryKeys.all });
-        toast.success("Test session updated");
+        toast.success(t("testSessions:toasts.updated"));
       },
     },
   });
@@ -54,7 +56,7 @@ export default function EditTestSessionFormModal({
       endAt: toLocalValue(session?.finishDate),
     },
     enableReinitialize: true,
-    validationZodSchema: editTestSessionFormSchema,
+    validationZodSchema: () => editTestSessionFormSchema(t),
     onSubmit: (values) => {
       updateMutation.mutate({
         id: session.id,
@@ -67,8 +69,8 @@ export default function EditTestSessionFormModal({
     <Popup
       isOpen={isOpen}
       onClose={onClose}
-      title={`Edit session #${session?.id ?? ""}`}
-      description="Update the session schedule."
+      title={t("testSessions:modal.editTitle", { id: session?.id ?? "" })}
+      description={t("testSessions:modal.editDescription")}
     >
       <form
         className="flex flex-col gap-3 w-[440px] max-w-full"
@@ -78,7 +80,7 @@ export default function EditTestSessionFormModal({
           <LabeledField
             type="datetime-local"
             name="startAt"
-            title="Starts at"
+            title={t("testSessions:modal.startsAt")}
             value={formik.values.startAt}
             helperText={formik.touchedErrors.startAt}
             onChange={formik.handleChange}
@@ -86,7 +88,7 @@ export default function EditTestSessionFormModal({
           <LabeledField
             type="datetime-local"
             name="endAt"
-            title="Ends at"
+            title={t("testSessions:modal.endsAt")}
             value={formik.values.endAt}
             helperText={formik.touchedErrors.endAt}
             onChange={formik.handleChange}
@@ -101,10 +103,10 @@ export default function EditTestSessionFormModal({
             onClick={onClose}
             disabled={loading}
           >
-            Cancel
+            {t("common:actions.cancel")}
           </Button>
           <Button type="submit" className="w-fit" disabled={loading}>
-            {loading ? "Saving..." : "Save"}
+            {loading ? t("common:actions.saving") : t("common:actions.save")}
           </Button>
         </div>
       </form>

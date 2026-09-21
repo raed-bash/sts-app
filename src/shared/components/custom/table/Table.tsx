@@ -29,6 +29,7 @@ import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
 import { useTablePinnedColumns } from "./hooks/useTablePinnedColumns";
 import { buildCsv } from "./utils/csv";
 import toast from "@/shared/lib/toast";
+import { useTranslation } from "react-i18next";
 
 const TABLE_MAX_HEIGHT = 500;
 
@@ -267,7 +268,7 @@ export type TableProps<Row extends TableRowRecord> = {
   hiding?: TableHideableColumns<Row> | TableNonHideableColumns;
 
   /**
-   * Pinned columns (floating on the right)
+   * Pinned columns (floating at the inline end — right in LTR, left in RTL)
    */
   pinning?: TablePinnableColumns<Row> | TableNonPinnableColumns;
 
@@ -329,6 +330,8 @@ function Table<Row extends TableRowRecord>({
   csv,
 }: TableProps<Row>) {
   const { rows = [], columns: originalColumns = [] } = data;
+
+  const { t } = useTranslation();
 
   const { loading: isLoading, scLoading } = loading;
 
@@ -459,9 +462,9 @@ function Table<Row extends TableRowRecord>({
 
       await navigator.clipboard.writeText(content);
 
-      toast.success("Copied as tab-separated values");
+      toast.success(t("table.copiedAsTsv"));
     } catch {
-      toast.error("Could not copy");
+      toast.error(t("table.couldNotCopy"));
     }
   };
 
@@ -478,7 +481,7 @@ function Table<Row extends TableRowRecord>({
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    toast.success("CSV downloaded");
+    toast.success(t("table.csvDownloaded"));
   };
 
   const theaderProps = {

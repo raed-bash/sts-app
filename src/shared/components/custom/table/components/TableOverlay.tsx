@@ -34,10 +34,7 @@ function TableOverlay({
   const { rowProps = {}, cellProps = {} } = elements;
 
   return (
-    <TableRow
-      {...rowProps}
-      className={cn("hover:bg-none", rowProps.className)}
-    >
+    <TableRow {...rowProps} className={cn("hover:bg-none", rowProps.className)}>
       <TableCell
         {...cellProps}
         colSpan={colSpan}

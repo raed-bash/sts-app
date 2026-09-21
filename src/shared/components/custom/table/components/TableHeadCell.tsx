@@ -9,7 +9,7 @@ function TableHeadCell(props: TableHeadCellProps) {
       title={typeof props.children === "string" ? props.children : ""}
       {...props}
       className={cn(
-        "text-gray-800 dark:text-gray-200 text-xs font-semibold uppercase py-3 px-4 text-left",
+        "text-gray-800 dark:text-gray-200 text-xs font-semibold uppercase py-3 px-4 text-start",
         props.className,
       )}
     />

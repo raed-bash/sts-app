@@ -24,7 +24,9 @@ export function PopoverContent({
   Pick<
     PopoverPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
-  > & { moveable?: boolean }) {
+  > & {
+    moveable?: boolean;
+  }) {
   const { ref, isGrabbing, isReleased, onPopoverOpenChange, onGrab } =
     useMoveablePopover();
 

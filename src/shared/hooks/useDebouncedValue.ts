@@ -16,10 +16,7 @@ export function useDebouncedValue<T>(
     setDebouncedValue(value);
   };
 
-  const debouncedSetValue = useDebounce(
-    handleDebounceValueChange,
-    delay,
-  );
+  const debouncedSetValue = useDebounce(handleDebounceValueChange, delay);
 
   useEffect(() => {
     if (debouncedValue === value) return;

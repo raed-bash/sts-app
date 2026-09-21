@@ -20,26 +20,28 @@ import type { ComboboxApiProps } from "../combobox/ComboboxApi";
 import type { ComboboxFieldProps } from "../combobox/ComboboxField";
 import { NativeSelect, type NativeSelectProps } from "../../ui/native-select";
 
-const SelectField = lazy(() =>
-  import("../select/SelectField"),
-) as unknown as <Value, Multiple extends boolean | undefined = false>(
+const SelectField = lazy(() => import("../select/SelectField")) as unknown as <
+  Value,
+  Multiple extends boolean | undefined = false,
+>(
   props: SelectPropsWithType<Value, Multiple>,
 ) => React.ReactElement;
 
-const SelectApi = lazy(() =>
-  import("../select/SelectApi"),
-) as unknown as <Value, Multiple extends boolean | undefined = false>(
+const SelectApi = lazy(() => import("../select/SelectApi")) as unknown as <
+  Value,
+  Multiple extends boolean | undefined = false,
+>(
   props: SelectApiPropsWithType<Value, Multiple>,
 ) => React.ReactElement;
 
-const ComboboxField = lazy(() =>
-  import("../combobox/ComboboxField"),
+const ComboboxField = lazy(
+  () => import("../combobox/ComboboxField"),
 ) as unknown as <Value, Multiple extends boolean | undefined = false>(
   props: ComboboxPropsWithType<Value, Multiple>,
 ) => React.ReactElement;
 
-const ComboboxApi = lazy(() =>
-  import("../combobox/ComboboxApi"),
+const ComboboxApi = lazy(
+  () => import("../combobox/ComboboxApi"),
 ) as unknown as <Value, Multiple extends boolean | undefined = false>(
   props: ComboboxApiPropsWithType<Value, Multiple>,
 ) => React.ReactElement;
@@ -181,49 +183,52 @@ function LabeledField<Value, Multiple extends boolean | undefined = false>({
           }
         >
           {loading ? (
-          <Skeleton
-            {...skeletonProps}
-            className={cn("h-8 w-full", skeletonProps.className)}
-          />
-        ) : props.type === "comboboxApi" ? (
-          <ComboboxApi
-            aria-invalid={invalid ? true : undefined}
-            {...props}
-            className={cn("w-full", props.className)}
-          />
-        ) : props.type === "combobox" ? (
-          <ComboboxField
-            aria-invalid={invalid ? true : undefined}
-            {...props}
-            className={cn("w-full", props.className)}
-          />
-        ) : props.type === "select" ? (
-          <SelectField
-            aria-invalid={invalid ? true : undefined}
-            {...props}
-            className={cn("w-full", props.className)}
-          />
-        ) : props.type === "nativeSelect" ? (
-          <NativeSelect
-            aria-invalid={invalid ? true : undefined}
-            {...props}
-            className={cn("w-full", props.className)}
-          />
-        ) : props.type === "textarea" ? (
-          <Textarea {...props} aria-invalid={invalid ? true : undefined} />
-        ) : props.type === "selectApi" ? (
-          <SelectApi
-            aria-invalid={invalid ? true : undefined}
-            {...props}
-            className={cn("w-full", props.className)}
-          />
-        ) : props.type === "password" ? (
-          <InputPassword {...props} aria-invalid={invalid ? true : undefined} />
-        ) : props.type === "checkbox" ? (
-          <Checkbox {...props} aria-invalid={invalid ? true : undefined} />
-        ) : (
-          <Input {...props} aria-invalid={invalid ? true : undefined} />
-        )}
+            <Skeleton
+              {...skeletonProps}
+              className={cn("h-8 w-full", skeletonProps.className)}
+            />
+          ) : props.type === "comboboxApi" ? (
+            <ComboboxApi
+              aria-invalid={invalid ? true : undefined}
+              {...props}
+              className={cn("w-full", props.className)}
+            />
+          ) : props.type === "combobox" ? (
+            <ComboboxField
+              aria-invalid={invalid ? true : undefined}
+              {...props}
+              className={cn("w-full", props.className)}
+            />
+          ) : props.type === "select" ? (
+            <SelectField
+              aria-invalid={invalid ? true : undefined}
+              {...props}
+              className={cn("w-full", props.className)}
+            />
+          ) : props.type === "nativeSelect" ? (
+            <NativeSelect
+              aria-invalid={invalid ? true : undefined}
+              {...props}
+              className={cn("w-full", props.className)}
+            />
+          ) : props.type === "textarea" ? (
+            <Textarea {...props} aria-invalid={invalid ? true : undefined} />
+          ) : props.type === "selectApi" ? (
+            <SelectApi
+              aria-invalid={invalid ? true : undefined}
+              {...props}
+              className={cn("w-full", props.className)}
+            />
+          ) : props.type === "password" ? (
+            <InputPassword
+              {...props}
+              aria-invalid={invalid ? true : undefined}
+            />
+          ) : props.type === "checkbox" ? (
+            <Checkbox {...props} aria-invalid={invalid ? true : undefined} />
+          ) : (
+            <Input {...props} aria-invalid={invalid ? true : undefined} />
+          )}
         </Suspense>
         {helperText ? (
           invalid ? (

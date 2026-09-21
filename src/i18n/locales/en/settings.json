@@ -1,0 +1,7 @@
+{
+  "labels": {
+    "STUDENT_PENDING_TTL_MINUTES": "Student Pending TTL (minutes)",
+    "SESSION_EXPIRE_MINUTES": "Session Expire Minutes"
+  },
+  "noSettings": "No settings configured."
+}

@@ -1,5 +1,6 @@
 import { loginSchema } from "../schemas/login.schema";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 import toast from "@/shared/lib/toast";
 import { Card } from "@/shared/components/ui/card";
 import LabeledField from "@/shared/components/custom/inputs/LabeledField";
@@ -14,13 +15,15 @@ import { LoginDto } from "../dtos/login.dto";
 export default function Login() {
   const authContext = useAuthContext();
 
+  const { t } = useTranslation(["common", "auth"]);
+
   const loginMutation = useLogin();
   const formik = useAppFormik<LoginDto>({
     initialValues: {
       username: "",
       password: "",
     },
-    validationZodSchema: loginSchema,
+    validationZodSchema: () => loginSchema(t),
     onSubmit: (values) => {
       loginMutation.mutate(values, {
         onSuccess: (data) => {
@@ -34,8 +37,8 @@ export default function Login() {
 
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-(--background) text-(--text)">
-      <h2 className="text-[26px] mb-1 font-medium ">Welcome Back</h2>
-      <p className="text-(--text-muted) text-sm">Please Login to continue</p>
+      <h2 className="text-[26px] mb-1 font-medium ">{t("auth:login.title")}</h2>
+      <p className="text-(--text-muted) text-sm">{t("auth:login.subtitle")}</p>
       <Card
         className="max-w-md w-full mt-5 p-6 aria-invalid:border-(--danger) aria-invalid:border aria-invalid:ring-[3px] aria-invalid:ring-(--danger)/30 "
         aria-invalid={Boolean(loginMutation.isError)}
@@ -44,7 +47,7 @@ export default function Login() {
           <LabeledField
             type="text"
             name="username"
-            title="Username"
+            title={t("common:fields.username")}
             value={formik.values.username}
             helperText={formik.touchedErrors.username}
             onChange={formik.handleChange}
@@ -54,7 +57,7 @@ export default function Login() {
           <LabeledField
             type="password"
             name="password"
-            title="Password"
+            title={t("common:fields.password")}
             value={formik.values.password}
             helperText={formik.touchedErrors.password}
             onChange={formik.handleChange}
@@ -66,7 +69,9 @@ export default function Login() {
             disabled={loginMutation.isPending}
             className="mt-2 w-full"
           >
-            {loginMutation.isPending ? "Logging in..." : "Login"}
+            {loginMutation.isPending
+              ? t("auth:login.submitting")
+              : t("auth:login.submit")}
           </Button>
 
           {loginMutation.isError && (
@@ -75,18 +80,20 @@ export default function Login() {
 
           <div className="flex items-center mt-2">
             <div className="border-b w-full border-gray-300 "></div>
-            <div className="mx-3 text-md min-w-max text-gray-400">OR</div>
+            <div className="mx-3 text-md min-w-max text-gray-400">
+              {t("auth:login.or")}
+            </div>
             <div className="border-b w-full border-gray-300"></div>
           </div>
           <div>
             <p className="inline-block text-gray-400 font-medium me-2">
-              Don't have an account?
+              {t("auth:login.noAccount")}
             </p>
             <AppLink
               to={`/${authPaths.signUp}`}
               className="text-(--primary) hover:text-(--primary-hover) mt-1 duration-150 underline text-shadow-2xs w-fit"
             >
-              Sign Up
+              {t("auth:login.signUp")}
             </AppLink>
           </div>
         </form>

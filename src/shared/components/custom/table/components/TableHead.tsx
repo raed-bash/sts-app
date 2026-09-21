@@ -6,6 +6,8 @@ import { cn } from "cn";
 import type React from "react";
 import { EllipsisVerticalIcon, Filter, Pin, PinOff } from "lucide-react";
 import type { TableRowRecord, TableColumn, TableSortStatuses } from "../Table";
+import { translateHeader } from "../utils/translate-header";
+import { useTranslation } from "react-i18next";
 import type { TablePinningProps } from "../Table";
 import type {
   UseTableCreateColumnFilterClickHandler,
@@ -78,6 +80,8 @@ function TableHead<Row extends TableRowRecord>({
 }: TableHeadProps<Row>) {
   const { columns } = data;
 
+  const { t } = useTranslation();
+
   const { createSortClickHandler, sortStatuses } = sorting;
 
   const { createSelectRowChangeHandler, selectAll, someSelected, selectable } =
@@ -139,10 +143,14 @@ function TableHead<Row extends TableRowRecord>({
             <TableHeadCell
               key={name}
               title={
-                typeof column.headerName === "string" ? column.headerName : ""
+                typeof translateHeader(column.headerName) === "string"
+                  ? translateHeader(column.headerName)
+                  : ""
               }
               data-pinned={isPinned ? name : undefined}
-              style={right !== undefined ? { right } : undefined}
+              style={
+                right !== undefined ? { insetInlineEnd: right } : undefined
+              }
               {...cellProps}
               {...headCellProps}
               className={cn(
@@ -150,7 +158,7 @@ function TableHead<Row extends TableRowRecord>({
                   cn(
                     "sticky z-[2] bg-gray-100 dark:bg-gray-700",
                     pinning?.isFirstPinned(column.name) &&
-                      "border-l-2 border-(--primary)",
+                      "border-s border-s-[var(--border)]",
                   ),
                 className,
                 cellProps.className,
@@ -159,14 +167,14 @@ function TableHead<Row extends TableRowRecord>({
               )}
             >
               <div className="flex items-center gap-2">
-                {!column.sort && column.headerName}
+                {!column.sort && translateHeader(column.headerName)}
                 {column.sort && (
                   <SortButton
                     className="mt-0 align-middle ms-1 py-1 uppercase"
                     onClick={createSortClickHandler(column)}
                     sortStatus={sortStatuses[column.name.toString()]}
                   >
-                    {column.headerName}
+                    {translateHeader(column.headerName)}
                   </SortButton>
                 )}
                 {showActions && (
@@ -199,7 +207,7 @@ function TableHead<Row extends TableRowRecord>({
                             }}
                           >
                             <Filter className="h-4 w-4" />
-                            Filter
+                            {t("table.filter")}
                           </button>
                         )}
                         {pinning?.pinnableColumns && (
@@ -216,7 +224,7 @@ function TableHead<Row extends TableRowRecord>({
                             ) : (
                               <Pin className="h-4 w-4" />
                             )}
-                            {isPinned ? "Unpin" : "Pin"}
+                            {isPinned ? t("table.unpin") : t("table.pin")}
                           </button>
                         )}
                       </PopoverContent>

@@ -9,6 +9,16 @@ export class TestDto {
   deletedAt?: Date | null;
 
   constructor(test: TestDto) {
-    Object.assign(this, pick(test, ["id", "name", "period", "createdAt", "updatedAt", "deletedAt"]));
+    Object.assign(
+      this,
+      pick(test, [
+        "id",
+        "name",
+        "period",
+        "createdAt",
+        "updatedAt",
+        "deletedAt",
+      ]),
+    );
   }
 }

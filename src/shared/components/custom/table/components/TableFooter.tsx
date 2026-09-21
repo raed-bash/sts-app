@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 import { cn } from "cn";
+import { useTranslation } from "react-i18next";
 import type { TablePaginationProps } from "../Table";
 
 export type TableFooterProps = {
@@ -18,18 +19,20 @@ export type TableFooterProps = {
 export default function TableFooter({ pagination }: TableFooterProps) {
   const { loadMore } = pagination;
 
+  const { t } = useTranslation();
+
   const disabled = loadMore?.enabled ?? false;
 
   return (
     <div className="flex justify-between items-center gap-4 px-4">
       <div className="flex gap-5 text-(--text)">
         <div className="flex items-center gap-1 font-medium text-sm">
-          <p>Total: </p>
+          <p>{t("table.total")} </p>
           <span>{pagination.count}</span>
         </div>
 
         <div className="flex items-center gap-1 font-medium text-sm">
-          <p>Rows per page: </p>
+          <p>{t("table.rowsPerPage")} </p>
           <Select
             value={pagination.perPage}
             onValueChange={(value) =>
@@ -37,10 +40,7 @@ export default function TableFooter({ pagination }: TableFooterProps) {
             }
             disabled={disabled}
           >
-            <SelectTrigger
-              size="sm"
-              className={cn("w-16 justify-center px-2")}
-            >
+            <SelectTrigger size="sm" className={cn("w-16 justify-center px-2")}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -64,8 +64,8 @@ export default function TableFooter({ pagination }: TableFooterProps) {
           >
             {loadMore.isFetching && <Spinner />}
             {loadMore.enabled
-              ? `Load more (${loadMore.loadedCount})`
-              : "Load more"}
+              ? t("table.loadMoreCount", { count: loadMore.loadedCount })
+              : t("table.loadMore")}
           </Button>
         )}
 

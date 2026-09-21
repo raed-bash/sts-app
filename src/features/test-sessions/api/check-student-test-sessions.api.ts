@@ -13,7 +13,9 @@ const getCheckStudentTestSessions = async (
   signal: AbortSignal,
 ): Promise<CheckStudentTestSessions> => {
   return (
-    await api.get(ep("test-sessions", "check-student-test-sessions"), { signal })
+    await api.get(ep("test-sessions", "check-student-test-sessions"), {
+      signal,
+    })
   ).data;
 };
 

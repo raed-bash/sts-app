@@ -1,0 +1,31 @@
+{
+  "detail": {
+    "back": "Back to questions",
+    "completeAnswer": "Complete answer"
+  },
+  "modal": {
+    "createTitle": "Create question",
+    "editTitle": "Edit question #{{id}}",
+    "questionText": "Question text",
+    "selectType": "Select type",
+    "selectTests": "Select tests...",
+    "completeAnswerText": "Complete answer text"
+  },
+  "actions": {
+    "manageAnswers": "Manage answers"
+  },
+  "confirm": {
+    "deleteTitle": "Delete question #{{id}}?",
+    "deleteMessage": "The question will be soft-deleted. Its answers stay in the database."
+  },
+  "toasts": {
+    "created": "Question created",
+    "updated": "Question updated",
+    "deleted": "Question deleted",
+    "restored": "Question restored"
+  },
+  "errors": {
+    "pointsPositive": "Points must be a positive number",
+    "completeTextRequired": "An answer text is required for COMPLETE"
+  }
+}

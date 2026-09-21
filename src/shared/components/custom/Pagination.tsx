@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useDebounce } from "@/shared/hooks";
 import { cn } from "cn";
 import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
-import LabeledField from "./inputs/LabeledField";
+import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 
 type PageItem = number | "ellipsis";
@@ -70,7 +71,11 @@ function Pagination({
   perPage = PER_PAGE,
   disabled = false,
 }: PaginationProps) {
+  const { t } = useTranslation();
+
   const totalPages = Math.ceil(count / perPage);
+
+  const jumpWidth = `calc(${Math.max(2, String(totalPages).length) + 4}ch + 1.75rem)`;
 
   const [prevCurrentPage, setPrevCurrentPage] = useState(currentPage);
   const [jumpValue, setJumpValue] = useState<string | number>(currentPage);
@@ -112,7 +117,7 @@ function Pagination({
           disabled={disabled || currentPage === 1}
           onClick={() => handleChange(currentPage - 1)}
         >
-          <ChevronLeftIcon />
+          <ChevronLeftIcon className="rtl:-scale-x-100" />
         </Button>
 
         {pages.map((page, idx) =>
@@ -150,29 +155,31 @@ function Pagination({
           disabled={disabled || currentPage === totalPages}
           onClick={() => handleChange(currentPage + 1)}
         >
-          <ChevronRightIcon />
+          <ChevronRightIcon className="rtl:-scale-x-100" />
         </Button>
       </div>
 
-      <LabeledField
-        oneline
-        title="Go:"
-        type="number"
-        disabled={disabled}
-        fieldProps={{ className: "w-30" }}
-        onChange={(e) => {
-          const newPage = +e.target.value;
+      <label className="flex items-center gap-1.5 whitespace-nowrap text-sm font-medium">
+        {t("table.go")}
+        <Input
+          type="number"
+          min={1}
+          max={totalPages}
+          disabled={disabled}
+          style={{ width: jumpWidth }}
+          className="text-center"
+          value={jumpValue}
+          onChange={(e) => {
+            const newPage = +e.target.value;
 
-          setJumpValue(e.target.value);
+            setJumpValue(e.target.value);
 
-          if (e.target.value !== "" && newPage > 0 && newPage <= totalPages) {
-            handleJumpChange(newPage);
-          }
-        }}
-        min={1}
-        max={totalPages}
-        value={jumpValue}
-      />
+            if (e.target.value !== "" && newPage > 0 && newPage <= totalPages) {
+              handleJumpChange(newPage);
+            }
+          }}
+        />
+      </label>
     </nav>
   );
 }

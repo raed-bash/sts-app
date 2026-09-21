@@ -1,7 +1,10 @@
 import { useTableState } from "@/hooks";
 import { TableAdapter } from "@/shared/components/custom/table/TableAdapter";
 import { useAnswers, useAnswersInfinite } from "../api/get-answers.api";
-import { QueryAnswerDto, type AnswerOrderAttributes } from "../dtos/query-answer.dto";
+import {
+  QueryAnswerDto,
+  type AnswerOrderAttributes,
+} from "../dtos/query-answer.dto";
 
 export function useAnswersTable(options: { questionId?: number } = {}) {
   const state = useTableState<AnswerOrderAttributes>({ name: "answers" });

@@ -15,6 +15,8 @@ import {
 } from "@/shared/components/ui/tooltip";
 import { Rows3 } from "lucide-react";
 import { cn } from "cn";
+import { useTranslation } from "react-i18next";
+import { translateDynamic } from "@/shared/lib/translate-dynamic";
 import type { TableDensity } from "../constants/table-density";
 import { TABLE_DENSITIES } from "../constants/table-density";
 
@@ -29,6 +31,8 @@ function TableDensityButton({
   density,
   onDensityChange,
 }: TableDensityButtonProps) {
+  const { t } = useTranslation();
+
   return (
     <DropdownMenu>
       <Tooltip>
@@ -39,7 +43,7 @@ function TableDensityButton({
                 <Button
                   variant="ghost"
                   size="icon-lg"
-                  aria-label="Table density"
+                  aria-label={t("table.tableDensity")}
                 >
                   <Rows3 />
                 </Button>
@@ -47,12 +51,12 @@ function TableDensityButton({
             />
           }
         />
-        <TooltipContent>density</TooltipContent>
+        <TooltipContent>{t("table.density")}</TooltipContent>
       </Tooltip>
       <DropdownMenuContent>
         <DropdownMenuGroup>
           <DropdownMenuLabel className="px-2 py-1 text-[12px] font-semibold text-gray-400 uppercase">
-            Density
+            {t("table.density")}
           </DropdownMenuLabel>
           <DropdownMenuRadioGroup
             value={density}
@@ -68,7 +72,7 @@ function TableDensityButton({
                   "data-checked:bg-(--primary) data-checked:text-(--primary-foreground)",
                 )}
               >
-                {option.label}
+                {translateDynamic(t, option.label)}
               </DropdownMenuRadioItem>
             ))}
           </DropdownMenuRadioGroup>

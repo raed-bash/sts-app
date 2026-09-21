@@ -3,6 +3,7 @@ import {
   type TestSessionStatus,
 } from "@/constants/test-session-status";
 import { cn } from "cn";
+import { useTranslation } from "react-i18next";
 
 export type TestSessionStatusBadgeProps = React.ComponentProps<"div"> & {
   status?: TestSessionStatus;
@@ -19,6 +20,8 @@ export default function TestSessionStatusBadge({
   status,
   ...props
 }: TestSessionStatusBadgeProps) {
+  const { t } = useTranslation(["common"]);
+
   return (
     <div
       {...props}
@@ -28,7 +31,7 @@ export default function TestSessionStatusBadge({
         props.className,
       )}
     >
-      {status && TEST_SESSION_STATUS_TITLES[status]}
+      {status && t(TEST_SESSION_STATUS_TITLES[status])}
     </div>
   );
 }

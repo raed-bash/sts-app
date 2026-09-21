@@ -26,11 +26,16 @@ export const getTestSessionsQueryOptions = (query: QueryTestSessionDto) => {
   });
 };
 
-export const getTestSessionsInfiniteQueryOptions = (query: QueryTestSessionDto) => {
+export const getTestSessionsInfiniteQueryOptions = (
+  query: QueryTestSessionDto,
+) => {
   return infiniteQueryOptions({
     queryKey: testSessionsQueryKeys.infiniteList(query),
     queryFn: ({ pageParam, signal }) =>
-      getTestSessions(new QueryTestSessionDto({ ...query, page: pageParam }), signal),
+      getTestSessions(
+        new QueryTestSessionDto({ ...query, page: pageParam }),
+        signal,
+      ),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage.meta.next,
   });
