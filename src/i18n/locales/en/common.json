@@ -107,6 +107,8 @@
     "filters": "Filters",
     "addFilter": "Add Filter",
     "selectColumn": "Select column",
+    "logicalOperator": "Logical operator",
+    "removeFilter": "Remove filter",
     "user": "User",
     "noColumns": "No columns",
     "reset": "Reset",

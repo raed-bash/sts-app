@@ -107,6 +107,8 @@
     "filters": "التصفية",
     "addFilter": "إضافة عامل تصفية",
     "selectColumn": "اختر العمود",
+    "logicalOperator": "العامل المنطقي",
+    "removeFilter": "إزالة عامل التصفية",
     "user": "المستخدم",
     "noColumns": "لا توجد أعمدة",
     "reset": "إعادة تعيين",

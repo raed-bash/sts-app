@@ -1,4 +1,3 @@
-import { cn } from "cn";
 import { FunnelIcon, FunnelXIcon, Plus, XIcon } from "lucide-react";
 import { getAvailableFilterOps } from "./utils/utils";
 import type { TableRowRecord, TableColumn } from "../Table";
@@ -10,6 +9,7 @@ import type {
   UseFilterDeleteHandler,
   UseFilterAddHandler,
   UseFilterUpdateHandler,
+  UseFilterClearHandler,
 } from "./hooks/useFilter";
 import type { SyntheticEvent } from "@/shared/utils";
 import {
@@ -31,7 +31,10 @@ import {
 import LabeledField, {
   type LabeledFieldProps,
 } from "../../inputs/LabeledField";
-import { NativeSelectOption } from "@/shared/components/ui/native-select";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@/shared/components/ui/native-select";
 import { filterOperations } from "./constants/constants";
 import { useTranslation } from "react-i18next";
 import type {
@@ -66,6 +69,8 @@ export type FilterBoardProps<Row extends TableRowRecord> = {
 
     onDeleteFilter: UseFilterDeleteHandler;
 
+    onClearFilters: UseFilterClearHandler;
+
     logicalOperator: FilterLogicalOperator;
 
     onLogicalOperatorChange: UseFilterLogicalOperatorChangeHandler;
@@ -80,6 +85,8 @@ export type FilterBoardProps<Row extends TableRowRecord> = {
   };
 };
 
+const NULL_OPS = new Set(["isNull", "isNotNull"]);
+
 export default function FilterBoard<Row extends TableRowRecord>({
   data,
   filtering,
@@ -92,6 +99,7 @@ export default function FilterBoard<Row extends TableRowRecord>({
     onAddFilter,
     onUpdateFilter,
     onDeleteFilter,
+    onClearFilters,
     onLogicalOperatorChange,
     logicalOperator,
   } = filtering;
@@ -108,6 +116,12 @@ export default function FilterBoard<Row extends TableRowRecord>({
     if (filters.length === 1) {
       onClose?.();
     }
+  };
+
+  const handleClearFilters = () => {
+    onClearFilters();
+
+    onClose?.();
   };
 
   const handleOpenChangeBoard = (open: boolean) => {
@@ -184,8 +198,18 @@ export default function FilterBoard<Row extends TableRowRecord>({
           render={
             <TooltipTrigger
               render={
-                <Button variant="ghost" size="icon-lg">
+                <Button
+                  variant="ghost"
+                  size="icon-lg"
+                  aria-label={t("table.filters")}
+                  className="relative"
+                >
                   {filters.length > 0 ? <FunnelXIcon /> : <FunnelIcon />}
+                  {filters.length > 0 && (
+                    <span className="absolute -top-0.5 -end-0.5 flex size-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold leading-none text-primary-foreground">
+                      {filters.length}
+                    </span>
+                  )}
                 </Button>
               }
             />
@@ -193,13 +217,38 @@ export default function FilterBoard<Row extends TableRowRecord>({
         />
         <TooltipContent>{t("table.filters")}</TooltipContent>
       </Tooltip>
+
       <PopoverContent
         alignOffset={0}
         align="start"
         side="top"
-        className="w-[37vw]"
+        className="w-[min(40rem,calc(100vw-2rem))]"
       >
-        <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between gap-3 pr-1.5">
+          <span className="flex items-center gap-2 text-sm font-medium">
+            <FunnelIcon className="size-4 text-muted-foreground" />
+            {t("table.filters")}
+            {filters.length > 0 && (
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+                {filters.length}
+              </span>
+            )}
+          </span>
+
+          {filters.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearFilters}
+              className="text-muted-foreground"
+            >
+              <XIcon />
+              {t("table.clearAll")}
+            </Button>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-2 border-t border-border/60 pt-2.5">
           {filters.map((filter, i) => {
             const name = filter.name;
 
@@ -214,37 +263,35 @@ export default function FilterBoard<Row extends TableRowRecord>({
               omittedOps: filterProps.omitOps,
             });
 
+            const needsValue = !NULL_OPS.has(filter.operation ?? "");
+
             return (
-              <div className={cn("flex gap-4 items-center ")} key={i}>
-                <div
-                  className={cn(
-                    "flex",
-                    filters.length > 1 ? "min-w-32 gap-5" : undefined,
-                  )}
-                >
+              <div key={i} className="flex items-start gap-2">
+                <div className="flex shrink-0 items-center gap-1.5">
                   <Button
                     variant={"destructive"}
-                    size="icon-lg"
+                    size="icon-sm"
                     onClick={createFilterDeleteHandler(i)}
+                    aria-label={t("table.removeFilter")}
                   >
                     <XIcon />
                   </Button>
-                  {filters.length && i === 0 ? (
-                    <div></div>
-                  ) : (
-                    i > 0 && (
-                      <LabeledField
-                        type="nativeSelect"
-                        onChange={handleChangeLogicalOperator}
-                        value={logicalOperator}
-                      >
-                        <NativeSelectOption value="AND">AND</NativeSelectOption>
-                        <NativeSelectOption value="OR">OR</NativeSelectOption>
-                      </LabeledField>
-                    )
+
+                  {i > 0 && (
+                    <NativeSelect
+                      size="sm"
+                      aria-label={t("table.logicalOperator")}
+                      value={logicalOperator}
+                      onChange={handleChangeLogicalOperator}
+                      className="w-[4.5rem]"
+                    >
+                      <NativeSelectOption value="AND">AND</NativeSelectOption>
+                      <NativeSelectOption value="OR">OR</NativeSelectOption>
+                    </NativeSelect>
                   )}
                 </div>
-                <div className="grid grid-cols-3 gap-4 w-full">
+
+                <div className="grid flex-1 grid-cols-3 gap-2">
                   <LabeledField
                     type="select"
                     name="name"
@@ -279,39 +326,40 @@ export default function FilterBoard<Row extends TableRowRecord>({
                       </NativeSelectOption>
                     ))}
                   </LabeledField>
-                  <LabeledField
-                    name="value"
-                    onChange={createFilterOperationChangeHandler(i)}
-                    value={filters[i].value}
-                    {...{
-                      placeholder: `${translateHeader(column?.headerName ?? "")}`,
-                    }}
-                    {...filterProps}
-                  />
+
+                  {needsValue ? (
+                    <LabeledField
+                      name="value"
+                      onChange={createFilterOperationChangeHandler(i)}
+                      value={filters[i].value}
+                      {...{
+                        placeholder: `${translateHeader(
+                          column?.headerName ?? "",
+                        )}`,
+                      }}
+                      {...filterProps}
+                    />
+                  ) : (
+                    <div className="flex h-8 items-center rounded-lg border border-dashed border-input px-2.5 text-sm text-muted-foreground select-none">
+                      —
+                    </div>
+                  )}
                 </div>
               </div>
             );
           })}
         </div>
 
-        <div className="flex justify-end">
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <Button
-                  variant="outline"
-                  size="icon-lg"
-                  onClick={handleAddFilter}
-                >
-                  <Plus />
-                </Button>
-              }
-            />
-            <TooltipContent side="bottom">
-              {t("table.addFilter")}
-            </TooltipContent>
-          </Tooltip>
-        </div>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleAddFilter}
+          className="w-full border-dashed"
+        >
+          <Plus />
+          {t("table.addFilter")}
+        </Button>
       </PopoverContent>
     </Popover>
   );

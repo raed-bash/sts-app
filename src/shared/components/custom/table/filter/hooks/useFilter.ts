@@ -10,6 +10,8 @@ export type UseFilterUpdateHandler = (
 
 export type UseFilterDeleteHandler = (index: number) => void;
 
+export type UseFilterClearHandler = () => void;
+
 export type FilterLogicalOperator = "AND" | "OR";
 
 export type FilterCondition = { name: string; operation?: string; value: any };
@@ -48,6 +50,10 @@ export function useFilter({
     onFiltersChange?.(filters.filter((_, i) => i !== targetIndex));
   };
 
+  const clearFilters: UseFilterClearHandler = () => {
+    onFiltersChange?.([]);
+  };
+
   const changeLogicalOperator: UseFilterLogicalOperatorChangeHandler = (
     operator: FilterLogicalOperator,
   ) => {
@@ -58,6 +64,7 @@ export function useFilter({
     addFilter,
     updateFilter,
     deleteFilter,
+    clearFilters,
     openFilter,
     closeFilter,
     isFilterOpen,

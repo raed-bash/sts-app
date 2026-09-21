@@ -90,6 +90,7 @@ export default function TableHeader<Row extends TableRowRecord>({
           onAddFilter: filterUtils.addFilter,
           onUpdateFilter: filterUtils.updateFilter,
           onDeleteFilter: filterUtils.deleteFilter,
+          onClearFilters: filterUtils.clearFilters,
           logicalOperator: filterUtils.logicalOperator,
           onLogicalOperatorChange: filterUtils.changeLogicalOperator,
         }}
