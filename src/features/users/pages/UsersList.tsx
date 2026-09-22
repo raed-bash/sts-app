@@ -143,8 +143,6 @@ export default function UsersList() {
     },
   ];
 
-  const confirmState = confirm;
-
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
@@ -185,74 +183,84 @@ export default function UsersList() {
       )}
 
       <ConfirmPopup
-        isOpen={Boolean(confirm)}
-        title={
-          confirmState?.action === "delete"
-            ? t("common:confirm.deleteTitle", {
-                name: confirmState?.user?.username ?? "",
-              })
-            : confirmState?.action === "block"
-              ? t("users:confirm.blockTitle", {
-                  name: confirmState?.user?.username ?? "",
-                })
-              : confirmState?.action === "activate"
-                ? t("users:confirm.activateTitle", {
-                    name: confirmState?.user?.username ?? "",
-                  })
-                : t("users:confirm.restoreTitle", {
-                    name: confirmState?.user?.username ?? "",
-                  })
-        }
-        message={
-          confirmState?.action === "delete"
-            ? t("users:confirm.deleteMessage")
-            : confirmState?.action === "block"
-              ? t("users:confirm.blockMessage")
-              : undefined
-        }
-        confirmLabel={
-          confirmState?.action === "delete"
-            ? t("common:actions.delete")
-            : confirmState?.action === "block"
-              ? t("common:actions.block")
-              : confirmState?.action === "activate"
-                ? t("common:actions.activate")
-                : t("common:actions.restore")
-        }
-        destructive={confirmState?.action === "delete"}
+        isOpen={confirm?.action === "delete"}
+        title={t("common:confirm.deleteTitle", {
+          name: confirm?.user.username ?? "",
+        })}
+        message={t("users:confirm.deleteMessage")}
+        confirmLabel={t("common:actions.delete")}
+        destructive
         loading={pendingId !== null}
         onCancel={() => setConfirm(null)}
         onConfirm={() => {
-          if (!confirm) return;
+          if (confirm?.action !== "delete") return;
 
-          if (confirm.action === "delete") {
-            setPendingId(confirm.user.id);
-            deleteMutation.mutate(confirm.user.id, {
-              onSettled: () => {
-                setPendingId(null);
-                setConfirm(null);
-                refresh();
-                toast.success(t("users:toasts.deleted"));
-              },
-            });
-          } else if (confirm.action === "block") {
-            handleStatus(confirm.user, "BLOCKED");
-            setConfirm(null);
-            toast.success(t("users:toasts.blocked"));
-          } else if (confirm.action === "activate") {
-            handleStatus(confirm.user, "ACTIVE");
-            setConfirm(null);
-            toast.success(t("users:toasts.activated"));
-          } else if (confirm.action === "restore") {
-            setPendingId(confirm.user.id);
-            restoreMutation.mutate(confirm.user.id, {
-              onSettled: () => {
-                setPendingId(null);
-                setConfirm(null);
-                refresh();
-              },
-            });
-          }
+          setPendingId(confirm.user.id);
+          deleteMutation.mutate(confirm.user.id, {
+            onSettled: () => {
+              setPendingId(null);
+              setConfirm(null);
+              refresh();
+              toast.success(t("users:toasts.deleted"));
+            },
+          });
+        }}
+      />
+
+      <ConfirmPopup
+        isOpen={confirm?.action === "block"}
+        title={t("users:confirm.blockTitle", {
+          name: confirm?.user.username ?? "",
+        })}
+        message={t("users:confirm.blockMessage")}
+        confirmLabel={t("common:actions.block")}
+        loading={pendingId !== null}
+        onCancel={() => setConfirm(null)}
+        onConfirm={() => {
+          if (confirm?.action !== "block") return;
+
+          handleStatus(confirm.user, "BLOCKED");
+          setConfirm(null);
+          toast.success(t("users:toasts.blocked"));
+        }}
+      />
+
+      <ConfirmPopup
+        isOpen={confirm?.action === "activate"}
+        title={t("users:confirm.activateTitle", {
+          name: confirm?.user.username ?? "",
+        })}
+        confirmLabel={t("common:actions.activate")}
+        loading={pendingId !== null}
+        onCancel={() => setConfirm(null)}
+        onConfirm={() => {
+          if (confirm?.action !== "activate") return;
+
+          handleStatus(confirm.user, "ACTIVE");
+          setConfirm(null);
+          toast.success(t("users:toasts.activated"));
+        }}
+      />
+
+      <ConfirmPopup
+        isOpen={confirm?.action === "restore"}
+        title={t("users:confirm.restoreTitle", {
+          name: confirm?.user.username ?? "",
+        })}
+        confirmLabel={t("common:actions.restore")}
+        loading={pendingId !== null}
+        onCancel={() => setConfirm(null)}
+        onConfirm={() => {
+          if (confirm?.action !== "restore") return;
+
+          setPendingId(confirm.user.id);
+          restoreMutation.mutate(confirm.user.id, {
+            onSettled: () => {
+              setPendingId(null);
+              setConfirm(null);
+              refresh();
+            },
+          });
         }}
       />
     </div>
