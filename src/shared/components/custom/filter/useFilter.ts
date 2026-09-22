@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { TableFilteringProps } from "../../Table";
 
 export type UseFilterAddHandler = (filter: FilterCondition) => void;
 
@@ -20,7 +19,15 @@ export type UseFilterLogicalOperatorChangeHandler = (
   operator: FilterLogicalOperator,
 ) => void;
 
-export type UseFilterOptions = TableFilteringProps;
+export type UseFilterOptions = {
+  filters: FilterCondition[];
+
+  onFiltersChange?: (filters: FilterCondition[]) => void;
+
+  logicalOperator: FilterLogicalOperator;
+
+  onLogicalOperatorChange: (operator: FilterLogicalOperator) => void;
+};
 
 export function useFilter({
   filters,

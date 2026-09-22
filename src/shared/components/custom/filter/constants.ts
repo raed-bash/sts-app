@@ -1,21 +1,21 @@
-import type { FilterFieldProps } from "../FilterBoard";
-import type { FilterOperation } from "../types";
+import type { FilterFieldProps } from "./types";
+import type { FilterOperation } from "./types";
 
 export const filterOperations = {
-  equals: "table.operators.equals",
-  notEquals: "table.operators.notEquals",
-  contains: "table.operators.contains",
-  notContains: "table.operators.notContains",
-  startsWith: "table.operators.startsWith",
-  endsWith: "table.operators.endsWith",
-  gt: "table.operators.gt",
-  lt: "table.operators.lt",
-  gte: "table.operators.gte",
-  lte: "table.operators.lte",
-  in: "table.operators.in",
-  notIn: "table.operators.notIn",
-  isNull: "table.operators.isNull",
-  isNotNull: "table.operators.isNotNull",
+  equals: "filter.operators.equals",
+  notEquals: "filter.operators.notEquals",
+  contains: "filter.operators.contains",
+  notContains: "filter.operators.notContains",
+  startsWith: "filter.operators.startsWith",
+  endsWith: "filter.operators.endsWith",
+  gt: "filter.operators.gt",
+  lt: "filter.operators.lt",
+  gte: "filter.operators.gte",
+  lte: "filter.operators.lte",
+  in: "filter.operators.in",
+  notIn: "filter.operators.notIn",
+  isNull: "filter.operators.isNull",
+  isNotNull: "filter.operators.isNotNull",
 } as const;
 
 export const textFilterOperations = [
@@ -61,7 +61,7 @@ export const dateFilterOperations = [
 ] satisfies FilterOperation[];
 
 export const FILTER_OPERATIONS_BY_TYPE: Partial<
-  Record<FilterFieldProps<any>["type"], FilterOperation[]>
+  Record<FilterFieldProps["type"], FilterOperation[]>
 > = {
   text: textFilterOperations,
   nativeSelect: selectFilterOperations,

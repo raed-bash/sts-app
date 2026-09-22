@@ -4,7 +4,10 @@ import type { Meta } from "@storybook/react-vite";
 import Table from "./Table";
 import type { TableAction } from "./components/TableActionsCell";
 import type { TableColumn, TableRowRecord, TableSortStatuses } from "./Table";
-import type { FilterCondition, FilterLogicalOperator } from "./filter";
+import type {
+  FilterCondition,
+  FilterLogicalOperator,
+} from "@/shared/components/custom/filter";
 
 type DemoRow = TableRowRecord & {
   id: number;

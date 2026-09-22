@@ -11,7 +11,7 @@ import type { SortButtonStatus } from "@/shared/components/custom/buttons/SortBu
 import type {
   FilterCondition,
   FilterLogicalOperator,
-} from "@/shared/components/custom/table/filter";
+} from "@/shared/components/custom/filter";
 import type { TableRowItem } from "@/shared/components/custom/table/Table";
 
 export type UseTableStateOptions<SortKey extends string> = {

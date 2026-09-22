@@ -7,8 +7,8 @@ import type {
   TableSelectionProps,
 } from "../Table";
 import { useEffect, useState } from "react";
-import { useFilter } from "../filter/hooks/useFilter";
-import { getAvailableFilterOps } from "../filter";
+import { useFilter } from "@/shared/components/custom/filter/useFilter";
+import { getAvailableFilterOps } from "@/shared/components/custom/filter/utils";
 import type {
   SortButtonEventHandler,
   SortButtonStatus,

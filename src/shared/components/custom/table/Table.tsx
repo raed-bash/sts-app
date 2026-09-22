@@ -21,9 +21,11 @@ import TableHeader, {
   type TableHeaderNonHideableColumns,
 } from "./components/TableHeader";
 import TableHead from "./components/TableHead";
-import type { FilterFieldProps } from "./filter/FilterBoard";
-import { type FilterCondition } from "./filter/hooks/useFilter";
-import type { FilterLogicalOperator } from "./filter";
+import type { FilterFieldProps } from "@/shared/components/custom/filter/types";
+import {
+  type FilterCondition,
+  type FilterLogicalOperator,
+} from "@/shared/components/custom/filter/useFilter";
 import type { TableAction } from "./components/TableActionsCell";
 import { PER_PAGE } from "@/shared/dtos/pagingated-results-dto";
 import { useTablePinnedColumns } from "./hooks/useTablePinnedColumns";

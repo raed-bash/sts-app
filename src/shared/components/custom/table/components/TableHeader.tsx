@@ -1,4 +1,8 @@
-import { FilterBoard, type useFilter } from "../filter";
+import {
+  FilterBoard,
+  type useFilter,
+  type FilterField,
+} from "@/shared/components/custom/filter";
 import type {
   UseTableCreateToggleColumnsClickHandler,
   UseTableSelectRowsHandler,
@@ -81,10 +85,18 @@ export default function TableHeader<Row extends TableRowRecord>({
 
   const { filterUtils } = filtering;
 
+  const filterFields: FilterField[] = columns
+    .filter((column) => column.filterable)
+    .map((column) => ({
+      name: column.name as string,
+      label: column.headerName,
+      filterProps: column.filterProps,
+    }));
+
   return (
     <div className="flex justify-between items-center py-2 px-4">
-      <FilterBoard<Row>
-        data={{ columns }}
+      <FilterBoard
+        fields={filterFields}
         filtering={{
           filters: filterUtils.filters,
           onAddFilter: filterUtils.addFilter,

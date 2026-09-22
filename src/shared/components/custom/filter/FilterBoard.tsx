@@ -1,7 +1,6 @@
 import { FunnelIcon, FunnelXIcon, Plus, XIcon } from "lucide-react";
-import { getAvailableFilterOps } from "./utils/utils";
-import type { TableRowRecord, TableColumn } from "../Table";
-import { translateHeader } from "../utils/translate-header";
+import { getAvailableFilterOps, resolveFieldLabel } from "./utils";
+import type { FilterField } from "./types";
 import type {
   FilterCondition,
   FilterLogicalOperator,
@@ -10,7 +9,7 @@ import type {
   UseFilterAddHandler,
   UseFilterUpdateHandler,
   UseFilterClearHandler,
-} from "./hooks/useFilter";
+} from "./useFilter";
 import type { SyntheticEvent } from "@/shared/utils";
 import {
   Popover,
@@ -23,42 +22,21 @@ import {
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip";
 import { Button } from "@/shared/components/ui/button";
-import {
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-} from "@/shared/components/ui/select";
-import LabeledField, {
-  type LabeledFieldProps,
-} from "../../inputs/LabeledField";
+import { Badge } from "@/shared/components/ui/badge";
+import { SelectItem } from "@/shared/components/ui/select";
+import LabeledField from "../inputs/LabeledField";
 import {
   NativeSelect,
   NativeSelectOption,
 } from "@/shared/components/ui/native-select";
-import { filterOperations } from "./constants/constants";
+import { filterOperations } from "./constants";
 import { useTranslation } from "react-i18next";
-import type {
-  FilterDateOperationsWithTypes,
-  FilterNumberOperationsWithTypes,
-  FilterSelectOperationsWithTypes,
-  FilterTextOperationsWithTypes,
-} from "./types";
 
-export type FilterFieldProps<
-  Option,
-  Multiple extends boolean | undefined = false,
-> = LabeledFieldProps<Option, Multiple> &
-  (
-    | FilterTextOperationsWithTypes
-    | FilterSelectOperationsWithTypes
-    | FilterNumberOperationsWithTypes
-    | FilterDateOperationsWithTypes
-  );
-
-export type FilterBoardProps<Row extends TableRowRecord> = {
-  data: {
-    columns: TableColumn<Row>[];
-  };
+export type FilterBoardProps = {
+  /**
+   * The filterable fields; only these can be selected as filter targets.
+   */
+  fields: FilterField[];
 
   filtering: {
     filters: FilterCondition[];
@@ -87,13 +65,11 @@ export type FilterBoardProps<Row extends TableRowRecord> = {
 
 const NULL_OPS = new Set(["isNull", "isNotNull"]);
 
-export default function FilterBoard<Row extends TableRowRecord>({
-  data,
+export default function FilterBoard({
+  fields,
   filtering,
   popup = {},
-}: FilterBoardProps<Row>) {
-  const { columns } = data;
-
+}: FilterBoardProps) {
   const {
     filters,
     onAddFilter,
@@ -107,8 +83,6 @@ export default function FilterBoard<Row extends TableRowRecord>({
   const { isOpen, onOpen, onClose } = popup;
 
   const { t } = useTranslation();
-
-  const filterColumns = columns.filter((column) => column.filterable);
 
   const createFilterDeleteHandler = (i: number) => () => {
     onDeleteFilter(i);
@@ -135,15 +109,17 @@ export default function FilterBoard<Row extends TableRowRecord>({
       return;
     }
 
-    addFilter();
+    if (fields.length > 0) {
+      addFilter();
+    }
 
     onOpen?.();
   };
 
   const addFilter = () => {
-    const filterColumn = filterColumns[0];
+    const filterField = fields[0];
 
-    const filterProps = filterColumn.filterProps;
+    const filterProps = filterField?.filterProps;
 
     const filterOps = getAvailableFilterOps(filterProps?.type || "text", {
       omittedOps: filterProps?.omitOps,
@@ -151,7 +127,7 @@ export default function FilterBoard<Row extends TableRowRecord>({
     });
 
     onAddFilter({
-      name: filterColumn.name.toString(),
+      name: filterField ? String(filterField.name) : "",
       operation: filterOps[0],
       value: "",
     });
@@ -174,13 +150,13 @@ export default function FilterBoard<Row extends TableRowRecord>({
       );
     };
 
-  const createFilterColumnChangeHandler =
+  const createFilterFieldChangeHandler =
     (i: number) => (e: SyntheticEvent<any>) => {
       const value = e.target.value;
 
-      const column = columns.find((col) => col.name === value);
+      const field = fields.find((field) => field.name === value);
 
-      const op = getAvailableFilterOps(column?.filterProps?.type || "text");
+      const op = getAvailableFilterOps(field?.filterProps?.type || "text");
 
       onUpdateFilter({ name: value, operation: op[0], value: "" }, i);
     };
@@ -201,21 +177,21 @@ export default function FilterBoard<Row extends TableRowRecord>({
                 <Button
                   variant="ghost"
                   size="icon-lg"
-                  aria-label={t("table.filters")}
+                  aria-label={t("filter.filters")}
                   className="relative"
                 >
                   {filters.length > 0 ? <FunnelXIcon /> : <FunnelIcon />}
                   {filters.length > 0 && (
-                    <span className="absolute -top-0.5 -end-0.5 flex size-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold leading-none text-primary-foreground">
+                    <Badge className="absolute -top-0.5 -end-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] leading-none">
                       {filters.length}
-                    </span>
+                    </Badge>
                   )}
                 </Button>
               }
             />
           }
         />
-        <TooltipContent>{t("table.filters")}</TooltipContent>
+        <TooltipContent>{t("filter.filters")}</TooltipContent>
       </Tooltip>
 
       <PopoverContent
@@ -227,7 +203,7 @@ export default function FilterBoard<Row extends TableRowRecord>({
         <div className="flex items-center justify-between gap-3 pr-1.5">
           <span className="flex items-center gap-2 text-sm font-medium">
             <FunnelIcon className="size-4 text-muted-foreground" />
-            {t("table.filters")}
+            {t("filter.filters")}
             {filters.length > 0 && (
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
                 {filters.length}
@@ -243,7 +219,7 @@ export default function FilterBoard<Row extends TableRowRecord>({
               className="text-muted-foreground"
             >
               <XIcon />
-              {t("table.clearAll")}
+              {t("filter.clearAll")}
             </Button>
           )}
         </div>
@@ -252,9 +228,9 @@ export default function FilterBoard<Row extends TableRowRecord>({
           {filters.map((filter, i) => {
             const name = filter.name;
 
-            const column = filterColumns.find((column) => column.name === name);
+            const field = fields.find((field) => field.name === name);
 
-            const filterProps = column?.filterProps;
+            const filterProps = field?.filterProps;
 
             if (!filterProps) return null;
 
@@ -272,7 +248,7 @@ export default function FilterBoard<Row extends TableRowRecord>({
                     variant={"destructive"}
                     size="icon-sm"
                     onClick={createFilterDeleteHandler(i)}
-                    aria-label={t("table.removeFilter")}
+                    aria-label={t("filter.removeFilter")}
                   >
                     <XIcon />
                   </Button>
@@ -280,7 +256,7 @@ export default function FilterBoard<Row extends TableRowRecord>({
                   {i > 0 && (
                     <NativeSelect
                       size="sm"
-                      aria-label={t("table.logicalOperator")}
+                      aria-label={t("filter.logicalOperator")}
                       value={logicalOperator}
                       onChange={handleChangeLogicalOperator}
                       className="w-[4.5rem]"
@@ -295,22 +271,19 @@ export default function FilterBoard<Row extends TableRowRecord>({
                   <LabeledField
                     type="select"
                     name="name"
-                    onChange={createFilterColumnChangeHandler(i)}
+                    onChange={createFilterFieldChangeHandler(i)}
                     value={name}
-                    placeholder={t("table.selectColumn")}
-                    getInputLabel={translateHeader(column.headerName)}
+                    placeholder={t("filter.selectField")}
+                    getInputLabel={resolveFieldLabel(field.label ?? "")}
                   >
-                    <SelectGroup>
-                      <SelectLabel>{t("table.user")}</SelectLabel>
-                      {filterColumns.map((column) => (
-                        <SelectItem
-                          key={column.name.toString()}
-                          value={column.name}
-                        >
-                          {translateHeader(column.headerName)}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
+                    {fields.map((field) => (
+                      <SelectItem
+                        key={String(field.name)}
+                        value={String(field.name)}
+                      >
+                        {resolveFieldLabel(field.label ?? "")}
+                      </SelectItem>
+                    ))}
                   </LabeledField>
 
                   <LabeledField
@@ -333,9 +306,7 @@ export default function FilterBoard<Row extends TableRowRecord>({
                       onChange={createFilterOperationChangeHandler(i)}
                       value={filters[i].value}
                       {...{
-                        placeholder: `${translateHeader(
-                          column?.headerName ?? "",
-                        )}`,
+                        placeholder: resolveFieldLabel(field?.label ?? ""),
                       }}
                       {...filterProps}
                     />
@@ -355,10 +326,11 @@ export default function FilterBoard<Row extends TableRowRecord>({
           variant="outline"
           size="sm"
           onClick={handleAddFilter}
+          disabled={fields.length === 0}
           className="w-full border-dashed"
         >
           <Plus />
-          {t("table.addFilter")}
+          {t("filter.addFilter")}
         </Button>
       </PopoverContent>
     </Popover>

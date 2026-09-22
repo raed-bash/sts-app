@@ -104,11 +104,6 @@
     "filter": "تصفية",
     "pin": "تثبيت",
     "unpin": "إلغاء التثبيت",
-    "filters": "التصفية",
-    "addFilter": "إضافة عامل تصفية",
-    "selectColumn": "اختر العمود",
-    "logicalOperator": "العامل المنطقي",
-    "removeFilter": "إزالة عامل التصفية",
     "user": "المستخدم",
     "noColumns": "لا توجد أعمدة",
     "reset": "إعادة تعيين",
@@ -136,7 +131,15 @@
     "clearAll": "مسح الكل",
     "noRowsSelected": "لم يتم تحديد أي صفوف.",
     "removeFromSelection": "إزالة من التحديد",
-    "noData": "لا توجد بيانات",
+    "noData": "لا توجد بيانات"
+  },
+  "filter": {
+    "filters": "التصفية",
+    "addFilter": "إضافة عامل تصفية",
+    "selectField": "اختر الحقل",
+    "logicalOperator": "العامل المنطقي",
+    "removeFilter": "إزالة عامل التصفية",
+    "clearAll": "مسح الكل",
     "operators": {
       "equals": "يساوي",
       "notEquals": "لا يساوي",

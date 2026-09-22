@@ -2,7 +2,8 @@ import type {
   filterOperations,
   selectFilterOperations,
   textFilterOperations,
-} from "./constants/constants";
+} from "./constants";
+import type { LabeledFieldProps } from "../inputs/LabeledField";
 
 export type FilterOperation = keyof typeof filterOperations;
 
@@ -43,4 +44,27 @@ export type FilterDateOperationsWithTypes = FilterOperationOptions<
   "equals" | "notEquals" | "gt" | "lt" | "gte" | "lte" | "isNull" | "isNotNull"
 > & {
   type: "date";
+};
+
+export type FilterFieldProps<
+  Option = any,
+  Multiple extends boolean | undefined = false,
+> = LabeledFieldProps<Option, Multiple> &
+  (
+    | FilterTextOperationsWithTypes
+    | FilterSelectOperationsWithTypes
+    | FilterNumberOperationsWithTypes
+    | FilterDateOperationsWithTypes
+  );
+
+/** A filterable field descriptor consumed by filter UI components. */
+export type FilterField = {
+  /** Unique key of the field (e.g. backend query param name) */
+  name: string | number;
+
+  /** Human-readable label; may be a raw i18n key resolved via translateDynamic */
+  label?: string;
+
+  /** Controls which input widget + operations the value editor renders */
+  filterProps?: FilterFieldProps;
 };

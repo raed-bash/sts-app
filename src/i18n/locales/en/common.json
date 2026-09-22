@@ -104,11 +104,6 @@
     "filter": "Filter",
     "pin": "Pin",
     "unpin": "Unpin",
-    "filters": "Filters",
-    "addFilter": "Add Filter",
-    "selectColumn": "Select column",
-    "logicalOperator": "Logical operator",
-    "removeFilter": "Remove filter",
     "user": "User",
     "noColumns": "No columns",
     "reset": "Reset",
@@ -136,7 +131,15 @@
     "clearAll": "Clear all",
     "noRowsSelected": "No rows selected.",
     "removeFromSelection": "Remove from selection",
-    "noData": "No data",
+    "noData": "No data"
+  },
+  "filter": {
+    "filters": "Filters",
+    "addFilter": "Add Filter",
+    "selectField": "Select field",
+    "logicalOperator": "Logical operator",
+    "removeFilter": "Remove filter",
+    "clearAll": "Clear all",
     "operators": {
       "equals": "Equals",
       "notEquals": "Not equals",

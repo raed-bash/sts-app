@@ -1,11 +1,12 @@
-import type { FilterOperation } from "../types";
-import type { FilterFieldProps } from "../FilterBoard";
-import { FILTER_OPERATIONS_BY_TYPE } from "../constants/constants";
+import i18n from "@/i18n";
+import type { FilterFieldProps, FilterOperation } from "./types";
+import { translateDynamic } from "@/shared/lib/translate-dynamic";
+import { FILTER_OPERATIONS_BY_TYPE } from "./constants";
 
 export const getAvailableFilterOps = <
   T extends FilterOperation = FilterOperation,
 >(
-  type: FilterFieldProps<any>["type"],
+  type: FilterFieldProps["type"] = "text",
   options: { selectedOps?: T[]; omittedOps?: T[] } = {},
 ): T[] => {
   const baseOps = (FILTER_OPERATIONS_BY_TYPE[type] ?? []) as T[];
@@ -21,4 +22,9 @@ export const getAvailableFilterOps = <
     if (omittedOps?.includes(op)) return false;
     return true;
   });
+};
+
+export const resolveFieldLabel = (label: string): string => {
+  if (!label) return "";
+  return translateDynamic((key, options) => i18n.t(key, options), label);
 };
