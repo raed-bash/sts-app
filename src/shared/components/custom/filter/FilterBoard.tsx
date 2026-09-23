@@ -205,9 +205,7 @@ export default function FilterBoard({
             <FunnelIcon className="size-4 text-muted-foreground" />
             {t("filter.filters")}
             {filters.length > 0 && (
-              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-                {filters.length}
-              </span>
+              <Badge variant="secondary">{filters.length}</Badge>
             )}
           </span>
 
