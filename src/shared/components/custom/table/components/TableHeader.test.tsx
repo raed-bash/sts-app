@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { renderHook } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -71,11 +71,6 @@ function renderHeader(
 }
 
 describe("TableHeader", () => {
-  beforeAll(() => {
-    Element.prototype.setPointerCapture = vi.fn();
-    Element.prototype.releasePointerCapture = vi.fn();
-  });
-
   it("renders the filter, density, columns and csv controls", () => {
     renderHeader();
 

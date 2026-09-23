@@ -31,3 +31,11 @@ if (!window.matchMedia) {
 if (!Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = () => {};
 }
+
+if (!Element.prototype.setPointerCapture) {
+  Element.prototype.setPointerCapture = () => {};
+}
+
+if (!Element.prototype.releasePointerCapture) {
+  Element.prototype.releasePointerCapture = () => {};
+}
