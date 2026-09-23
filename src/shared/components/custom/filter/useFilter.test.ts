@@ -1,84 +1,87 @@
 import { describe, expect, it, vi } from "vitest";
 import { act, renderHook } from "@testing-library/react";
-import { useFilter, type FilterCondition } from "./useFilter";
+import { useFilter, type UseFilterOptions } from "./useFilter";
+import type { FilterCondition } from "./useFilter";
 
-const empty = {
-  filters: [] as FilterCondition[],
-  logicalOperator: "AND" as const,
-  onLogicalOperatorChange: () => {},
-};
+const initialFilters: FilterCondition[] = [
+  { name: "username", operation: "contains", value: "a" },
+  { name: "role", operation: "in", value: ["TEACHER"] },
+];
+
+function makeOptions(
+  overrides: Partial<UseFilterOptions> = {},
+): UseFilterOptions {
+  return {
+    filters: initialFilters,
+    onFiltersChange: vi.fn(),
+    logicalOperator: "AND",
+    onLogicalOperatorChange: vi.fn(),
+    ...overrides,
+  };
+}
 
 describe("useFilter", () => {
-  it("adds a filter by appending to the current list", () => {
-    const onFiltersChange = vi.fn();
+  it("returns the provided filters and operator", () => {
+    const { result } = renderHook(() => useFilter(makeOptions()));
 
-    const { result } = renderHook(() =>
-      useFilter({ ...empty, onFiltersChange }),
-    );
-
-    const filter: FilterCondition = {
-      name: "username",
-      operation: "contains",
-      value: "a",
-    };
-
-    act(() => result.current.addFilter(filter));
-
-    expect(onFiltersChange).toHaveBeenCalledWith([filter]);
+    expect(result.current.filters).toBe(initialFilters);
+    expect(result.current.logicalOperator).toBe("AND");
+    expect(result.current.isFilterOpen).toBe(false);
   });
 
-  it("updates only the targeted filter", () => {
+  it("appends a filter on addFilter", () => {
     const onFiltersChange = vi.fn();
 
     const { result } = renderHook(() =>
-      useFilter({
-        ...empty,
-        filters: [
-          { name: "username", operation: "contains", value: "a" },
-          { name: "role", operation: "equals", value: "ADMIN" },
-        ],
-        onFiltersChange,
+      useFilter(makeOptions({ onFiltersChange })),
+    );
+
+    act(() =>
+      result.current.addFilter({
+        name: "age",
+        operation: "gt",
+        value: 18,
       }),
     );
 
-    act(() => result.current.updateFilter({ operation: "startsWith" }, 0));
-
     expect(onFiltersChange).toHaveBeenCalledWith([
-      { name: "username", operation: "startsWith", value: "a" },
-      { name: "role", operation: "equals", value: "ADMIN" },
+      ...initialFilters,
+      { name: "age", operation: "gt", value: 18 },
     ]);
   });
 
-  it("removes the filter at the given index", () => {
+  it("merges a partial filter only at the target index", () => {
     const onFiltersChange = vi.fn();
 
     const { result } = renderHook(() =>
-      useFilter({
-        ...empty,
-        filters: [
-          { name: "username", operation: "contains", value: "a" },
-          { name: "role", operation: "equals", value: "ADMIN" },
-        ],
-        onFiltersChange,
-      }),
+      useFilter(makeOptions({ onFiltersChange })),
     );
 
-    act(() => result.current.deleteFilter(1));
+    act(() => result.current.updateFilter({ value: "al" }, 0));
 
     expect(onFiltersChange).toHaveBeenCalledWith([
-      { name: "username", operation: "contains", value: "a" },
+      { ...initialFilters[0], value: "al" },
+      initialFilters[1],
     ]);
   });
 
-  it("clears all filters", () => {
+  it("deletes the filter at the target index", () => {
     const onFiltersChange = vi.fn();
 
     const { result } = renderHook(() =>
-      useFilter({
-        ...empty,
-        filters: [{ name: "role", operation: "equals", value: "ADMIN" }],
-        onFiltersChange,
-      }),
+      useFilter(makeOptions({ onFiltersChange })),
+    );
+
+    act(() => result.current.deleteFilter(0));
+
+    expect(onFiltersChange).toHaveBeenCalledWith([initialFilters[1]]);
+  });
+
+  it("clears every filter", () => {
+    const onFiltersChange = vi.fn();
+
+    const { result } = renderHook(() =>
+      useFilter(makeOptions({ onFiltersChange })),
     );
 
     act(() => result.current.clearFilters());
@@ -86,10 +89,8 @@ describe("useFilter", () => {
     expect(onFiltersChange).toHaveBeenCalledWith([]);
   });
 
-  it("toggles the filter panel open state", () => {
-    const { result } = renderHook(() => useFilter(empty));
-
-    expect(result.current.isFilterOpen).toBe(false);
+  it("toggles the open state", () => {
+    const { result } = renderHook(() => useFilter(makeOptions()));
 
     act(() => result.current.openFilter());
 
@@ -100,15 +101,28 @@ describe("useFilter", () => {
     expect(result.current.isFilterOpen).toBe(false);
   });
 
-  it("forwards logical operator changes", () => {
+  it("forwards the logical operator change", () => {
     const onLogicalOperatorChange = vi.fn();
 
     const { result } = renderHook(() =>
-      useFilter({ ...empty, onLogicalOperatorChange }),
+      useFilter(makeOptions({ onLogicalOperatorChange })),
     );
 
     act(() => result.current.changeLogicalOperator("OR"));
 
     expect(onLogicalOperatorChange).toHaveBeenCalledWith("OR");
+  });
+
+  it("tolerates a missing onFiltersChange handler", () => {
+    const { result } = renderHook(() =>
+      useFilter(makeOptions({ filters: [], onFiltersChange: undefined })),
+    );
+
+    expect(() => {
+      act(() => result.current.addFilter(initialFilters[0]));
+      act(() => result.current.updateFilter({}, 0));
+      act(() => result.current.deleteFilter(0));
+      act(() => result.current.clearFilters());
+    }).not.toThrow();
   });
 });
