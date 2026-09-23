@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect } from "react";
+import { AxiosError, type AxiosResponse } from "axios";
 import toast from "@/shared/lib/toast";
 import { api } from "@/lib/api";
-import type { AxiosResponse } from "axios";
 import { useLogout } from "./useLogout";
 
 export function useApiInterceptor() {
@@ -28,11 +28,9 @@ export function useApiInterceptor() {
     [handleLogout],
   );
 
-  const handleErrNetwork = useCallback((err: any) => {
+  const handleErrNetwork = useCallback((err: AxiosError) => {
     if (err.message) {
-      const message = err.message;
-
-      toast.error(message);
+      toast.error(err.message);
     }
   }, []);
 
@@ -43,13 +41,15 @@ export function useApiInterceptor() {
 
         return res;
       },
-      (err) => {
+      (err: AxiosError<{ message?: string }>) => {
         if (err.response) {
           handleResponse(err.response);
 
           const apiMessage = err.response.data.message;
 
-          err.message = apiMessage;
+          if (apiMessage) {
+            err.message = apiMessage;
+          }
         }
 
         if (err.code === "ERR_NETWORK") {

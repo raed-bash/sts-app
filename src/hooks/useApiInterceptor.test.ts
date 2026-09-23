@@ -1,11 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { renderHook } from "@testing-library/react";
-import type { AxiosResponse } from "axios";
 import { useApiInterceptor } from "./useApiInterceptor";
 
-type ResponseFulfilled = (res: any) => AxiosResponse;
-type ResponseRejected = (err: any) => Promise<never>;
-type RequestFulfilled = (config: any) => any;
+type ResponseFulfilled = (res: unknown) => unknown;
+type ResponseRejected = (err: unknown) => Promise<never>;
+type RequestFulfilled = (config: unknown) => unknown;
 
 type ResponseUse = (
   fulfilled: ResponseFulfilled,
@@ -52,7 +51,7 @@ describe("useApiInterceptor", () => {
       status: 401,
       data: { message: "Session expired" },
       config: {},
-    });
+    }) as { status: number };
 
     expect(mocks.logout).toHaveBeenCalled();
     expect(mocks.toastError).toHaveBeenCalledWith("Session expired", {
@@ -118,7 +117,9 @@ describe("useApiInterceptor", () => {
     const requestFulfilled: RequestFulfilled =
       mocks.requestUse.mock.calls[0][0];
 
-    const config = requestFulfilled({ params: { title: "", page: 2 } });
+    const config = requestFulfilled({ params: { title: "", page: 2 } }) as {
+      params: { title: string; page: number };
+    };
 
     expect(config.params).toEqual({ title: undefined, page: 2 });
   });

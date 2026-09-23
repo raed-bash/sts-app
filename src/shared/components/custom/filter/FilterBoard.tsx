@@ -138,20 +138,20 @@ export default function FilterBoard({
   };
 
   const createFilterOperationChangeHandler =
-    (i: number) => (e: SyntheticEvent<any>) => {
+    (i: number) => (e: SyntheticEvent<string | string[]>) => {
       const name = e.target.name;
       const value = e.target.value;
 
       onUpdateFilter(
         {
           [name]: value,
-        },
+        } as Partial<FilterCondition>,
         i,
       );
     };
 
   const createFilterFieldChangeHandler =
-    (i: number) => (e: SyntheticEvent<any>) => {
+    (i: number) => (e: SyntheticEvent<string>) => {
       const value = e.target.value;
 
       const field = fields.find((field) => field.name === value);
@@ -161,10 +161,10 @@ export default function FilterBoard({
       onUpdateFilter({ name: value, operation: op[0], value: "" }, i);
     };
 
-  const handleChangeLogicalOperator = (e: SyntheticEvent<any>) => {
+  const handleChangeLogicalOperator = (e: SyntheticEvent<string>) => {
     const value = e.target.value;
 
-    onLogicalOperatorChange(value);
+    onLogicalOperatorChange(value as FilterLogicalOperator);
   };
 
   return (

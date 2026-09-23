@@ -1,4 +1,5 @@
 import LabeledField, { type LabeledFieldProps } from "./LabeledField";
+import type { FormikValues } from "formik";
 
 export type LabeledFieldFormikProps<
   Value,
@@ -6,9 +7,9 @@ export type LabeledFieldFormikProps<
 > = LabeledFieldProps<Value, Multiple> & {
   name: string;
 
-  values?: Record<any, any>;
+  values?: FormikValues;
 
-  errors?: Record<any, any>;
+  errors?: FormikValues;
 };
 
 function LabeledFieldFormik<

@@ -4,7 +4,10 @@ export const isBeforeLastIndex = (i: number, arrayLength: number) =>
 export const isLastIndex = (i: number, arrayLength: number) =>
   arrayLength - 1 === i;
 
-export const wrapInArrayIf = <Y extends boolean, T extends Record<any, any>>(
+export const wrapInArrayIf = <
+  Y extends boolean,
+  T extends Record<PropertyKey, unknown>,
+>(
   condition: Y,
   obj: T,
 ): Y extends true ? T[] : [] =>

@@ -7,7 +7,7 @@ export class JsonHelper {
     }
   }
 
-  static stringify(value: any) {
+  static stringify(value: unknown) {
     try {
       return JSON.stringify(value);
     } catch {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildCsv, escapeCsvField, getCsvCellValue } from "./csv";
 
-type Row = Record<string, any>;
+type Row = Record<string, unknown>;
 
 describe("escapeCsvField", () => {
   it("returns an empty string for nullish values", () => {

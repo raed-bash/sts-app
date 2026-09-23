@@ -1,6 +1,6 @@
-export type SyntheticEventHandler<T = any> = (e: SyntheticEvent<T>) => void;
+export type SyntheticEventHandler<T = unknown> = (e: SyntheticEvent<T>) => void;
 
-export class SyntheticEvent<T = any> {
+export class SyntheticEvent<T = unknown> {
   target: { name: string; value?: T; checked?: boolean };
 
   constructor(name: string, value?: T, checked?: boolean) {

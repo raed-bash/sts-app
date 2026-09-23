@@ -1,5 +1,5 @@
 export class TokenHelpers {
-  static decodedToken(token: string): Record<string | number, any> | null {
+  static decodedToken(token: string): Record<string | number, unknown> | null {
     try {
       const base64Url = token.split(".")[1];
       const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");

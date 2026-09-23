@@ -6,17 +6,18 @@ type UseLocalStorageOptions<T> = {
   onGet: (value: string) => T;
 };
 
-const defaultLocalStorageOptions: UseLocalStorageOptions<any> = {
+const DEFAULT_OPTIONS: UseLocalStorageOptions<unknown> = {
   onStore: (value) => value as string,
-  onGet: (value) => value as any,
+  onGet: (value) => value as unknown,
 };
 
 export function useLocalStorage<T>(
   name: string,
   defaultValue: T,
-  options: UseLocalStorageOptions<T> = defaultLocalStorageOptions,
+  options?: UseLocalStorageOptions<T>,
 ): [T, (value: T) => void] {
-  const { onStore, onGet } = options;
+  const { onStore, onGet } =
+    options ?? (DEFAULT_OPTIONS as UseLocalStorageOptions<T>);
 
   const [storedValue, setStoredValue] = useState<T>(() => {
     const oldValue = onGet(LocalStorageHelper.getItem(name));
