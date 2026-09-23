@@ -125,12 +125,12 @@ describe("FilterBoard", () => {
     expect(onOpen).toHaveBeenCalled();
   });
 
-  it("renders an existing filter row with field, operation and value", () => {
+  it("renders an existing filter row with field, operation and value", async () => {
     const filters = [{ name: "role", operation: "in", value: "TEACHER" }];
 
     renderBoard({ filtering: { filters } });
 
-    expect(screen.getByText("Role")).toBeInTheDocument();
+    expect(await screen.findByText("Role")).toBeInTheDocument();
 
     const operation = document.querySelector<HTMLSelectElement>(
       'select[name="operation"]',
@@ -269,7 +269,7 @@ describe("FilterBoard", () => {
       filtering: { filters: [textFilter()], onUpdateFilter },
     });
 
-    await user.click(screen.getAllByRole("combobox")[0]);
+    await user.click((await screen.findAllByRole("combobox"))[0]);
 
     await user.click(await screen.findByRole("option", { name: "Role" }));
 
