@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { expect, userEvent, within } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import SortButton from "./SortButton";
 
@@ -31,6 +32,26 @@ export const Interactive: Story = {
         Name
       </SortButton>
     );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button", { name: /Name/i });
+
+    await userEvent.click(button);
+    await userEvent.click(button);
+    await userEvent.click(button);
+
+    await expect(button).toBeVisible();
+  },
+};
+
+export const Mobile: Story = {
+  args: {
+    sortStatus: "asc",
+    children: "Name",
+  },
+  parameters: {
+    viewport: { defaultViewport: "mobile1" },
   },
 };
 
