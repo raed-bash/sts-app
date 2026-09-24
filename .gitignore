@@ -28,6 +28,9 @@ dist-ssr
 # Build analysis
 stats.html
 
+# Coverage
+coverage
+
 # Playwright
 test-results/
 playwright-report/
