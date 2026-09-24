@@ -11,6 +11,8 @@ import { testSessionsRouter } from "../features/test-sessions/test-sessions.rout
 import { settingsRouter } from "../features/settings/settings.router";
 import { homePaths } from "../features/home/home.paths";
 import Container from "@/components/layout/Container";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import NotFound from "@/components/NotFound";
 import PrivateRoute from "@/components/PrivateRoute";
 import { useQueryClient, type QueryClient } from "@tanstack/react-query";
 
@@ -27,6 +29,7 @@ export default function AppRouter() {
   const routers = createBrowserRouter([
     {
       path: "/",
+      errorElement: <ErrorBoundary />,
       element: <Container />,
       children: [
         {
@@ -45,6 +48,7 @@ export default function AppRouter() {
             ...answersRouter(queryClient),
             ...testSessionsRouter(queryClient),
             ...settingsRouter(queryClient),
+            { path: "*", element: <NotFound /> },
           ],
         },
         ...authRouter(queryClient),

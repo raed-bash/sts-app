@@ -6,6 +6,7 @@ import ThemeProvider from "./contexts/ThemeProvider";
 import LanguageProvider from "./contexts/LanguageProvider";
 import { TooltipProvider } from "./shared/components/ui/tooltip";
 import AppRouter from "./app/app.router";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { queryClient } from "./lib/react-query";
 
 const ReactQueryDevtools = import.meta.env.DEV
@@ -28,7 +29,9 @@ function App() {
         <ThemeProvider>
           <AuthProvider>
             <TooltipProvider>
-              <AppRouter />
+              <ErrorBoundary>
+                <AppRouter />
+              </ErrorBoundary>
             </TooltipProvider>
           </AuthProvider>
         </ThemeProvider>

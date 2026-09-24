@@ -6,6 +6,7 @@ const API_URL = env.API_URL;
 
 export const api = axios.create({
   baseURL: API_URL,
+  timeout: env.API_TIMEOUT,
   headers: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${LocalStorageHelper.getItem("token") || ""}`,

@@ -5,6 +5,8 @@ const createEnv = () => {
     API_URL: z.string().default("http://localhost:3000"),
     PER_PAGE: z.coerce.number().int().positive().default(10),
     DEBOUNCE_DELAY: z.coerce.number().positive().default(300),
+    API_TIMEOUT: z.coerce.number().positive().default(15000),
+    SENTRY_DSN: z.string().optional(),
   });
 
   const envVars = Object.entries(import.meta.env).reduce<
