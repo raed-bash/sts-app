@@ -52,7 +52,7 @@ export function useApiInterceptor() {
           err.message = apiMessage;
         }
 
-        if (err.code === "ERR_NETWORK") {
+        if (err.code === "ERR_NETWORK" || err.code === "ECONNABORTED") {
           handleErrNetwork(err);
         }
 
