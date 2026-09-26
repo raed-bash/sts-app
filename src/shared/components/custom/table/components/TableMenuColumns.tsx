@@ -1,22 +1,25 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import type { TableRowRecord, TableColumn } from "../Table";
 import { translateHeader } from "../utils/translate-header";
 import { useTranslation } from "react-i18next";
 import InputIcon from "../../inputs/InputIcon";
 import Checkbox from "../../inputs/Checkbox";
 import type { UseTableCreateToggleColumnsClickHandler } from "../hooks/useTable";
+import { useColumnReorder } from "../hooks/useColumnReorder";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/shared/components/custom/popover/Popover";
 import { Button } from "@/shared/components/ui/button";
-import { EllipsisVerticalIcon, Search } from "lucide-react";
+import { EllipsisVerticalIcon, GripVerticalIcon, Search } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip";
+import { cn } from "cn";
 
 export type TableMenuColumnsProps<Row extends TableRowRecord> = {
   data: {
@@ -46,22 +49,7 @@ function TableMenuColumns<Row extends TableRowRecord>({
 
   const { t } = useTranslation();
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const ghostRef = useRef<HTMLDivElement>(null);
-  const buttonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
-
-  const drag = useRef({
-    active: false,
-    fromOriginalIndex: -1,
-    fromFilteredIndex: -1,
-    toFilteredIndex: -1,
-    offsetY: 0,
-    startY: 0,
-    didMove: false,
-    suppressClick: false,
-  });
-
-  const filteredColumns = useMemo(
+  const listedColumns = useMemo(
     () =>
       columns
         .map((column, originalIndex) => ({ column, originalIndex }))
@@ -73,147 +61,12 @@ function TableMenuColumns<Row extends TableRowRecord>({
     [columns, searchMenuCols],
   );
 
-  const getFilteredIndexFromY = (y: number): number => {
-    const children = containerRef.current
-      ? (Array.from(containerRef.current.children) as HTMLElement[])
-      : [];
-
-    for (let i = 0; i < children.length; i++) {
-      const { top, height } = children[i].getBoundingClientRect();
-      if (y < top + height / 2) return i;
-    }
-    return Math.max(0, children.length - 1);
-  };
-
-  const setButtonAttr = (name: string, attr: string, val: string | null) => {
-    const el = buttonRefs.current.get(name);
-    if (!el) return;
-
-    if (val === null) return el.removeAttribute(attr);
-    else el.setAttribute(attr, val);
-  };
-
-  const clearAllDragStyles = () => {
-    buttonRefs.current.forEach((el) => {
-      el.removeAttribute("data-dragging");
-      el.removeAttribute("data-drag-over");
-    });
-  };
-
-  const handlePointerDown = (
-    e: React.PointerEvent<HTMLButtonElement>,
-    originalIndex: number,
-    filteredIndex: number,
-  ) => {
-    if (e.pointerId) e.currentTarget.setPointerCapture(e.pointerId);
-
-    const rect = e.currentTarget.getBoundingClientRect();
-
-    drag.current = {
-      active: true,
-      fromOriginalIndex: originalIndex,
-      fromFilteredIndex: filteredIndex,
-      toFilteredIndex: filteredIndex,
-      offsetY: e.clientY - rect.top,
-      startY: e.clientY,
-      didMove: false,
-      suppressClick: false,
-    };
-
-    if (ghostRef.current) {
-      ghostRef.current.textContent = translateHeader(
-        filteredColumns[filteredIndex]?.column.headerName ?? "",
-      );
-
-      Object.assign(ghostRef.current.style, {
-        display: "none",
-        width: `${rect.width}px`,
-        height: `${rect.height}px`,
-        left: `${rect.left}px`,
-        top: `${rect.top}px`,
-      });
-    }
-  };
-
-  const handlePointerMove = (e: React.PointerEvent<HTMLButtonElement>) => {
-    if (!drag.current.active) return;
-
-    const movedEnough = Math.abs(e.clientY - drag.current.startY) > 4;
-
-    if (!drag.current.didMove) {
-      if (!movedEnough) return;
-      drag.current.didMove = true;
-      drag.current.suppressClick = true;
-
-      if (ghostRef.current) ghostRef.current.style.display = "flex";
-
-      const fromName = String(
-        filteredColumns[drag.current.fromFilteredIndex]?.column.name ?? "",
-      );
-      setButtonAttr(fromName, "data-dragging", "true");
-    }
-
-    if (ghostRef.current) {
-      ghostRef.current.style.top = `${e.clientY - drag.current.offsetY}px`;
-    }
-
-    const newFilteredIdx = getFilteredIndexFromY(e.clientY);
-
-    if (newFilteredIdx !== drag.current.toFilteredIndex) {
-      const oldName = String(
-        filteredColumns[drag.current.toFilteredIndex]?.column.name ?? "",
-      );
-      setButtonAttr(oldName, "data-drag-over", null);
-
-      drag.current.toFilteredIndex = newFilteredIdx;
-
-      if (newFilteredIdx !== drag.current.fromFilteredIndex) {
-        const newName = String(
-          filteredColumns[newFilteredIdx]?.column.name ?? "",
-        );
-        setButtonAttr(newName, "data-drag-over", "true");
-      }
-    }
-  };
-
-  const handlePointerUp = () => {
-    if (!drag.current.active) return;
-    drag.current.active = false;
-
-    if (ghostRef.current) ghostRef.current.style.display = "none";
-    clearAllDragStyles();
-
-    const { fromOriginalIndex, fromFilteredIndex, toFilteredIndex, didMove } =
-      drag.current;
-
-    if (didMove && fromFilteredIndex !== toFilteredIndex) {
-      const toOriginalIndex =
-        filteredColumns[toFilteredIndex]?.originalIndex ?? -1;
-      if (toOriginalIndex !== -1) {
-        setColumns((prev) => {
-          const next = [...prev];
-
-          const [removed] = next.splice(fromOriginalIndex, 1);
-
-          next.splice(toOriginalIndex, 0, removed);
-
-          return next;
-        });
-      }
-    }
-  };
-
-  const handleClick = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    column: TableColumn<Row>,
-  ) => {
-    if (drag.current.suppressClick) {
-      drag.current.suppressClick = false;
-      return;
-    }
-
-    createToggleColumnsClickHandler(column)(e);
-  };
+  const { status, ghostRef, dropLineRef, getRowProps } = useColumnReorder<Row>({
+    columns,
+    setColumns,
+    listedColumns,
+    onToggle: (column, e) => createToggleColumnsClickHandler(column)(e),
+  });
 
   const handleSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) =>
     setSearchMenuCols(e.target.value);
@@ -225,8 +78,12 @@ function TableMenuColumns<Row extends TableRowRecord>({
           render={
             <TooltipTrigger
               render={
-                <Button variant={"ghost"} size={"icon-lg"}>
-                  <EllipsisVerticalIcon size={1000} />
+                <Button
+                  variant={"ghost"}
+                  size={"icon-lg"}
+                  aria-label={t("table.showHideColumns")}
+                >
+                  <EllipsisVerticalIcon size={1000} aria-hidden />
                 </Button>
               }
             />
@@ -241,48 +98,64 @@ function TableMenuColumns<Row extends TableRowRecord>({
           onChange={handleSearchChange}
         />
 
-        <div
-          ref={ghostRef}
-          className="fixed z-40 items-center gap-2 rounded text-[13px] px-2 bg-primary text-primary-foreground opacity-90 pointer-events-none select-none"
-          style={{ display: "none" }}
-        />
+        <div role="status" aria-live="polite" className="sr-only">
+          {status}
+        </div>
 
-        <div ref={containerRef} className="flex flex-col gap-1">
-          {filteredColumns.length ? (
-            filteredColumns.map(({ column, originalIndex }, filteredIndex) => (
-              <button
-                key={String(column.name)}
-                ref={(el) => {
-                  const key = String(column.name);
-                  if (el) buttonRefs.current.set(key, el);
-                  else buttonRefs.current.delete(key);
-                }}
-                className={[
-                  "flex items-center gap-3 rounded text-[13px] px-2 py-1 select-none touch-none cursor-pointer",
-                  "hover:bg-primary hover:text-primary-foreground",
-                  "data-[dragging=true]:opacity-30 data-[dragging=true]:border data-[dragging=true]:cursor-grabbing data-[dragging=true]:border-dashed data-[dragging=true]:border-primary",
-                  "data-[drag-over=true]:bg-primary data-[drag-over=true]:text-primary-foreground",
-                ].join(" ")}
-                onClick={(e) => handleClick(e, column)}
-                onPointerDown={(e) =>
-                  handlePointerDown(e, originalIndex, filteredIndex)
-                }
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-                onPointerCancel={handlePointerUp}
-              >
-                <Checkbox
-                  className="w-4 h-4 cursor-pointer"
-                  readOnly
-                  checked={!hiddenColumns.has(column.name)}
-                  tabIndex={-1}
-                />
-                {translateHeader(column.headerName)}
-              </button>
-            ))
-          ) : (
-            <p className="text-gray-400">{t("table.noColumns")}</p>
-          )}
+        {createPortal(
+          <div
+            ref={ghostRef}
+            className="fixed z-[60] flex items-center gap-2 rounded text-[13px] px-2 bg-primary text-primary-foreground opacity-90 pointer-events-none select-none"
+            style={{ display: "none" }}
+          />,
+          document.body,
+        )}
+
+        <div className="relative">
+          <div className="flex flex-col gap-1">
+            {listedColumns.length ? (
+              listedColumns.map((listed, filteredIndex) => (
+                <button
+                  key={String(listed.column.name)}
+                  {...getRowProps(listed, filteredIndex)}
+                  type="button"
+                  className={cn(
+                    "group flex items-center gap-3 rounded text-[13px] px-2 py-1 select-none touch-none cursor-pointer",
+                    "hover:bg-primary hover:text-primary-foreground",
+                    "focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary",
+                    "transition-transform duration-200 ease-out motion-reduce:transition-none",
+                    "data-[dragging=true]:opacity-0 data-[dragging=true]:cursor-grabbing",
+                  )}
+                >
+                  <Checkbox
+                    className="w-4 h-4 cursor-pointer"
+                    readOnly
+                    checked={!hiddenColumns.has(listed.column.name)}
+                    tabIndex={-1}
+                    aria-hidden
+                  />
+                  <span className="grow truncate">
+                    {translateHeader(listed.column.headerName)}
+                  </span>
+                  <GripVerticalIcon
+                    size={14}
+                    aria-hidden
+                    className="shrink-0 opacity-40 group-hover:opacity-90"
+                  />
+                </button>
+              ))
+            ) : (
+              <p className="text-gray-400">{t("table.noColumns")}</p>
+            )}
+          </div>
+
+          <div
+            ref={dropLineRef}
+            data-drop-line=""
+            data-visible={"false"}
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 z-10 h-0.5 rounded-full bg-primary opacity-0 transition-[transform,opacity] duration-200 ease-out data-[visible=true]:opacity-100"
+          />
         </div>
 
         <Button variant="outline" onClick={onReset}>

@@ -131,7 +131,8 @@
     "clearAll": "Clear all",
     "noRowsSelected": "No rows selected.",
     "removeFromSelection": "Remove from selection",
-    "noData": "No data"
+    "noData": "No data",
+    "columnMovedTo": "{{header}} moved to position {{position}} of {{total}}"
   },
   "filter": {
     "filters": "Filters",
