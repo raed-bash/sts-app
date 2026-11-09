@@ -18,7 +18,10 @@
     "deleted": "تم حذف الإجابة"
   },
   "table": {
-    "isCorrect": "إجابة صحيحة",
-    "correctIndex": "الفهرس الصحيح"
+    "isCorrect": "الإجابة الصحيحة",
+    "correctIndex": "الفهرس الصحيح",
+    "position": "الموضع {{n}}",
+    "correct": "صحيحة",
+    "incorrect": "خاطئة"
   }
 }

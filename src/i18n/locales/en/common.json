@@ -132,7 +132,11 @@
     "noRowsSelected": "No rows selected.",
     "removeFromSelection": "Remove from selection",
     "noData": "No data",
-    "columnMovedTo": "{{header}} moved to position {{position}} of {{total}}"
+    "columnMovedTo": "{{header}} moved to position {{position}} of {{total}}",
+    "moreActions": "More actions",
+    "noMatches": "No results match your filters",
+    "clearFilters": "Clear filters",
+    "deleted": "Deleted"
   },
   "filter": {
     "filters": "Filters",
@@ -180,5 +184,29 @@
   "labels": {
     "assignedCount": "{{count}} assigned"
   },
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "theme": {
+    "dark": "Switch to dark mode",
+    "light": "Switch to light mode"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "goHome": "Go to home"
+  },
+  "views": {
+    "cards": "Cards",
+    "table": "Table",
+    "switch": "Switch view",
+    "showing": "Showing {{count}} of {{total}}",
+    "testsCount": "{{count}} tests",
+    "sessionsCount": "{{count}} sessions",
+    "questionsCount": "{{count}} questions",
+    "minutes": "{{count}} min",
+    "points": "{{count}} pts",
+    "noSubject": "Not linked to a subject",
+    "noAnswers": "No answers yet",
+    "all": "All",
+    "showDeleted": "Show deleted"
+  }
 }

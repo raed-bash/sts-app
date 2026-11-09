@@ -1,7 +1,14 @@
 {
   "detail": {
     "back": "Back to questions",
-    "completeAnswer": "Complete answer"
+    "completeAnswer": "Complete answer",
+    "preview": "Student preview",
+    "answerKey": "Answer key",
+    "usedIn": "Used in tests",
+    "notUsed": "Not used in any test yet",
+    "answeredTimes": "Answered {{count}} times",
+    "editQuestion": "Edit question",
+    "manageRaw": "Advanced: raw answers"
   },
   "modal": {
     "createTitle": "Create question",
@@ -26,6 +33,52 @@
   },
   "errors": {
     "pointsPositive": "Points must be a positive number",
+    "textTooLong": "Keep the question under 191 characters",
+    "twoOptions": "Add at least two options",
+    "markCorrect": "Tick the one correct option",
+    "blanksNone": "Add at least one blank — put the answer in [brackets]",
+    "blanksEmpty": "A blank can’t be empty: write the answer inside [ ]",
+    "blanksUnbalanced": "A bracket is missing: every [ needs a matching ]",
+    "blanksNested": "Blanks can’t be inside other blanks",
+    "blanksReserved": "“;;” is reserved, please remove it",
     "completeTextRequired": "An answer text is required for COMPLETE"
+  },
+  "form": {
+    "createDescription": "Pick a type, write the question, and check the preview on the right.",
+    "type": "Question type",
+    "types": {
+      "choose": {
+        "title": "Multiple choice",
+        "description": "Students pick one correct option."
+      },
+      "complete": {
+        "title": "Fill in the blanks",
+        "description": "Students place answers into the blanks of a sentence."
+      },
+      "dragDrop": {
+        "title": "Put in order",
+        "description": "Students drag answers into the right positions."
+      }
+    },
+    "textPlaceholder": "e.g. What is 7 × 8?",
+    "options": "Options",
+    "optionsHint": "Tick the correct option. Press Enter to add the next one.",
+    "optionPlaceholder": "Option {{letter}}",
+    "optionLabel": "Option {{n}}",
+    "markCorrect": "Mark option {{n}} as correct",
+    "removeOption": "Remove option {{n}}",
+    "addOption": "Add option",
+    "sentence": "Sentence with blanks",
+    "makeBlank": "Make blank",
+    "sentencePlaceholder": "The area of a circle is [π] × [r²]",
+    "sentencePlaceholderOrder": "[Solid] → [Liquid] → [Gas]",
+    "sentenceHint": "Put each answer in [square brackets], or select a word and press “Make blank”. Students get the answers shuffled and place them in the blanks.",
+    "sentenceHintOrder": "Write the items in the correct order, each in [square brackets]. Students get them shuffled and must put them back in order.",
+    "previewTitle": "What students see",
+    "answerKeyTitle": "Answer key",
+    "previewTextPlaceholder": "Your question text appears here",
+    "previewNoOptions": "Add options to see them here.",
+    "previewNoBlanks": "Add a [blank] to see the sentence here.",
+    "locked": "Students have already answered this question, so its type and answers are locked to keep their results correct. You can still change the text, points and tests."
   }
 }

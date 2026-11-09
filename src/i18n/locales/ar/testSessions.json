@@ -17,44 +17,79 @@
     "selectSubject": "اختر الموضوع...",
     "subjects": "الموضوعات",
     "startsAt": "يبدأ في",
-    "endsAt": "ينتهي في"
+    "endsAt": "ينتهي في",
+    "pickSubjectFirst": "اختر مادة لعرض اختباراتها.",
+    "durationInfo": "المدة: {{count}} دقيقة (محددة في الاختبار)",
+    "endsAtInfo": "ينتهي في {{time}}"
   },
   "actions": {
     "editSchedule": "تعديل الجدول",
     "start": "بدء",
     "finish": "إنهاء",
-    "register": "تسجيل"
+    "register": "تسجيل",
+    "continue": "متابعة",
+    "results": "النتائج",
+    "startNow": "ابدأ الآن",
+    "cancel": "إلغاء الجلسة"
   },
   "confirm": {
     "deleteTitle": "حذف الجلسة #{{id}}؟",
-    "deleteMessage": "سيتم حذف جلسة الاختبار بشكل ناعم."
+    "deleteMessage": "سيتم حذف جلسة الاختبار بشكل ناعم.",
+    "finishTitle": "إنهاء الجلسة #{{id}} الآن؟",
+    "finishMessage": "أمام الطلاب الذين ما زالوا يقدمون الاختبار دقيقة واحدة للتسليم، ثم يُغلق اختبارهم.",
+    "cancelTitle": "إلغاء الجلسة #{{id}}؟",
+    "cancelMessage": "سيتم تحرير الطلاب المسجلين ولن يتمكنوا من تقديم هذا الاختبار. تُحفظ النتائج المكتملة."
   },
   "student": {
     "duration": "المدة: {{count}} دقيقة",
     "starts": "البداية",
-    "ends": "النهاية"
+    "ends": "النهاية",
+    "registered": "مسجّل — بانتظار البدء",
+    "registrationClosed": "التسجيل مغلق",
+    "canceled": "تم إلغاء الجلسة",
+    "missed": "لم تقدّم هذا الاختبار",
+    "startsIn": "يبدأ بعد {{time}}",
+    "endsIn": "ينتهي بعد {{time}}",
+    "submittedWaiting": "تم التسليم — النتائج في {{time}}"
   },
   "results": {
     "title": "نتائج الاختبار",
     "noStudents": "لا يوجد طلاب مسجّلون في جلسة الاختبار هذه.",
     "loadError": "تعذّر تحميل نتائج جلسة الاختبار هذه.",
     "noFinishedResults": "لا توجد نتائج منتهية بعد.",
+    "q": "س{{n}}",
+    "pts": "{{count}} نقطة",
+    "correctAnswer": "الإجابة الصحيحة",
+    "yourAnswer": "إجابتك",
+    "correctPosition": "الموضع الصحيح",
+    "notPlaced": "لم يُوضع",
+    "answeredAt": "أُجيب في {{time}}",
+    "finishedCount": "أنهوا",
+    "average": "المتوسط",
+    "highest": "الأعلى",
+    "lowest": "الأدنى",
+    "pointsOf": "{{got}} من {{total}} نقطة",
+    "submittedAt": "سُلّم في {{time}}",
+    "correct": "صحيحة",
+    "partial": "جزئية",
+    "wrong": "خاطئة",
+    "unanswered": "بدون إجابة",
+    "notAnswered": "لم تتم الإجابة",
+    "blanksLegend": "الإجابات المشطوبة خاطئة، والإجابة الصحيحة ظاهرة بالأخضر بجانبها.",
+    "placedAt": "وضعتها في الموضع {{position}}",
+    "lockedTitle": "تم تسليم الإجابات",
+    "lockedMessage": "حفاظاً على نزاهة الاختبار، تُعرض النتائج للجميع عند انتهاء الجلسة.",
+    "lockedSoon": "خلال لحظات…",
+    "availableAt": "النتائج متاحة في {{time}}",
     "subject": "الموضوع",
     "totalPoints": "إجمالي النقاط",
     "studentPoints": "نقاط الطالب",
-    "q": "س{{n}}",
-    "pts": "{{count}} نقطة",
     "plusPoints": "+{{count}}",
-    "correctAnswer": "الإجابة الصحيحة",
-    "yourAnswer": "إجابتك",
     "correctOrder": "الترتيب الصحيح: {{order}}",
-    "correctPosition": "الموضع الصحيح",
     "wrongPosition": "موضع خاطئ (الصحيح: {{position}})",
-    "notPlaced": "لم يُوضع",
     "correctBlank": "الفراغ الصحيح",
     "wrongBlank": "فراغ خاطئ (الصحيح: {{position}})",
-    "notUsed": "غير مستخدم",
-    "answeredAt": "أُجيب في {{time}}"
+    "notUsed": "غير مستخدم"
   },
   "exam": {
     "loadError": "تعذّر تحميل الاختبار. ربما أنهيتَه بالفعل أو لم يبدأ بعد.",
@@ -62,26 +97,65 @@
     "submit": "إرسال",
     "answeredProgress": "تمت الإجابة على {{answered}} من أصل {{total}} سؤالًا",
     "submitExam": "إنهاء الاختبار",
-    "dragOrder": "اسحب الإجابات إلى الترتيب الصحيح.",
-    "dragHint": "اسحب إجابةً وأفلتها في الفراغ الصحيح (أو اضغط على فراغ ثم على إجابة).",
-    "fillHint": "اختر فراغًا ثم اضغط على إجابة لتعبئته."
+    "dragOrder": "اسحب المقبض لإعادة الترتيب، أو استخدم الأسهم.",
+    "dragHint": "اسحب كل إجابة إلى فراغ، أو انقر على إجابة ثم على فراغ. انقر على فراغ ممتلئ لمسحه.",
+    "fillHint": "انقر على إجابة ثم على فراغ (أو اسحبها). انقر على فراغ ممتلئ لمسحه.",
+    "timeLeft": "الوقت المتبقي",
+    "timeUp": "انتهى الوقت. يتم إرسال إجاباتك الآن.",
+    "noQuestions": "لا يحتوي هذا الاختبار على أسئلة.",
+    "confirmTitle": "تسليم الاختبار؟",
+    "confirmUnanswered": "أسئلة بدون إجابة: {{count}}. لا يمكنك تعديل إجاباتك بعد التسليم.",
+    "moveUp": "تحريك للأعلى",
+    "moveDown": "تحريك للأسفل",
+    "blank": "الفراغ {{n}}",
+    "returnToExam": "لديك اختبار قيد التقدم. أنهِه أولاً.",
+    "tapBlankNow": "الآن انقر على فراغ لوضع «{{answer}}».",
+    "tapAnswerNow": "الآن انقر على إجابة للفراغ {{n}}.",
+    "blankFilled": "الفراغ {{n}}: {{answer}}. انقر للإزالة.",
+    "allPlaced": "تم وضع كل الإجابات. اسحب إجابة إلى هنا لإزالتها."
   },
   "toasts": {
     "created": "تم إنشاء جلسة الاختبار",
     "updated": "تم تحديث جلسة الاختبار",
     "deleted": "تم حذف جلسة الاختبار",
     "submitted": "تم إرسال الإجابات بنجاح",
-    "submitError": "فشل إرسال الإجابات"
+    "submitError": "فشل إرسال الإجابات",
+    "registered": "تم تسجيلك في هذه الجلسة",
+    "started": "بدأت جلسة الاختبار",
+    "finished": "انتهت جلسة الاختبار",
+    "canceled": "أُلغيت جلسة الاختبار",
+    "submittedWaiting": "تم تسليم الإجابات. ستظهر النتائج عند انتهاء الجلسة."
   },
   "errors": {
     "startDateRequired": "تاريخ البدء مطلوب",
     "endDateRequired": "تاريخ الانتهاء مطلوب",
-    "positiveNumber": "يجب أن يكون رقمًا موجبًا"
+    "positiveNumber": "يجب أن يكون رقمًا موجبًا",
+    "startInPast": "يجب أن يكون وقت البدء في المستقبل",
+    "testRequired": "الاختبار مطلوب",
+    "subjectRequired": "المادة مطلوبة",
+    "endBeforeStart": "يجب أن يكون الانتهاء بعد البدء"
   },
   "table": {
     "test": "الاختبار",
     "startDate": "تاريخ البدء",
     "finishDate": "تاريخ الانتهاء",
-    "updatedAt": "آخر تحديث"
+    "updatedAt": "آخر تحديث",
+    "subject": "المادة",
+    "students": "الطلاب"
+  },
+  "board": {
+    "live": "مباشر الآن",
+    "upcoming": "القادمة",
+    "past": "الجلسات السابقة",
+    "noLive": "لا توجد جلسة جارية الآن.",
+    "noUpcoming": "لا يوجد شيء مجدول. أنشئ جلسة للبدء.",
+    "noPast": "لا توجد جلسات منتهية بعد.",
+    "timeLeft": "الوقت المتبقي",
+    "ending": "تنتهي…",
+    "submitted": "سلّموا",
+    "registered": "{{count}} مسجلين",
+    "startingNow": "تبدأ الآن…",
+    "submittedOf": "{{done}} / {{total}} سلّموا",
+    "morePast": "{{count}} جلسات أقدم — انتقل إلى الجدول لرؤية الكل."
   }
 }

@@ -8,14 +8,19 @@
     "duration": "المدة",
     "minutes": "{{count}} دقيقة",
     "subjects": "المواد الدراسية",
-    "subjectsNotAssigned": "غير مخصص"
+    "subjectsNotAssigned": "غير مخصص",
+    "totalPoints": "مجموع النقاط",
+    "noQuestions": "لا يحتوي هذا الاختبار على أسئلة بعد.",
+    "showAnswers": "إظهار مفتاح الإجابة",
+    "hideAnswers": "إخفاء مفتاح الإجابة"
   },
   "modal": {
     "createTitle": "إنشاء اختبار",
     "editTitle": "تعديل الاختبار — {{name}}",
     "description": "يجمع الاختبار الأسئلة ومدة زمنية (بالدقائق) مشتركة بين جميع جلساته.",
     "subjects": "المواد الدراسية",
-    "selectSubjects": "اختر المواد..."
+    "selectSubjects": "اختر المواد...",
+    "min": "دقيقة"
   },
   "actions": {
     "open": "فتح الاختبار"

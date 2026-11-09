@@ -17,44 +17,79 @@
     "selectSubject": "Select subject...",
     "subjects": "Subjects",
     "startsAt": "Starts at",
-    "endsAt": "Ends at"
+    "endsAt": "Ends at",
+    "pickSubjectFirst": "Pick a subject to see its tests.",
+    "durationInfo": "Duration: {{count}} min (set on the test)",
+    "endsAtInfo": "Ends at {{time}}"
   },
   "actions": {
     "editSchedule": "Edit schedule",
     "start": "Start",
     "finish": "Finish",
-    "register": "Register"
+    "register": "Register",
+    "continue": "Continue",
+    "results": "Results",
+    "startNow": "Start now",
+    "cancel": "Cancel session"
   },
   "confirm": {
     "deleteTitle": "Delete session #{{id}}?",
-    "deleteMessage": "The test session will be soft-deleted."
+    "deleteMessage": "The test session will be soft-deleted.",
+    "finishTitle": "Finish session #{{id}} now?",
+    "finishMessage": "Students still taking the test have one minute to submit, then their test closes.",
+    "cancelTitle": "Cancel session #{{id}}?",
+    "cancelMessage": "Registered students are released and can no longer take this test. Finished results are kept."
   },
   "student": {
     "duration": "Duration: {{count}} min",
     "starts": "Starts",
-    "ends": "Ends"
+    "ends": "Ends",
+    "registered": "Registered — waiting for start",
+    "registrationClosed": "Registration closed",
+    "canceled": "Session canceled",
+    "missed": "You did not take this test",
+    "startsIn": "Starts in {{time}}",
+    "endsIn": "Ends in {{time}}",
+    "submittedWaiting": "Submitted — results at {{time}}"
   },
   "results": {
     "title": "Test Results",
     "noStudents": "No students are registered in this test session.",
     "loadError": "Unable to load results for this test session.",
     "noFinishedResults": "No finished results yet.",
+    "q": "Q{{n}}",
+    "pts": "{{count}} pts",
+    "correctAnswer": "Correct answer",
+    "yourAnswer": "Your answer",
+    "correctPosition": "Correct position",
+    "notPlaced": "Not placed",
+    "answeredAt": "Answered at {{time}}",
+    "finishedCount": "Finished",
+    "average": "Average",
+    "highest": "Highest",
+    "lowest": "Lowest",
+    "pointsOf": "{{got}} of {{total}} points",
+    "submittedAt": "Submitted {{time}}",
+    "correct": "Correct",
+    "partial": "Partial",
+    "wrong": "Wrong",
+    "unanswered": "Unanswered",
+    "notAnswered": "Not answered",
+    "blanksLegend": "Crossed-out answers are wrong; the correct answer is shown in green next to them.",
+    "placedAt": "You placed it at {{position}}",
+    "lockedTitle": "Answers submitted",
+    "lockedMessage": "To keep the test fair, results are shown to everyone when the session ends.",
+    "lockedSoon": "Any moment now…",
+    "availableAt": "Results available at {{time}}",
     "subject": "Subject",
     "totalPoints": "Total points",
     "studentPoints": "Student points",
-    "q": "Q{{n}}",
-    "pts": "{{count}} pts",
     "plusPoints": "+{{count}}",
-    "correctAnswer": "Correct answer",
-    "yourAnswer": "Your answer",
     "correctOrder": "Correct order: {{order}}",
-    "correctPosition": "Correct position",
     "wrongPosition": "Wrong position (correct: {{position}})",
-    "notPlaced": "Not placed",
     "correctBlank": "Correct blank",
     "wrongBlank": "Wrong blank (correct: {{position}})",
-    "notUsed": "Not used",
-    "answeredAt": "Answered at {{time}}"
+    "notUsed": "Not used"
   },
   "exam": {
     "loadError": "Unable to load the exam. You may have already finished it or it has not started yet.",
@@ -62,26 +97,65 @@
     "submit": "Submit",
     "answeredProgress": "{{answered}} of {{total}} questions answered",
     "submitExam": "Submit exam",
-    "dragOrder": "Drag the answers into the correct order.",
-    "dragHint": "Drag an answer and drop it into the correct blank (or click a blank, then an answer).",
-    "fillHint": "Select a blank, then click an answer to fill it."
+    "dragOrder": "Drag the handle to reorder, or use the arrows.",
+    "dragHint": "Drag each answer into a blank, or tap an answer and then a blank. Tap a filled blank to clear it.",
+    "fillHint": "Tap an answer and then a blank (or drag it). Tap a filled blank to clear it.",
+    "timeLeft": "Time left",
+    "timeUp": "Time is up. Your answers are being submitted.",
+    "noQuestions": "This test has no questions.",
+    "confirmTitle": "Submit the exam?",
+    "confirmUnanswered": "Unanswered questions: {{count}}. You can't change your answers after submitting.",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "blank": "Blank {{n}}",
+    "returnToExam": "You have a test in progress. Finish it first.",
+    "tapBlankNow": "Now tap a blank to place “{{answer}}”.",
+    "tapAnswerNow": "Now tap an answer for blank {{n}}.",
+    "blankFilled": "Blank {{n}}: {{answer}}. Tap to remove.",
+    "allPlaced": "All answers are placed. Drag one back here to remove it."
   },
   "toasts": {
     "created": "Test session created",
     "updated": "Test session updated",
     "deleted": "Test session deleted",
     "submitted": "Answers submitted successfully",
-    "submitError": "Failed to submit answers"
+    "submitError": "Failed to submit answers",
+    "registered": "You are registered for this session",
+    "started": "Test session started",
+    "finished": "Test session finished",
+    "canceled": "Test session canceled",
+    "submittedWaiting": "Answers submitted. Results will be shown when the session ends."
   },
   "errors": {
     "startDateRequired": "Start date is required",
     "endDateRequired": "End date is required",
-    "positiveNumber": "Must be a positive number"
+    "positiveNumber": "Must be a positive number",
+    "startInPast": "Start time must be in the future",
+    "testRequired": "Test is required",
+    "subjectRequired": "Subject is required",
+    "endBeforeStart": "End must be after start"
   },
   "table": {
     "test": "Test",
     "startDate": "Start date",
     "finishDate": "Finish date",
-    "updatedAt": "Updated at"
+    "updatedAt": "Updated at",
+    "subject": "Subject",
+    "students": "Students"
+  },
+  "board": {
+    "live": "Live now",
+    "upcoming": "Upcoming",
+    "past": "Past sessions",
+    "noLive": "No session is running right now.",
+    "noUpcoming": "Nothing scheduled. Create a session to get started.",
+    "noPast": "No finished sessions yet.",
+    "timeLeft": "Time left",
+    "ending": "Ending…",
+    "submitted": "Submitted",
+    "registered": "{{count}} registered",
+    "startingNow": "Starting now…",
+    "submittedOf": "{{done}} / {{total}} submitted",
+    "morePast": "{{count}} older sessions — switch to the table to see all."
   }
 }

@@ -132,7 +132,11 @@
     "noRowsSelected": "لم يتم تحديد أي صفوف.",
     "removeFromSelection": "إزالة من التحديد",
     "noData": "لا توجد بيانات",
-    "columnMovedTo": "تم نقل {{header}} إلى الموضع {{position}} من {{total}}"
+    "columnMovedTo": "تم نقل {{header}} إلى الموضع {{position}} من {{total}}",
+    "moreActions": "إجراءات أخرى",
+    "noMatches": "لا توجد نتائج تطابق عوامل التصفية",
+    "clearFilters": "مسح عوامل التصفية",
+    "deleted": "محذوف"
   },
   "filter": {
     "filters": "التصفية",
@@ -180,5 +184,29 @@
   "labels": {
     "assignedCount": "{{count}} مخصص"
   },
-  "loading": "جارٍ التحميل..."
+  "loading": "جارٍ التحميل...",
+  "theme": {
+    "dark": "التبديل إلى الوضع الداكن",
+    "light": "التبديل إلى الوضع الفاتح"
+  },
+  "notFound": {
+    "title": "الصفحة غير موجودة",
+    "description": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+    "goHome": "الذهاب إلى الرئيسية"
+  },
+  "views": {
+    "cards": "بطاقات",
+    "table": "جدول",
+    "switch": "تبديل العرض",
+    "showing": "عرض {{count}} من {{total}}",
+    "testsCount": "{{count}} اختبارات",
+    "sessionsCount": "{{count}} جلسات",
+    "questionsCount": "{{count}} أسئلة",
+    "minutes": "{{count}} دقيقة",
+    "points": "{{count}} نقطة",
+    "noSubject": "غير مرتبط بمادة",
+    "noAnswers": "لا توجد إجابات بعد",
+    "all": "الكل",
+    "showDeleted": "إظهار المحذوف"
+  }
 }

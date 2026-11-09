@@ -18,7 +18,10 @@
     "deleted": "Answer deleted"
   },
   "table": {
-    "isCorrect": "Is Correct",
-    "correctIndex": "Correct Index"
+    "isCorrect": "Correct answer",
+    "correctIndex": "Correct Index",
+    "position": "Position {{n}}",
+    "correct": "Correct",
+    "incorrect": "Incorrect"
   }
 }
