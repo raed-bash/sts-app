@@ -3,8 +3,10 @@ import { UserRound } from "lucide-react";
 import { useFocusout } from "@/shared/hooks";
 import ProfileMenu from "./ProfileMenu";
 import { Button } from "@/shared/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileButton() {
+  const { t } = useTranslation();
   const [openProfile, setOpenProfile] = useState(false);
 
   const handleToggleProfile = () => {
@@ -23,6 +25,8 @@ export default function ProfileButton() {
         size="icon"
         className="aria-expanded:bg-[#DFDFDF]/40"
         aria-expanded={openProfile}
+        aria-haspopup="menu"
+        aria-label={t("profile.profile")}
       >
         <UserRound className="stroke-foreground" />
       </Button>
