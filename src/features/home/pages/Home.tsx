@@ -199,7 +199,7 @@ export default function Home() {
       </div>
 
       <div
-        className={`grid grid-cols-2 ${isStudent ? "md:grid-cols-3" : "md:grid-cols-3 lg:grid-cols-5"} gap-4`}
+        className={`grid grid-cols-2 ${isStudent || isTeacher ? "md:grid-cols-3" : "md:grid-cols-3 lg:grid-cols-5"} gap-4`}
       >
         {stats.map(({ Icon, color, label, to, query }) => (
           <AppLink
