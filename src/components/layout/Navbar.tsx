@@ -5,10 +5,12 @@ import ProfileButton from "../profile/ProfileButton";
 import GlobalSearch from "../search/GlobalSearch";
 import { SidebarTrigger } from "@/shared/components/ui/sidebar";
 import { Button } from "@/shared/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export default function Navbar() {
   const { darkMode, toggleDarkMode } = useThemeContext();
   const { language, changeLanguage } = useLanguageContext();
+  const { t } = useTranslation();
 
   return (
     <header className="mb-5 sticky top-0 pt-5 transition-all duration-300 z-20 after:content-[''] after:w-full after:backdrop-blur-md after:absolute after:left-0 after:top-0 after:h-full after:-z-10">
@@ -28,12 +30,14 @@ export default function Navbar() {
           >
             {language === "en" ? "عربي" : "EN"}
           </Button>
-          <Button size="icon" variant="ghost" onClick={toggleDarkMode}>
-            {darkMode ? (
-              <Sun size={22} className="stroke-white" />
-            ) : (
-              <Moon size={22} />
-            )}
+          <Button
+            size="icon"
+            variant="ghost"
+            aria-label={t(darkMode ? "theme.light" : "theme.dark")}
+            title={t(darkMode ? "theme.light" : "theme.dark")}
+            onClick={toggleDarkMode}
+          >
+            {darkMode ? <Sun size={22} /> : <Moon size={22} />}
           </Button>
           <ProfileButton />
         </div>

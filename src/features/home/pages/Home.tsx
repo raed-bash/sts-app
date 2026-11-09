@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/shared/components/ui/card";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import {
   Users,
   BookOpen,
@@ -37,19 +38,28 @@ export default function Home() {
 
   const { t } = useTranslation(["common", "home"]);
 
-  const usersQuery = useQuery(getUsersQueryOptions(new QueryUserDto({})));
-  const subjectsQuery = useQuery(
-    getSubjectsQueryOptions(new QuerySubjectDto({})),
-  );
-  const testsQuery = useQuery(getTestsQueryOptions(new QueryTestDto({})));
-  const questionsQuery = useQuery(
-    getQuestionsQueryOptions(new QueryQuestionDto({})),
-  );
+  const isStudent = role === "STUDENT";
+  const staff = { enabled: !isStudent };
+
+  const usersQuery = useQuery({
+    ...getUsersQueryOptions(new QueryUserDto({})),
+    ...staff,
+  });
+  const subjectsQuery = useQuery({
+    ...getSubjectsQueryOptions(new QuerySubjectDto({})),
+    ...staff,
+  });
+  const testsQuery = useQuery({
+    ...getTestsQueryOptions(new QueryTestDto({})),
+    ...staff,
+  });
+  const questionsQuery = useQuery({
+    ...getQuestionsQueryOptions(new QueryQuestionDto({})),
+    ...staff,
+  });
   const sessionsQuery = useQuery(
     getTestSessionsQueryOptions(new QueryTestSessionDto({})),
   );
-
-  const isStudent = role === "STUDENT";
 
   const stats = isStudent
     ? [
@@ -57,7 +67,8 @@ export default function Home() {
           Icon: CalendarCheck,
           color: "text-teal-500",
           label: t("entities.testSessions"),
-          value: sessionsQuery.data?.meta.total ?? 0,
+          to: `/${testSessionsPaths.list}`,
+          query: sessionsQuery,
         },
       ]
     : [
@@ -65,31 +76,36 @@ export default function Home() {
           Icon: Users,
           color: "text-blue-500",
           label: t("entities.users"),
-          value: usersQuery.data?.meta.total ?? 0,
+          to: `/${usersPaths.list}`,
+          query: usersQuery,
         },
         {
           Icon: BookOpen,
           color: "text-green-500",
           label: t("entities.subjects"),
-          value: subjectsQuery.data?.meta.total ?? 0,
+          to: `/${subjectsPaths.list}`,
+          query: subjectsQuery,
         },
         {
           Icon: FileText,
           color: "text-purple-500",
           label: t("entities.tests"),
-          value: testsQuery.data?.meta.total ?? 0,
+          to: `/${testsPaths.list}`,
+          query: testsQuery,
         },
         {
           Icon: HelpCircle,
           color: "text-orange-500",
           label: t("entities.questions"),
-          value: questionsQuery.data?.meta.total ?? 0,
+          to: `/${questionsPaths.list}`,
+          query: questionsQuery,
         },
         {
           Icon: CalendarCheck,
           color: "text-teal-500",
           label: t("entities.testSessions"),
-          value: sessionsQuery.data?.meta.total ?? 0,
+          to: `/${testSessionsPaths.list}`,
+          query: sessionsQuery,
         },
       ];
 
@@ -152,18 +168,30 @@ export default function Home() {
       <div
         className={`grid grid-cols-2 ${isStudent ? "md:grid-cols-3" : "md:grid-cols-3 lg:grid-cols-5"} gap-4`}
       >
-        {stats.map(({ Icon, color, label, value }) => (
-          <Card key={label} className="transition-shadow hover:shadow-lg">
-            <CardContent className="flex flex-col items-center gap-3 pt-6 pb-8">
-              <div className={`p-3 rounded-full bg-secondary/10 ${color}`}>
-                <Icon size={28} />
-              </div>
-              <span className="text-sm font-medium text-muted-foreground">
-                {label}
-              </span>
-              <span className="text-3xl font-bold">{value}</span>
-            </CardContent>
-          </Card>
+        {stats.map(({ Icon, color, label, to, query }) => (
+          <AppLink
+            key={label}
+            to={to}
+            className="rounded-xl no-underline text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+          >
+            <Card className="h-full transition-all hover:-translate-y-0.5 hover:shadow-lg">
+              <CardContent className="flex flex-col items-center gap-3 pt-6 pb-8">
+                <div className={`p-3 rounded-full bg-current/10 ${color}`}>
+                  <Icon size={28} />
+                </div>
+                <span className="text-sm font-medium text-muted-foreground text-center">
+                  {label}
+                </span>
+                {query.isPending ? (
+                  <Skeleton className="h-9 w-14" />
+                ) : (
+                  <span className="text-3xl font-bold tabular-nums">
+                    {query.isError ? "—" : (query.data?.meta.total ?? 0)}
+                  </span>
+                )}
+              </CardContent>
+            </Card>
+          </AppLink>
         ))}
       </div>
 
@@ -180,7 +208,7 @@ export default function Home() {
                   <AppLink
                     key={to}
                     to={to}
-                    className="p-3 rounded-lg border border-border hover:bg-secondary/10 transition-colors no-underline text-foreground"
+                    className="p-3 rounded-lg border border-border hover:bg-secondary hover:text-secondary-foreground hover:border-primary/30 transition-colors no-underline text-foreground"
                   >
                     {label}
                   </AppLink>

@@ -1,6 +1,6 @@
 import Input from "./Input";
 import { cn } from "cn";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useId } from "react";
 import type { HTMLInputTypeAttribute, ReactNode } from "react";
 import type { OnlyStringLiterals } from "@/shared/types/utils";
 import InputPassword from "./InputPassword";
@@ -137,6 +137,12 @@ function LabeledField<Value, Multiple extends boolean | undefined = false>({
 
   const invalid = Boolean(helperText) && error !== false;
 
+  // labels and error messages must point at the control (click + screen readers)
+  const autoId = useId();
+  const id = props.id ?? autoId;
+  const helpId = `${id}-help`;
+  const describedBy = helperText ? helpId : undefined;
+
   return (
     <Field
       {...fieldProps}
@@ -156,7 +162,7 @@ function LabeledField<Value, Multiple extends boolean | undefined = false>({
       {hasTitle && (
         <FieldLabel
           {...titleProps}
-          htmlFor={props.id}
+          htmlFor={id}
           className={cn(
             "gap-1 text-base",
             oneline && "flex-none",
@@ -191,50 +197,79 @@ function LabeledField<Value, Multiple extends boolean | undefined = false>({
             <ComboboxApi
               aria-invalid={invalid ? true : undefined}
               {...props}
+              id={id}
+              aria-describedby={describedBy}
               className={cn("w-full", props.className)}
             />
           ) : props.type === "combobox" ? (
             <ComboboxField
               aria-invalid={invalid ? true : undefined}
               {...props}
+              id={id}
+              aria-describedby={describedBy}
               className={cn("w-full", props.className)}
             />
           ) : props.type === "select" ? (
             <SelectField
               aria-invalid={invalid ? true : undefined}
               {...props}
+              id={id}
+              aria-describedby={describedBy}
               className={cn("w-full", props.className)}
             />
           ) : props.type === "nativeSelect" ? (
             <NativeSelect
               aria-invalid={invalid ? true : undefined}
               {...props}
+              id={id}
+              aria-describedby={describedBy}
               className={cn("w-full", props.className)}
             />
           ) : props.type === "textarea" ? (
-            <Textarea {...props} aria-invalid={invalid ? true : undefined} />
+            <Textarea
+              {...props}
+              id={id}
+              aria-describedby={describedBy}
+              aria-invalid={invalid ? true : undefined}
+            />
           ) : props.type === "selectApi" ? (
             <SelectApi
               aria-invalid={invalid ? true : undefined}
               {...props}
+              id={id}
+              aria-describedby={describedBy}
               className={cn("w-full", props.className)}
             />
           ) : props.type === "password" ? (
             <InputPassword
               {...props}
+              id={id}
+              aria-describedby={describedBy}
               aria-invalid={invalid ? true : undefined}
             />
           ) : props.type === "checkbox" ? (
-            <Checkbox {...props} aria-invalid={invalid ? true : undefined} />
+            <Checkbox
+              {...props}
+              id={id}
+              aria-describedby={describedBy}
+              aria-invalid={invalid ? true : undefined}
+            />
           ) : (
-            <Input {...props} aria-invalid={invalid ? true : undefined} />
+            <Input
+              {...props}
+              id={id}
+              aria-describedby={describedBy}
+              aria-invalid={invalid ? true : undefined}
+            />
           )}
         </Suspense>
         {helperText ? (
           invalid ? (
-            <FieldError {...helperTextProps}>{helperText}</FieldError>
+            <FieldError id={helpId} {...helperTextProps}>
+              {helperText}
+            </FieldError>
           ) : (
-            <FieldDescription {...helperTextProps}>
+            <FieldDescription id={helpId} {...helperTextProps}>
               {helperText}
             </FieldDescription>
           )

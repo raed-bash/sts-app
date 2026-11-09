@@ -8,9 +8,9 @@ export type StatusBadgeProps = React.ComponentProps<"div"> & {
 };
 
 const STATUS_STYLES: Record<UserStatus, string> = {
-  ACTIVE: "bg-success",
-  BLOCKED: "bg-destructive",
-  PENDING: "bg-warning",
+  ACTIVE: "bg-success text-white",
+  BLOCKED: "bg-destructive text-white",
+  PENDING: "bg-warning text-black",
 };
 
 export default function StatusBadge({ status, ...props }: StatusBadgeProps) {
@@ -20,7 +20,7 @@ export default function StatusBadge({ status, ...props }: StatusBadgeProps) {
     <div
       {...props}
       className={cn(
-        "px-2 py-1 inline-block rounded-lg text-white font-bold text-xs",
+        "px-2 py-1 inline-block rounded-lg font-bold text-xs whitespace-nowrap",
         status && STATUS_STYLES[status],
         props.className,
       )}

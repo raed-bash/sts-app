@@ -36,7 +36,7 @@ export default function Login() {
   });
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-background text-foreground">
+    <div className="min-h-svh px-4 flex flex-col items-center justify-center bg-background text-foreground">
       <h2 className="text-[26px] mb-1 font-medium ">{t("auth:login.title")}</h2>
       <p className="text-muted-foreground text-sm">
         {t("auth:login.subtitle")}
@@ -48,7 +48,10 @@ export default function Login() {
         <form className="flex flex-col gap-2 " onSubmit={formik.handleSubmit}>
           <LabeledField
             type="text"
+            id="username"
             name="username"
+            autoComplete="username"
+            autoFocus
             title={t("common:fields.username")}
             value={formik.values.username}
             helperText={formik.touchedErrors.username}
@@ -58,7 +61,9 @@ export default function Login() {
           />
           <LabeledField
             type="password"
+            id="password"
             name="password"
+            autoComplete="current-password"
             title={t("common:fields.password")}
             value={formik.values.password}
             helperText={formik.touchedErrors.password}
@@ -81,14 +86,14 @@ export default function Login() {
           )}
 
           <div className="flex items-center mt-2">
-            <div className="border-b w-full border-gray-300 "></div>
-            <div className="mx-3 text-md min-w-max text-gray-400">
+            <div className="border-b w-full border-border "></div>
+            <div className="mx-3 text-md min-w-max text-muted-foreground">
               {t("auth:login.or")}
             </div>
-            <div className="border-b w-full border-gray-300"></div>
+            <div className="border-b w-full border-border"></div>
           </div>
           <div>
-            <p className="inline-block text-gray-400 font-medium me-2">
+            <p className="inline-block text-muted-foreground font-medium me-2">
               {t("auth:login.noAccount")}
             </p>
             <AppLink

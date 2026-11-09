@@ -10,10 +10,10 @@ export type StudentTestSessionStatusBadgeProps = React.ComponentProps<"div"> & {
 };
 
 const STATUS_STYLES: Record<StudentTestSessionStatus, string> = {
-  PENDING: "bg-warning",
-  STARTED: "bg-info",
-  FINISHED: "bg-success",
-  CANCELED: "bg-destructive",
+  PENDING: "bg-warning text-black",
+  STARTED: "bg-info text-black",
+  FINISHED: "bg-success text-white",
+  CANCELED: "bg-destructive text-white",
 };
 
 export default function StudentTestSessionStatusBadge({
@@ -26,7 +26,7 @@ export default function StudentTestSessionStatusBadge({
     <div
       {...props}
       className={cn(
-        "px-2 py-1 inline-block rounded-lg text-white font-bold text-xs",
+        "px-2 py-1 inline-block rounded-lg font-bold text-xs whitespace-nowrap",
         status && STATUS_STYLES[status],
         props.className,
       )}
