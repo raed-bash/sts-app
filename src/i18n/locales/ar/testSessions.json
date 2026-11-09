@@ -80,16 +80,7 @@
     "lockedTitle": "تم تسليم الإجابات",
     "lockedMessage": "حفاظاً على نزاهة الاختبار، تُعرض النتائج للجميع عند انتهاء الجلسة.",
     "lockedSoon": "خلال لحظات…",
-    "availableAt": "النتائج متاحة في {{time}}",
-    "subject": "الموضوع",
-    "totalPoints": "إجمالي النقاط",
-    "studentPoints": "نقاط الطالب",
-    "plusPoints": "+{{count}}",
-    "correctOrder": "الترتيب الصحيح: {{order}}",
-    "wrongPosition": "موضع خاطئ (الصحيح: {{position}})",
-    "correctBlank": "الفراغ الصحيح",
-    "wrongBlank": "فراغ خاطئ (الصحيح: {{position}})",
-    "notUsed": "غير مستخدم"
+    "availableAt": "النتائج متاحة في {{time}}"
   },
   "exam": {
     "loadError": "تعذّر تحميل الاختبار. ربما أنهيتَه بالفعل أو لم يبدأ بعد.",

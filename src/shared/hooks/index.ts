@@ -6,3 +6,4 @@ export * from "./useDebouncedValue";
 export * from "./useAnimation";
 export * from "./useFocusout";
 export * from "./useMouseUp";
+export * from "./useNow";

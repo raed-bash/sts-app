@@ -1,5 +1,16 @@
+import ViewSwitch from "@/shared/components/custom/views/ViewSwitch";
+import { useViewMode } from "@/shared/components/custom/views/use-view-mode";
+import SessionsBoard from "../components/SessionsBoard";
 import { useState } from "react";
-import { Pencil, Play, Plus, Square, Trash, BarChart3 } from "lucide-react";
+import {
+  Ban,
+  Pencil,
+  Play,
+  Plus,
+  Square,
+  Trash,
+  BarChart3,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { TableAction } from "@/shared/components/custom/table/components/TableActionsCell";
 import TestSessionsTable from "../components/TestSessionsTable";
@@ -16,6 +27,7 @@ import { useTestSessionsTable } from "../hooks/useTestSessionsTable";
 import { useStartTestSession } from "../api/start-test-session.api";
 import { useFinishTestSession } from "../api/finish-test-session.api";
 import { useDeleteTestSession } from "../api/delete-test-session.api";
+import { useCancelTestSession } from "../api/cancel-test-session.api";
 import { useRegisterTestSession } from "../api/register-test-session.api";
 import { useStartStudentTestSession } from "../api/start-student-test-session.api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -47,45 +59,65 @@ export default function TestSessionsList() {
 function AdminTestSessionsView() {
   const { t } = useTranslation(["testSessions", "common"]);
   const { tableProps } = useTestSessionsTable();
+  const [view, setView] = useViewMode("test-sessions");
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<TestSessionDto | null>(null);
-  const [confirm, setConfirm] = useState<TestSessionDto | null>(null);
+  const [confirm, setConfirm] = useState<{
+    session: TestSessionDto;
+    kind: "delete" | "finish" | "cancel";
+  } | null>(null);
 
   const refresh = () => {
     queryClient.invalidateQueries({ queryKey: testSessionsQueryKeys.all });
   };
 
+  const done = (message: string) => () => {
+    setConfirm(null);
+    refresh();
+    toast.success(message);
+  };
+
   const startMutation = useStartTestSession({
-    mutationConfig: { onSuccess: refresh },
+    mutationConfig: { onSuccess: done(t("testSessions:toasts.started")) },
   });
   const finishMutation = useFinishTestSession({
-    mutationConfig: { onSuccess: refresh },
+    mutationConfig: { onSuccess: done(t("testSessions:toasts.finished")) },
+  });
+  const cancelMutation = useCancelTestSession({
+    mutationConfig: { onSuccess: done(t("testSessions:toasts.canceled")) },
   });
   const deleteMutation = useDeleteTestSession({
-    mutationConfig: {
-      onSuccess: () => {
-        setConfirm(null);
-        refresh();
-        toast.success(t("testSessions:toasts.deleted"));
-      },
-    },
+    mutationConfig: { onSuccess: done(t("testSessions:toasts.deleted")) },
   });
 
+  const active = (session: TestSessionDto) =>
+    session.status === "PENDING" || session.status === "STARTED";
+
   const actions: TableAction<TestSessionDto>[] = [
+    {
+      name: "results",
+      label: t("testSessions:actions.results"),
+      icon: <BarChart3 />,
+      hidden: (session) =>
+        session.status !== "FINISHED" && session.status !== "STARTED",
+      onClick: (session) => navigate(testSessionsPaths.resultsLink(session.id)),
+    },
     {
       name: "edit",
       label: t("testSessions:actions.editSchedule"),
       icon: <Pencil />,
+      hidden: (session) => !active(session) || Boolean(session.deletedAt),
       onClick: (session) => setEditing(session),
     },
     {
       name: "start",
-      label: t("testSessions:actions.start"),
+      label: t("testSessions:actions.startNow"),
       icon: <Play />,
-      hidden: (session) => session.status !== "PENDING",
+      hidden: (session) =>
+        session.status !== "PENDING" || Boolean(session.deletedAt),
       onClick: (session) => startMutation.mutate(session.id),
     },
     {
@@ -93,14 +125,15 @@ function AdminTestSessionsView() {
       label: t("testSessions:actions.finish"),
       icon: <Square />,
       hidden: (session) => session.status !== "STARTED",
-      onClick: (session) => finishMutation.mutate(session.id),
+      onClick: (session) => setConfirm({ session, kind: "finish" }),
     },
     {
-      name: "results",
-      label: t("common:actions.viewResults"),
-      icon: <BarChart3 />,
-      hidden: (session) => session.status !== "FINISHED",
-      onClick: (session) => navigate(testSessionsPaths.resultsLink(session.id)),
+      name: "cancel",
+      label: t("testSessions:actions.cancel"),
+      icon: <Ban />,
+      variant: "destructive",
+      hidden: (session) => !active(session) || Boolean(session.deletedAt),
+      onClick: (session) => setConfirm({ session, kind: "cancel" }),
     },
     {
       name: "delete",
@@ -108,27 +141,63 @@ function AdminTestSessionsView() {
       icon: <Trash />,
       variant: "destructive",
       hidden: (session) => Boolean(session.deletedAt),
-      onClick: (session) => setConfirm(session),
+      onClick: (session) => setConfirm({ session, kind: "delete" }),
     },
   ];
 
+  const confirmCopy =
+    confirm &&
+    {
+      delete: {
+        title: t("testSessions:confirm.deleteTitle", {
+          id: confirm.session.id,
+        }),
+        message: t("testSessions:confirm.deleteMessage"),
+        label: t("common:actions.delete"),
+        mutation: deleteMutation,
+      },
+      finish: {
+        title: t("testSessions:confirm.finishTitle", {
+          id: confirm.session.id,
+        }),
+        message: t("testSessions:confirm.finishMessage"),
+        label: t("testSessions:actions.finish"),
+        mutation: finishMutation,
+      },
+      cancel: {
+        title: t("testSessions:confirm.cancelTitle", {
+          id: confirm.session.id,
+        }),
+        message: t("testSessions:confirm.cancelMessage"),
+        label: t("testSessions:actions.cancel"),
+        mutation: cancelMutation,
+      },
+    }[confirm.kind];
+
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-3xl font-bold">{t("testSessions:list.title")}</h1>
-        <Button
-          className="w-fit flex items-center gap-2"
-          onClick={() => setCreateOpen(true)}
-        >
-          <Plus size={16} />
-          {t("testSessions:list.create")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <ViewSwitch value={view} onChange={setView} />
+          <Button
+            className="w-fit flex items-center gap-2"
+            onClick={() => setCreateOpen(true)}
+          >
+            <Plus size={16} />
+            {t("testSessions:list.create")}
+          </Button>
+        </div>
       </div>
-      <Card className="pb-0">
-        <CardContent>
-          <TestSessionsTable {...tableProps} actions={actions} />
-        </CardContent>
-      </Card>
+      {view === "cards" ? (
+        <SessionsBoard actions={actions} />
+      ) : (
+        <Card className="pb-0">
+          <CardContent>
+            <TestSessionsTable {...tableProps} actions={actions} />
+          </CardContent>
+        </Card>
+      )}
 
       <CreateTestSessionFormModal
         isOpen={createOpen}
@@ -145,17 +214,27 @@ function AdminTestSessionsView() {
 
       <ConfirmPopup
         isOpen={Boolean(confirm)}
-        title={t("testSessions:confirm.deleteTitle", { id: confirm?.id ?? "" })}
-        message={t("testSessions:confirm.deleteMessage")}
-        confirmLabel={t("common:actions.delete")}
+        title={confirmCopy?.title ?? ""}
+        message={confirmCopy?.message ?? ""}
+        confirmLabel={confirmCopy?.label ?? ""}
         destructive
-        loading={deleteMutation.isPending}
+        loading={confirmCopy?.mutation.isPending}
         onCancel={() => setConfirm(null)}
-        onConfirm={() => confirm && deleteMutation.mutate(confirm.id)}
+        onConfirm={() =>
+          confirm && confirmCopy?.mutation.mutate(confirm.session.id)
+        }
       />
     </div>
   );
 }
+
+// Live sessions first, then upcoming, then past.
+const STATUS_ORDER: Record<TestSessionDto["status"], number> = {
+  STARTED: 0,
+  PENDING: 1,
+  FINISHED: 2,
+  CANCELED: 3,
+};
 
 function StudentTestSessionsView() {
   const { t } = useTranslation(["testSessions"]);
@@ -168,14 +247,22 @@ function StudentTestSessionsView() {
   };
 
   const registerMutation = useRegisterTestSession({
-    mutationConfig: { onSuccess: refresh },
-  });
-  const startMutation = useStartStudentTestSession({
     mutationConfig: {
       onSuccess: () => {
         refresh();
-        const sessionId = startMutation.variables;
-        if (sessionId != null) navigate(testSessionsPaths.examLink(sessionId));
+        toast.success(t("testSessions:toasts.registered"));
+      },
+    },
+  });
+  const startMutation = useStartStudentTestSession({
+    mutationConfig: {
+      // no list refresh here: during the exam the API blocks every other page
+      onSuccess: (_, sessionId) => {
+        queryClient.setQueryData(
+          testSessionsQueryKeys.checkStudentTestSessions(),
+          { status: "STARTED", testSessionId: sessionId },
+        );
+        navigate(testSessionsPaths.examLink(sessionId));
       },
     },
   });
@@ -195,8 +282,18 @@ function StudentTestSessionsView() {
         </div>
       ) : data && data.length > 0 ? (
         <StudentSessions
-          data={data}
-          loading={registerMutation.isPending || startMutation.isPending}
+          data={[...data].sort(
+            (a, b) =>
+              STATUS_ORDER[a.status] - STATUS_ORDER[b.status] ||
+              new Date(a.startDate).getTime() - new Date(b.startDate).getTime(),
+          )}
+          pendingId={
+            registerMutation.isPending
+              ? registerMutation.variables
+              : startMutation.isPending
+                ? startMutation.variables
+                : null
+          }
           onRegister={(session) => registerMutation.mutate(session.id)}
           onStart={(session) => startMutation.mutate(session.id)}
           onResults={(session) =>

@@ -1,3 +1,5 @@
+import { NameCell } from "@/shared/components/custom/table/components/NameCell";
+import { mutedIfDeleted } from "@/shared/components/custom/table/utils/muted-if-deleted";
 import Table, {
   type TableColumn,
 } from "@/shared/components/custom/table/Table";
@@ -38,7 +40,19 @@ export default function TestSessionsTable({
       name: "test",
       headerName: t("testSessions:table.test"),
       strict: false,
-      getCell: (_, row) => row.test?.name,
+      getCell: (_, row) => (
+        <NameCell
+          text={row.test?.name ?? `#${row.id}`}
+          sub={row.subject?.name}
+          deletedAt={row.deletedAt}
+        />
+      ),
+    },
+    {
+      name: "registeredCount",
+      headerName: t("testSessions:table.students"),
+      strict: false,
+      getCell: (count) => <span className="tabular-nums">{count ?? 0}</span>,
     },
     {
       name: "status",
@@ -75,6 +89,7 @@ export default function TestSessionsTable({
     {
       name: "updatedAt",
       headerName: t("testSessions:table.updatedAt"),
+      hidden: true,
       getCell: (updatedAt) => dateFormatter(updatedAt),
       sort: true,
       strict: false,
@@ -104,6 +119,7 @@ export default function TestSessionsTable({
       filtering={filtering}
       csv={{ fileName: "test-sessions" }}
       loading={loading}
+      getRowClassName={mutedIfDeleted}
     />
   );
 }

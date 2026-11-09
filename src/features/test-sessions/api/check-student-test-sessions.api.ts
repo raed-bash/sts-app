@@ -7,6 +7,8 @@ import { testSessionsQueryKeys } from "../test-sessions.api-keys";
 export type CheckStudentTestSessions = {
   status: "NONE" | "STARTED";
   message?: string;
+  /** the session the student must return to */
+  testSessionId?: number;
 };
 
 const getCheckStudentTestSessions = async (

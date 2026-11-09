@@ -6,6 +6,8 @@ import type { MutationConfig } from "@/lib/react-query";
 
 export type SubmitAnswerInput = {
   answerId: number;
+  /** 0-based blank/position for COMPLETE and DRAG_DROP questions. */
+  answerIndex?: number;
 };
 
 export type SubmitQuestionInput = {

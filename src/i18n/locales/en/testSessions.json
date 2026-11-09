@@ -80,16 +80,7 @@
     "lockedTitle": "Answers submitted",
     "lockedMessage": "To keep the test fair, results are shown to everyone when the session ends.",
     "lockedSoon": "Any moment now…",
-    "availableAt": "Results available at {{time}}",
-    "subject": "Subject",
-    "totalPoints": "Total points",
-    "studentPoints": "Student points",
-    "plusPoints": "+{{count}}",
-    "correctOrder": "Correct order: {{order}}",
-    "wrongPosition": "Wrong position (correct: {{position}})",
-    "correctBlank": "Correct blank",
-    "wrongBlank": "Wrong blank (correct: {{position}})",
-    "notUsed": "Not used"
+    "availableAt": "Results available at {{time}}"
   },
   "exam": {
     "loadError": "Unable to load the exam. You may have already finished it or it has not started yet.",

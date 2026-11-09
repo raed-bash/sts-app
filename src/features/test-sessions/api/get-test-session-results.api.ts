@@ -14,7 +14,8 @@ export const getTestSessionResults = async (
     ? ep("test-sessions", id, "results", studentId)
     : ep("test-sessions", id, "results");
 
-  return (await api.get(end, { signal })).data;
+  // the page renders its own states (e.g. "results after the session ends")
+  return (await api.get(end, { signal, hideToasterMessage: true })).data;
 };
 
 export const getTestSessionResultsQueryOptions = (

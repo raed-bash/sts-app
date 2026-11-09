@@ -3,9 +3,12 @@ import toast from "@/shared/lib/toast";
 import { api } from "@/lib/api";
 import type { AxiosResponse } from "axios";
 import { useLogout } from "./useLogout";
+import { useQueryClient } from "@tanstack/react-query";
+import { testSessionsQueryKeys } from "@/features/test-sessions/test-sessions.api-keys";
 
 export function useApiInterceptor() {
   const handleLogout = useLogout();
+  const queryClient = useQueryClient();
 
   const handleResponse = useCallback(
     (res: AxiosResponse) => {
@@ -18,6 +21,14 @@ export function useApiInterceptor() {
           handleLogout();
         }
 
+        // Exam in progress: not an error for the user — ActiveExamRedirect takes them back.
+        if (res.data?.code === "TEST_IN_PROGRESS") {
+          queryClient.invalidateQueries({
+            queryKey: testSessionsQueryKeys.checkStudentTestSessions(),
+          });
+          return;
+        }
+
         if (!res.config.hideToasterMessage && message) {
           toast.error(message, {
             id: message,
@@ -25,7 +36,7 @@ export function useApiInterceptor() {
         }
       }
     },
-    [handleLogout],
+    [handleLogout, queryClient],
   );
 
   const handleErrNetwork = useCallback((err: any) => {

@@ -12,6 +12,7 @@ import {
 export function useTestSessionsTable() {
   const state = useTableState<TestSessionOrderAttributes>({
     name: "test-sessions",
+    defaultHiddenColumns: ["updatedAt"],
   });
 
   const queryBase = new QueryTestSessionDto({

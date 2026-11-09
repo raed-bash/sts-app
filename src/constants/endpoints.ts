@@ -13,6 +13,7 @@ export type ENDPOINTS =
   | "healthcheck"
   | "start"
   | "finish"
+  | "cancel"
   | "register"
   | "start-student-test-session"
   | "submit"

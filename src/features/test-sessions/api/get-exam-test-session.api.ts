@@ -9,7 +9,13 @@ export const getExamTestSession = async (
   id: number,
   signal: AbortSignal,
 ): Promise<ExamTestSessionDto> => {
-  return (await api.get(ep("test-sessions", id, "exam"), { signal })).data;
+  // the exam page shows its own error state; no toast
+  return (
+    await api.get(ep("test-sessions", id, "exam"), {
+      signal,
+      hideToasterMessage: true,
+    })
+  ).data;
 };
 
 export const getExamTestSessionQueryOptions = (id: number) => {
