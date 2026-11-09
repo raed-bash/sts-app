@@ -1,3 +1,8 @@
+import ShowDeletedToggle from "@/shared/components/custom/views/ShowDeletedToggle";
+import { useShowDeleted } from "@/shared/components/custom/views/use-show-deleted";
+import ViewSwitch from "@/shared/components/custom/views/ViewSwitch";
+import { useViewMode } from "@/shared/components/custom/views/use-view-mode";
+import SubjectsCards from "../components/SubjectsCards";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { subjectsPaths } from "../subjects.paths";
@@ -36,7 +41,9 @@ export default function SubjectsList() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { t } = useTranslation(["subjects", "common"]);
-  const { tableProps } = useSubjectsTable();
+  const [showDeleted, setShowDeleted] = useShowDeleted("subjects");
+  const { tableProps } = useSubjectsTable({ isDeleted: showDeleted });
+  const [view, setView] = useViewMode("subjects");
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<SubjectDto | null>(null);
@@ -70,8 +77,12 @@ export default function SubjectsList() {
       icon: <RotateCcw />,
       hidden: (subject) => !subject.deletedAt,
       onClick: (subject) => {
-        restoreMutation.mutate(subject.id, { onSuccess: refresh });
-        toast.success(t("subjects:toasts.restored"));
+        restoreMutation.mutate(subject.id, {
+          onSuccess: () => {
+            refresh();
+            toast.success(t("subjects:toasts.restored"));
+          },
+        });
       },
     },
     {
@@ -99,19 +110,27 @@ export default function SubjectsList() {
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">{t("subjects:list.title")}</h1>
-        <Button
-          className="w-fit flex items-center gap-2"
-          onClick={() => setCreateOpen(true)}
-        >
-          <Plus size={16} />
-          {t("subjects:list.add")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <ShowDeletedToggle value={showDeleted} onChange={setShowDeleted} />
+          <ViewSwitch value={view} onChange={setView} />
+          <Button
+            className="w-fit flex items-center gap-2"
+            onClick={() => setCreateOpen(true)}
+          >
+            <Plus size={16} />
+            {t("subjects:list.add")}
+          </Button>
+        </div>
       </div>
-      <Card className="pb-0">
-        <CardContent>
-          <SubjectsTable {...tableProps} actions={actions} />
-        </CardContent>
-      </Card>
+      {view === "cards" ? (
+        <SubjectsCards actions={actions} isDeleted={showDeleted} />
+      ) : (
+        <Card className="pb-0">
+          <CardContent>
+            <SubjectsTable {...tableProps} actions={actions} />
+          </CardContent>
+        </Card>
+      )}
 
       <CreateSubjectFormModal
         isOpen={createOpen}

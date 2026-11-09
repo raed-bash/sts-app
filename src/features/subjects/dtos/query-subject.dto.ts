@@ -46,7 +46,8 @@ export class QuerySubjectDto
 
   toUpdatedAt?: Date;
 
-  isDeleted?: boolean = true;
+  // deleted rows are opt-in ("Show deleted") so they don't confuse lists
+  isDeleted?: boolean = false;
 
   fromDeletedAt?: Date;
 

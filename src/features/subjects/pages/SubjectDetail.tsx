@@ -1,10 +1,20 @@
+import ShowDeletedToggle from "@/shared/components/custom/views/ShowDeletedToggle";
+import { useShowDeleted } from "@/shared/components/custom/views/use-show-deleted";
+import Fact from "@/shared/components/custom/views/Fact";
+import EditSubjectFormModal from "../components/EditSubjectFormModal";
+import ViewSwitch from "@/shared/components/custom/views/ViewSwitch";
+import { useViewMode } from "@/shared/components/custom/views/use-view-mode";
+import TestsCards from "@/features/tests/components/TestsCards";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { subjectsPaths } from "../subjects.paths";
 import { testsPaths } from "@/features/tests/tests.paths";
 import {
   ArrowLeft,
+  CalendarCheck,
+  CalendarDays,
   Edit,
+  FileText,
   ListChecks,
   Plus,
   RotateCcw,
@@ -45,7 +55,13 @@ export default function SubjectDetail() {
     queryConfig: { enabled: Number.isFinite(subjectId) },
   });
 
-  const { tableProps } = useTestsTable({ subjectIds: [subjectId] });
+  const [showDeleted, setShowDeleted] = useShowDeleted("subject-tests");
+  const { tableProps } = useTestsTable({
+    subjectIds: [subjectId],
+    isDeleted: showDeleted,
+  });
+  const [view, setView] = useViewMode("subject-tests");
+  const [editingSubject, setEditingSubject] = useState(false);
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<TestDto | null>(null);
@@ -132,49 +148,69 @@ export default function SubjectDetail() {
           <ArrowLeft size={16} />
           {t("subjects:detail.back")}
         </Button>
+        <Button
+          variant="outline"
+          className="w-fit gap-2"
+          onClick={() => setEditingSubject(true)}
+        >
+          <Edit size={16} />
+          {t("common:actions.edit")}
+        </Button>
       </div>
 
       <Card>
-        <CardContent className="pt-6">
-          <h1 className="text-3xl font-bold">{subject.name}</h1>
-          <div className="grid md:grid-cols-2 gap-4 mt-4">
-            <div className="p-4 rounded-lg bg-secondary/10">
-              <div className="text-xs text-muted-foreground uppercase">
-                {t("common:fields.created")}
-              </div>
-              <div className="text-lg font-semibold">
-                {dateFormatter(subject.createdAt)}
-              </div>
-            </div>
-            <div className="p-4 rounded-lg bg-secondary/10">
-              <div className="text-xs text-muted-foreground uppercase">
-                {t("entities.tests")}
-              </div>
-              <div className="text-lg font-semibold">
-                {t("common:labels.assignedCount", {
-                  count: tableProps.data?.rows?.length ?? 0,
-                })}
-              </div>
-            </div>
+        <CardContent className="flex flex-col gap-4 pt-6">
+          <div>
+            <div className="text-xs text-muted-foreground">#{subject.id}</div>
+            <h1 className="text-3xl font-bold">{subject.name}</h1>
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <Fact
+              icon={<FileText size={16} />}
+              label={t("entities.tests")}
+              value={subject.testsCount ?? 0}
+            />
+            <Fact
+              icon={<CalendarCheck size={16} />}
+              label={t("entities.testSessions")}
+              value={subject.sessionsCount ?? 0}
+            />
+            <Fact
+              icon={<CalendarDays size={16} />}
+              label={t("common:fields.created")}
+              value={dateFormatter(subject.createdAt, "date")}
+            />
           </div>
         </CardContent>
       </Card>
 
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">{t("entities.tests")}</h2>
-        <Button
-          className="w-fit flex items-center gap-2"
-          onClick={() => setCreateOpen(true)}
-        >
-          <Plus size={16} />
-          {t("tests:list.add")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <ShowDeletedToggle value={showDeleted} onChange={setShowDeleted} />
+          <ViewSwitch value={view} onChange={setView} />
+          <Button
+            className="w-fit flex items-center gap-2"
+            onClick={() => setCreateOpen(true)}
+          >
+            <Plus size={16} />
+            {t("tests:list.add")}
+          </Button>
+        </div>
       </div>
-      <Card className="pb-52">
-        <CardContent>
-          <TestsTable {...tableProps} actions={actions} />
-        </CardContent>
-      </Card>
+      {view === "cards" ? (
+        <TestsCards
+          actions={actions}
+          subjectIds={[subjectId]}
+          isDeleted={showDeleted}
+        />
+      ) : (
+        <Card className="pb-52">
+          <CardContent>
+            <TestsTable {...tableProps} actions={actions} />
+          </CardContent>
+        </Card>
+      )}
 
       <CreateTestFormModal
         isOpen={createOpen}
@@ -201,6 +237,13 @@ export default function SubjectDetail() {
         onCancel={() => setConfirm(null)}
         onConfirm={() => deleteMutation.mutate(deletingId ?? 0)}
       />
+      {editingSubject && (
+        <EditSubjectFormModal
+          isOpen
+          subject={subject}
+          onClose={() => setEditingSubject(false)}
+        />
+      )}
     </div>
   );
 }

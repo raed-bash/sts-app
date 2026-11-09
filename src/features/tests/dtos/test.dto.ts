@@ -1,4 +1,5 @@
 import { pick } from "lodash";
+import type { QuestionDto } from "@/features/questions/dtos/question.dto";
 
 export class TestDto {
   id!: number;
@@ -7,6 +8,10 @@ export class TestDto {
   createdAt!: Date;
   updatedAt?: Date | null;
   deletedAt?: Date | null;
+  questionsCount?: number;
+  subjects?: { id: number; name: string }[];
+  /** detail only */
+  questions?: { question: QuestionDto }[];
 
   constructor(test: TestDto) {
     Object.assign(
@@ -18,6 +23,9 @@ export class TestDto {
         "createdAt",
         "updatedAt",
         "deletedAt",
+        "questionsCount",
+        "subjects",
+        "questions",
       ]),
     );
   }

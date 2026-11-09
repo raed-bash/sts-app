@@ -1,3 +1,5 @@
+import ShowDeletedToggle from "@/shared/components/custom/views/ShowDeletedToggle";
+import { useShowDeleted } from "@/shared/components/custom/views/use-show-deleted";
 import { useState } from "react";
 import {
   BadgeCheck,
@@ -52,7 +54,8 @@ export default function UsersList() {
   const allowed = useRequireRole(["SUPER_ADMIN"]);
   const queryClient = useQueryClient();
   const { t } = useTranslation(["common", "users"]);
-  const { tableProps } = useUsersTable();
+  const [showDeleted, setShowDeleted] = useShowDeleted("users");
+  const { tableProps } = useUsersTable({ isDeleted: showDeleted });
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<UserDto | null>(null);
@@ -147,13 +150,16 @@ export default function UsersList() {
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">{t("entities.users")}</h1>
-        <Button
-          className="w-fit flex items-center gap-2"
-          onClick={() => setCreateOpen(true)}
-        >
-          <UserPlus size={16} />
-          {t("users:list.add")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <ShowDeletedToggle value={showDeleted} onChange={setShowDeleted} />
+          <Button
+            className="w-fit flex items-center gap-2"
+            onClick={() => setCreateOpen(true)}
+          >
+            <UserPlus size={16} />
+            {t("users:list.add")}
+          </Button>
+        </div>
       </div>
       <Card className="pb-0">
         <CardContent>

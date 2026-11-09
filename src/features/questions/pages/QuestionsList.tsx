@@ -1,3 +1,8 @@
+import ShowDeletedToggle from "@/shared/components/custom/views/ShowDeletedToggle";
+import { useShowDeleted } from "@/shared/components/custom/views/use-show-deleted";
+import ViewSwitch from "@/shared/components/custom/views/ViewSwitch";
+import { useViewMode } from "@/shared/components/custom/views/use-view-mode";
+import QuestionsCards from "../components/QuestionsCards";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { questionsPaths } from "../questions.paths";
@@ -36,7 +41,9 @@ export default function QuestionsList() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { t } = useTranslation(["common", "questions"]);
-  const { tableProps } = useQuestionsTable();
+  const [showDeleted, setShowDeleted] = useShowDeleted("questions");
+  const { tableProps } = useQuestionsTable({ isDeleted: showDeleted });
+  const [view, setView] = useViewMode("questions");
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<QuestionDto | null>(null);
@@ -107,19 +114,27 @@ export default function QuestionsList() {
     <div className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">{t("entities.questions")}</h1>
-        <Button
-          className="w-fit flex items-center gap-2"
-          onClick={() => setCreateOpen(true)}
-        >
-          <Plus size={16} />
-          {t("common:actions.addQuestion")}
-        </Button>
+        <div className="flex items-center gap-2">
+          <ShowDeletedToggle value={showDeleted} onChange={setShowDeleted} />
+          <ViewSwitch value={view} onChange={setView} />
+          <Button
+            className="w-fit flex items-center gap-2"
+            onClick={() => setCreateOpen(true)}
+          >
+            <Plus size={16} />
+            {t("common:actions.addQuestion")}
+          </Button>
+        </div>
       </div>
-      <Card className="pb-0">
-        <CardContent>
-          <QuestionsTable {...tableProps} actions={actions} />
-        </CardContent>
-      </Card>
+      {view === "cards" ? (
+        <QuestionsCards actions={actions} isDeleted={showDeleted} />
+      ) : (
+        <Card className="pb-0">
+          <CardContent>
+            <QuestionsTable {...tableProps} actions={actions} />
+          </CardContent>
+        </Card>
+      )}
 
       <CreateQuestionFormModal
         isOpen={createOpen}

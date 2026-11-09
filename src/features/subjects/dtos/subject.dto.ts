@@ -6,11 +6,21 @@ export class SubjectDto {
   createdAt!: Date;
   updatedAt?: Date | null;
   deletedAt?: Date | null;
+  testsCount?: number;
+  sessionsCount?: number;
 
   constructor(subject: SubjectDto) {
     Object.assign(
       this,
-      pick(subject, ["id", "name", "createdAt", "updatedAt", "deletedAt"]),
+      pick(subject, [
+        "id",
+        "name",
+        "createdAt",
+        "updatedAt",
+        "deletedAt",
+        "testsCount",
+        "sessionsCount",
+      ]),
     );
   }
 }
