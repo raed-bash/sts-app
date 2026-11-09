@@ -61,7 +61,6 @@ export default function Home() {
   });
   const sessionsQuery = useQuery({
     ...getTestSessionsQueryOptions(new QueryTestSessionDto({})),
-    enabled: !isTeacher,
   });
 
   const stats = isTeacher
@@ -79,6 +78,13 @@ export default function Home() {
           label: t("entities.questions"),
           to: `/${questionsPaths.list}`,
           query: questionsQuery,
+        },
+        {
+          Icon: CalendarCheck,
+          color: "text-teal-500",
+          label: t("entities.testSessions"),
+          to: `/${testSessionsPaths.list}`,
+          query: sessionsQuery,
         },
       ]
     : isStudent
@@ -150,6 +156,10 @@ export default function Home() {
           {
             to: `/${answersPaths.list}`,
             label: t("home:actions.answersManagement"),
+          },
+          {
+            to: `/${testSessionsPaths.list}`,
+            label: t("entities.testSessions"),
           },
         ]
       : [

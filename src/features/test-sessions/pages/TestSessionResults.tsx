@@ -70,7 +70,8 @@ export default function TestSessionResults() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const role = useRole();
-  const isAdmin = role === "SUPER_ADMIN";
+  // staff (admin or the teacher who owns the test) see every student's results
+  const isAdmin = role === "SUPER_ADMIN" || role === "TEACHER";
 
   const testSessionId = Number(id);
   const studentIdParam = searchParams.get("studentId");

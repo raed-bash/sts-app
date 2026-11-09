@@ -1,3 +1,4 @@
+import { useCanDelete } from "@/hooks/useCanDelete";
 import ViewSwitch from "@/shared/components/custom/views/ViewSwitch";
 import { useViewMode } from "@/shared/components/custom/views/use-view-mode";
 import SessionsBoard from "../components/SessionsBoard";
@@ -57,6 +58,7 @@ export default function TestSessionsList() {
 }
 
 function AdminTestSessionsView() {
+  const canDelete = useCanDelete();
   const { t } = useTranslation(["testSessions", "common"]);
   const { tableProps } = useTestSessionsTable();
   const [view, setView] = useViewMode("test-sessions");
@@ -140,7 +142,7 @@ function AdminTestSessionsView() {
       label: t("common:actions.remove"),
       icon: <Trash />,
       variant: "destructive",
-      hidden: (session) => Boolean(session.deletedAt),
+      hidden: (session) => !canDelete || Boolean(session.deletedAt),
       onClick: (session) => setConfirm({ session, kind: "delete" }),
     },
   ];

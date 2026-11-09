@@ -102,7 +102,7 @@ export const sidebarCategories: SidebarCategory[] = [
         to: testSessionsPaths.list,
         label: "entities.testSessions",
         Icon: CalendarCheck,
-        roles: ["SUPER_ADMIN", "STUDENT"],
+        roles: ["SUPER_ADMIN", "TEACHER", "STUDENT"],
       },
       {
         to: settingsPaths.settings,
