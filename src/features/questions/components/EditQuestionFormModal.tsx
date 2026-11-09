@@ -1,27 +1,18 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import toast from "@/shared/lib/toast";
 import Popup from "@/shared/components/custom/popups/Popup";
-import { Button } from "@/shared/components/ui/button";
-import LabeledField from "@/shared/components/custom/inputs/LabeledField";
-import { useAppFormik } from "@/shared/lib/formik";
-import {
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-} from "@/shared/components/ui/select";
-import { getTests } from "@/features/tests/api/get-tests.api";
-import { testsQueryKeys } from "@/features/tests/tests.api-keys";
+import Loading from "@/shared/components/custom/loading/Loading";
+import type { TestDto } from "@/features/tests/dtos/test.dto";
 import { useUpdateQuestion } from "../api/update-question.api";
+import { useQuestion } from "../api/get-question.api";
 import { questionsQueryKeys } from "../questions.api-keys";
 import { UpdateQuestionDto } from "../dtos/update-question.dto";
-import type { TestDto } from "@/features/tests/dtos/test.dto";
-import type { QuestionDto, QuestionType } from "../dtos/question.dto";
-import { QUESTION_TYPE_TITLES } from "@/constants/question-type";
-import {
-  questionFormSchema,
-  type QuestionFormValues,
-} from "../schemas/question-form.schema";
-import { useTranslation } from "react-i18next";
+import type { QuestionDto } from "../dtos/question.dto";
+import type { QuestionFormValues } from "../schemas/question-form.schema";
+import { fromStored } from "../utils/blanks";
+import QuestionForm from "./form/QuestionForm";
+import { newChoice } from "./form/choices";
 
 export type EditQuestionFormModalProps = {
   isOpen: boolean;
@@ -29,14 +20,40 @@ export type EditQuestionFormModalProps = {
   onClose: () => void;
 };
 
+function toFormValues(question: QuestionDto): QuestionFormValues {
+  const answers = question.answers ?? [];
+  const choices =
+    question.type === "CHOOSE"
+      ? [...answers]
+          .sort((a, b) => a.order - b.order)
+          .map((a) => newChoice(a.text, a.isCorrect))
+      : [];
+
+  return {
+    text: question.text,
+    type: question.type,
+    points: question.points,
+    tests: (question.tests ?? []) as TestDto[],
+    sentence: question.completeQuestion
+      ? fromStored(question.completeQuestion.text, answers)
+      : "",
+    // a type switch to CHOOSE starts with two empty options
+    choices: choices.length >= 2 ? choices : [newChoice("", true), newChoice()],
+  };
+}
+
 export default function EditQuestionFormModal({
   isOpen,
   question,
   onClose,
 }: EditQuestionFormModalProps) {
   const queryClient = useQueryClient();
-
   const { t } = useTranslation(["common", "questions"]);
+
+  // the list row lacks tests/answeredCount: load the full question
+  const detail = useQuestion({ id: question.id });
+  const full = detail.data;
+  const locked = (full?.answeredCount ?? 0) > 0;
 
   const updateMutation = useUpdateQuestion({
     mutationConfig: {
@@ -48,134 +65,32 @@ export default function EditQuestionFormModal({
     },
   });
 
-  const loading = updateMutation.isPending;
-
-  const formik = useAppFormik<QuestionFormValues>({
-    initialValues: {
-      text: question?.text ?? "",
-      type: question?.type ?? "CHOOSE",
-      points: question?.points ?? 1,
-      tests: [],
-      completeQuestion: question?.completeQuestion?.text ?? "",
-    },
-    enableReinitialize: true,
-    validationZodSchema: () => questionFormSchema(t),
-    onSubmit: (values) =>
-      updateMutation.mutate({
-        id: question.id,
-        data: new UpdateQuestionDto(values),
-      }),
-  });
-
-  const isComplete = formik.values.type === "COMPLETE";
-
   return (
     <Popup
       isOpen={isOpen}
       onClose={onClose}
-      title={t("questions:modal.editTitle", { id: question?.id ?? "" })}
+      title={t("questions:modal.editTitle", { id: question.id })}
+      className="max-h-[92svh] overflow-y-auto sm:max-w-5xl"
     >
-      <form
-        className="flex flex-col gap-3 w-full"
-        onSubmit={formik.handleSubmit}
-      >
-        <LabeledField
-          type="textarea"
-          name="text"
-          title={t("questions:modal.questionText")}
-          value={formik.values.text}
-          helperText={formik.touchedErrors.text}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-        />
-        <div className="grid grid-cols-2 gap-3">
-          <LabeledField
-            type="select"
-            name="type"
-            title={t("common:fields.type")}
-            value={formik.values.type}
-            onChange={formik.handleChange}
-            getInputLabel={(value) =>
-              value
-                ? t(QUESTION_TYPE_TITLES[value as QuestionType])
-                : t("questions:modal.selectType")
-            }
-          >
-            {(Object.keys(QUESTION_TYPE_TITLES) as QuestionType[]).map(
-              (type) => (
-                <SelectItem key={type} value={type}>
-                  {t(QUESTION_TYPE_TITLES[type])}
-                </SelectItem>
-              ),
-            )}
-          </LabeledField>
-          <LabeledField
-            type="number"
-            name="points"
-            title={t("common:fields.points")}
-            value={formik.values.points}
-            helperText={formik.touchedErrors.points}
-            onChange={formik.handleChange}
-          />
+      {!full ? (
+        <div className="flex justify-center py-16">
+          <Loading />
         </div>
-        <LabeledField<TestDto, true>
-          type="selectApi"
-          title={t("entities.tests")}
-          name="tests"
-          multiple
-          value={formik.values.tests}
-          isItemEqualToValue={(item, value) => item.id === value.id}
-          getInputLabel={(items) =>
-            items?.length
-              ? items.map((test) => test.name).join(", ")
-              : t("questions:modal.selectTests")
+      ) : (
+        <QuestionForm
+          initialValues={toFormValues(full)}
+          lockContent={locked}
+          submitting={updateMutation.isPending}
+          submitLabel={t("common:actions.save")}
+          onSubmit={(values) =>
+            updateMutation.mutate({
+              id: question.id,
+              data: new UpdateQuestionDto(values, locked),
+            })
           }
-          onChange={formik.handleChange}
-          queryProps={{
-            queryFn: getTests,
-            queryKey: testsQueryKeys.infiniteList(),
-          }}
-        >
-          {(data) => (
-            <SelectGroup>
-              <SelectLabel>{t("entities.tests")}</SelectLabel>
-              {data?.pages.map((page) =>
-                page.data.map((test) => (
-                  <SelectItem key={test.id} value={test}>
-                    {test.name}
-                  </SelectItem>
-                )),
-              )}
-            </SelectGroup>
-          )}
-        </LabeledField>
-        {isComplete && (
-          <LabeledField
-            type="textarea"
-            name="completeQuestion"
-            title={t("questions:modal.completeAnswerText")}
-            value={formik.values.completeQuestion}
-            helperText={formik.touchedErrors.completeQuestion}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-        )}
-
-        <div className="flex justify-end gap-3 mt-2">
-          <Button
-            type="button"
-            variant="outline"
-            className="w-fit"
-            onClick={onClose}
-            disabled={loading}
-          >
-            {t("common:actions.cancel")}
-          </Button>
-          <Button type="submit" className="w-fit" disabled={loading}>
-            {loading ? t("common:actions.saving") : t("common:actions.save")}
-          </Button>
-        </div>
-      </form>
+          onCancel={onClose}
+        />
+      )}
     </Popup>
   );
 }

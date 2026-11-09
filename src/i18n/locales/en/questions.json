@@ -15,8 +15,7 @@
     "editTitle": "Edit question #{{id}}",
     "questionText": "Question text",
     "selectType": "Select type",
-    "selectTests": "Select tests...",
-    "completeAnswerText": "Complete answer text"
+    "selectTests": "Select tests..."
   },
   "actions": {
     "manageAnswers": "Manage answers"
@@ -40,8 +39,7 @@
     "blanksEmpty": "A blank can’t be empty: write the answer inside [ ]",
     "blanksUnbalanced": "A bracket is missing: every [ needs a matching ]",
     "blanksNested": "Blanks can’t be inside other blanks",
-    "blanksReserved": "“;;” is reserved, please remove it",
-    "completeTextRequired": "An answer text is required for COMPLETE"
+    "blanksReserved": "“;;” is reserved, please remove it"
   },
   "form": {
     "createDescription": "Pick a type, write the question, and check the preview on the right.",

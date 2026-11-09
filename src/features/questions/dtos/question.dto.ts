@@ -18,6 +18,10 @@ export class QuestionDto {
   createdAt!: Date;
   updatedAt?: Date | null;
   deletedAt?: Date | null;
+  /** detail only */
+  tests?: { id: number; name: string; period: number }[];
+  /** detail only: >0 means students answered it (answers locked) */
+  answeredCount?: number;
 
   constructor(question: QuestionDto) {
     Object.assign(
@@ -32,6 +36,8 @@ export class QuestionDto {
         "createdAt",
         "updatedAt",
         "deletedAt",
+        "tests",
+        "answeredCount",
       ]),
     );
   }

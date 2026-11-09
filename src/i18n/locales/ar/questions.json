@@ -15,8 +15,7 @@
     "editTitle": "تعديل السؤال #{{id}}",
     "questionText": "نص السؤال",
     "selectType": "اختر النوع",
-    "selectTests": "اختر الاختبارات...",
-    "completeAnswerText": "نص الإجابة الكاملة"
+    "selectTests": "اختر الاختبارات..."
   },
   "actions": {
     "manageAnswers": "إدارة الإجابات"
@@ -40,8 +39,7 @@
     "blanksEmpty": "لا يمكن أن يكون الفراغ فارغاً: اكتب الإجابة داخل [ ]",
     "blanksUnbalanced": "هناك قوس ناقص: كل [ تحتاج إلى ] مطابقة",
     "blanksNested": "لا يمكن وضع فراغ داخل فراغ آخر",
-    "blanksReserved": "«;;» محجوزة، يرجى إزالتها",
-    "completeTextRequired": "نص الإجابة مطلوب لأسئلة الإكمال"
+    "blanksReserved": "«;;» محجوزة، يرجى إزالتها"
   },
   "form": {
     "createDescription": "اختر النوع، واكتب السؤال، وتحقق من المعاينة على اليمين.",

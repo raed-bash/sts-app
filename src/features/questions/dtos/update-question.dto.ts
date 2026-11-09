@@ -1,27 +1,29 @@
-import { pick } from "lodash";
 import type { QuestionType } from "@/constants/question-type";
+import type { QuestionFormValues } from "../schemas/question-form.schema";
+import { contentOf } from "./create-question.dto";
 
 export class UpdateQuestionDto {
   text!: string;
-
-  type!: QuestionType;
 
   points!: number;
 
   testIds!: number[];
 
+  type?: QuestionType;
+
   completeQuestion?: string;
 
-  constructor(question: {
-    text: string;
-    type: QuestionType;
-    points: number;
-    completeQuestion?: string;
-    tests: { id: number }[];
-  }) {
-    Object.assign(this, pick(question, ["text", "type", "points"]));
-    this.testIds = question.tests.map((test) => test.id);
-    this.completeQuestion =
-      question.type === "COMPLETE" ? question.completeQuestion : undefined;
+  answers?: { text: string; isCorrect: boolean }[];
+
+  /** `lockContent`: students already answered — send only text/points/tests. */
+  constructor(values: QuestionFormValues, lockContent = false) {
+    this.text = values.text.trim();
+    this.points = values.points;
+    this.testIds = values.tests.map((test) => test.id);
+
+    if (!lockContent) {
+      this.type = values.type;
+      Object.assign(this, contentOf(values));
+    }
   }
 }
