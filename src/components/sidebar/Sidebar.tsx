@@ -53,9 +53,19 @@ export default function Sidebar() {
   const categories = sidebarCategories
     .map((category) => ({
       ...category,
-      links: category.links.filter(
-        (link) => !link.roles || (role && link.roles.includes(role)),
-      ),
+      links: category.links
+        .filter((link) => !link.roles || (role && link.roles.includes(role)))
+        // sections: keep only the pages this role may open
+        .map((link) =>
+          "pages" in link
+            ? {
+                ...link,
+                pages: link.pages.filter(
+                  (page) => !page.roles || (role && page.roles.includes(role)),
+                ),
+              }
+            : link,
+        ),
     }))
     .filter((category) => category.links.length > 0);
 

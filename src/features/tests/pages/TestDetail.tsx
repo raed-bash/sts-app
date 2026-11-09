@@ -1,3 +1,4 @@
+import { useCanDelete } from "@/hooks/useCanDelete";
 import ShowDeletedToggle from "@/shared/components/custom/views/ShowDeletedToggle";
 import { useShowDeleted } from "@/shared/components/custom/views/use-show-deleted";
 import { useState } from "react";
@@ -47,7 +48,8 @@ import { dateFormatter } from "@/shared/utils";
 import { useTranslation } from "react-i18next";
 
 export default function TestDetail() {
-  const allowed = useRequireRole(["SUPER_ADMIN"]);
+  const allowed = useRequireRole(["SUPER_ADMIN", "TEACHER"]);
+  const canDelete = useCanDelete();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const testId = Number(id);
@@ -156,7 +158,7 @@ export default function TestDetail() {
       label: t("common:actions.remove"),
       icon: <Trash size={16} />,
       variant: "destructive",
-      hidden: (question) => Boolean(question.deletedAt),
+      hidden: (question) => !canDelete || Boolean(question.deletedAt),
       onClick: (question) => setConfirmQuestion(question),
     },
   ];
@@ -181,14 +183,16 @@ export default function TestDetail() {
             <Edit size={16} />
             {t("tests:detail.edit")}
           </Button>
-          <Button
-            variant="destructive"
-            className="w-fit gap-2"
-            onClick={() => setConfirmTest(test)}
-          >
-            <Trash size={16} />
-            {t("common:actions.delete")}
-          </Button>
+          {canDelete && (
+            <Button
+              variant="destructive"
+              className="w-fit gap-2"
+              onClick={() => setConfirmTest(test)}
+            >
+              <Trash size={16} />
+              {t("common:actions.delete")}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -226,15 +230,25 @@ export default function TestDetail() {
             </div>
             {test.subjects?.length ? (
               <div className="flex flex-wrap gap-2">
-                {test.subjects.map((subject) => (
-                  <AppLink
-                    key={subject.id}
-                    to={subjectsPaths.subjectDetailLink(subject.id)}
-                    className="rounded-full border px-3 py-1 text-sm no-underline text-foreground transition-colors hover:border-primary/50 hover:bg-secondary"
-                  >
-                    {subject.name}
-                  </AppLink>
-                ))}
+                {test.subjects.map((subject) =>
+                  canDelete ? (
+                    <AppLink
+                      key={subject.id}
+                      to={subjectsPaths.subjectDetailLink(subject.id)}
+                      className="rounded-full border px-3 py-1 text-sm no-underline text-foreground transition-colors hover:border-primary/50 hover:bg-secondary"
+                    >
+                      {subject.name}
+                    </AppLink>
+                  ) : (
+                    // subject pages are admin-only
+                    <span
+                      key={subject.id}
+                      className="rounded-full border px-3 py-1 text-sm"
+                    >
+                      {subject.name}
+                    </span>
+                  ),
+                )}
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">

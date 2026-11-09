@@ -1,3 +1,4 @@
+import { useCanDelete } from "@/hooks/useCanDelete";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { questionsPaths } from "../questions.paths";
@@ -34,7 +35,8 @@ import type { AnswerDto } from "@/features/answers/dtos/answer.dto";
 import { useTranslation } from "react-i18next";
 
 export default function QuestionDetail() {
-  const allowed = useRequireRole(["SUPER_ADMIN"]);
+  const allowed = useRequireRole(["SUPER_ADMIN", "TEACHER"]);
+  const canDelete = useCanDelete();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const questionId = Number(id);
@@ -94,6 +96,7 @@ export default function QuestionDetail() {
     },
     {
       name: "delete",
+      hidden: () => !canDelete,
       label: t("common:actions.remove"),
       icon: <Trash size={16} />,
       variant: "destructive",

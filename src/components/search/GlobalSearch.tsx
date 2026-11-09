@@ -81,6 +81,7 @@ export default function GlobalSearch() {
   const role = useRole();
 
   const isAdmin = role === "SUPER_ADMIN";
+  const isStaff = isAdmin || role === "TEACHER";
 
   const rawTerm = term.trim();
 
@@ -88,11 +89,12 @@ export default function GlobalSearch() {
 
   const search = debouncedTerm.length >= MIN_TERM ? debouncedTerm : "";
 
-  const enabled = isAdmin && Boolean(search);
+  const enabled = isStaff && Boolean(search);
+  const adminEnabled = isAdmin && Boolean(search);
 
   const users = useUsers({
     query: new QueryUserDto({ username: search, isDeleted: false }),
-    queryConfig: { enabled },
+    queryConfig: { enabled: adminEnabled },
   });
 
   const subjects = useSubjects({
@@ -101,7 +103,7 @@ export default function GlobalSearch() {
       isDeleted: false,
       perPage: PER_GROUP,
     }),
-    queryConfig: { enabled },
+    queryConfig: { enabled: adminEnabled },
   });
 
   const tests = useTests({
@@ -148,6 +150,7 @@ export default function GlobalSearch() {
           if (!canAccess(role, link.roles)) continue;
 
           for (const page of link.pages) {
+            if (!canAccess(role, page.roles)) continue;
             if (translateDynamic(t, page.label).toLowerCase().includes(query)) {
               pages.push({
                 to: `/${page.to}`,

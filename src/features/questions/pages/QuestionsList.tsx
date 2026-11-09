@@ -1,3 +1,4 @@
+import { useCanDelete } from "@/hooks/useCanDelete";
 import ShowDeletedToggle from "@/shared/components/custom/views/ShowDeletedToggle";
 import { useShowDeleted } from "@/shared/components/custom/views/use-show-deleted";
 import ViewSwitch from "@/shared/components/custom/views/ViewSwitch";
@@ -37,7 +38,8 @@ export const clientLoader = (queryClient: QueryClient) => async () => {
 };
 
 export default function QuestionsList() {
-  const allowed = useRequireRole(["SUPER_ADMIN"]);
+  const allowed = useRequireRole(["SUPER_ADMIN", "TEACHER"]);
+  const canDelete = useCanDelete();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { t } = useTranslation(["common", "questions"]);
@@ -102,7 +104,7 @@ export default function QuestionsList() {
       label: t("common:actions.remove"),
       icon: <Trash />,
       variant: "destructive",
-      hidden: (question) => Boolean(question.deletedAt),
+      hidden: (question) => !canDelete || Boolean(question.deletedAt),
       onClick: (question) => {
         setConfirm(question);
         setDeletingId(question.id);

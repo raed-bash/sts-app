@@ -39,15 +39,17 @@ export default function Home() {
   const { t } = useTranslation(["common", "home"]);
 
   const isStudent = role === "STUDENT";
+  const isTeacher = role === "TEACHER";
   const staff = { enabled: !isStudent };
+  const adminOnly = { enabled: role === "SUPER_ADMIN" };
 
   const usersQuery = useQuery({
     ...getUsersQueryOptions(new QueryUserDto({})),
-    ...staff,
+    ...adminOnly,
   });
   const subjectsQuery = useQuery({
     ...getSubjectsQueryOptions(new QuerySubjectDto({})),
-    ...staff,
+    ...adminOnly,
   });
   const testsQuery = useQuery({
     ...getTestsQueryOptions(new QueryTestDto({})),
@@ -57,35 +59,13 @@ export default function Home() {
     ...getQuestionsQueryOptions(new QueryQuestionDto({})),
     ...staff,
   });
-  const sessionsQuery = useQuery(
-    getTestSessionsQueryOptions(new QueryTestSessionDto({})),
-  );
+  const sessionsQuery = useQuery({
+    ...getTestSessionsQueryOptions(new QueryTestSessionDto({})),
+    enabled: !isTeacher,
+  });
 
-  const stats = isStudent
+  const stats = isTeacher
     ? [
-        {
-          Icon: CalendarCheck,
-          color: "text-teal-500",
-          label: t("entities.testSessions"),
-          to: `/${testSessionsPaths.list}`,
-          query: sessionsQuery,
-        },
-      ]
-    : [
-        {
-          Icon: Users,
-          color: "text-blue-500",
-          label: t("entities.users"),
-          to: `/${usersPaths.list}`,
-          query: usersQuery,
-        },
-        {
-          Icon: BookOpen,
-          color: "text-green-500",
-          label: t("entities.subjects"),
-          to: `/${subjectsPaths.list}`,
-          query: subjectsQuery,
-        },
         {
           Icon: FileText,
           color: "text-purple-500",
@@ -100,14 +80,54 @@ export default function Home() {
           to: `/${questionsPaths.list}`,
           query: questionsQuery,
         },
-        {
-          Icon: CalendarCheck,
-          color: "text-teal-500",
-          label: t("entities.testSessions"),
-          to: `/${testSessionsPaths.list}`,
-          query: sessionsQuery,
-        },
-      ];
+      ]
+    : isStudent
+      ? [
+          {
+            Icon: CalendarCheck,
+            color: "text-teal-500",
+            label: t("entities.testSessions"),
+            to: `/${testSessionsPaths.list}`,
+            query: sessionsQuery,
+          },
+        ]
+      : [
+          {
+            Icon: Users,
+            color: "text-blue-500",
+            label: t("entities.users"),
+            to: `/${usersPaths.list}`,
+            query: usersQuery,
+          },
+          {
+            Icon: BookOpen,
+            color: "text-green-500",
+            label: t("entities.subjects"),
+            to: `/${subjectsPaths.list}`,
+            query: subjectsQuery,
+          },
+          {
+            Icon: FileText,
+            color: "text-purple-500",
+            label: t("entities.tests"),
+            to: `/${testsPaths.list}`,
+            query: testsQuery,
+          },
+          {
+            Icon: HelpCircle,
+            color: "text-orange-500",
+            label: t("entities.questions"),
+            to: `/${questionsPaths.list}`,
+            query: questionsQuery,
+          },
+          {
+            Icon: CalendarCheck,
+            color: "text-teal-500",
+            label: t("entities.testSessions"),
+            to: `/${testSessionsPaths.list}`,
+            query: sessionsQuery,
+          },
+        ];
 
   const actionLinks = isStudent
     ? [
@@ -117,8 +137,21 @@ export default function Home() {
         },
         { to: `/${homePaths.home}`, label: t("home:dashboard") },
       ]
-    : role === "TEACHER"
-      ? []
+    : isTeacher
+      ? [
+          {
+            to: `/${testsPaths.list}`,
+            label: t("home:actions.testsManagement"),
+          },
+          {
+            to: `/${questionsPaths.list}`,
+            label: t("home:actions.questionsManagement"),
+          },
+          {
+            to: `/${answersPaths.list}`,
+            label: t("home:actions.answersManagement"),
+          },
+        ]
       : [
           {
             to: `/${usersPaths.list}`,

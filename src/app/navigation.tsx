@@ -73,12 +73,13 @@ export const sidebarCategories: SidebarCategory[] = [
         key: "bank",
         label: "nav:bank",
         Icon: LibraryBig,
-        roles: ["SUPER_ADMIN"],
+        roles: ["SUPER_ADMIN", "TEACHER"],
         pages: [
           {
             to: subjectsPaths.list,
             label: "entities.subjects",
             Icon: BookOpen,
+            roles: ["SUPER_ADMIN"],
           },
           {
             to: testsPaths.list,

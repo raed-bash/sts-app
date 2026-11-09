@@ -1,3 +1,4 @@
+import { useCanDelete } from "@/hooks/useCanDelete";
 import { useState } from "react";
 import { Edit, Plus, Trash } from "lucide-react";
 import type { TableAction } from "@/shared/components/custom/table/components/TableActionsCell";
@@ -29,7 +30,8 @@ export const clientLoader = (queryClient: QueryClient) => async () => {
 };
 
 export default function AnswersList() {
-  const allowed = useRequireRole(["SUPER_ADMIN"]);
+  const allowed = useRequireRole(["SUPER_ADMIN", "TEACHER"]);
+  const canDelete = useCanDelete();
   const queryClient = useQueryClient();
   const { t } = useTranslation(["common", "answers"]);
   const { tableProps } = useAnswersTable();
@@ -63,6 +65,7 @@ export default function AnswersList() {
     },
     {
       name: "delete",
+      hidden: () => !canDelete,
       label: t("common:actions.remove"),
       icon: <Trash />,
       variant: "destructive",
