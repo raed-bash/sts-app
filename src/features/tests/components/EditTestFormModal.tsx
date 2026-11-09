@@ -1,3 +1,4 @@
+import DurationField from "./DurationField";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "@/shared/lib/toast";
 import Popup from "@/shared/components/custom/popups/Popup";
@@ -86,13 +87,10 @@ export default function EditTestFormModal({
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
         />
-        <LabeledField
-          type="number"
-          name="period"
-          title={t("common:fields.duration")}
+        <DurationField
           value={formik.values.period}
-          helperText={formik.touchedErrors.period}
-          onChange={formik.handleChange}
+          onChange={(minutes) => formik.setFieldValue("period", minutes)}
+          error={formik.touchedErrors.period}
         />
         <LabeledField<SubjectDto, true>
           type="selectApi"
