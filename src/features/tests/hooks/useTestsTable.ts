@@ -3,14 +3,20 @@ import { TableAdapter } from "@/shared/components/custom/table/TableAdapter";
 import { useTests, useTestsInfinite } from "../api/get-tests.api";
 import { QueryTestDto, type TestOrderAttributes } from "../dtos/query-test.dto";
 
-export function useTestsTable(options: { subjectIds?: number[] } = {}) {
-  const state = useTableState<TestOrderAttributes>({ name: "tests" });
+export function useTestsTable(
+  options: { subjectIds?: number[]; isDeleted?: boolean } = {},
+) {
+  const state = useTableState<TestOrderAttributes>({
+    name: "tests",
+    defaultHiddenColumns: ["updatedAt", "deletedAt"],
+  });
 
   const queryBase = new QueryTestDto({
     ...Object.fromEntries(
       state.debouncedFilters.map((filter) => [filter.name, filter.value]),
     ),
     ...(options.subjectIds?.length ? { subjectIds: options.subjectIds } : {}),
+    isDeleted: options.isDeleted ?? false,
     sorts: state.sorting.sortStatuses,
     perPage: state.pagination.perPage,
   });

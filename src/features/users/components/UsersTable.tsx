@@ -1,3 +1,5 @@
+import { NameCell } from "@/shared/components/custom/table/components/NameCell";
+import { mutedIfDeleted } from "@/shared/components/custom/table/utils/muted-if-deleted";
 import Table, {
   type TableColumn,
 } from "@/shared/components/custom/table/Table";
@@ -46,6 +48,9 @@ export default function UsersTable({
     {
       name: "username",
       headerName: "common:fields.username",
+      getCell: (username, row) => (
+        <NameCell text={username} deletedAt={row.deletedAt} />
+      ),
       sort: true,
       filterable: true,
       filterProps: {
@@ -57,6 +62,7 @@ export default function UsersTable({
       headerName: "common:fields.fullName",
       strict: false,
       getCell: (_, row) => row.student?.fullName || row.teacher?.fullName,
+      truncate: true,
     },
     {
       name: "status",
@@ -111,6 +117,7 @@ export default function UsersTable({
     {
       name: "updatedAt",
       headerName: "common:table.updatedAt",
+      hidden: true,
       getCell: (updatedAt) => dateFormatter(updatedAt),
       sort: true,
       strict: false,
@@ -118,47 +125,10 @@ export default function UsersTable({
     {
       name: "deletedAt",
       headerName: "common:table.deletedAt",
+      hidden: true,
       getCell: (deletedAt) => dateFormatter(deletedAt),
       sort: true,
       strict: false,
-    },
-    {
-      name: "fakePhone",
-      headerName: "users:table.phone",
-      strict: false,
-      getCell: (_, row) =>
-        `+20 1${(row.id % 1000).toString().padStart(3, "0")} ${(row.id * 7)
-          .toString()
-          .padStart(4, "0")}`,
-    },
-    {
-      name: "fakeEmail",
-      headerName: "common:fields.email",
-      strict: false,
-      getCell: (_, row) =>
-        `${(row.student?.fullName || row.teacher?.fullName || row.username)
-          .toLowerCase()
-          .replace(/\s+/g, ".")}@example.com`,
-    },
-    {
-      name: "fakeAddress",
-      headerName: "users:table.address",
-      strict: false,
-      getCell: (_, row) =>
-        `${(row.id * 13) % 500} Main Street, District ${(row.id * 3) % 12}, Cairo, Egypt - floor ${(row.id * 5) % 7}`,
-    },
-    {
-      name: "fakeCompany",
-      headerName: "users:table.company",
-      strict: false,
-      getCell: (_, row) =>
-        `Tech Solutions #${(row.id % 15) + 1} - Department ${(row.id % 6) + 1}`,
-    },
-    {
-      name: "fakeScore",
-      headerName: "common:fields.score",
-      strict: false,
-      getCell: (_, row) => `${(row.id * 37) % 100} pts`,
     },
     {
       name: "actions",
@@ -185,6 +155,7 @@ export default function UsersTable({
       filtering={filtering}
       csv={{ fileName: "users" }}
       loading={loading}
+      getRowClassName={mutedIfDeleted}
     />
   );
 }

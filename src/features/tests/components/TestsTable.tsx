@@ -1,3 +1,5 @@
+import { NameCell } from "@/shared/components/custom/table/components/NameCell";
+import { mutedIfDeleted } from "@/shared/components/custom/table/utils/muted-if-deleted";
 import Table, {
   type TableColumn,
 } from "@/shared/components/custom/table/Table";
@@ -19,11 +21,18 @@ const columns: TableColumn<TestDto>[] = [
   {
     name: "name",
     headerName: "common:table.name",
+    getCell: (name, row) => <NameCell text={name} deletedAt={row.deletedAt} />,
     sort: true,
     filterable: true,
     filterProps: {
       type: "text",
     },
+  },
+  {
+    name: "period",
+    headerName: "common:fields.duration",
+    getCell: (period) => <span className="tabular-nums">{period} min</span>,
+    sort: true,
   },
   {
     name: "createdAt",
@@ -34,6 +43,7 @@ const columns: TableColumn<TestDto>[] = [
   {
     name: "updatedAt",
     headerName: "common:table.updatedAt",
+    hidden: true,
     getCell: (updatedAt) => dateFormatter(updatedAt),
     sort: true,
     strict: false,
@@ -41,6 +51,7 @@ const columns: TableColumn<TestDto>[] = [
   {
     name: "deletedAt",
     headerName: "common:table.deletedAt",
+    hidden: true,
     getCell: (deletedAt) => dateFormatter(deletedAt),
     sort: true,
     strict: false,
@@ -84,6 +95,7 @@ export default function TestsTable({
       filtering={filtering}
       csv={{ fileName: "tests" }}
       loading={loading}
+      getRowClassName={mutedIfDeleted}
     />
   );
 }

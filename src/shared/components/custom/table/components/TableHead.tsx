@@ -96,15 +96,9 @@ function TableHead<Row extends TableRowRecord>({
   return (
     <thead
       {...props}
-      className={cn(
-        "sticky top-0 z-[3] bg-gray-100 dark:bg-gray-700",
-        props.className,
-      )}
+      className={cn("sticky top-0 z-[3] bg-muted", props.className)}
     >
-      <TableRow
-        {...rowProps}
-        className={cn("bg-gray-100 dark:bg-gray-700 ", rowProps.className)}
-      >
+      <TableRow {...rowProps} className={cn("bg-muted ", rowProps.className)}>
         {selectable && (
           <TableHeadCell
             {...cellProps}
@@ -156,7 +150,7 @@ function TableHead<Row extends TableRowRecord>({
               className={cn(
                 isPinned &&
                   cn(
-                    "sticky z-[2] bg-gray-100 dark:bg-gray-700",
+                    "sticky z-[2] bg-muted",
                     pinning?.isFirstPinned(column.name) &&
                       "border-s border-s-[var(--border)]",
                   ),

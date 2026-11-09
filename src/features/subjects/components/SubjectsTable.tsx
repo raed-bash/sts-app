@@ -1,3 +1,5 @@
+import { NameCell } from "@/shared/components/custom/table/components/NameCell";
+import { mutedIfDeleted } from "@/shared/components/custom/table/utils/muted-if-deleted";
 import Table, {
   type TableColumn,
 } from "@/shared/components/custom/table/Table";
@@ -19,6 +21,7 @@ const columns: TableColumn<SubjectDto>[] = [
   {
     name: "name",
     headerName: "common:table.name",
+    getCell: (name, row) => <NameCell text={name} deletedAt={row.deletedAt} />,
     sort: true,
     filterable: true,
     filterProps: {
@@ -34,6 +37,7 @@ const columns: TableColumn<SubjectDto>[] = [
   {
     name: "updatedAt",
     headerName: "common:table.updatedAt",
+    hidden: true,
     getCell: (updatedAt) => dateFormatter(updatedAt),
     sort: true,
     strict: false,
@@ -41,6 +45,7 @@ const columns: TableColumn<SubjectDto>[] = [
   {
     name: "deletedAt",
     headerName: "common:table.deletedAt",
+    hidden: true,
     getCell: (deletedAt) => dateFormatter(deletedAt),
     strict: false,
   },
@@ -83,6 +88,7 @@ export default function SubjectsTable({
       filtering={filtering}
       csv={{ fileName: "subjects" }}
       loading={loading}
+      getRowClassName={mutedIfDeleted}
     />
   );
 }

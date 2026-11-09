@@ -6,13 +6,17 @@ import {
   type SubjectOrderAttributes,
 } from "../dtos/query-subject.dto";
 
-export function useSubjectsTable() {
-  const state = useTableState<SubjectOrderAttributes>({ name: "subjects" });
+export function useSubjectsTable(options: { isDeleted?: boolean } = {}) {
+  const state = useTableState<SubjectOrderAttributes>({
+    name: "subjects",
+    defaultHiddenColumns: ["updatedAt", "deletedAt"],
+  });
 
   const queryBase = new QuerySubjectDto({
     ...Object.fromEntries(
       state.debouncedFilters.map((filter) => [filter.name, filter.value]),
     ),
+    isDeleted: options.isDeleted ?? false,
     sorts: state.sorting.sortStatuses,
     perPage: state.pagination.perPage,
   });

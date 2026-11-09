@@ -7,7 +7,10 @@ import {
 } from "../dtos/query-answer.dto";
 
 export function useAnswersTable(options: { questionId?: number } = {}) {
-  const state = useTableState<AnswerOrderAttributes>({ name: "answers" });
+  const state = useTableState<AnswerOrderAttributes>({
+    name: "answers",
+    defaultHiddenColumns: ["correctIndex"],
+  });
 
   const queryBase = new QueryAnswerDto({
     ...Object.fromEntries(

@@ -3,13 +3,17 @@ import { TableAdapter } from "@/shared/components/custom/table/TableAdapter";
 import { useUsers, useUsersInfinite } from "../api/get-users.api";
 import { QueryUserDto, type UserOrderAttributes } from "../dtos/query-user.dto";
 
-export function useUsersTable() {
-  const state = useTableState<UserOrderAttributes>({ name: "users" });
+export function useUsersTable(options: { isDeleted?: boolean } = {}) {
+  const state = useTableState<UserOrderAttributes>({
+    name: "users",
+    defaultHiddenColumns: ["updatedAt", "deletedAt"],
+  });
 
   const queryBase = new QueryUserDto({
     ...Object.fromEntries(
       state.debouncedFilters.map((filter) => [filter.name, filter.value]),
     ),
+    isDeleted: options.isDeleted ?? false,
     sorts: state.sorting.sortStatuses,
     perPage: state.pagination.perPage,
   });

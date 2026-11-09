@@ -6,14 +6,20 @@ import {
   type QuestionOrderAttributes,
 } from "../dtos/query-question.dto";
 
-export function useQuestionsTable(options: { testIds?: number[] } = {}) {
-  const state = useTableState<QuestionOrderAttributes>({ name: "questions" });
+export function useQuestionsTable(
+  options: { testIds?: number[]; isDeleted?: boolean } = {},
+) {
+  const state = useTableState<QuestionOrderAttributes>({
+    name: "questions",
+    defaultHiddenColumns: ["updatedAt", "deletedAt"],
+  });
 
   const queryBase = new QueryQuestionDto({
     ...Object.fromEntries(
       state.debouncedFilters.map((filter) => [filter.name, filter.value]),
     ),
     ...(options.testIds?.length ? { testIds: options.testIds } : {}),
+    isDeleted: options.isDeleted ?? false,
     sorts: state.sorting.sortStatuses,
     perPage: state.pagination.perPage,
   });

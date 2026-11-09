@@ -19,6 +19,9 @@ import Loading from "../../loading/Loading";
 import Checkbox from "../../inputs/Checkbox";
 import TableActionsCell, { type TableAction } from "./TableActionsCell";
 import { useTranslation } from "react-i18next";
+import { Inbox, SearchX } from "lucide-react";
+import { Button } from "../../../ui/button";
+import { getPrimaryAction } from "../utils/primary-action";
 
 export type TableBodyProps<Row extends TableRowRecord> =
   React.ComponentProps<"tbody"> & {
@@ -41,6 +44,13 @@ export type TableBodyProps<Row extends TableRowRecord> =
     };
 
     loading?: TableLoadingProps;
+
+    onRowClick?: (row: Row) => void;
+
+    getRowClassName?: (row: Row) => string | undefined;
+
+    /** Empty-state context: were the rows filtered away? */
+    empty?: { filtered: boolean; onClearFilters: () => void };
 
     pinning?: TablePinningProps<Row>;
 
@@ -72,6 +82,9 @@ function TableBody<Row extends TableRowRecord>({
   actions = [],
   selection,
   loading = {},
+  onRowClick,
+  getRowClassName,
+  empty,
   pinning,
   density,
   bodyMinHeight,
@@ -94,6 +107,13 @@ function TableBody<Row extends TableRowRecord>({
 
   const { rowProps = {}, cellProps = {}, checkboxCellProps = {} } = elements;
 
+  // Row click: explicit handler, else the row's own main action (view > edit).
+  const getRowClick = (row: TableRowItem) => {
+    if (onRowClick) return () => onRowClick(row as Row);
+    const action = getPrimaryAction(actions, row as Row);
+    return action ? () => action.onClick(row as Row) : undefined;
+  };
+
   const {
     createCheckboxChangeHandler,
     createCheckboxMouseDownHandler,
@@ -115,7 +135,7 @@ function TableBody<Row extends TableRowRecord>({
     <tbody
       {...props}
       className={cn(
-        " [&>tr[aria-rowindex]:not([aria-rowindex='0']):not([aria-selected='true'])]:border-gray-100/60  [&>tr[aria-rowindex]:not([aria-rowindex='0']):not([aria-selected='true'])]:border-t-[0.833333px] ",
+        "[&>tr[aria-rowindex]:not([aria-rowindex='0'])>td]:border-t [&>tr[aria-rowindex]:not([aria-rowindex='0'])>td]:border-border/60",
         className,
       )}
     >
@@ -140,100 +160,177 @@ function TableBody<Row extends TableRowRecord>({
           {isLoading ? (
             <Loading />
           ) : (
-            <p className="min-w-max text-lg">{t("table.noData")}</p>
+            <div className="flex min-w-max flex-col items-center gap-3 text-center">
+              <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                {empty?.filtered ? <SearchX /> : <Inbox />}
+              </div>
+              <p className="text-base font-medium">
+                {empty?.filtered ? t("table.noMatches") : t("table.noData")}
+              </p>
+              {empty?.filtered && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={empty.onClearFilters}
+                >
+                  {t("table.clearFilters")}
+                </Button>
+              )}
+            </div>
           )}
         </TableOverlay>
       ) : (
-        rows.map((row, i) => (
-          <TableRow
-            {...rowProps}
-            key={row.id}
-            className={cn(
-              "hover:bg-gray-100/30 dark:hover:bg-gray-700",
-              rowProps.className,
-            )}
-            aria-rowindex={i}
-            aria-selected={selectedRows ? selectedRows.has(row?.id) : false}
-          >
-            {selectable && (
-              <TableCell
-                {...cellProps}
-                {...checkboxCellProps}
-                onMouseEnter={createRowMouseEnterHandler(row)}
-                onMouseDown={createRowMouseDownHandler(row)}
-                className={cn(
-                  cellProps.className,
-                  checkboxCellProps.className,
-                  "select-none",
-                  getSelectedAreaBorders(i, "first"),
-                  density,
-                )}
-              >
-                <Checkbox
-                  checked={selectedRows.has(row.id)}
-                  onChange={createCheckboxChangeHandler(row)}
-                  onMouseDown={createCheckboxMouseDownHandler(row)}
-                />
-              </TableCell>
-            )}
-            {columns.map(({ bodyCellProps = {}, className, ...column }, ci) => {
-              const isPinned = pinning
-                ? pinning.pinnedColumns.has(column.name)
-                : false;
-
-              const right = isPinned
-                ? pinning?.getRightOffset(column.name)
-                : undefined;
-
-              const position =
-                ci === columns.length - 1
-                  ? "last"
-                  : ci === 0 && !selectable
-                    ? "first"
-                    : "middle";
-
-              const rowIsSelected = selectedRows?.has(row.id) ?? false;
-
-              const suppressPinnedSeparator =
-                rowIsSelected && position === "first" && isPinned;
-
-              return (
+        rows.map((row, i) => {
+          const rowClick = getRowClick(row);
+          return (
+            <TableRow
+              {...rowProps}
+              key={row.id}
+              {...(rowClick && {
+                tabIndex: 0,
+                onClick: (event: React.MouseEvent<HTMLTableRowElement>) => {
+                  // clicks on controls inside the row keep their own behaviour
+                  if (
+                    (event.target as HTMLElement).closest(
+                      "button,a,input,label,[role='menuitem'],[role='checkbox']",
+                    )
+                  )
+                    return;
+                  rowClick();
+                },
+                onKeyDown: (
+                  event: React.KeyboardEvent<HTMLTableRowElement>,
+                ) => {
+                  if (
+                    event.key === "Enter" &&
+                    event.target === event.currentTarget
+                  )
+                    rowClick();
+                },
+              })}
+              className={cn(
+                "transition-colors hover:bg-muted/50",
+                rowClick &&
+                  "cursor-pointer focus-visible:bg-muted/60 focus-visible:outline-none",
+                getRowClassName?.(row),
+                rowProps.className,
+              )}
+              aria-rowindex={i}
+              aria-selected={selectedRows ? selectedRows.has(row?.id) : false}
+            >
+              {selectable && (
                 <TableCell
-                  key={String(column.name)}
-                  style={
-                    right !== undefined ? { insetInlineEnd: right } : undefined
-                  }
                   {...cellProps}
-                  {...bodyCellProps}
+                  {...checkboxCellProps}
+                  onMouseEnter={createRowMouseEnterHandler(row)}
+                  onMouseDown={createRowMouseDownHandler(row)}
                   className={cn(
-                    isPinned &&
-                      cn(
-                        "sticky z-[1] bg-card hover:bg-gray-100/30 dark:hover:bg-gray-700",
-                        pinning?.isFirstPinned(column.name) &&
-                          !suppressPinnedSeparator &&
-                          "border-s border-s-[var(--border)]!",
-                      ),
-                    getSelectedAreaBorders(i, position),
-                    className,
                     cellProps.className,
-                    bodyCellProps.className,
+                    checkboxCellProps.className,
+                    "select-none",
+                    getSelectedAreaBorders(i, "first"),
                     density,
                   )}
                 >
-                  {column.type === "actions" ? (
-                    <TableActionsCell row={row} actions={actions} />
-                  ) : column.getCell ? (
-                    column.getCell(getRowValue(row, String(column.name)), row)
-                  ) : (
-                    getRowValue(row, String(column.name))
-                  )}
+                  <Checkbox
+                    checked={selectedRows.has(row.id)}
+                    onChange={createCheckboxChangeHandler(row)}
+                    onMouseDown={createCheckboxMouseDownHandler(row)}
+                  />
                 </TableCell>
-              );
-            })}
-          </TableRow>
-        ))
+              )}
+              {columns.map(
+                ({ bodyCellProps = {}, className, ...column }, ci) => {
+                  const isPinned = pinning
+                    ? pinning.pinnedColumns.has(column.name)
+                    : false;
+
+                  const right = isPinned
+                    ? pinning?.getRightOffset(column.name)
+                    : undefined;
+
+                  const position =
+                    ci === columns.length - 1
+                      ? "last"
+                      : ci === 0 && !selectable
+                        ? "first"
+                        : "middle";
+
+                  const rowIsSelected = selectedRows?.has(row.id) ?? false;
+
+                  const suppressPinnedSeparator =
+                    rowIsSelected && position === "first" && isPinned;
+
+                  return (
+                    <TableCell
+                      key={String(column.name)}
+                      style={
+                        right !== undefined
+                          ? { insetInlineEnd: right }
+                          : undefined
+                      }
+                      {...cellProps}
+                      {...bodyCellProps}
+                      className={cn(
+                        isPinned &&
+                          cn(
+                            "sticky z-[1] bg-card",
+                            pinning?.isFirstPinned(column.name) &&
+                              !suppressPinnedSeparator &&
+                              "border-s border-s-[var(--border)]!",
+                          ),
+                        getSelectedAreaBorders(i, position),
+                        className,
+                        cellProps.className,
+                        bodyCellProps.className,
+                        density,
+                      )}
+                    >
+                      {column.type === "actions" ? (
+                        <TableActionsCell row={row} actions={actions} />
+                      ) : (
+                        <CellContent
+                          truncate={column.truncate}
+                          value={
+                            column.getCell
+                              ? column.getCell(
+                                  getRowValue(row, String(column.name)),
+                                  row,
+                                )
+                              : getRowValue(row, String(column.name))
+                          }
+                        />
+                      )}
+                    </TableCell>
+                  );
+                },
+              )}
+            </TableRow>
+          );
+        })
       )}
     </tbody>
   );
 }
+/** Empty values read as "—" instead of a blank cell; long text can be cut to one line. */
+function CellContent({
+  value,
+  truncate,
+}: {
+  value: React.ReactNode;
+  truncate?: boolean;
+}) {
+  if (value === null || value === undefined || value === "")
+    return <span className="text-muted-foreground">—</span>;
+
+  if (truncate && (typeof value === "string" || typeof value === "number"))
+    return (
+      <div className="max-w-[28rem] truncate" title={String(value)}>
+        {value}
+      </div>
+    );
+
+  return <>{value}</>;
+}
+
 export default TableBody;

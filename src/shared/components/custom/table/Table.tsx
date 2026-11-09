@@ -79,6 +79,9 @@ export type TableColumn<Row extends TableRowRecord> = (
 
   hidden?: boolean;
 
+  /** Cut long text to one line; the full value shows on hover */
+  truncate?: boolean;
+
   filterable?: boolean;
 
   filterProps?: FilterFieldProps<any>;
@@ -260,6 +263,16 @@ export type TableProps<Row extends TableRowRecord> = {
   actions?: TableAction<Row>[];
 
   /**
+   * Called when a row is clicked (outside its buttons/links/checkbox) or Enter is pressed on it
+   */
+  onRowClick?: (row: Row) => void;
+
+  /**
+   * Extra classes per row, e.g. to mute soft-deleted rows
+   */
+  getRowClassName?: (row: Row) => string | undefined;
+
+  /**
    * Enable "Copy as CSV" / "Download CSV" in the table header
    */
   csv?: TableCsvOptions<Row>;
@@ -330,6 +343,8 @@ function Table<Row extends TableRowRecord>({
   filtering,
   elements = {},
   csv,
+  onRowClick,
+  getRowClassName,
 }: TableProps<Row>) {
   const { rows = [], columns: originalColumns = [] } = data;
 
@@ -553,6 +568,12 @@ function Table<Row extends TableRowRecord>({
               onSelectRows,
             }}
             loading={{ loading: isLoading, scLoading }}
+            onRowClick={onRowClick}
+            getRowClassName={getRowClassName}
+            empty={{
+              filtered: filterUtils.filters.length > 0,
+              onClearFilters: filterUtils.clearFilters,
+            }}
             pinning={pinningColumns}
             density={densityPadding}
             bodyMinHeight={bodyMinHeight}

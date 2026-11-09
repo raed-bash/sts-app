@@ -21,6 +21,8 @@ export type UseTableStateOptions<SortKey extends string> = {
   defaultPerPage?: number;
   multi?: boolean;
   caching?: boolean;
+  /** Columns hidden until the user changes the column menu (housekeeping dates, ids…) */
+  defaultHiddenColumns?: string[];
 };
 
 export type UseTableStateReturn<SortKey extends string> = {
@@ -71,6 +73,7 @@ export function useTableState<SortKey extends string>({
   defaultPerPage = PER_PAGE,
   multi = false,
   caching = true,
+  defaultHiddenColumns,
 }: UseTableStateOptions<SortKey>): UseTableStateReturn<SortKey> {
   const [page, setPage] = useState(1);
 
@@ -109,7 +112,10 @@ export function useTableState<SortKey extends string>({
 
   const { orderedColumns, setOrderedColumns } = useOrderedColumns(name);
 
-  const { hiddenColumns, setHiddenColumns } = useHiddenColumns(name);
+  const { hiddenColumns, setHiddenColumns } = useHiddenColumns(
+    name,
+    new Set(defaultHiddenColumns),
+  );
 
   const { pinnedColumns, setPinnedColumns } = usePinnedColumns(name);
 

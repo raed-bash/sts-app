@@ -1,3 +1,4 @@
+import { Check, X } from "lucide-react";
 import Table, {
   type TableColumn,
 } from "@/shared/components/custom/table/Table";
@@ -33,6 +34,7 @@ export default function AnswersTable({
     {
       name: "text",
       headerName: "common:fields.text",
+      truncate: true,
       sort: true,
       filterable: true,
       filterProps: {
@@ -42,15 +44,23 @@ export default function AnswersTable({
     {
       name: "isCorrect",
       headerName: "answers:table.isCorrect",
-      getCell: (isCorrect) => (
-        <span
-          className={`px-2 py-1 text-xs font-medium text-white rounded-full ${
-            isCorrect ? "bg-green-500" : "bg-red-500"
-          }`}
-        >
-          {isCorrect ? t("common:actions.yes") : t("common:actions.no")}
-        </span>
-      ),
+      // blanks/order answers are judged by position, not by isCorrect
+      getCell: (isCorrect, row) =>
+        row.correctIndex != null ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
+            {t("answers:table.position", { n: row.correctIndex })}
+          </span>
+        ) : isCorrect ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-success/15 px-2 py-0.5 text-xs font-semibold text-success">
+            <Check size={12} />
+            {t("answers:table.correct")}
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+            <X size={12} />
+            {t("answers:table.incorrect")}
+          </span>
+        ),
       sort: true,
     },
     {
@@ -61,6 +71,7 @@ export default function AnswersTable({
     {
       name: "correctIndex",
       headerName: "answers:table.correctIndex",
+      hidden: true,
       sort: true,
     },
     {

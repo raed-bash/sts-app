@@ -1,3 +1,6 @@
+import QuestionTypeBadge from "@/components/QuestionTypeBadge";
+import { NameCell } from "@/shared/components/custom/table/components/NameCell";
+import { mutedIfDeleted } from "@/shared/components/custom/table/utils/muted-if-deleted";
 import Table, {
   type TableColumn,
 } from "@/shared/components/custom/table/Table";
@@ -39,6 +42,9 @@ export default function QuestionsTable({
     {
       name: "text",
       headerName: "common:fields.text",
+      getCell: (text, row) => (
+        <NameCell text={text} deletedAt={row.deletedAt} />
+      ),
       sort: true,
       filterable: true,
       filterProps: {
@@ -48,6 +54,7 @@ export default function QuestionsTable({
     {
       name: "type",
       headerName: "common:fields.type",
+      getCell: (type) => <QuestionTypeBadge type={type} />,
       sort: true,
       filterable: true,
       filterProps: {
@@ -69,6 +76,7 @@ export default function QuestionsTable({
     {
       name: "points",
       headerName: "common:fields.points",
+      getCell: (points) => <span className="tabular-nums">{points}</span>,
       sort: true,
     },
     {
@@ -80,6 +88,7 @@ export default function QuestionsTable({
     {
       name: "updatedAt",
       headerName: "common:table.updatedAt",
+      hidden: true,
       getCell: (updatedAt) => dateFormatter(updatedAt),
       sort: true,
       strict: false,
@@ -87,6 +96,7 @@ export default function QuestionsTable({
     {
       name: "deletedAt",
       headerName: "common:table.deletedAt",
+      hidden: true,
       getCell: (deletedAt) => dateFormatter(deletedAt),
       sort: true,
       strict: false,
@@ -116,6 +126,7 @@ export default function QuestionsTable({
       filtering={filtering}
       csv={{ fileName: "questions" }}
       loading={loading}
+      getRowClassName={mutedIfDeleted}
     />
   );
 }
